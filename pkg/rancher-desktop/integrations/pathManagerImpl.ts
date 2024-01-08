@@ -5,7 +5,10 @@ import path from 'path';
 import manageLinesInFile from '@pkg/integrations/manageLinesInFile';
 import { ManualPathManager, PathManagementStrategy, PathManager } from '@pkg/integrations/pathManager';
 import mainEvents from '@pkg/main/mainEvents';
+import Logging from '@pkg/utils/logging';
 import paths from '@pkg/utils/paths';
+
+const console = Logging['path-management'];
 
 /**
  * RcFilePathManager is for when the user wants Rancher Desktop to
@@ -58,9 +61,12 @@ export class RcFilePathManager implements PathManager {
         const filePath = path.join(os.homedir(), fileName);
 
         try {
+          console.log(`managing ${ filePath }: ${ desiredPresent }`);
           await fs.promises.stat(filePath);
+          console.log(`No issues with ${ filePath }, will modify.`);
         } catch (error: any) {
           if (error.code === 'ENOENT') {
+            console.log(`${ filePath } does not exist; will create.`);
             continue;
           }
           throw error;
@@ -74,6 +80,7 @@ export class RcFilePathManager implements PathManager {
       if (!linesAdded) {
         const filePath = path.join(os.homedir(), bashLoginShellFiles[0]);
 
+        console.log(`No files exist, will create ${ filePath }`);
         await manageLinesInFile(filePath, [pathLine], desiredPresent);
       }
     } else {
@@ -88,6 +95,8 @@ export class RcFilePathManager implements PathManager {
     // Handle other shells' rc files and .bashrc
     await Promise.all(['.bashrc', '.zshrc'].map((rcName) => {
       const rcPath = path.join(os.homedir(), rcName);
+
+      console.log(`Managing ${ rcPath } -> ${ desiredPresent }`);
 
       return manageLinesInFile(rcPath, [pathLine], desiredPresent);
     }));

@@ -3,9 +3,12 @@ import os from 'os';
 
 import isEqual from 'lodash/isEqual.js';
 
+import Logging from '@pkg/utils/logging';
+
 export const START_LINE = '### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)';
 export const END_LINE = '### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)';
 const DEFAULT_FILE_MODE = 0o644;
+const console = Logging['path-management'];
 
 // Inserts/removes fenced lines into/from a file. Idempotent.
 // @param path The path to the file to work on.
@@ -15,6 +18,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
   // read file, creating it if it doesn't exist
   let currentContent: string;
 
+  console.log(`managing ${ path }: ${ desiredManagedLines } should${ desiredPresent ? '' : ' not' } exist.`);
   try {
     currentContent = await fs.promises.readFile(path, 'utf8');
   } catch (error: any) {
@@ -22,10 +26,13 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
       const lines = buildFileLines([], desiredManagedLines, ['']);
       const content = lines.join(os.EOL);
 
+      console.log(`${ path }: file does not exist, writing new file`);
       await fs.promises.writeFile(path, content, { mode: DEFAULT_FILE_MODE });
 
       return;
     } else if (error.code === 'ENOENT' && !desiredPresent) {
+      console.log(`${ path }: file does not exist, not doing anything`);
+
       return;
     } else {
       throw error;
@@ -54,6 +61,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
     const newLines = buildFileLines(before, desiredManagedLines, after);
     const newContent = newLines.join(os.EOL);
 
+    console.log(`${ path }: adding lines to file.`);
     await fs.promises.writeFile(path, newContent);
   }
   if (!desiredPresent) {
@@ -62,11 +70,13 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
       after = [];
     }
     if (before.length === 0 && after.length === 0) {
+      console.log(`${ path }: removing empty file.`);
       await fs.promises.rm(path);
     } else {
       const newLines = buildFileLines(before, [], after);
       const newContent = newLines.join(os.EOL);
 
+      console.log(`${ path }: removing lines from file.`);
       await fs.promises.writeFile(path, newContent);
     }
   }
