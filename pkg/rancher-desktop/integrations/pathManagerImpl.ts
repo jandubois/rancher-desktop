@@ -52,6 +52,7 @@ export class RcFilePathManager implements PathManager {
       '.profile',
     ];
 
+    console.log(Error(`managePosix: desiredPresent=${ desiredPresent }`).stack);
     // Handle files that pertain to bash login shells
     if (desiredPresent) {
       let linesAdded = false;

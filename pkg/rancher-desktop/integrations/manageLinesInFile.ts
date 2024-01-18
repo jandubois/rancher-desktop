@@ -18,7 +18,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
   // read file, creating it if it doesn't exist
   let currentContent: string;
 
-  console.log(`managing ${ path }: ${ desiredManagedLines } should${ desiredPresent ? '' : ' not' } exist.`);
+  console.log(Error(`manageLinesInFile path=${ path } desiredLines='${ desiredManagedLines }' should${ desiredPresent ? '' : ' not' } exist.`).stack);
   try {
     currentContent = await fs.promises.readFile(path, 'utf8');
   } catch (error: any) {
@@ -52,6 +52,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
     throw new Error(`could not split ${ path }: ${ error }`);
   }
 
+  console.log(`splitLinesByDelimiteres returned: before='${ before }' current='${ currentManagedLines }' after='${ after }'`);
   // make the changes
   if (desiredPresent && !isEqual(currentManagedLines, desiredManagedLines)) {
     // This is needed to ensure the file ends with an EOL
@@ -61,7 +62,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
     const newLines = buildFileLines(before, desiredManagedLines, after);
     const newContent = newLines.join(os.EOL);
 
-    console.log(`${ path }: adding lines to file.`);
+    console.log(`${ path }: adding lines to file. newContent='${ newContent }'`);
     await fs.promises.writeFile(path, newContent);
   }
   if (!desiredPresent) {
@@ -76,7 +77,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
       const newLines = buildFileLines(before, [], after);
       const newContent = newLines.join(os.EOL);
 
-      console.log(`${ path }: removing lines from file.`);
+      console.log(`${ path }: removing lines from file. newContent='${ newContent }'`);
       await fs.promises.writeFile(path, newContent);
     }
   }
