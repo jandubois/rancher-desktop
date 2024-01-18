@@ -26,15 +26,16 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
       const lines = buildFileLines([], desiredManagedLines, ['']);
       const content = lines.join(os.EOL);
 
-      console.log(`${ path }: file does not exist, writing new file`);
+      console.log(`  manageLinesInFile path='${ path }': file does not exist, writing new file`);
       await fs.promises.writeFile(path, content, { mode: DEFAULT_FILE_MODE });
 
       return;
     } else if (error.code === 'ENOENT' && !desiredPresent) {
-      console.log(`${ path }: file does not exist, not doing anything`);
+      console.log(`  manageLinesInFile path='${ path }': file does not exist, not doing anything`);
 
       return;
     } else {
+      console.log(`  manageLinesInFile throwing error: ${ JSON.stringify(error) }`);
       throw error;
     }
   }
@@ -49,10 +50,10 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
 
     [before, currentManagedLines, after] = splitLinesByDelimiters(currentLines);
   } catch (error) {
-    throw new Error(`could not split ${ path }: ${ error }`);
+    throw new Error(`  manageLinesInFile: could not split ${ path }: ${ error }`);
   }
 
-  console.log(`splitLinesByDelimiteres returned: before='${ before }' current='${ currentManagedLines }' after='${ after }'`);
+  console.log(`  manageLinesInFile: splitLinesByDelimiters returned: before='${ before }' current='${ currentManagedLines }' after='${ after }'`);
   // make the changes
   if (desiredPresent && !isEqual(currentManagedLines, desiredManagedLines)) {
     // This is needed to ensure the file ends with an EOL
@@ -71,13 +72,13 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
       after = [];
     }
     if (before.length === 0 && after.length === 0) {
-      console.log(`${ path }: removing empty file.`);
+      console.log(`  manageLinesInFile ${ path }: removing empty file.`);
       await fs.promises.rm(path);
     } else {
       const newLines = buildFileLines(before, [], after);
       const newContent = newLines.join(os.EOL);
 
-      console.log(`${ path }: removing lines from file. newContent='${ newContent }'`);
+      console.log(`  manageLinesInFile ${ path }: removing lines from file. newContent='${ newContent }'`);
       await fs.promises.writeFile(path, newContent);
     }
   }

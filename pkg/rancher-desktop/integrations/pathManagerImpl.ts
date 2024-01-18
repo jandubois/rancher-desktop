@@ -62,14 +62,15 @@ export class RcFilePathManager implements PathManager {
         const filePath = path.join(os.homedir(), fileName);
 
         try {
-          console.log(`managing ${ filePath }: ${ desiredPresent }`);
+          console.log(`  managePosix: checking path='${ filePath }'`);
           await fs.promises.stat(filePath);
-          console.log(`No issues with ${ filePath }, will modify.`);
+          console.log(`  managePosix: no issues with ${ filePath }, will modify`);
         } catch (error: any) {
           if (error.code === 'ENOENT') {
-            console.log(`${ filePath } does not exist; will create.`);
+            console.log(`  managePosix path='${ filePath }' does not exist; will create`);
             continue;
           }
+          console.log(`  managePosix throwing error: ${ JSON.stringify(error) }`);
           throw error;
         }
         await manageLinesInFile(filePath, [pathLine], desiredPresent);
@@ -97,7 +98,7 @@ export class RcFilePathManager implements PathManager {
     await Promise.all(['.bashrc', '.zshrc'].map((rcName) => {
       const rcPath = path.join(os.homedir(), rcName);
 
-      console.log(`Managing ${ rcPath } -> ${ desiredPresent }`);
+      console.log(`  managePosix: managing path='${ rcPath }'`);
 
       return manageLinesInFile(rcPath, [pathLine], desiredPresent);
     }));
