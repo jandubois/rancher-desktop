@@ -21,6 +21,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
   console.log(Error(`manageLinesInFile path=${ path } desiredLines='${ desiredManagedLines }' should${ desiredPresent ? '' : ' not' } exist.`).stack);
   try {
     currentContent = await fs.promises.readFile(path, 'utf8');
+    console.log(`  manageLinesInFile current length=${ currentContent.length}`);
   } catch (error: any) {
     if (error.code === 'ENOENT' && desiredPresent) {
       const lines = buildFileLines([], desiredManagedLines, ['']);
@@ -48,6 +49,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
   try {
     const currentLines = currentContent.split('\n');
 
+    console.log(`  manageLinesInFile: splitting ${ currentLines.length } lines`);
     [before, currentManagedLines, after] = splitLinesByDelimiters(currentLines);
   } catch (error) {
     throw new Error(`  manageLinesInFile: could not split ${ path }: ${ error }`);
