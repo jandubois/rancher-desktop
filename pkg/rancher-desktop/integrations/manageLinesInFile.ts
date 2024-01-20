@@ -21,7 +21,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
   console.log(Error(`manageLinesInFile(${ path }) desiredLines='${ desiredManagedLines }' should${ desiredPresent ? '' : ' not' } exist.`).stack);
   try {
     currentContent = await fs.promises.readFile(path, 'utf8');
-    console.log(`  manageLinesInFile(${ path }) current length=${ currentContent.length}`);
+    console.log(`  manageLinesInFile(${ path }) current length=${ currentContent.length }`);
   } catch (error: any) {
     if (error.code === 'ENOENT' && desiredPresent) {
       const lines = buildFileLines([], desiredManagedLines, ['']);
@@ -84,6 +84,7 @@ export default async function manageLinesInFile(path: string, desiredManagedLine
       await fs.promises.writeFile(path, newContent);
     }
   }
+  console.log(`  manageLinesInFile(${ path }): done`);
 }
 
 // Splits a file into three arrays containing the lines before the managed portion,

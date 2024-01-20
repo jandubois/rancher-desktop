@@ -103,8 +103,9 @@ export class RcFilePathManager implements PathManager {
       return manageLinesInFile(rcPath, [pathLine], desiredPresent);
     }));
 
-    mainEvents.invoke('diagnostics-trigger', 'RD_BIN_IN_BASH_PATH');
-    mainEvents.invoke('diagnostics-trigger', 'RD_BIN_IN_ZSH_PATH');
+    await mainEvents.invoke('diagnostics-trigger', 'RD_BIN_IN_BASH_PATH');
+    await mainEvents.invoke('diagnostics-trigger', 'RD_BIN_IN_ZSH_PATH');
+    console.log(`  managePosix done: desiredPresent=${ desiredPresent }`);
   }
 
   protected async manageCsh(desiredPresent: boolean): Promise<void> {
