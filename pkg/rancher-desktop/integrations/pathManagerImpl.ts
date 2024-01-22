@@ -2,6 +2,8 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
+import { Mutex } from 'async-mutex';
+
 import manageLinesInFile from '@pkg/integrations/manageLinesInFile';
 import { ManualPathManager, PathManagementStrategy, PathManager } from '@pkg/integrations/pathManager';
 import mainEvents from '@pkg/main/mainEvents';
@@ -17,6 +19,9 @@ const console = Logging['path-management'];
  */
 export class RcFilePathManager implements PathManager {
   readonly strategy = PathManagementStrategy.RcFiles;
+  protected readonly posixMutex : Mutex;
+  protected readonly cshMutex : Mutex;
+  protected readonly fishMutex : Mutex;
 
   constructor() {
     const platform = os.platform();
@@ -24,6 +29,9 @@ export class RcFilePathManager implements PathManager {
     if (platform !== 'linux' && platform !== 'darwin') {
       throw new Error(`Platform "${ platform }" is not supported by RcFilePathManager`);
     }
+    this.posixMutex = new Mutex();
+    this.cshMutex = new Mutex();
+    this.fishMutex = new Mutex();
   }
 
   async enforce(): Promise<void> {
@@ -38,12 +46,30 @@ export class RcFilePathManager implements PathManager {
     await this.manageFish(false);
   }
 
+  protected async managePosix(desiredPresent: boolean): Promise<void> {
+    await this.posixMutex.runExclusive(async() => {
+      await this._managePosix(desiredPresent);
+    });
+  }
+
+  protected async manageCsh(desiredPresent: boolean): Promise<void> {
+    await this.cshMutex.runExclusive(async() => {
+      await this._manageCsh(desiredPresent);
+    });
+  }
+
+  protected async manageFish(desiredPresent: boolean): Promise<void> {
+    await this.fishMutex.runExclusive(async() => {
+      await this._manageFish(desiredPresent);
+    });
+  }
+
   /**
    * bash requires some special handling. This is because the files it reads
    * on startup differ depending on whether it is a login shell or a
    * non-login shell. We must cover both cases.
    */
-  protected async managePosix(desiredPresent: boolean): Promise<void> {
+  protected async _managePosix(desiredPresent: boolean): Promise<void> {
     const pathLine = `export PATH="${ paths.integration }:$PATH"`;
     // Note: order is important here. Only the first one that is present is modified.
     const bashLoginShellFiles = [
@@ -108,7 +134,7 @@ export class RcFilePathManager implements PathManager {
     console.log(`  managePosix done: desiredPresent=${ desiredPresent }`);
   }
 
-  protected async manageCsh(desiredPresent: boolean): Promise<void> {
+  protected async _manageCsh(desiredPresent: boolean): Promise<void> {
     const pathLine = `setenv PATH "${ paths.integration }"\\:"$PATH"`;
 
     await Promise.all(['.cshrc', '.tcshrc'].map((rcName) => {
@@ -118,7 +144,7 @@ export class RcFilePathManager implements PathManager {
     }));
   }
 
-  protected async manageFish(desiredPresent: boolean): Promise<void> {
+  protected async _manageFish(desiredPresent: boolean): Promise<void> {
     const pathLine = `set --export --prepend PATH "${ paths.integration }"`;
     const configHome = process.env['XDG_CONFIG_HOME'] || path.join(os.homedir(), '.config');
     const fishConfigDir = path.join(configHome, 'fish');
