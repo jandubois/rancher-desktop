@@ -324,6 +324,7 @@ export default class DockerDirManager {
 
     await fs.promises.mkdir(path.dirname(this.dockerContextPath), { recursive: true });
     await fs.promises.writeFile(this.dockerContextPath, JSON.stringify(contextContents));
+    console.debug('docker context updated');
   }
 
   /**
@@ -331,7 +332,9 @@ export default class DockerDirManager {
    */
   async clearDockerContext(): Promise<void> {
     try {
+      console.debug(`Deleting docker context at ${ this.dockerContextPath }`);
       await fs.promises.rm(path.dirname(this.dockerContextPath), { recursive: true, force: true });
+      console.debug('docker context has been deleted');
 
       const config = await this.readDockerConfig();
 
