@@ -60,6 +60,10 @@ Electron.app.setAppLogsPath(paths.logs);
 
 const console = Logging.background;
 
+process.on('uncaughtException', function (err) {
+  console.log(err);
+})
+
 if (!Electron.app.requestSingleInstanceLock()) {
   process.exit(201);
 }
