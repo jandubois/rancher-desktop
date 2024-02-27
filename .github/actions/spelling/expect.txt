@@ -827,6 +827,7 @@ WSLIs
 wslutils
 WWID
 wwn
+wws
 Xcomposite
 Xdamage
 xdev
