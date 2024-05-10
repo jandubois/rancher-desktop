@@ -50,7 +50,7 @@ EOF
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapp
+  name: webapp-1
 spec:
   type: ClusterIP
   selector:
@@ -58,24 +58,17 @@ spec:
   ports:
   - port: 80
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: webapp
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+  name: webapp-2
 spec:
-  rules:
-  - host: localhost
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: webapp
-              port:
-                number: 80
+  type: ClusterIP
+  selector:
+    app: webapp
+  ports:
+  - name: http
+    port: 80
 EOF
 }
 
@@ -84,15 +77,38 @@ EOF
     assert_failure
 }
 
-@test 'connect to the service on localhost with port forwarding' {
-    rdctl api -X POST -b '{ "namespace": "default", "service": "webapp", "k8sPort": 80, "hostPort": 8080 }' port_forwarding
-    run try curl --silent --fail "http://localhost:8080"
+@test 'forward service by port number' {
+    rdctl api port_forwarding --method POST --input - <<<'{
+        "namespace": "default",
+        "service":   "webapp-1",
+        "k8sPort":   80,
+        "hostPort":  8080
+    }'
+    run try curl --silent --fail  "http://localhost:8080"
     assert_success
     assert_output "Hello World!"
 }
 
-@test 'fail to connect to the service on localhost after removing port forwarding' {
-    rdctl api -X DELETE "port_forwarding?namespace=default&service=webapp&k8sPort=80"
+@test 'forward service by port name' {
+    rdctl api port_forwarding --method POST --input - <<<'{
+        "namespace": "default",
+        "service":   "webapp-2",
+        "k8sPort":   "http",
+        "hostPort":  8088
+    }'
+    run try curl --silent --fail  "http://localhost:8088"
+    assert_success
+    assert_output "Hello World!"
+}
+
+@test 'fail to connect to the service after removing port number forwarding' {
+    rdctl api -X DELETE "port_forwarding?namespace=default&service=webapp-1&k8sPort=80"
     run try --max 5 curl --silent --fail "http://localhost:8080"
+    assert_failure
+}
+
+@test 'fail to connect to the service after removing port name forwarding' {
+    rdctl api -X DELETE "port_forwarding?namespace=default&service=webapp-2&k8sPort=http"
+    run try --max 5 curl --silent --fail "http://localhost:8088"
     assert_failure
 }
