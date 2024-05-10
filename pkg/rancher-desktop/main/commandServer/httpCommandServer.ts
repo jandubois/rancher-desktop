@@ -567,15 +567,8 @@ export class HttpCommandServer {
         values = JSON.parse(data);
         if ('namespace' in values && 'service' in values && 'k8sPort' in values && 'hostPort' in values) {
           namespace = values.namespace;
-
           service = values.service;
-
-          if (Number.isNaN(values.k8sPort)) {
-            k8sPort = values.k8sPort;
-          } else {
-            k8sPort = parseInt(values.k8sPort, 10);
-          }
-
+          k8sPort = values.k8sPort;
           hostPort = values.hostPort;
         } else {
           error = 'missing required parameters';
