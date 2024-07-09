@@ -8,6 +8,9 @@ local_setup_file() {
 
 local_setup() {
     needs_port 443
+
+    LOG_NAMESPACE=cattle-system
+    LOG_APPNAME=rancher
 }
 
 # Check that the rancher-latest/rancher helm chart at the given version is
@@ -101,20 +104,37 @@ assert_true() {
     assert_output --regexp '^([Tt]rue|1)$' || return
 }
 
-# Given namespace and app name, assert that a log line contains the given string.
-assert_pod_log_line() {
-    local namespace="$1"
-    local selector="app=$2"
-    shift 2
-    local expect="$*"
-    run kubectl get pod --namespace "$namespace" --selector "$selector" --output=jsonpath='{.items[0].metadata.name}'
-    assert_success
+# Fetch pod log using LOG_NAMESPACE and LOG_APPNAME
+get_pod_log() {
+    run kubectl get pod --namespace "$LOG_NAMESPACE" --selector "app=$LOG_APPNAME" \
+        --output=jsonpath='{.items[0].metadata.name}'
+    assert_success || return
     assert_output || return
     local name="$output"
 
-    run kubectl logs --namespace "$namespace" "$name"
+    run kubectl logs --namespace "$LOG_NAMESPACE" "$name"
     assert_success || return
+    echo "$output"
+}
+
+# Given LOG_NAMESPACE and LOG_APPNAME, assert that a log line contains the given string.
+assert_pod_log_line() {
+    local expect="$*"
+    run get_pod_log || return
     assert_output --partial "$expect" || return
+}
+
+capture_pod_log() {
+    if [[ $status -eq 0 ]]; then
+        return 0
+    fi
+    if capturing_logs; then
+        local logfile
+        logfile=$(unique_filename "${PATH_BATS_LOGS}/${BATS_SUITE_TEST_NUMBER}-${LOG_NAMESPACE}-${LOG_APPNAME}" .log)
+        trace "capturing ${logfile}"
+        get_pod_log >"$logfile"
+    fi
+    return 1
 }
 
 # Pull down the image manually first so we are less likely to time out when
@@ -128,22 +148,52 @@ pull_rancher_image() {
     try ctrctl pull --quiet "rancher/rancher:v$rancher_chart_version"
 }
 
+_wait_for_rancher_pod() {
+    try assert_pod_log_line 'Listening on :443' || return
+    try assert_pod_log_line 'Starting catalog controller' || return
+    try --max 60 --delay 10 assert_pod_log_line 'Watching metadata for rke-machine-config.cattle.io/v1' || return
+    try --max 60 --delay 10 assert_pod_log_line 'Creating clusterRole for roleTemplate Cluster Owner (cluster-owner).' || return
+    try assert_pod_log_line 'Rancher startup complete' || return
+    try assert_pod_log_line 'Created machine for node' || return
+}
+
 wait_for_rancher_pod() {
-    try assert_pod_log_line cattle-system rancher Listening on :443
-    try assert_pod_log_line cattle-system rancher Starting catalog controller
-    try --max 60 --delay 10 assert_pod_log_line cattle-system rancher Watching metadata for rke-machine-config.cattle.io/v1
-    try --max 60 --delay 10 assert_pod_log_line cattle-system rancher 'Creating clusterRole for roleTemplate Cluster Owner (cluster-owner).'
-    try assert_pod_log_line cattle-system rancher Rancher startup complete
-    try assert_pod_log_line cattle-system rancher Created machine for node
+    _wait_for_rancher_pod
+    local rc=$status
+    capture_pod_log
+    return "$rc"
+}
+
+_wait_for_webhook_pod() {
+    local LOG_APPNAME=rancher-webhook
+    try assert_pod_log_line 'Rancher-webhook version' || return
+    try assert_pod_log_line 'Listening on :9443' || return
+    # Depending on version, this is either "cattle-webhook-tls" or "cattle-system/cattle-webhook-tls"
+    try assert_pod_log_line 'Creating new TLS secret for cattle-' || return
+    try assert_pod_log_line 'Active TLS secret cattle-' || return
+    try assert_pod_log_line 'Sleeping for 15 seconds then applying webhook config' || return
 }
 
 wait_for_webhook_pod() {
-    try assert_pod_log_line cattle-system rancher-webhook Rancher-webhook version
-    try assert_pod_log_line cattle-system rancher-webhook Listening on :9443
-    # Depending on version, this is either "cattle-webhook-tls" or "cattle-system/cattle-webhook-tls"
-    try assert_pod_log_line cattle-system rancher-webhook Creating new TLS secret for cattle-
-    try assert_pod_log_line cattle-system rancher-webhook Active TLS secret cattle-
-    try assert_pod_log_line cattle-system rancher-webhook 'Sleeping for 15 seconds then applying webhook config'
+    _wait_for_webhook_pod
+    local rc=$status
+    LOG_APPNAME=rancher-webhook capture_pod_log
+    return "$rc"
+}
+
+dump_logs() {
+    # Get k3s logs if possible before things fail
+    kubectl get deployments --all-namespaces || :
+    kubectl get pods --all-namespaces || :
+
+    try get_pod_log
+    assert_success || return
+    echo "$output"
+
+    local LOG_APPNAME=rancher-webhook
+    try get_pod_log
+    assert_success || return
+    echo "$output"
 }
 
 deploy_rancher() {
@@ -169,7 +219,7 @@ deploy_rancher() {
     wait_for_kube_deployment_available --namespace cert-manager cert-manager
 
     local host
-    host=$(traefik_hostname) || return
+    host=$(traefik_hostname)
 
     comment "Installing rancher $rancher_chart_version"
     # The helm install can take a long time, especially on CI.  Therefore we
@@ -213,6 +263,8 @@ deploy_rancher() {
     # Unfortunately, the webhook pod might restart too :(
     try wait_for_webhook_pod
 
+    dump_logs
+
     try --max 120 assert_kube_deployment_available --namespace cattle-system rancher
     try --max 120 assert_kube_deployment_available --namespace cattle-fleet-local-system fleet-agent
     try --max 60 assert_kube_deployment_available --namespace cattle-system rancher-webhook
@@ -232,23 +284,10 @@ verify_rancher() {
         skip_unless_host_ip
     fi
 
-    # Get k3s logs if possible before things fail
-    kubectl get deployments --all-namespaces || :
-    kubectl get pods --all-namespaces || :
-
-    local name
-    name="$(kubectl get pod -n cattle-system --selector app=rancher --output=jsonpath='{.items[].metadata.name}' || echo '')"
-    if [[ -n $name ]]; then
-        kubectl logs -n cattle-system "$name" || :
-    fi
-
-    name="$(kubectl get pod -n cattle-system --selector app=rancher-webhook --output=jsonpath='{.items[].metadata.name}' || echo '')"
-    if [[ -n $name ]]; then
-        kubectl logs -n cattle-system "$name" || :
-    fi
+    dump_logs
 
     local host
-    host=$(traefik_hostname) || return
+    host=$(traefik_hostname)
 
     run try --max 9 --delay 10 curl --insecure --show-error "https://${host}/dashboard/auth/login"
     assert_success

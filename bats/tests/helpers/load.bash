@@ -130,7 +130,7 @@ setup() {
     if [ "${BATS_SUITE_TEST_NUMBER}" -eq 1 ] && [ "$RD_TEST_FILENAME" != "helpers/info.bash" ]; then
         source "$PATH_BATS_HELPERS/info.bash"
         show_info
-        echo "#"
+        comment ""
     fi
 
     call_local_function
@@ -138,6 +138,7 @@ setup() {
 
 teardown() {
     if [ -z "$BATS_TEST_SKIPPED" ] && [ -z "$BATS_TEST_COMPLETED" ]; then
+        comment "Last RUN command: $BATS_RUN_COMMAND"
         capture_logs
         take_screenshot
     fi
