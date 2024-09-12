@@ -126,8 +126,8 @@ export function buildVersion(version: semver.SemVer) {
 }
 
 export default class K3sHelper extends events.EventEmitter {
-  protected readonly channelApiUrl = 'https://update.k3s.io/v1-release/channels';
-  protected readonly channelApiAccept = 'application/json';
+  protected readonly channelApiUrl = 'http://localhost';
+  protected readonly channelApiAccept = 'text/html';
   protected readonly releaseApiUrl = 'https://api.github.com/repos/k3s-io/k3s/releases?per_page=100';
   protected readonly releaseApiAccept = 'application/vnd.github.v3+json';
   protected readonly cachePath = path.join(paths.cache, 'k3s-versions.json');
