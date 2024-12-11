@@ -37,6 +37,7 @@ APPLEID
 applescript
 APPLICATIONFOLDER
 AProject
+argjson
 ARPNOMODIFY
 ARPPRODUCTICON
 ARPURLINFOABOUT
@@ -469,6 +470,7 @@ loglines
 logrus
 logz
 lovelace
+ltrimstr
 mabels
 macarm
 machinedeployment
