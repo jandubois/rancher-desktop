@@ -43,10 +43,10 @@ def resolve_test(test: str, platform: Platforms) -> Iterator[str]:
     """
     # If we can't glob the test, use it as-is.
     for test in glob.glob(test) or (test,):
-        if platform == "mac" and test == "k8s":
+        if platform == "mac" and (test == "k8s" or test == "containers"):
             # The macOS runners on CI are extra slow; for this test suite,
             # run each test individually.
-            for name in glob.glob("k8s/*.bats"):
+            for name in glob.glob(f"{test}/*.bats"):
                 yield name.removesuffix(".bats")
         else:
             yield test.removesuffix(".bats")
