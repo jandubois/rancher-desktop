@@ -50,7 +50,7 @@ function rcompareVersions(version1: string, version2: string): -1 | 0 | 1 {
 
 export class Lima implements Dependency, GitHubDependency {
   name = 'lima';
-  githubOwner = 'rancher-sandbox';
+  githubOwner = 'jandubois';
   githubRepo = 'rancher-desktop-lima';
 
   async download(context: DownloadContext): Promise<void> {
@@ -58,7 +58,7 @@ export class Lima implements Dependency, GitHubDependency {
     let platform: string = context.platform;
 
     if (platform === 'darwin') {
-      platform = `macos-13.${ process.env.M1 ? 'arm64' : 'amd64' }`;
+      platform = `macos-15.${ process.env.M1 ? 'arm64' : 'amd64' }`;
     } else {
       platform = 'linux.amd64';
     }
