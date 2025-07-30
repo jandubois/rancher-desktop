@@ -1,25 +1,27 @@
 <script lang="ts">
-import Vue from 'vue';
-export default Vue.extend({ props: { id: { type: String, default: '' } } });
+import { defineComponent } from 'vue';
+export default defineComponent({
+  name:  'nav-item',
+  props: { id: { type: String, default: '' } },
+});
 </script>
 
 <template>
   <div
+    v-bind="$attrs"
     class="nav-item"
     :data-id="id"
-    v-on="$listeners"
   >
     <div
       v-if="$slots.before"
       class="before"
     >
-      <slot name="before">
-      </slot>
+      <slot name="before" />
     </div>
     <slot name="default">
       Extensions
     </slot>
-    <slot name="after"></slot>
+    <slot name="after" />
   </div>
 </template>
 
@@ -27,9 +29,9 @@ export default Vue.extend({ props: { id: { type: String, default: '' } } });
   .nav-item {
     color: var(--body-text);
     text-decoration: none;
-    line-height: 24px;
-    padding: 7.5px 10px;
-    letter-spacing: 1.4px;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    padding: 0.5rem 0.75rem;
     display: flex;
     gap: 0.5rem;
     align-items: center;

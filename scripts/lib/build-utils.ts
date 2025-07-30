@@ -11,7 +11,7 @@ import spawn from 'cross-spawn';
 import _ from 'lodash';
 import webpack from 'webpack';
 
-import babelConfig from 'babel.config';
+import babelConfig from 'babel.config.cjs';
 
 /**
  * A promise that is resolved when the child exits.
@@ -36,7 +36,7 @@ export default {
    * Get the root directory of the repository.
    */
   get rootDir() {
-    return path.resolve(__dirname, '..', '..');
+    return path.resolve(import.meta.dirname, '..', '..');
   },
 
   get rendererSrcDir() {
@@ -82,7 +82,7 @@ export default {
 
     const child = spawn(command, args, options);
 
-    const promise: Promise<void> = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       child.on('exit', (code, signal) => {
         if (signal && signal !== 'SIGTERM') {
           reject(new Error(`Process exited with signal ${ signal }`));
@@ -128,17 +128,18 @@ export default {
         __dirname:  false,
         __filename: false,
       },
-      entry:     { background: path.resolve(this.rootDir, 'background') },
-      externals: [...Object.keys(this.packageMeta.dependencies)],
-      devtool:   this.isDevelopment ? 'source-map' : false,
-      resolve:   {
+      entry:       { background: path.resolve(this.rootDir, 'background') },
+      experiments: { outputModule: true },
+      externals:   [...Object.keys(this.packageMeta.dependencies)],
+      devtool:     this.isDevelopment ? 'source-map' : false,
+      resolve:     {
         alias:      { '@pkg': path.resolve(this.rootDir, 'pkg', 'rancher-desktop') },
         extensions: ['.ts', '.js', '.json', '.node'],
         modules:    ['node_modules'],
       },
       output: {
-        libraryTarget: 'commonjs2',
         filename:      '[name].js',
+        library:  { type: 'modern-module' },
         path:          this.appDir,
       },
       module: {
@@ -147,7 +148,7 @@ export default {
             test: /\.ts$/,
             use:  {
               loader:  'ts-loader',
-              options: { transpileOnly: this.isDevelopment },
+              options: { transpileOnly: this.isDevelopment, onlyCompileBundledFiles: true },
             },
           },
           {
@@ -192,22 +193,34 @@ export default {
       target: 'electron-preload',
       output: {
         filename: '[name].js',
+        library:  { type: 'commonjs2' },
         path:     path.join(this.rootDir, 'resources'),
       },
+      experiments: { outputModule: false },
     };
 
     const result = Object.assign({}, this.webpackConfig, overrides);
-    const rules = result.module?.rules ?? [];
-
-    const uses = rules.filter(
-      (rule): rule is webpack.RuleSetRule => typeof rule !== 'boolean' && typeof rule !== 'string',
+    const rules = (result.module?.rules ?? []).filter(
+      (rule): rule is webpack.RuleSetRule => !!rule && typeof rule === 'object',
     );
+    const tsLoader = rules.find((rule) => {
+      const { use } = rule;
 
-    const tsLoader = uses.find(u => u.loader === 'ts-loader');
+      if (!use || typeof use !== 'object' || Array.isArray(use)) {
+        return false;
+      }
 
-    if (tsLoader) {
-      tsLoader.options = _.merge({}, tsLoader.options, { compilerOptions: { noEmit: false } });
+      return use.loader === 'ts-loader';
+    });
+
+    if (!tsLoader) {
+      console.log('rules', util.inspect(rules, false, null, true));
+      throw new Error('failed to find TS loader');
+    } else if (!tsLoader.use || typeof tsLoader.use !== 'object' || Array.isArray(tsLoader.use)) {
+      throw new Error(`Unexpected TS loader config ${ util.inspect(tsLoader, false, null, true) }`);
     }
+
+    tsLoader.use.options = _.merge({}, tsLoader.use.options, { compilerOptions: { noEmit: false } });
 
     result.entry = { preload: path.resolve(this.rendererSrcDir, 'preload', 'index.ts') };
 

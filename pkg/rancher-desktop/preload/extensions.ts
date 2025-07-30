@@ -23,10 +23,10 @@ const id = Symbol('id');
  * ddClient.docker.listContainers()
  */
 interface DockerListContainersOptions {
-  all?: boolean;
-  limit?: number;
-  size?: boolean;
-  filters?: string;
+  all?:       boolean;
+  limit?:     number;
+  size?:      boolean;
+  filters?:   string;
   namespace?: string;
 }
 
@@ -35,16 +35,25 @@ interface DockerListContainersOptions {
  * ddClient.docker.listImages()
  */
 interface DockerListImagesOptions {
-  all?: boolean;
-  filters?: string;
-  digests?: boolean;
+  all?:       boolean;
+  filters?:   string;
+  digests?:   boolean;
+  namespace?: string;
+}
+
+/**
+ * DockerListVolumesOptions describes the arguments for
+ * ddClient.docker.rdListVolumes()
+ */
+interface DockerListVolumesOptions {
+  filters?:   string;
   namespace?: string;
 }
 
 /** execProcess holds the state associated with a v1.ExecProcess. */
 interface execProcess {
   /** The identifier for this process. */
-  [id]: string;
+  [id]:     string;
   [stdout]: string;
   [stderr]: string;
   [stream]: v1.ExecStreamOptions;
@@ -271,7 +280,7 @@ ipcRenderer.on('extensions/spawn/output', (event, id, data) => {
           return;
         }
         try {
-          process[stream].onOutput?.({ [key]: line } as {stdout:string} | {stderr:string});
+          process[stream].onOutput?.({ [key]: line } as { stdout: string } | { stderr: string });
         } catch (ex) {
           console.error(ex);
         }
@@ -304,7 +313,7 @@ ipcRenderer.on('extensions/spawn/close', (_, id, returnValue) => {
 // During the nuxt removal, import/namespace started failing
 
 class Client implements v1.DockerDesktopClient {
-  constructor(info: {arch: string, hostname: string}) {
+  constructor(info: { arch: string, hostname: string }) {
     Object.assign(this.host, info);
   }
 
@@ -551,6 +560,38 @@ class Client implements v1.DockerDesktopClient {
           VirtualSize: i.VirtualSize ?? i.Size,
           Labels:      i.Config?.Labels ?? {},
           Containers:  isNaN(containers) ? -1 : containers,
+        };
+      });
+    },
+    rdListVolumes: async(options: DockerListVolumesOptions = {}) => {
+      const lsArgs = ['ls', '--format={{json .}}'];
+
+      if (options.filters !== undefined) {
+        lsArgs.push(`--filter=${ options.filters }`);
+      }
+      if (options.namespace) {
+        lsArgs.unshift(`--namespace=${ options.namespace }`);
+      }
+
+      const lsResult = await this.docker.cli.exec('volume', lsArgs);
+
+      if (lsResult.code || lsResult.signal) {
+        throw new Error(`failed to list volumes: ${ lsResult.stderr }`);
+      }
+
+      const lsVolumes = lsResult.parseJsonLines();
+
+      return lsVolumes.map((v) => {
+        return {
+          Name:       v.Name,
+          Driver:     v.Driver,
+          Mountpoint: v.Mountpoint,
+          Labels:     v.Labels ?? {},
+          Scope:      v.Scope,
+          Options:    v.Options ?? {},
+          UsageData:  v.UsageData ?? {},
+          CreatedAt:  v.CreatedAt,
+          Created:    v.CreatedAt ? Date.parse(v.CreatedAt).valueOf() : 0,
         };
       });
     },
