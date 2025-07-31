@@ -206,12 +206,14 @@ export default class LimaKubernetesBackend extends events.EventEmitter implement
         () => this.vm.execCommand({ capture: true, root: true }, 'cat', '/etc/rancher/k3s/k3s.yaml'),
       ));
 
-    const client = this.client = kubeClient?.() || new KubeClient();
+    this.client = kubeClient?.() || new KubeClient();
 
     await this.progressTracker.action(
       'Waiting for services',
       50,
       async() => {
+        const client = this.client!;
+
         await client.waitForServiceWatcher();
         client.on('service-changed', (services) => {
           this.emit('service-changed', services);
@@ -231,15 +233,15 @@ export default class LimaKubernetesBackend extends events.EventEmitter implement
       await this.progressTracker.action(
         'Removing Traefik',
         50,
-        this.k3sHelper.uninstallHelmChart(client, 'traefik'));
+        this.k3sHelper.uninstallHelmChart(this.client, 'traefik'));
     }
     if (!this.cfg?.experimental?.kubernetes?.options?.spinkube) {
       await this.progressTracker.action(
         'Removing spinkube operator',
         50,
         Promise.all([
-          this.k3sHelper.uninstallHelmChart(client, MANIFEST_CERT_MANAGER),
-          this.k3sHelper.uninstallHelmChart(client, MANIFEST_SPIN_OPERATOR),
+          this.k3sHelper.uninstallHelmChart(this.client, MANIFEST_CERT_MANAGER),
+          this.k3sHelper.uninstallHelmChart(this.client, MANIFEST_SPIN_OPERATOR),
         ]));
     }
 
@@ -248,7 +250,11 @@ export default class LimaKubernetesBackend extends events.EventEmitter implement
       await this.progressTracker.action(
         'Waiting for nodes',
         100,
-        client.waitForReadyNodes());
+        async() => {
+          if (!await this.client?.waitForReadyNodes()) {
+            throw new Error('No client');
+          }
+        });
     } else {
       await this.progressTracker.action(
         'Skipping node checks, flannel is disabled',
