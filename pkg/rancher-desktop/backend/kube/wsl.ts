@@ -304,7 +304,11 @@ export default class WSLKubernetesBackend extends events.EventEmitter implements
       await this.progressTracker.action(
         'Waiting for nodes',
         100,
-        client.waitForReadyNodes());
+        async() => {
+          if (!await client.waitForReadyNodes()) {
+            throw new Error('Failed to wait for nodes');
+          }
+        });
     } else {
       await this.progressTracker.action(
         'Skipping node checks, flannel is disabled',
