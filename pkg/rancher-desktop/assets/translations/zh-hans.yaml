@@ -465,6 +465,7 @@ kubernetesPrefs:
     recommendedVersions: 推荐版本
 
 locale:
+  de: 德语
   # @reason locale name for English
   en-us: 英语
   # @reason locale name for Simplified Chinese - using the Chinese name per rules for locale names

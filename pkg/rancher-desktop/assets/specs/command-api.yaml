@@ -597,7 +597,7 @@ components:
                   x-rd-usage: terminate app when the main window is closed
             locale:
               type: string
-              enum: [none, en-us, zh-hans]
+              enum: [none, de, en-us, zh-hans]
               x-rd-usage: set the UI language
             theme:
               type: string

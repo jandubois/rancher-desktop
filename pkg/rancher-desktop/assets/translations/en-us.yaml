@@ -8,6 +8,7 @@ generic:
   rerun: Rerun
   search: Search
 locale:
+  de: German
   en-us: English
   zh-hans: Chinese (Simplified)
 nav:
