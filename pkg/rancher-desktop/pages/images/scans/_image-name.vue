@@ -115,7 +115,7 @@ export default {
   mounted() {
     this.$store.dispatch(
       'page/setHeader',
-      { title: this.t('images.scan.title', { image: this.$route.params.image }, true) },
+      { titleKey: 'images.scan.title', titleArgs: { image: this.$route.params.image } },
     );
 
     ipcRenderer.on('ok:images-process-output', (_event, data) => {

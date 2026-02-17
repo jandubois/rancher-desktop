@@ -324,6 +324,7 @@ portForwarding:
   sortableTables:
     noRows: There are no port forwarding entries to show
 general:
+  navLabel: General
   title: Welcome to Rancher Desktop by SUSE
   description: Rancher Desktop provides Kubernetes and image management through the use of a desktop application.
 about:
@@ -4913,6 +4914,7 @@ troubleshooting:
 ### Diagnostics Page
 ##############################
 diagnostics:
+  title: Diagnostics
   results:
     muted:
       icon: icon-search
@@ -4948,6 +4950,22 @@ extensions:
 ### Preferences Page
 ##############################
 preferences:
+  nav:
+    application: Application
+    virtualMachine: Virtual Machine
+    wsl: WSL
+    containerEngine: Container Engine
+    kubernetes: Kubernetes
+  tabs:
+    general: General
+    behavior: Behavior
+    environment: Environment
+    hardware: Hardware
+    volumes: Volumes
+    emulation: Emulation
+    integrations: Integrations
+    proxy: Proxy
+    allowedImages: Allowed Images
   actions:
     banner:
       reset: Kubernetes will reset after applying changes.

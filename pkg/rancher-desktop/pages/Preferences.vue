@@ -28,8 +28,8 @@ export default defineComponent({
     ...mapGetters('preferences', ['getPreferences', 'hasError']),
     ...mapGetters('transientSettings', ['getCurrentNavItem']),
     ...mapState('credentials', ['credentials']),
-    navItems(): string[] {
-      return preferencesNavItems.map(({ name }) => name);
+    navItems(): { name: string; labelKey: string }[] {
+      return preferencesNavItems.map(({ name, labelKey }) => ({ name, labelKey }));
     },
   },
   async beforeMount() {
@@ -126,9 +126,10 @@ export default defineComponent({
 
       if (direction) {
         const dir = (direction === 'forward' ? 1 : -1);
-        const idx = (this.navItems.length + this.navItems.indexOf(this.getCurrentNavItem) + dir) % this.navItems.length;
+        const currentIdx = this.navItems.findIndex(item => item.name === this.getCurrentNavItem);
+        const idx = (this.navItems.length + currentIdx + dir) % this.navItems.length;
 
-        await this.commitNavItem(this.navItems[idx]);
+        await this.commitNavItem(this.navItems[idx].name);
       }
     },
   },

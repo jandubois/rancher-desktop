@@ -52,10 +52,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch('page/setHeader', {
-      title:       this.t('marketplace.title'),
-      description: '',
-    });
+    this.$store.dispatch('page/setHeader', { titleKey: 'marketplace.title' });
   },
   methods: {
     tabActivate(tab) {
