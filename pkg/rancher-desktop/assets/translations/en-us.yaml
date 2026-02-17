@@ -118,7 +118,90 @@ nav:
     accountAndKeys: Account & API Keys
     logOut: Log Out
 
+##############################
+### Application Menu (main process)
+##############################
+mainMenu:
+  edit:
+    label: '&Edit'
+    undo: '&Undo'
+    redo: '&Redo'
+    cut: 'Cu&t'
+    copy: '&Copy'
+    paste: '&Paste'
+    delete: 'De&lete'
+    selectAll: 'Select &All'
+  view:
+    label: '&View'
+    reload: '&Reload'
+    forceReload: '&Force Reload'
+    toggleDevTools: 'Toggle &Developer Tools'
+    actualSize: '&Actual Size'
+    zoomIn: 'Zoom &In'
+    zoomOut: 'Zoom &Out'
+    toggleFullScreen: 'Toggle Full &Screen'
+  help:
+    label: '&Help'
+    about: '&About {appName}'
+    help: '{appName} &Help'
+    getHelp: 'Get &Help'
+    fileABug: 'File a &Bug'
+    projectPage: '&Project Page'
+    discuss: '&Discuss'
+  file:
+    label: '&File'
+    close: Close
+    exit: 'E&xit'
+  window:
+    label: '&Window'
+    minimize: Minimize
+    zoom: Zoom
+    front: Bring All to Front
+  preferences: Preferences
+  about: 'About {appName}'
+  services: Services
+  hide: 'Hide {appName}'
+  hideOthers: Hide Others
+  showAll: Show All
+  quit: 'Quit {appName}'
+
+##############################
+### System Tray
+##############################
+tray:
+  tooltip: Rancher Desktop
+  state:
+    stopped: Kubernetes is stopped
+    starting: Kubernetes is starting
+    started: Kubernetes is running
+    stopping: Kubernetes is shutting down
+    error: Kubernetes has encountered an error
+    disabled: Kubernetes is disabled
+  openMainWindow: Open main window
+  openPreferences: Open preferences dialog
+  openDashboard: Open cluster dashboard
+  kubernetesContexts: Kubernetes Contexts
+  quitRancherDesktop: Quit Rancher Desktop
+  containerEngine: "Container engine: {name}"
+  networkStatus: "Network status: {status}"
+  noneFound: None found
+
+##############################
+### Image Operations (main process)
+##############################
+imageEvents:
+  deleteError: "Error trying to delete image {name} ({id}):\n\n {error}"
+  deleteBatchError: "Error trying to delete images {ids}"
+  buildTitle: Pick the build directory
+  buildMessage: Please select the Dockerfile to use (could have a different name)
+  scanError: "Error trying to scan {name}:\n\n {error}"
+  pushError: "Error trying to push {name}:\n\n {error}"
+
 product:
+  networkStatusValues:
+    "checking...": "checking..."
+    online: online
+    offline: offline
   apps: Apps & Marketplace
   auth: Users & Authentication
   backup: Rancher Backups
