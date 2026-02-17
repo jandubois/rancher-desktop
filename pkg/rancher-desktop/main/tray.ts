@@ -12,6 +12,7 @@ import { VMBackend } from '@pkg/backend/backend';
 import { State } from '@pkg/backend/k8s';
 import * as kubeconfig from '@pkg/backend/kubeconfig';
 import { Settings } from '@pkg/config/settings';
+import { onLocaleChange, t } from '@pkg/main/i18n';
 import { getIpcMainProxy } from '@pkg/main/ipcMain';
 import mainEvents from '@pkg/main/mainEvents';
 import { checkConnectivity } from '@pkg/main/networking';
@@ -44,14 +45,14 @@ export class Tray {
     {
       id:      'state',
       enabled: false,
-      label:   'Kubernetes is starting',
+      label:   t('tray.state.starting'),
       type:    'normal',
       icon:    path.join(paths.resources, 'icons', 'kubernetes-icon-black.png'),
     },
     {
       id:      'network-status',
       enabled: false,
-      label:   `Network status: ${ this.currentNetworkStatus }`,
+      label:   t('tray.networkStatus', { status: t(`product.networkStatusValues.${ this.currentNetworkStatus }`) }),
       type:    'normal',
       icon:    '',
     },
@@ -65,7 +66,7 @@ export class Tray {
     { type: 'separator' },
     {
       id:    'main',
-      label: 'Open main window',
+      label: t('tray.openMainWindow'),
       type:  'normal',
       click() {
         openMain();
@@ -73,28 +74,28 @@ export class Tray {
     },
     {
       id:    'preferences',
-      label: 'Open preferences dialog',
+      label: t('tray.openPreferences'),
       type:  'normal',
       click: openPreferences,
     },
     {
       id:      'dashboard',
       enabled: false,
-      label:   'Open cluster dashboard',
+      label:   t('tray.openDashboard'),
       type:    'normal',
       click:   openDashboard,
     },
     { type: 'separator' },
     {
       id:      'contexts',
-      label:   'Kubernetes Contexts',
+      label:   t('tray.kubernetesContexts'),
       type:    'submenu',
       submenu: [],
     },
     { type: 'separator' },
     {
       id:    'quit',
-      label: 'Quit Rancher Desktop',
+      label: t('tray.quitRancherDesktop'),
       role:  'quit',
       type:  'normal',
     },
@@ -165,11 +166,11 @@ export class Tray {
   private constructor(settings: Settings) {
     this.settings = settings;
     this.trayMenu = new Electron.Tray(this.trayIconSet.starting);
-    this.trayMenu.setToolTip('Rancher Desktop');
+    this.trayMenu.setToolTip(t('tray.tooltip'));
     const menuItem = this.contextMenuItems.find(item => item.id === 'container-engine');
 
     if (menuItem) {
-      menuItem.label = `Container engine: ${ this.settings.containerEngine.name }`;
+      menuItem.label = t('tray.containerEngine', { name: this.settings.containerEngine.name });
     }
 
     // Discover k8s contexts
@@ -197,6 +198,9 @@ export class Tray {
     mainEvents.emit('backend-locked-check');
     mainEvents.on('k8s-check-state', this.k8sStateChangedEvent);
     mainEvents.on('settings-update', this.settingsUpdateEvent);
+
+    // Refresh labels after the i18n module has loaded the new locale.
+    onLocaleChange(() => this.updateMenu());
 
     // If the network connectivity diagnostic changes results, update it here.
     mainEvents.on('diagnostics-event', payload => {
@@ -324,12 +328,12 @@ export class Tray {
     }
 
     const labels = {
-      [State.STOPPED]:  'Kubernetes is stopped',
-      [State.STARTING]: 'Kubernetes is starting',
-      [State.STARTED]:  'Kubernetes is running',
-      [State.STOPPING]: 'Kubernetes is shutting down',
-      [State.ERROR]:    'Kubernetes has encountered an error',
-      [State.DISABLED]: 'Kubernetes is disabled',
+      [State.STOPPED]:  t('tray.state.stopped'),
+      [State.STARTING]: t('tray.state.starting'),
+      [State.STARTED]:  t('tray.state.started'),
+      [State.STOPPING]: t('tray.state.stopping'),
+      [State.ERROR]:    t('tray.state.error'),
+      [State.DISABLED]: t('tray.state.disabled'),
     };
 
     let icon = path.join(paths.resources, 'icons', 'kubernetes-icon-black.png');
@@ -363,14 +367,29 @@ export class Tray {
     if (containerEngineMenu) {
       const containerEngine = this.settings.containerEngine.name;
 
-      containerEngineMenu.label = containerEngine === 'containerd' ? containerEngine : `dockerd (${ containerEngine })`;
+      containerEngineMenu.label = t('tray.containerEngine', { name: containerEngine === 'containerd' ? containerEngine : `dockerd (${ containerEngine })` });
       containerEngineMenu.icon = containerEngine === 'containerd' ? path.join(paths.resources, 'icons', 'containerd-icon-color.png') : '';
     }
     const networkStatusItem = this.contextMenuItems.find(item => item.id === 'network-status');
 
     if (networkStatusItem) {
-      networkStatusItem.label = `Network status: ${ this.currentNetworkStatus }`;
+      networkStatusItem.label = t('tray.networkStatus', { status: t(`product.networkStatusValues.${ this.currentNetworkStatus }`) });
     }
+
+    // Refresh all translatable labels so they update on locale changes.
+    const menuLabels: Record<string, string> = {
+      'main':        t('tray.openMainWindow'),
+      'preferences': t('tray.openPreferences'),
+      'dashboard':   t('tray.openDashboard'),
+      'contexts':    t('tray.kubernetesContexts'),
+      'quit':        t('tray.quitRancherDesktop'),
+    };
+
+    this.contextMenuItems
+      .filter(item => item.id && item.id in menuLabels)
+      .forEach((item) => {
+        item.label = menuLabels[item.id!];
+      });
 
     this.contextMenuItems
       .filter(item => item.id && ['preferences', 'dashboard', 'contexts', 'quit'].includes(item.id))
@@ -409,7 +428,7 @@ export class Tray {
       return;
     }
     if (ctxs.length === 0) {
-      contextsMenu.submenu = [{ label: 'None found' }];
+      contextsMenu.submenu = [{ label: t('tray.noneFound') }];
     } else {
       contextsMenu.submenu = ctxs.map(val => ({
         label:   val.name,
