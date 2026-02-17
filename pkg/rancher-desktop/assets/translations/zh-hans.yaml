@@ -1,6 +1,5 @@
 action:
   refresh: 刷新
-
 allowedImages:
   alert: 镜像名称必须匹配"允许的镜像"偏好设置中定义的某个模式。
   enable: 启用
@@ -9,10 +8,8 @@ allowedImages:
   label: 允许的镜像模式
   patterns:
     placeholder: 输入镜像模式
-
 app:
   name: Rancher Desktop
-
 application:
   behavior:
     autoStart:
@@ -60,7 +57,6 @@ application:
   locale:
     disclaimer: 翻译由社区和 AI 工具提供。英语为规范语言。如发现翻译问题，请在 GitHub 上报告。
     legendText: 语言
-
 asyncButton:
   activate:
     # @reason 异步按钮：激活操作，动词"激活"
@@ -233,7 +229,6 @@ asyncButton:
     success: 正在升级
     # @reason "Starting…" - in-progress state before upgrade completes
     waiting: 正在启动&hellip;
-
 containerEngine:
   label: 容器引擎
   options:
@@ -247,8 +242,8 @@ containerEngine:
       description: Docker API；与 Docker CLI 配合使用。
       # @reason product name, kept in English per rules
       label: dockerd (moby)
-
 containerInfo:
+  fallbackTitle: 容器信息
   logs: 日志
   search:
     ariaLabel: 在日志中搜索
@@ -256,7 +251,7 @@ containerInfo:
     nextMatch: 下一个匹配
     placeholder: 搜索日志...
     previousMatch: 上一个匹配
-
+  shell: Shell
 containers:
   manage:
     table:
@@ -267,11 +262,12 @@ containers:
         started: 运行时间
         state: 状态
   title: 容器
-
 denyRoot:
   message: Rancher Desktop 不能以 root 权限运行。请以普通用户身份重新运行。
   title: 无法以 Root 身份运行
-
+deploymentProfile:
+  noVersion: 无效的部署文件 {path}：未指定版本。请添加版本字段使其有效（当前版本为 {version}）。
+  noVersionRegistry: 无效的部署：未在 {path} 指定版本。请添加版本字段使其有效（当前版本为 {version}）。
 diagnostics:
   failedCount: '{count} 项失败，{muted} 项已静音'
   lastRun: 上次运行：
@@ -290,7 +286,6 @@ diagnostics:
     mute: 静音
     name: 名称
   title: 诊断
-
 dialog:
   bridgedNetwork:
     noNetwork: 共享网络也不可用。只能通过端口转发访问主机网络。
@@ -302,12 +297,12 @@ dialog:
     title: 确认迁移
   invalidK8sVersion:
     detail: 回退到建议的最低升级版本 {version}
+    message: 请求的 Kubernetes 版本 '{version}' 不是受支持的版本。
     title: 无效的 Kubernetes 版本
   networkFailure:
     detail: 请获取 {range} 范围内的版本并安装到 '{path}'
     message: 离线模式下无法下载兼容版本的 kubectl
     title: 网络故障
-
 extensions:
   icon: icon-extension
   installed:
@@ -323,7 +318,6 @@ extensions:
   view:
     emptyState:
       heading: 扩展已移除
-
 firstRun:
   enableKubernetes: 启用 Kubernetes
   kubernetesVersion:
@@ -333,7 +327,6 @@ firstRun:
     recommendedVersions: 推荐版本
   ok: 确定
   welcome: 欢迎使用 SUSE Rancher Desktop
-
 general:
   description: Rancher Desktop 通过桌面应用程序提供 Kubernetes 和镜像管理功能。
   homepage: 主页
@@ -342,7 +335,6 @@ general:
   projectDiscussions: 项目讨论：<a href="https://slack.rancher.io/">Rancher Users</a> Slack 中的 <b>#rancher-desktop</b>
   projectLinks: 项目链接：
   title: 欢迎使用 SUSE Rancher Desktop
-
 generic:
   apply: 应用
   cancel: 取消
@@ -352,7 +344,6 @@ generic:
   ok: 确定
   rerun: 重新运行
   search: 搜索
-
 imageEvents:
   buildMessage: 请选择要使用的 Dockerfile（可能使用了其他名称）
   buildTitle: 选择构建目录
@@ -360,7 +351,6 @@ imageEvents:
   deleteError: 尝试删除镜像 {name} ({id}) 时出错：\n\n {error}
   pushError: 尝试推送 {name} 时出错：\n\n {error}
   scanError: 尝试扫描 {name} 时出错：\n\n {error}
-
 images:
   action:
     add: 添加镜像
@@ -435,16 +425,14 @@ images:
     imagesUnready: 正在等待镜像管理器就绪
     unknown: 错误：未知状态，请重新加载。
   title: Images
-
 integrations:
   windows:
     description: 将 Rancher Desktop 的 Kubernetes 配置和 Docker 套接字暴露给 Windows Subsystem for Linux (WSL) 发行版
-
 kubernetesError:
   context: 上下文：
   lastCommand: 上次运行的命令：
   logLines: 最近的一些<a href="#" data-action="showLogs">日志文件</a>行：
-
+  title: '{appName} 错误'
 kubernetesPrefs:
   kubernetes:
     label: 启用 Kubernetes
@@ -452,9 +440,7 @@ kubernetesPrefs:
   options:
     legendText: 选项
     spinkube: 安装 Spin Operator
-    spinkubeWarningLink: WebAssembly
-    spinkubeWarningPrefix: Spin Operator 需要启用
-    spinkubeWarningSuffix: 。
+    spinkubeWarning: Spin Operator 需要启用<a href="#" data-navigate="Container Engine,general">WebAssembly</a>。
     traefik: 启用 Traefik
   port:
     legendText: Kubernetes 端口
@@ -463,13 +449,12 @@ kubernetesPrefs:
     legendTextCached: Kubernetes 版本（仅缓存版本）
     otherVersions: 其他版本
     recommendedVersions: 推荐版本
-
 locale:
+  de: 德语
   # @reason locale name for English
   en-us: 英语
   # @reason locale name for Simplified Chinese - using the Chinese name per rules for locale names
   zh-hans: 简体中文
-
 mainMenu:
   about: 关于 {appName}
   edit:
@@ -513,7 +498,6 @@ mainMenu:
     label: 窗口(&W)
     minimize: 最小化
     zoom: 缩放
-
 marketplace:
   labels:
     install: 安装
@@ -532,12 +516,10 @@ marketplace:
     catalog: 目录
     installed: 已安装
   title: 扩展
-
 nav:
   userMenu:
     clusterDashboard: 集群仪表板
     preferences: 偏好设置
-
 pathManagement:
   label: 配置 PATH
   options:
@@ -548,10 +530,9 @@ pathManagement:
       description: Rancher Desktop 会自动编辑您的 shell 配置文件。请重新启动所有已打开的 shell 以使更改生效。
       label: 自动
   tooltip: Rancher Desktop 附带 kubectl、nerdctl、helm 和 docker 等工具。要使用这些工具，<code>$HOME/.rd/bin</code> 必须在您的 PATH 中。
-
 portForwarding:
+  includeKubernetesServices: 包含 Kubernetes 服务
   title: 端口转发
-
 preferences:
   actions:
     banner:
@@ -593,7 +574,6 @@ preferences:
     integrations: 集成
     proxy: 代理
     volumes: 卷
-
 preferencesWindow:
   close:
     detail: 有未应用的偏好设置更改。所有未保存的偏好设置将丢失。
@@ -601,7 +581,6 @@ preferencesWindow:
     message: 关闭偏好设置而不应用？
     title: Rancher Desktop - 关闭偏好设置
   title: Rancher Desktop - 偏好设置
-
 prefs:
   experimental: 实验性
   # @reason macOS version requirement for arm64; Ventura is proper noun kept as-is
@@ -612,7 +591,6 @@ prefs:
   onlyWithVZ_arm64: 此设置需要使用 VZ 仿真模式。VZ 仅在 macOS 13.3（Ventura）或更高版本上可用。
   # @reason VZ emulation mode requirement for x64; same pattern
   onlyWithVZ_x64: 此设置需要使用 VZ 仿真模式。VZ 仅在 macOS 13.0（Ventura）或更高版本上可用。
-
 product:
   containerEngine:
     abbreviation: CE
@@ -629,7 +607,6 @@ product:
     online: 在线
   version: 版本
   versionChecking: (检查中...)
-
 progress:
   askingPermission: 正在请求以管理员身份运行任务的权限
   bundlingCertificates: 正在打包证书
@@ -704,7 +681,6 @@ progress:
   waitingForNodes: 正在等待节点
   waitingForServices: 正在等待服务
   writingK3sConfiguration: 正在写入 K3s 配置
-
 snapshots:
   action:
     create: 创建快照
@@ -790,7 +766,6 @@ snapshots:
       success: 已还原 '<b>'{snapshot}'</b>'
     when: ' 于 {time}'
   title: 快照
-
 sortableTable:
   actionAvailability:
     selected: 已选择 {actionable} 项
@@ -817,7 +792,6 @@ sortableTable:
     groupBy: 分组依据
     noFilter: 此列无法用于过滤
     show: 显示
-
 sudoPrompt:
   alwaysRunWithout: 始终在无管理员权限的情况下运行
   buttonText: 确定
@@ -836,15 +810,12 @@ sudoPrompt:
       # @reason short title for networking sudo prompt item
       title: 配置网络
   title: 需要管理员权限
-
 systemPreferences:
   cpus: CPU 数量
   memory: 内存 (GB)
-
 telemetryOptIn:
   fineprint: 发送匿名使用信息、错误报告等，帮助改进 Rancher Desktop。您的数据不会与任何第三方共享，也不会包含您所部署的具体资源或端点信息。
   label: 允许收集匿名统计数据，帮助我们改进 Rancher Desktop
-
 tray:
   containerEngine: 容器引擎：{name}
   kubernetesContexts: Kubernetes 上下文
@@ -862,7 +833,6 @@ tray:
     stopped: Kubernetes 已停止
     stopping: Kubernetes 正在关闭
   tooltip: Rancher Desktop
-
 troubleshooting:
   debugMode: 启用调试模式
   general:
@@ -894,13 +864,11 @@ troubleshooting:
       title: 重置 Kubernetes
   needHelp: 仍有问题？请在 <a href="https://slack.rancher.io/">Rancher Users Slack</a> 的 <b>#rancher-desktop</b> 频道发起讨论，或<a href="https://github.com/rancher-sandbox/rancher-desktop/issues">报告问题</a>。
   title: 故障排除
-
 unmetPrerequisites:
   action: 请确保满足所有前提条件后重试。Rancher Desktop 将立即关闭。
   buttonText: 确定
   message: Rancher Desktop 无法启动，因为缺少必要条件或配置不正确：
   title: Rancher Desktop 无法启动
-
 updateStatus:
   applyingUpdate: 正在应用更新...
   available: 版本 {version} 的更新可用
@@ -911,12 +879,10 @@ updateStatus:
   restartNow: 立即重启
   restartToApply: 重启应用程序以应用更新。
   unsupported:
-    documentationLink: 安装文档
     message: Rancher Desktop 有新版本可用，但您的系统不支持该版本。
-    seeDocumentation: 如需了解更多信息，请参阅
+    seeDocumentation: '如需了解更多信息，请参阅<a href="https://docs.rancherdesktop.io/getting-started/installation">安装文档</a>。'
     title: 不支持最新版本
   updateAvailable: 有可用更新
-
 validation:
   cannotDecrease: 无法将"{field}"从 {from} 减小到 {to}
   cannotEnableWasmClassic: 无法在 moby 经典存储模式下启用 WebAssembly。
@@ -927,6 +893,7 @@ validation:
   fieldLocked: 字段"{field}"已锁定
   invalidImageReference: '{field}："{pattern}"不是有效的镜像引用'
   invalidMapping: '{field}："{value}"不是有效的映射'
+  invalidNoproxyEntries: '字段"{field}"包含无效条目（必须为 IP 地址、CIDR 子网或域名）："{entries}"'
   invalidName: '{field}："{name}"是无效的名称'
   invalidPageName: '{field}："{value}"不是偏好设置对话框的有效页面名称'
   invalidTabName: '{field}：标签页名称"{tabName}"不是"{page}"偏好设置页面的有效标签页名称'
@@ -950,7 +917,6 @@ validation:
   shouldBeSimple: 设置"{field}"应为简单值，但得到 <{value}>。
   vzArmMacOs: 在 ARM 上将 {field} 设置为"{vmType}"需要 macOS 13.3 (Ventura) 或更高版本。
   vzIntelMacOs: 在 Intel 上将 {field} 设置为"{vmType}"需要 macOS 13.0 (Ventura) 或更高版本。
-
 virtualMachine:
   mount:
     type:
@@ -1039,12 +1005,13 @@ virtualMachine:
   useRosetta:
     label: 启用 Rosetta 支持
     legend: VZ 选项
-
 volumes:
   files:
+    available: 可用
     checkError: 检查卷状态时出错
     listError: 列出文件时出错：{error}
     loading: 正在加载卷文件...
+    notFound: 未找到
     table:
       header:
         modified: 修改时间
@@ -1066,7 +1033,6 @@ volumes:
         browse: 浏览文件
         delete: 删除
   title: 卷
-
 webAssembly:
   description: 启用实验性 WebAssembly 功能前请先阅读文档！
   enabled: 已启用
