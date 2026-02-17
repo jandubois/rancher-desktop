@@ -61,9 +61,9 @@ export default {
     this.$store.dispatch(
       'page/setHeader',
       {
-        title:       this.t('general.title'),
-        description: this.t('general.description'),
-        icon:        'icon icon-rancher-desktop',
+        titleKey:       'general.title',
+        descriptionKey: 'general.description',
+        icon:           'icon icon-rancher-desktop',
       },
     );
     ipcRenderer.on('settings-update', this.onSettingsUpdate);

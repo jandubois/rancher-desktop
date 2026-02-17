@@ -110,7 +110,7 @@ export default {
   mounted() {
     this.$store.dispatch(
       'page/setHeader',
-      { title: this.t('troubleshooting.title') },
+      { titleKey: 'troubleshooting.title' },
     );
     ipcRenderer.on('k8s-check-state', (_, newState) => {
       this.$data.state = newState;

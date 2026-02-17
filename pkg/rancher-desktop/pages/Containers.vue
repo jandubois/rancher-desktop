@@ -298,10 +298,7 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.$store.dispatch('page/setHeader', {
-      title:       this.t('containers.title'),
-      description: '',
-    });
+    this.$store.dispatch('page/setHeader', { titleKey: 'containers.title' });
 
     ipcRenderer.on('settings-read', (event, settings) => {
       this.settings = settings;

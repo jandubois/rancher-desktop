@@ -211,7 +211,7 @@ export default defineComponent({
     }
 
     this.$store.dispatch('page/setHeader', {
-      title:       this.t('volumes.files.title'),
+      titleKey:    'volumes.files.title',
       description: this.volumeName,
     });
 
