@@ -24,9 +24,10 @@ export default {
     '<rootDir>/screenshots',
   ],
   moduleNameMapper: {
-    '\\.css$':       '<rootDir>/pkg/rancher-desktop/config/emptyStubForJSLinter.js',
-    '^@pkg/assets/': '<rootDir>/pkg/rancher-desktop/config/emptyStubForJSLinter.js',
-    '^@pkg/(.*)$':   '<rootDir>/pkg/rancher-desktop/$1',
+    '\\.css$':          '<rootDir>/pkg/rancher-desktop/config/emptyStubForJSLinter.js',
+    '^@pkg/assets/':    '<rootDir>/pkg/rancher-desktop/config/emptyStubForJSLinter.js',
+    '^@pkg/main/i18n$': '<rootDir>/pkg/rancher-desktop/main/__mocks__/i18n.ts',
+    '^@pkg/(.*)$':      '<rootDir>/pkg/rancher-desktop/$1',
   },
   setupFiles: [
     '<rootDir>/pkg/rancher-desktop/utils/testUtils/setupVue.ts',

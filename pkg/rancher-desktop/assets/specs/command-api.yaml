@@ -595,6 +595,13 @@ components:
                 quitOnClose:
                   type: boolean
                   x-rd-usage: terminate app when the main window is closed
+            locale:
+              type: string
+              # Keep in sync with meta/locales.yaml and settingsValidator.ts;
+              # run `i18n-report manifest` to cross-validate.
+              # Add this check to CI to catch desynchronization automatically.
+              enum: [none, en-us, zh-hans]
+              x-rd-usage: set the UI language
             theme:
               type: string
               enum: [system, light, dark]
