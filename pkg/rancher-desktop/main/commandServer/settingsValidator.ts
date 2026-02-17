@@ -15,6 +15,7 @@ import {
   Settings,
   VMType,
 } from '@pkg/config/settings';
+import { availableLocales } from '@pkg/main/i18n';
 import { NavItemName, navItemNames, TransientSettings } from '@pkg/config/transientSettings';
 import { PathManagementStrategy } from '@pkg/integrations/pathManager';
 import { parseImageReference, validateImageName, validateImageTag } from '@pkg/utils/dockerUtils';
@@ -98,6 +99,7 @@ export default class SettingsValidator {
         autoStart:              this.checkBoolean,
         startInBackground:      this.checkBoolean,
         hideNotificationIcon:   this.checkBoolean,
+        locale:                 this.checkEnum('none', ...availableLocales),
         window:                 { quitOnClose: this.checkBoolean },
         theme:                  this.checkEnum('system', 'light', 'dark'),
       },

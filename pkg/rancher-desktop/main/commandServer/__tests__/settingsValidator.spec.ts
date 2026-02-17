@@ -78,6 +78,7 @@ describe('SettingsValidator', () => {
     // Special fields that cannot be checked here; this includes enums and maps.
     const specialFields = [
       ['application', 'pathManagementStrategy'],
+      ['application', 'locale'],
       ['application', 'theme'],
       ['containerEngine', 'allowedImages', 'locked'],
       ['containerEngine', 'mobyStorageDriver'],
@@ -461,6 +462,40 @@ describe('SettingsValidator', () => {
         errors:       [`Invalid value for "application.theme": <"invalid">; must be one of ["system","light","dark"]`],
         isFatal:      true,
       });
+    });
+  });
+
+  describe('application.locale', () => {
+    it('should accept valid locales', () => {
+      const [needToUpdate, errors] = subject.validateSettings({
+        ...cfg,
+        application: { ...cfg.application, locale: 'en-us' },
+      }, { application: { locale: 'zh-hans' } });
+
+      expect({ needToUpdate, errors }).toEqual({
+        needToUpdate: true,
+        errors:       [],
+      });
+    });
+
+    it('should accept no-op changes', () => {
+      const [needToUpdate, errors] = subject.validateSettings(cfg,
+        { application: { locale: 'none' } });
+
+      expect({ needToUpdate, errors }).toEqual({
+        needToUpdate: false,
+        errors:       [],
+      });
+    });
+
+    it('should reject invalid values', () => {
+      const [needToUpdate, errors, isFatal] = subject.validateSettings(cfg,
+        { application: { locale: 'invalid' } });
+
+      expect(needToUpdate).toBe(false);
+      expect(isFatal).toBe(true);
+      expect(errors).toHaveLength(1);
+      expect(errors[0]).toContain('Invalid value for "application.locale"');
     });
   });
 

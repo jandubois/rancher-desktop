@@ -4,10 +4,9 @@ import en from '@pkg/assets/translations/en-us.yaml';
 import { LOCALE } from '@pkg/config/cookies';
 import { getProduct, getVendor } from '@pkg/config/private-label';
 import { get } from '@pkg/utils/object';
+import { ipcRenderer } from '@pkg/utils/ipcRenderer';
 
-const translationContext = import.meta.webpackContext('@pkg/assets/translations', { recursive: true, regExp: /.*/ });
-
-const NONE = 'none';
+const translationContext = import.meta.webpackContext('@pkg/assets/translations', { recursive: false, regExp: /\.yaml$/ });
 
 // Formatters can't be serialized into state
 const intlCache = {};
@@ -18,7 +17,6 @@ export const state = function() {
   const out = {
     default:      'en-us',
     selected:     null,
-    previous:     null,
     available,
     translations: { 'en-us': en },
   };
@@ -27,26 +25,18 @@ export const state = function() {
 };
 
 export const getters = {
-  selectedLocaleLabel(state) {
-    const key = `locale.${ state.selected }`;
-
-    if ( state.selected === NONE ) {
-      return `%${ key }%`;
-    } else {
-      return get(state.translations[state.default], key);
-    }
-  },
-
-  availableLocales(state, getters) {
+  availableLocales(state) {
     const out = {};
 
     for ( const locale of state.available ) {
-      const key = `locale.${ locale }`;
+      const nativeName = get(state.translations[locale], `locale.${ locale }`);
+      const translatedName = get(state.translations[state.selected], `locale.${ locale }`)
+                          ?? get(state.translations[state.default], `locale.${ locale }`);
 
-      if ( state.selected === NONE ) {
-        out[locale] = `%${ key }%`;
+      if ( !nativeName || !translatedName || nativeName === translatedName ) {
+        out[locale] = nativeName ?? translatedName ?? locale;
       } else {
-        out[locale] = get(state.translations[state.default], key);
+        out[locale] = `${ nativeName } (${ translatedName })`;
       }
     }
 
@@ -54,10 +44,6 @@ export const getters = {
   },
 
   t: state => (key, args) => {
-    if (state.selected === NONE ) {
-      return `%${ key }%`;
-    }
-
     const cacheKey = `${ state.selected }/${ key }`;
     let formatter = intlCache[cacheKey];
 
@@ -112,7 +98,7 @@ export const getters = {
 
     let msg = get(state.translations[state.default], key);
 
-    if ( !msg && state.selected && state.selected !== NONE ) {
+    if ( !msg && state.selected ) {
       msg = get(state.translations[state.selected], key);
     }
 
@@ -159,12 +145,42 @@ export const mutations = {
 };
 
 export const actions = {
-  init({ state, commit, dispatch }) {
+  async init({ state, commit, dispatch }) {
+    // Load all translation files so availableLocales can show native names.
+    await Promise.all(
+      state.available
+        .filter(locale => !state.translations[locale])
+        .map(locale => dispatch('load', locale)),
+    );
+
+    // Use the cookie for fast initial render.
     let selected = this.$cookies.get(LOCALE, { parseJSON: false });
 
     if ( !selected ) {
       selected = state.default;
     }
+
+    // Listen for settings changes (from preferences UI or rdctl) to sync locale.
+    // 'none' means the language selector is disabled; use the default locale.
+    ipcRenderer.on('settings-update', (_, settings) => {
+      const raw = settings?.application?.locale;
+      const locale = (!raw || raw === 'none') ? state.default : raw;
+
+      if ( locale !== state.selected ) {
+        dispatch('switchTo', locale);
+      }
+    });
+
+    // Read initial settings to sync with the persisted locale.
+    ipcRenderer.once('settings-read', (_, settings) => {
+      const raw = settings?.application?.locale;
+      const locale = (!raw || raw === 'none') ? state.default : raw;
+
+      if ( locale !== state.selected ) {
+        dispatch('switchTo', locale);
+      }
+    });
+    ipcRenderer.send('settings-read');
 
     return dispatch('switchTo', selected);
   },
@@ -178,11 +194,8 @@ export const actions = {
   },
 
   async switchTo({ state, commit, dispatch }, locale) {
-    if ( locale === NONE ) {
-      commit('setSelected', locale);
-
-      // Don't remember into cookie
-      return;
+    if ( !locale || locale === 'none' ) {
+      locale = state.default;
     }
 
     if ( !state.translations[locale] ) {
@@ -199,6 +212,14 @@ export const actions = {
       }
     }
 
+    const oldPrefix = `${ state.selected }/`;
+
+    for (const key of Object.keys(intlCache)) {
+      if (key.startsWith(oldPrefix)) {
+        delete intlCache[key];
+      }
+    }
+
     commit('setSelected', locale);
     this.$cookies.set(LOCALE, locale, {
       encode: x => x,
@@ -208,11 +229,4 @@ export const actions = {
     });
   },
 
-  toggleNone({ state, dispatch }) {
-    if ( state.selected === NONE ) {
-      return dispatch('switchTo', state.previous || state.default);
-    } else {
-      return dispatch('switchTo', NONE);
-    }
-  },
 };

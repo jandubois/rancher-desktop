@@ -68,8 +68,7 @@ generic:
 
 locale:
   en-us: English
-  zh-hans: 简体中文
-  none: (None)
+  zh-hans: Chinese (Simplified)
 
 nav:
   backToRancher: Cluster Manager
@@ -347,6 +346,12 @@ about:
     title: CLI Downloads
 
 application:
+  locale:
+    legendText: Language
+    disclaimer: >-
+      Community and AI tools provide translations.
+      English is the canonical language.
+      Report translation issues on GitHub.
   behavior:
     autoStart:
       legendText: Startup
