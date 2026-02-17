@@ -1,9 +1,49 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 import { jest } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import FloatingVue from 'floating-vue';
+import yaml from 'js-yaml';
 
 import type { UpdateState } from '@pkg/main/update';
 import mockModules from '@pkg/utils/testUtils/mockModules';
+
+type TranslationMap = Record<string, unknown>;
+
+const thisDir = path.dirname(fileURLToPath(import.meta.url));
+const enPath = path.resolve(thisDir, '../../assets/translations/en-us.yaml');
+const en = yaml.load(fs.readFileSync(enPath, 'utf8')) as TranslationMap;
+
+function resolveKey(obj: TranslationMap, keyPath: string): string | undefined {
+  let current: unknown = obj;
+
+  for (const segment of keyPath.split('.')) {
+    if (current == null || typeof current !== 'object') {
+      return undefined;
+    }
+    current = (current as TranslationMap)[segment];
+  }
+
+  return typeof current === 'string' ? current : undefined;
+}
+
+function tFn(key: string, args?: Record<string, string | number>): string {
+  let msg = resolveKey(en, key);
+
+  if (msg === undefined) {
+    return `%${ key }%`;
+  }
+
+  if (args) {
+    for (const [name, value] of Object.entries(args)) {
+      msg = msg!.replaceAll(`{${ name }}`, String(value));
+    }
+  }
+
+  return msg!;
+}
 
 mockModules({
   '@pkg/utils/ipcRenderer': {
@@ -21,7 +61,7 @@ function wrap(props: typeof UpdateStatus['$props']) {
   return mount(UpdateStatus, {
     props,
     global: {
-      mocks:   { t: jest.fn() },
+      mocks:   { t: tFn },
       stubs:   {
         T:          { template: '<span> {{ k }} </span>' },
         RdCheckbox: { template: '<input type="checkbox">' },
@@ -95,9 +135,12 @@ describe('UpdateStatus.vue', () => {
         } as UpdateState,
       });
 
-      expect(wrapper.get({ ref: 'updateStatus' }).text().replace(/\s+/g, ' '))
-        .toEqual('An update to version v1.2.3 is available. Restart the application to apply the update.');
+      const statusDiv = wrapper.get({ ref: 'updateStatus' });
 
+      expect(statusDiv.find('p').text())
+        .toEqual('An update to version v1.2.3 is available.');
+      expect(statusDiv.find('.update-notification').text())
+        .toEqual('Restart the application to apply the update.');
       expect(wrapper.get({ ref: 'applyButton' }).attributes()).not.toHaveProperty('disabled');
     });
 

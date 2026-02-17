@@ -36,7 +36,6 @@ import { defaultSettings } from '@pkg/config/settings';
 import ExtensionsInstalled from '@pkg/pages/extensions/installed.vue';
 
 export default {
-  title:      'Marketplace',
   components: {
     RdTabbed,
     Tab,

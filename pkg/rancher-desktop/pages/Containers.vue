@@ -25,7 +25,7 @@
       <template #header-middle>
         <div class="header-middle">
           <div v-if="supportsNamespaces">
-            <label>Namespace</label>
+            <label>{{ t('generic.namespace') }}</label>
             <select
               class="select-namespace"
               :value="namespace"
@@ -169,7 +169,6 @@ import { ipcRenderer } from '@pkg/utils/ipcRenderer';
 
 export default defineComponent({
   name:       'Containers',
-  title:      'Containers',
   components: { SortableTable, BadgeState, Banner },
   data() {
     return {

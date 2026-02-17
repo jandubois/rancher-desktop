@@ -38,6 +38,13 @@ export default defineComponent({
     },
   },
   methods: {
+    onWarningClick(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+
+      if (target?.getAttribute('data-navigate')) {
+        this.$root.navigate(target.getAttribute('data-navigate'));
+      }
+    },
     onChangeEngine(desiredEngine: ContainerEngine) {
       this.containerEngine = desiredEngine;
       this.$emit('container-engine-change', desiredEngine);
@@ -81,14 +88,12 @@ export default defineComponent({
           v-if="webAssemblyIncompatible"
           #below
         >
-          <banner color="warning">
-            WebAssembly must be enabled for the
-            <a
-              href="#"
-              @click.prevent="$root.navigate('Kubernetes')"
-            >Spin Operator</a>
-            to be installed.
-          </banner>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <banner
+            color="warning"
+            @click.prevent="onWarningClick"
+            v-html="t('preferences.containerEngine.webAssembly.warning')"
+          />
         </template>
       </rd-checkbox>
     </rd-fieldset>

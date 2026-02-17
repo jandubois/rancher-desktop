@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import { RecursivePartial, RecursiveReadonly } from '@pkg/utils/typeUtils';
 
+// TODO: Translate navItemNames for display while keeping internal identifiers stable.
 export const navItemNames = [
   'Application',
   'WSL',

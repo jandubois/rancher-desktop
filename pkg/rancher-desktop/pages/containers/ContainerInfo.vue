@@ -14,13 +14,13 @@
         pty process across tab switches).
       -->
       <tab
-        label="Logs"
+        :label="t('containerInfo.logs')"
         name="tab-logs"
         :weight="1"
         @active="activeTab = 'tab-logs'"
       />
       <tab
-        label="Shell"
+        :label="t('containerInfo.shell')"
         name="tab-shell"
         :weight="0"
         :disabled="!isRunning"
@@ -35,20 +35,20 @@
           <input
             ref="searchInput"
             v-model="searchTerm"
-            aria-label="Search in logs"
+            :aria-label="t('containerInfo.search.ariaLabel')"
             class="search-input"
             data-testid="search-input"
-            placeholder="Search logs..."
+            :placeholder="t('containerInfo.search.placeholder')"
             type="search"
             @input="onSearchInput"
             @keydown="handleSearchKeydown"
           >
           <button
             :disabled="!searchTerm"
-            aria-label="Previous match"
+            :aria-label="t('containerInfo.search.previousMatch')"
             class="search-btn btn role-tertiary"
             data-testid="search-prev-btn"
-            title="Previous match"
+            :title="t('containerInfo.search.previousMatch')"
             @click="searchPrevious"
           >
             <i
@@ -58,10 +58,10 @@
           </button>
           <button
             :disabled="!searchTerm"
-            aria-label="Next match"
+            :aria-label="t('containerInfo.search.nextMatch')"
             class="search-btn btn role-tertiary"
             data-testid="search-next-btn"
-            title="Next match"
+            :title="t('containerInfo.search.nextMatch')"
             @click="searchNext"
           >
             <i
@@ -71,10 +71,10 @@
           </button>
           <button
             :disabled="!searchTerm"
-            aria-label="Clear search"
+            :aria-label="t('containerInfo.search.clearSearch')"
             class="search-btn btn role-tertiary"
             data-testid="search-clear-btn"
-            title="Clear search"
+            :title="t('containerInfo.search.clearSearch')"
             @click="clearSearch"
           >
             <i

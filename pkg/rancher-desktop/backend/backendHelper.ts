@@ -14,6 +14,7 @@ import { LockedFieldError } from '@pkg/config/commandLineOptions';
 import { ContainerEngine, Settings } from '@pkg/config/settings';
 import * as settingsImpl from '@pkg/config/settingsImpl';
 import SettingsValidator from '@pkg/main/commandServer/settingsValidator';
+import { t } from '@pkg/main/i18n';
 import mainEvents from '@pkg/main/mainEvents';
 import { minimumUpgradeVersion, SemanticVersionEntry } from '@pkg/utils/kubeVersions';
 import Logging from '@pkg/utils/logging';
@@ -239,7 +240,7 @@ export default class BackendHelper {
         throw new LockedFieldError(`Locked kubernetes version '${ currentConfigVersionString }' isn't a valid version.`);
       }
       const message = invalidK8sVersionMainMessage;
-      const detail = `Falling back to recommended minimum upgrade version of ${ upgradeVersion.version.version }`;
+      const detail = t('dialog.invalidK8sVersion.detail', { version: upgradeVersion.version.version });
 
       if (noModalDialogs) {
         console.log(`${ message } ${ detail }`);
@@ -248,8 +249,8 @@ export default class BackendHelper {
           message,
           detail,
           type:    'warning',
-          buttons: ['OK'],
-          title:   'Invalid Kubernetes Version',
+          buttons: [t('generic.ok')],
+          title:   t('dialog.invalidK8sVersion.title'),
         };
 
         await showMessageBox(options, true);

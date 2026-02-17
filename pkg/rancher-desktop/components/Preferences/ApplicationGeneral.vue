@@ -21,13 +21,6 @@ export default defineComponent({
   },
   data() {
     return {
-      sudoAllowedTooltip: `
-        If checked, Rancher Desktop will attempt to acquire administrative
-        credentials ("sudo access") when starting for some operations.  This
-        allows for enhanced functionality, including bridged networking and
-        default docker socket support.  Changes will only be applied next time
-        Rancher Desktop starts.
-      `,
       automaticUpdates: true,
       statistics:       false,
     };
@@ -103,11 +96,11 @@ export default defineComponent({
     <rd-fieldset
       v-if="!isPlatformWindows"
       data-test="administrativeAccess"
-      legend-text="Administrative Access"
-      :legend-tooltip="sudoAllowedTooltip"
+      :legend-text="t('application.general.adminAccess.legendText')"
+      :legend-tooltip="t('application.general.adminAccess.legendTooltip')"
     >
       <rd-checkbox
-        label="Allow to acquire administrative credentials (sudo access)"
+        :label="t('application.general.adminAccess.label')"
         :value="isSudoAllowed"
         :is-locked="isPreferenceLocked('application.adminAccess')"
         @update:value="onChange('application.adminAccess', $event)"
@@ -115,11 +108,11 @@ export default defineComponent({
     </rd-fieldset>
     <rd-fieldset
       data-test="automaticUpdates"
-      legend-text="Automatic Updates"
+      :legend-text="t('application.general.automaticUpdates.legendText')"
     >
       <rd-checkbox
         data-test="automaticUpdatesCheckbox"
-        label="Check for updates automatically"
+        :label="t('application.general.automaticUpdates.label')"
         :value="canAutoUpdate"
         :is-locked="isPreferenceLocked('application.updater.enabled')"
         @update:value="onChange('application.updater.enabled', $event)"
@@ -127,10 +120,10 @@ export default defineComponent({
     </rd-fieldset>
     <rd-fieldset
       data-test="statistics"
-      legend-text="Statistics"
+      :legend-text="t('application.general.statistics.legendText')"
     >
       <rd-checkbox
-        label="Allow collection of anonymous statistics to help us improve Rancher Desktop"
+        :label="t('application.general.statistics.label')"
         :value="preferences.application.telemetry.enabled"
         :is-locked="isPreferenceLocked('application.telemetry.enabled')"
         @update:value="onChange('application.telemetry.enabled', $event)"

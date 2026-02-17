@@ -56,7 +56,9 @@ export default defineComponent({
       return this.preferences.kubernetes.version;
     },
     kubernetesVersionLabel(): string {
-      return `Kubernetes version${ this.cachedVersionsOnly ? ' (cached versions only)' : '' }`;
+      return this.cachedVersionsOnly
+        ? this.t('kubernetesPrefs.version.legendTextCached')
+        : this.t('kubernetesPrefs.version.legendText');
     },
     spinOperatorIncompatible(): boolean {
       return !this.isKubernetesDisabled &&
@@ -100,10 +102,10 @@ export default defineComponent({
   <div class="preferences-body">
     <rd-fieldset
       data-test="kubernetesToggle"
-      legend-text="Kubernetes"
+      :legend-text="t('kubernetesPrefs.kubernetes.legendText')"
     >
       <rd-checkbox
-        label="Enable Kubernetes"
+        :label="t('kubernetesPrefs.kubernetes.label')"
         :value="preferences.kubernetes.enabled"
         :is-locked="isPreferenceLocked('kubernetes.enabled')"
         @update:value="onChange('kubernetes.enabled', $event)"
@@ -127,7 +129,7 @@ export default defineComponent({
             -->
         <optgroup
           v-if="recommendedVersions.length > 0"
-          label="Recommended Versions"
+          :label="t('kubernetesPrefs.version.recommendedVersions')"
         >
           <option
             v-for="item in recommendedVersions"
@@ -140,7 +142,7 @@ export default defineComponent({
         </optgroup>
         <optgroup
           v-if="nonRecommendedVersions.length > 0"
-          label="Other Versions"
+          :label="t('kubernetesPrefs.version.otherVersions')"
         >
           <option
             v-for="item in nonRecommendedVersions"
@@ -156,7 +158,7 @@ export default defineComponent({
     <rd-fieldset
       data-test="kubernetesPort"
       class="width-xs"
-      legend-text="Kubernetes Port"
+      :legend-text="t('kubernetesPrefs.port.legendText')"
     >
       <rd-input
         type="number"
@@ -168,10 +170,10 @@ export default defineComponent({
     </rd-fieldset>
     <rd-fieldset
       data-test="kubernetesOptions"
-      legend-text="Options"
+      :legend-text="t('kubernetesPrefs.options.legendText')"
     >
       <rd-checkbox
-        label="Enable Traefik"
+        :label="t('kubernetesPrefs.options.traefik')"
         :disabled="isKubernetesDisabled"
         :value="preferences.kubernetes.options.traefik"
         :is-locked="isPreferenceLocked('kubernetes.options.traefik')"
@@ -179,7 +181,7 @@ export default defineComponent({
       />
       <!-- Don't disable Spinkube option when Wasm is disabled; let validation deal with it  -->
       <rd-checkbox
-        label="Install Spin Operator"
+        :label="t('kubernetesPrefs.options.spinkube')"
         :disabled="isKubernetesDisabled"
         :value="preferences.experimental.kubernetes.options.spinkube"
         :is-locked="isPreferenceLocked('experimental.kubernetes.options.spinkube')"
@@ -191,12 +193,10 @@ export default defineComponent({
           #below
         >
           <banner color="warning">
-            Spin operator requires
-            <a
+            {{ t('kubernetesPrefs.options.spinkubeWarningPrefix') }}<a
               href="#"
               @click.prevent="$root.navigate('Container Engine', 'general')"
-            >WebAssembly</a>
-            to be enabled.
+            >{{ t('kubernetesPrefs.options.spinkubeWarningLink') }}</a>{{ t('kubernetesPrefs.options.spinkubeWarningSuffix') }}
           </banner>
         </template>
       </rd-checkbox>

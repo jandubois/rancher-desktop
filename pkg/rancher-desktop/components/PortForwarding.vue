@@ -62,7 +62,7 @@
             class="btn btn-sm role-tertiary"
             @click="emitEditPortForward(row)"
           >
-            Forward
+            {{ t('generic.forward') }}
           </button>
         </div>
         <div
@@ -90,7 +90,7 @@
             class="btn btn-sm role-tertiary"
             @click="emitCancelPortForward(row)"
           >
-            Cancel
+            {{ t('generic.cancel') }}
           </button>
         </div>
       </template>
