@@ -2,11 +2,12 @@
   <div class="general">
     <div>
       <ul>
-        <li>Project Discussions: <b>#rancher-desktop</b> in <a href="https://slack.rancher.io/">Rancher Users</a> Slack</li>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <li v-html="t('general.projectDiscussions', {}, true)" />
         <li class="project-links">
-          <span>Project Links:</span>
-          <a href="https://github.com/rancher-sandbox/rancher-desktop">Homepage</a>
-          <a href="https://github.com/rancher-sandbox/rancher-desktop/issues">Issues</a>
+          <span>{{ t('general.projectLinks') }}</span>
+          <a href="https://github.com/rancher-sandbox/rancher-desktop">{{ t('general.homepage') }}</a>
+          <a href="https://github.com/rancher-sandbox/rancher-desktop/issues">{{ t('general.issues') }}</a>
         </li>
       </ul>
     </div>
@@ -43,7 +44,6 @@ import { ipcRenderer } from '@pkg/utils/ipcRenderer';
 
 export default {
   name:       'General',
-  title:      'General',
   components: {
     NetworkStatus, TelemetryOptIn, UpdateStatus,
   },

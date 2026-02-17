@@ -99,14 +99,14 @@ export default defineComponent({
       const cancelPosition = 1;
 
       const result = await ipcRenderer.invoke('show-message-box', {
-        title:    'Rancher Desktop - Reset Kubernetes',
+        title:    this.t('preferences.resetDialog.title'),
         type:     'warning',
-        message:  'Apply preferences and reset Kubernetes?',
-        detail:   'These changes will reset the Kubernetes cluster, which will result in a loss of workloads and container images.',
+        message:  this.t('preferences.resetDialog.message'),
+        detail:   this.t('preferences.resetDialog.detail'),
         cancelId: cancelPosition,
         buttons:  [
-          'Apply and reset',
-          'Cancel',
+          this.t('preferences.resetDialog.apply'),
+          this.t('generic.cancel'),
         ],
       });
 
@@ -163,15 +163,15 @@ export default defineComponent({
       >
         <empty-state
           icon="icon-warning"
-          heading="Unable to fetch preferences"
-          body="Reload Preferences to try again."
+          :heading="t('preferences.error.heading')"
+          :body="t('preferences.error.body')"
         >
           <template #primary-action>
             <button
               class="btn role-primary"
               @click="reloadPreferences"
             >
-              Reload preferences
+              {{ t('preferences.error.reload') }}
             </button>
           </template>
         </empty-state>

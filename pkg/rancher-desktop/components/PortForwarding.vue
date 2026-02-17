@@ -26,7 +26,7 @@
         <div class="header-middle">
           <Checkbox
             class="kubernetes-services"
-            :label="'Include Kubernetes services'"
+            :label="t('portForwarding.includeKubernetesServices')"
             :value="includeKubernetesServices"
             :disabled="!isRunning || kubernetesIsDisabled"
             @update:value="handleCheckbox"
@@ -62,7 +62,7 @@
             class="btn btn-sm role-tertiary"
             @click="emitEditPortForward(row)"
           >
-            Forward
+            {{ t('generic.forward') }}
           </button>
         </div>
         <div
@@ -90,7 +90,7 @@
             class="btn btn-sm role-tertiary"
             @click="emitCancelPortForward(row)"
           >
-            Cancel
+            {{ t('generic.cancel') }}
           </button>
         </div>
       </template>

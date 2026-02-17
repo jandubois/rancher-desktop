@@ -8,6 +8,7 @@ import RdInput from '@pkg/components/RdInput.vue';
 import RdSelect from '@pkg/components/RdSelect.vue';
 import RdCheckbox from '@pkg/components/form/RdCheckbox.vue';
 import RdFieldset from '@pkg/components/form/RdFieldset.vue';
+import { handleNavigateClick } from '@pkg/components/Preferences/navigateClick';
 import { Settings } from '@pkg/config/settings';
 import { ipcRenderer } from '@pkg/utils/ipcRenderer';
 import { highestStableVersion, VersionEntry } from '@pkg/utils/kubeVersions';
@@ -56,7 +57,9 @@ export default defineComponent({
       return this.preferences.kubernetes.version;
     },
     kubernetesVersionLabel(): string {
-      return `Kubernetes version${ this.cachedVersionsOnly ? ' (cached versions only)' : '' }`;
+      return this.cachedVersionsOnly
+        ? this.t('kubernetesPrefs.version.legendTextCached')
+        : this.t('kubernetesPrefs.version.legendText');
     },
     spinOperatorIncompatible(): boolean {
       return !this.isKubernetesDisabled &&
@@ -73,6 +76,9 @@ export default defineComponent({
     ipcRenderer.send('k8s-versions');
   },
   methods: {
+    onWarningClick(event: MouseEvent) {
+      handleNavigateClick(event, this.$root.navigate);
+    },
     /**
      * Get the display name of a given version.
      * @param version The version to format.
@@ -100,10 +106,10 @@ export default defineComponent({
   <div class="preferences-body">
     <rd-fieldset
       data-test="kubernetesToggle"
-      legend-text="Kubernetes"
+      :legend-text="t('kubernetesPrefs.kubernetes.legendText')"
     >
       <rd-checkbox
-        label="Enable Kubernetes"
+        :label="t('kubernetesPrefs.kubernetes.label')"
         :value="preferences.kubernetes.enabled"
         :is-locked="isPreferenceLocked('kubernetes.enabled')"
         @update:value="onChange('kubernetes.enabled', $event)"
@@ -127,7 +133,7 @@ export default defineComponent({
             -->
         <optgroup
           v-if="recommendedVersions.length > 0"
-          label="Recommended Versions"
+          :label="t('kubernetesPrefs.version.recommendedVersions')"
         >
           <option
             v-for="item in recommendedVersions"
@@ -140,7 +146,7 @@ export default defineComponent({
         </optgroup>
         <optgroup
           v-if="nonRecommendedVersions.length > 0"
-          label="Other Versions"
+          :label="t('kubernetesPrefs.version.otherVersions')"
         >
           <option
             v-for="item in nonRecommendedVersions"
@@ -156,7 +162,7 @@ export default defineComponent({
     <rd-fieldset
       data-test="kubernetesPort"
       class="width-xs"
-      legend-text="Kubernetes Port"
+      :legend-text="t('kubernetesPrefs.port.legendText')"
     >
       <rd-input
         type="number"
@@ -168,10 +174,10 @@ export default defineComponent({
     </rd-fieldset>
     <rd-fieldset
       data-test="kubernetesOptions"
-      legend-text="Options"
+      :legend-text="t('kubernetesPrefs.options.legendText')"
     >
       <rd-checkbox
-        label="Enable Traefik"
+        :label="t('kubernetesPrefs.options.traefik')"
         :disabled="isKubernetesDisabled"
         :value="preferences.kubernetes.options.traefik"
         :is-locked="isPreferenceLocked('kubernetes.options.traefik')"
@@ -179,7 +185,7 @@ export default defineComponent({
       />
       <!-- Don't disable Spinkube option when Wasm is disabled; let validation deal with it  -->
       <rd-checkbox
-        label="Install Spin Operator"
+        :label="t('kubernetesPrefs.options.spinkube')"
         :disabled="isKubernetesDisabled"
         :value="preferences.experimental.kubernetes.options.spinkube"
         :is-locked="isPreferenceLocked('experimental.kubernetes.options.spinkube')"
@@ -190,14 +196,14 @@ export default defineComponent({
           v-if="spinOperatorIncompatible"
           #below
         >
-          <banner color="warning">
-            Spin operator requires
-            <a
-              href="#"
-              @click.prevent="$root.navigate('Container Engine', 'general')"
-            >WebAssembly</a>
-            to be enabled.
-          </banner>
+          <!-- eslint-disable-next-line vue/no-v-html — v-html is required for
+               translated strings with embedded links. XSS risk is low: translation
+               files are compiled into the app and validated by i18n-report. -->
+          <banner
+            color="warning"
+            @click.prevent="onWarningClick"
+            v-html="t('kubernetesPrefs.options.spinkubeWarning', {}, true)"
+          />
         </template>
       </rd-checkbox>
     </rd-fieldset>

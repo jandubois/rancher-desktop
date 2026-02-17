@@ -2,7 +2,6 @@
 import { defineComponent } from 'vue';
 
 import { ipcRenderer } from '@pkg/utils/ipcRenderer';
-import { networkStatus } from '@pkg/utils/networks';
 
 export default defineComponent({
   name:  'network-status',
@@ -21,7 +20,10 @@ export default defineComponent({
   },
   computed: {
     networkStatusLabel() {
-      return this.networkStatus ? networkStatus.CONNECTED : networkStatus.OFFLINE;
+      // Uses string literals rather than a networkStatus enum (pre-existing).
+      const key = this.networkStatus ? 'online' : 'offline';
+
+      return this.t(`product.networkStatusValues.${ key }`);
     },
     getTooltip() {
       return {

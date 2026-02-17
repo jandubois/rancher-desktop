@@ -72,7 +72,7 @@ export default defineComponent({
     <input
       v-model="searchValue"
       type="text"
-      placeholder="Search"
+      :placeholder="t('generic.search')"
     >
     <div
       v-if="filteredExtensions.length === 0"
