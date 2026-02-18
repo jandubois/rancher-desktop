@@ -468,6 +468,7 @@ locale:
   de: 德语
   # @reason locale name for English
   en-us: 英语
+  fa: 波斯语
   # @reason locale name for Simplified Chinese - using the Chinese name per rules for locale names
   zh-hans: 简体中文
 

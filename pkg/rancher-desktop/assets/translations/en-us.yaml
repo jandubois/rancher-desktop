@@ -10,6 +10,7 @@ generic:
 locale:
   de: German
   en-us: English
+  fa: Farsi
   zh-hans: Chinese (Simplified)
 nav:
   userMenu:

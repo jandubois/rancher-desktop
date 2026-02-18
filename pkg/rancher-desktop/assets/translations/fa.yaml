@@ -1,0 +1,1080 @@
+action:
+  refresh: تازه‌سازی
+
+allowedImages:
+  alert: نام تصویر باید با یکی از الگوهای تعریف‌شده در تب تنظیمات Allowed Images مطابقت داشته باشد.
+  enable: فعال‌سازی
+  errors:
+    duplicate: خطا، مورد تکراری است.
+  label: الگوهای تصویر مجاز
+  patterns:
+    placeholder: الگوی تصویر را وارد کنید
+
+app:
+  name: Rancher Desktop
+
+application:
+  behavior:
+    autoStart:
+      label: راه‌اندازی خودکار هنگام ورود
+      legendText: راه‌اندازی
+    background:
+      legendText: پس‌زمینه
+      legendTooltip: پنجره برنامه را هنگامی که Rancher Desktop در پس‌زمینه اجرا می‌شود مخفی کنید. می‌توان آن را از طریق آیکون اعلان (در صورت نمایش) یا با اجرای Rancher Desktop از منوی برنامه‌ها باز کرد.
+    notificationIcon:
+      label: مخفی کردن آیکون اعلان
+      legendText: آیکون اعلان
+    startInBackground:
+      label: شروع در پس‌زمینه
+    theme:
+      legendText: ظاهر
+      options:
+        dark:
+          # @reason theme option - dark mode, always active (as opposed to following system)
+          description: همیشه از حالت تاریک استفاده کن
+          # @reason label for dark theme option
+          label: تاریک
+        light:
+          # @reason theme option - light mode, always active
+          description: همیشه از حالت روشن استفاده کن
+          # @reason label for light theme option
+          label: روشن
+        system:
+          # @reason theme option - follows OS setting
+          description: از تنظیمات سیستم‌عامل پیروی کن
+          # @reason label for system theme option
+          label: سیستم
+    windowQuitOnClose:
+      label: خروج هنگام بستن پنجره برنامه
+  general:
+    adminAccess:
+      label: اجازه دسترسی مدیریتی (دسترسی sudo)
+      legendText: دسترسی مدیریتی
+      legendTooltip: در صورت فعال بودن، {appName} هنگام راه‌اندازی اعتبارنامه مدیریتی («دسترسی sudo») دریافت خواهد کرد. این امکان شبکه bridge و پشتیبانی socket پیش‌فرض docker را فعال می‌کند. در راه‌اندازی بعدی اعمال می‌شود.
+    automaticUpdates:
+      label: بررسی خودکار به‌روزرسانی‌ها
+      legendText: به‌روزرسانی‌های خودکار
+    statistics:
+      label: اجازه جمع‌آوری آمار ناشناس برای کمک به بهبود {appName}
+      legendText: آمار
+  locale:
+    disclaimer: ابزارهای جامعه و هوش مصنوعی ترجمه‌ها را ارائه می‌دهند. انگلیسی زبان اصلی است. مشکلات ترجمه را در GitHub گزارش دهید.
+    legendText: زبان
+
+asyncButton:
+  activate:
+    # @reason button label to activate a feature
+    action: فعال‌سازی
+    # @reason confirmation that activation succeeded
+    success: فعال شد
+    # @reason in-progress label during activation
+    waiting: در حال فعال‌سازی&hellip;
+  apply:
+    # @reason button label to apply settings
+    action: اعمال
+    # @reason confirmation that settings were applied
+    success: اعمال شد
+    # @reason in-progress label while applying
+    waiting: در حال اعمال&hellip;
+  continue:
+    # @reason button label to continue to next step
+    action: ادامه
+    # @reason confirmation that progress was saved
+    success: ذخیره شد
+    # @reason in-progress label while saving on continue
+    waiting: در حال ذخیره&hellip;
+  copy:
+    # @reason button label to copy text to clipboard
+    action: برای کپی کلیک کنید
+    # @reason confirmation that text was copied
+    success: کپی شد!
+  create:
+    # @reason button label to create a new resource
+    action: ایجاد
+    # @reason confirmation that resource was created
+    success: ایجاد شد
+    # @reason in-progress label during creation
+    waiting: در حال ایجاد&hellip;
+  deactivate:
+    # @reason button label to deactivate a feature
+    action: غیرفعال‌سازی
+    # @reason confirmation that deactivation succeeded
+    success: غیرفعال شد
+    # @reason in-progress label during deactivation
+    waiting: در حال غیرفعال‌سازی&hellip;
+  default:
+    # @reason generic fallback action label
+    action: عملیات
+    # @reason generic fallback error label
+    error: خطا
+    # @reason generic fallback success label
+    success: موفقیت
+    # @reason generic fallback waiting label
+    waiting: در حال انتظار
+  delete:
+    # @reason button label to delete a resource
+    action: حذف
+    # @reason confirmation that resource was deleted
+    success: حذف شد
+    # @reason in-progress label during deletion
+    waiting: در حال حذف&hellip;
+  disable:
+    # @reason button label to disable a feature
+    action: غیرفعال کردن
+    # @reason confirmation that feature was disabled
+    success: غیرفعال شد
+    # @reason in-progress label while disabling
+    waiting: در حال غیرفعال کردن&hellip;
+  done:
+    # @reason button label to mark something as done
+    action: انجام شد
+    # @reason confirmation that state was saved on done
+    success: ذخیره شد
+    # @reason in-progress label while saving on done
+    waiting: در حال ذخیره&hellip;
+  download:
+    # @reason button label to download a file
+    action: دانلود
+    # @reason status shown while saving a downloaded file
+    success: در حال ذخیره
+    # @reason in-progress label during download
+    waiting: در حال دانلود&hellip;
+  edit:
+    # @reason button label to save edits
+    action: ذخیره
+    # @reason confirmation that edits were saved
+    success: ذخیره شد
+    # @reason in-progress label while saving edits
+    waiting: در حال ذخیره&hellip;
+  enable:
+    # @reason button label to enable a feature
+    action: فعال کردن
+    # @reason confirmation that feature was enabled
+    success: فعال شد
+    # @reason in-progress label while enabling
+    waiting: در حال فعال کردن&hellip;
+  finish:
+    # @reason button label to finish a workflow
+    action: پایان
+    # @reason confirmation that workflow finished
+    success: به پایان رسید
+    # @reason in-progress label while finishing
+    waiting: در حال اتمام&hellip;
+  import:
+    # @reason: button action label for importing content
+    action: وارد کردن
+    # @reason: past tense success state after import completes
+    success: وارد شد
+    # @reason: present progressive state while import is in progress
+    waiting: در حال وارد کردن&hellip;
+  install:
+    # @reason: button action label for installing software
+    action: نصب
+    # @reason: state label while installation is in progress (note: English uses "Installing" as success state)
+    success: در حال نصب
+    # @reason: state label while installation is starting
+    waiting: در حال شروع&hellip;
+  refresh:
+    # @reason: empty value preserved as-is per rules
+    action: ''
+    # @reason: icon name stays in English per rules
+    actionIcon: refresh
+    # @reason: empty value preserved as-is per rules
+    error: ''
+    # @reason: icon name stays in English per rules
+    errorIcon: error
+    # @reason: empty value preserved as-is per rules
+    success: ''
+    # @reason: icon name stays in English per rules
+    successIcon: checkmark
+    # @reason: empty value preserved as-is per rules
+    waiting: ''
+    # @reason: icon name stays in English per rules
+    waitingIcon: refresh
+  remove:
+    # @reason: button action label for removing an item
+    action: حذف
+    # @reason: past tense success state after removal completes
+    success: حذف شد
+    # @reason: present progressive state while removal is in progress
+    waiting: در حال حذف&hellip;
+  restore:
+    # @reason: button action label for restoring a snapshot or backup
+    action: بازیابی
+    # @reason: past tense success state after restore completes
+    success: بازیابی شد
+    # @reason: present progressive state while restore is in progress
+    waiting: در حال بازیابی&hellip;
+  snapshot:
+    # @reason: button action label to take a snapshot immediately
+    action: گرفتن اسنپشات
+    # @reason: state label while snapshot is being created
+    success: اسنپشات در حال ایجاد
+    # @reason: present progressive state while snapshot is in progress
+    waiting: در حال گرفتن اسنپشات&hellip;
+  uninstall:
+    # @reason: button action label for uninstalling software
+    action: حذف نصب
+    # @reason: past tense success state after uninstall completes
+    success: حذف نصب شد
+    # @reason: present progressive state while uninstall is in progress
+    waiting: در حال حذف نصب&hellip;
+  update:
+    # @reason: button action label for updating software
+    action: به‌روزرسانی
+    # @reason: past tense success state after update completes
+    success: به‌روز شد
+    # @reason: present progressive state while update is in progress
+    waiting: در حال به‌روزرسانی&hellip;
+  upgrade:
+    # @reason: button action label for upgrading to a newer version
+    action: ارتقا
+    # @reason: state label while upgrade is in progress (note: English uses "Upgrading" as success state)
+    success: در حال ارتقا
+    # @reason: state label while upgrade is starting
+    waiting: در حال شروع&hellip;
+
+containerEngine:
+  label: موتور کانتینر
+  options:
+    containerd:
+      # @reason: description for containerd engine option; nerdctl is a product name kept in English
+      description: فضاهای نام برای تصاویر کانتینر؛ با nerdctl استفاده کنید.
+      # @reason: product name label, kept in English per rules
+      label: containerd
+    moby:
+      # @reason: description for moby/Docker engine option; Docker CLI is a product name kept in English
+      description: رابط برنامه‌نویسی Docker؛ با Docker CLI استفاده کنید.
+      # @reason: product name label, kept in English per rules
+      label: dockerd (moby)
+
+containerInfo:
+  logs: گزارش‌ها
+  search:
+    ariaLabel: جستجو در گزارش‌ها
+    clearSearch: پاک کردن جستجو
+    nextMatch: مورد بعدی
+    placeholder: جستجوی گزارش‌ها...
+    previousMatch: مورد قبلی
+
+containers:
+  sortableTables:
+    noRows: هیچ کانتینری برای نمایش وجود ندارد
+  manage:
+    table:
+      header:
+        containerName: نام
+        image: تصویر
+        ports: پورت(ها)
+        started: مدت فعالیت
+        state: وضعیت
+  title: کانتینرها
+
+denyRoot:
+  message: Rancher Desktop نمی‌تواند با سطح دسترسی root اجرا شود. لطفاً دوباره به عنوان یک کاربر عادی اجرا کنید.
+  title: امکان اجرا به عنوان Root نیست
+
+diagnostics:
+  failedCount: '{count} شکست خورده به علاوه {muted} خاموش'
+  lastRun: 'آخرین اجرا:'
+  noFixes: (رفع مشکل در دسترس نیست)
+  results:
+    muted:
+      body: نمایش تشخیص‌های خاموش را امتحان کنید.
+      heading: نتیجه‌ای یافت نشد
+      icon: icon-search
+    success:
+      body: Rancher Desktop به نظر می‌رسد به درستی کار می‌کند.
+      heading: مشکلی شناسایی نشد
+      icon: icon-checkmark
+  showMuted: نمایش خاموش‌شده‌ها
+  tableHeaders:
+    mute: خاموش
+    name: نام
+  title: تشخیص
+
+dialog:
+  bridgedNetwork:
+    noNetwork: شبکه اشتراکی نیز در دسترس نیست. دسترسی شبکه فقط از طریق port forwarding به میزبان است.
+    sharedFallback: استفاده از آدرس شبکه اشتراکی {ip}
+    title: شبکه bridge آدرس IP دریافت نکرد.
+  confirmMigration:
+    delete: حذف Workloadها
+    message: کاهش نسخه از {from} به {to} باعث از دست رفتن Workloadهای Kubernetes موجود می‌شود. داده‌ها حذف شوند؟
+    title: تأیید مهاجرت
+  invalidK8sVersion:
+    detail: بازگشت به نسخه حداقل ارتقای توصیه‌شده {version}
+    title: نسخه Kubernetes نامعتبر
+  networkFailure:
+    detail: لطفاً یک نسخه در محدوده {range} دریافت کرده و در '{path}' نصب کنید
+    message: امکان دانلود نسخه سازگار kubectl در حالت آفلاین وجود ندارد
+    title: شکست شبکه
+
+extensions:
+  icon: icon-extension
+  installed:
+    emptyState:
+      body: به نظر می‌رسد هنوز هیچ افزونه‌ای نصب نکرده‌اید. کاتالوگ افزونه‌ها را مرور کنید تا شروع کنید.
+      button:
+        text: مرور افزونه‌ها
+      heading: افزونه‌ای نصب نشده
+      icon: icon-extension
+    list:
+      uninstall: حذف
+      upgrade: ارتقا
+  view:
+    emptyState:
+      heading: افزونه حذف شد
+
+firstRun:
+  enableKubernetes: فعال‌سازی Kubernetes
+  kubernetesVersion:
+    cachedOnly: (فقط نسخه‌های cached)
+    legend: نسخه Kubernetes
+    otherVersions: سایر نسخه‌ها
+    recommendedVersions: نسخه‌های توصیه‌شده
+  ok: تأیید
+  welcome: به Rancher Desktop توسط SUSE خوش آمدید
+
+general:
+  description: Rancher Desktop امکان مدیریت Kubernetes و تصاویر را از طریق یک برنامه دسکتاپ فراهم می‌کند.
+  homepage: صفحه اصلی
+  issues: مسائل
+  navLabel: عمومی
+  projectDiscussions: 'بحث‌های پروژه: <b>#rancher-desktop</b> در <a href="https://slack.rancher.io/">Rancher Users</a> Slack'
+  projectLinks: 'پیوندهای پروژه:'
+  title: به Rancher Desktop توسط SUSE خوش آمدید
+
+generic:
+  apply: اعمال
+  cancel: لغو
+  close: بستن
+  forward: ارسال به جلو
+  loading: در حال بارگذاری&hellip;
+  namespace: فضای‌نام
+  ok: تأیید
+  rerun: اجرای مجدد
+  search: جستجو
+
+imageEvents:
+  buildMessage: لطفاً Dockerfile مورد استفاده را انتخاب کنید (ممکن است نام متفاوتی داشته باشد)
+  buildTitle: انتخاب دایرکتوری ساخت
+  deleteBatchError: خطا در تلاش برای حذف تصاویر {ids}
+  deleteError: خطا در تلاش برای حذف تصویر {name} ({id}):\n\n {error}
+  pushError: خطا در تلاش برای push کردن {name}:\n\n {error}
+  scanError: خطا در تلاش برای scan کردن {name}:\n\n {error}
+
+images:
+  sortableTables:
+    noRows: هیچ تصویری برای نمایش وجود ندارد
+  action:
+    add: افزودن تصویر
+  add:
+    action:
+      build: ساخت
+      pastTense:
+        # @reason: past tense label after a container image build action
+        build: ساخته شد
+        # @reason: past tense label after a container image pull action
+        pull: دریافت شد
+      pull: دریافت
+    errorText: خطا در تلاش برای {action} کردن '{image}' - برای اطلاعات بیشتر خروجی کنسول را ببینید
+    loadingText: در حال {action} کردن تصویر...
+    successText: '{action} تصویر'
+    title: افزودن تصویر
+  confirmDelete:
+    multiple: حذف {count} {count, plural, one {تصویر} other {تصاویر}}؟
+    single: حذف تصویر {name}:{tag}؟
+    title: تأیید حذف تصویر
+  manager:
+    close: بستن خروجی برای ادامه
+    input:
+      build:
+        # @reason: button label to trigger an image build
+        button: ساختن
+        # @reason: label for the image name input field in build context
+        label: 'نام تصویر برای ساختن:'
+        # @reason: placeholder text showing example registry path format; registry URL format stays in English
+        placeholder: registry.example.com/namespace/image:tag
+      pull:
+        # @reason: button label to trigger an image pull
+        button: دریافت
+        # @reason: label for the image name input field in pull context
+        label: 'نام تصویر برای دریافت:'
+        # @reason: placeholder text showing example registry path format; registry URL format stays in English
+        placeholder: registry.example.com/namespace/image
+    table:
+      action:
+        delete: حذف
+        push: Push
+        scan: Scan...
+      header:
+        imageId: شناسه تصویر
+        imageName: تصویر
+        size: حجم
+        tag: تگ
+      label: همه تصاویر
+    title: خروجی تصویر
+  scan:
+    details:
+      description: توضیحات
+      primaryUrl: URL اصلی
+      references: مراجع
+    errorText: خطا در تلاش برای scan کردن '{image}' - برای اطلاعات بیشتر خروجی کنسول را ببینید
+    labels:
+      critical: CRITICAL
+      high: HIGH
+      issuesFound: مشکلات یافت شده
+      low: LOW
+      medium: MEDIUM
+    loadingText: در حال Scan کردن '{image}'
+    results:
+      headers:
+        fixed: اصلاح شده
+        installed: نصب شده
+        package: بسته
+        severity: شدت
+        vulnerabilityId: شناسه آسیب‌پذیری
+    title: جزئیات Scan برای '{image}'
+  state:
+    imagesUnready: در انتظار آماده شدن مدیریت تصاویر
+    unknown: 'خطا: وضعیت نامشخص؛ لطفاً بارگذاری مجدد کنید.'
+  title: تصاویر
+
+integrations:
+  windows:
+    description: دسترس‌پذیر کردن پیکربندی Kubernetes و سوکت Docker در Rancher Desktop به توزیع‌های Windows Subsystem for Linux (WSL)
+
+kubernetesError:
+  context: 'زمینه:'
+  lastCommand: 'آخرین دستور اجرا شده:'
+  logLines: 'چند خط اخیر <a href="#" data-action="showLogs">فایل لاگ</a>:'
+
+kubernetesPrefs:
+  kubernetes:
+    label: فعال‌سازی Kubernetes
+    legendText: Kubernetes
+  options:
+    legendText: گزینه‌ها
+    spinkube: نصب Spin Operator
+    spinkubeWarningLink: WebAssembly
+    spinkubeWarningPrefix: Spin operator نیاز دارد
+    spinkubeWarningSuffix: فعال شود.
+    traefik: فعال‌سازی Traefik
+  port:
+    legendText: پورت Kubernetes
+  version:
+    legendText: نسخه Kubernetes
+    legendTextCached: نسخه Kubernetes (فقط نسخه‌های ذخیره شده)
+    otherVersions: سایر نسخه‌ها
+    recommendedVersions: نسخه‌های توصیه شده
+
+locale:
+  de: آلمانی
+  en-us: انگلیسی
+  fa: فارسی
+  zh-hans: چینی (ساده‌شده)
+
+mainMenu:
+  about: درباره {appName}
+  edit:
+    copy: کپی(&C)
+    cut: برش(&T)
+    delete: حذف(&L)
+    label: ویرایش(&E)
+    paste: جای‌گذاری(&P)
+    redo: انجام مجدد(&R)
+    selectAll: انتخاب همه(&A)
+    undo: واگرد(&U)
+  file:
+    close: بستن
+    exit: خروج(&X)
+    label: فایل(&F)
+  help:
+    about: درباره {appName}(&A)
+    discuss: بحث(&D)
+    fileABug: گزارش &Bug
+    getHelp: دریافت راهنما(&H)
+    help: راهنمای {appName}(&H)
+    label: راهنما(&H)
+    projectPage: صفحه پروژه(&P)
+  hide: مخفی کردن {appName}
+  hideOthers: مخفی کردن سایرین
+  preferences: تنظیمات
+  quit: خروج از {appName}
+  services: سرویس‌ها
+  showAll: نمایش همه
+  view:
+    actualSize: اندازه واقعی(&A)
+    forceReload: بارگذاری اجباری(&F)
+    label: نما(&V)
+    reload: بارگذاری مجدد(&R)
+    toggleDevTools: ابزارهای توسعه‌دهنده(&D)
+    toggleFullScreen: تمام‌صفحه(&S)
+    zoomIn: بزرگ‌نمایی(&I)
+    zoomOut: کوچک‌نمایی(&O)
+  window:
+    front: آوردن همه به جلو
+    label: پنجره(&W)
+    minimize: کمینه کردن
+    zoom: بزرگ‌نمایی
+
+marketplace:
+  labels:
+    install: نصب
+    uninstall: حذف
+    upgrade: ارتقا
+  loading:
+    # @reason: loading state message while a marketplace extension installs
+    install: در حال نصب...
+    # @reason: loading state message while a marketplace extension is being removed
+    uninstall: در حال حذف...
+    # @reason: loading state message while a marketplace extension upgrades
+    upgrade: در حال ارتقا...
+  moreInfo: اطلاعات بیشتر
+  noResults: هیچ extension برای معیارهای جستجو یافت نشد
+  tabs:
+    catalog: کاتالوگ
+    installed: نصب شده
+  title: Extensions
+
+nav:
+  userMenu:
+    clusterDashboard: داشبورد کلاستر
+    preferences: تنظیمات
+
+pathManagement:
+  label: پیکربندی PATH
+  options:
+    manual:
+      description: Rancher Desktop مسیر PATH شما را تغییر نمی‌دهد؛ <code>$HOME/.rd/bin</code> را به صورت دستی به مسیر خود اضافه کنید.
+      label: دستی
+    rcFiles:
+      description: Rancher Desktop پروفایل shell شما را برای شما ویرایش می‌کند. برای اعمال تغییرات، shell‌های باز را راه‌اندازی مجدد کنید.
+      label: خودکار
+  tooltip: Rancher Desktop با ابزارهایی مانند kubectl، nerdctl، helm و docker ارائه می‌شود. برای استفاده از این ابزارها، <code>$HOME/.rd/bin</code> باید در PATH شما باشد.
+
+portForwarding:
+  title: Port Forwarding
+  sortableTables:
+    noRows: هیچ ورودی ارجاع پورتی برای نمایش وجود ندارد
+
+preferences:
+  actions:
+    banner:
+      error: مشکلی در انتخاب تنظیمات وجود دارد.
+      reset: Kubernetes پس از اعمال تغییرات بازنشانی خواهد شد.
+      restart: Kubernetes پس از اعمال تغییرات راه‌اندازی مجدد خواهد شد.
+  containerEngine:
+    webAssembly:
+      warning: WebAssembly باید برای نصب <a href="#" data-navigate="Kubernetes">Spin Operator</a> فعال باشد.
+  error:
+    body: برای تلاش مجدد، تنظیمات را بارگذاری مجدد کنید.
+    heading: ناتوان در دریافت تنظیمات
+    reload: بارگذاری مجدد تنظیمات
+  header: تنظیمات
+  incompatiblePrefWarningOr: یا
+  incompatibleTypeWarningPostDisabled: انتخاب نشود.
+  incompatibleTypeWarningPostSelected: انتخاب شود.
+  incompatibleTypeWarningPre: گزینه نیاز دارد
+  locked:
+    tooltip: قفل شده به دلیل خط‌مشی سازمان
+  nav:
+    application: برنامه
+    containerEngine: موتور Container
+    kubernetes: Kubernetes
+    virtualMachine: ماشین مجازی
+    wsl: WSL
+  resetDialog:
+    apply: اعمال و بازنشانی
+    detail: این تغییرات کلاستر Kubernetes را بازنشانی می‌کند که منجر به از دست دادن workloadها و تصاویر container می‌شود.
+    message: اعمال تنظیمات و بازنشانی Kubernetes؟
+    title: Rancher Desktop - بازنشانی Kubernetes
+  tabs:
+    allowedImages: تصاویر مجاز
+    behavior: رفتار
+    emulation: شبیه‌سازی
+    environment: محیط
+    general: عمومی
+    hardware: سخت‌افزار
+    integrations: یکپارچه‌سازی‌ها
+    proxy: Proxy
+    volumes: حجم‌ها
+
+preferencesWindow:
+  close:
+    detail: تنظیماتی با تغییراتی وجود دارد که اعمال نشده‌اند. تمام تنظیمات ذخیره نشده از بین خواهند رفت.
+    discardChanges: نادیده گرفتن تغییرات
+    message: بستن تنظیمات بدون اعمال؟
+    title: Rancher Desktop - بستن تنظیمات
+  title: Rancher Desktop - تنظیمات
+
+prefs:
+  experimental: آزمایشی
+  # @reason: message shown when a setting requires macOS 13.3 Ventura on ARM64; macOS version and name are proper nouns
+  onlyFromVentura_arm64: این تنظیم به macOS 13.3 (Ventura) یا نسخه‌های جدیدتر نیاز دارد.
+  # @reason: message shown when a setting requires macOS 13.0 Ventura on x64; macOS version and name are proper nouns
+  onlyFromVentura_x64: این تنظیم به macOS 13.0 (Ventura) یا نسخه‌های جدیدتر نیاز دارد.
+  # @reason این تنظیم نیازمند استفاده از حالت شبیه‌سازی VZ است؛ VZ فقط روی macOS 13.3 (Ventura) یا جدیدتر در دسترس است
+  onlyWithVZ_arm64: این تنظیم نیازمند استفاده از حالت شبیه‌سازی VZ است. VZ فقط روی macOS 13.3 (Ventura) یا جدیدتر در دسترس است.
+  # @reason همان پیام بالا اما برای x64 با نسخه macOS 13.0
+  onlyWithVZ_x64: این تنظیم نیازمند استفاده از حالت شبیه‌سازی VZ است. VZ فقط روی macOS 13.0 (Ventura) یا جدیدتر در دسترس است.
+
+product:
+  containerEngine:
+    abbreviation: CE
+    fullName: موتور کانتینر
+  deactivated: غیرفعال شده
+  kubernetesVersion: Kubernetes
+  networkStatus: وضعیت شبکه
+  networkStatusValues:
+    # @reason وضعیت در حال بررسی اتصال شبکه
+    checking: در حال بررسی...
+    # @reason وضعیت آفلاین شبکه
+    offline: آفلاین
+    # @reason وضعیت آنلاین شبکه
+    online: آنلاین
+  version: نسخه
+  versionChecking: (در حال بررسی...)
+
+progress:
+  askingPermission: درخواست مجوز برای اجرای وظایف به عنوان مدیر سیستم
+  bundlingCertificates: بسته‌بندی گواهی‌نامه‌ها
+  checkingK3sImages: بررسی تصاویر k3s
+  configuringContainerEngine: پیکربندی موتور کانتینر
+  configuringImageProxy: پیکربندی پروکسی تصویر
+  configuringLogrotate: پیکربندی logrotate
+  containerEngineComponents: اجزای موتور کانتینر
+  copyingCertificates: کپی‌برداری گواهی‌نامه‌ها
+  deletingIncompatibleState: حذف وضعیت ناسازگار Kubernetes
+  deletingKubernetes: حذف Kubernetes
+  deletingVirtualMachine: حذف ماشین مجازی
+  dnsConfiguration: پیکربندی DNS
+  ensuringCompatibleKubectl: اطمینان از سازگاری kubectl
+  ensuringVirtualizationSupported: اطمینان از پشتیبانی مجازی‌سازی
+  expectingPermission: در انتظار مجوز کاربر برای ادامه
+  extractingCertificates: استخراج گواهی‌نامه‌ها
+  fetchingCertificates: دریافت گواهی‌نامه‌ها
+  initializingRancherDesktop: مقداردهی اولیه Rancher Desktop
+  initializingWslData: مقداردهی اولیه داده‌های WSL
+  installingBuildkit: نصب Buildkit
+  installingCaCertificates: نصب گواهی‌نامه‌های CA
+  installingContainerEngine: نصب موتور کانتینر
+  installingCredentialHelper: نصب ابزار کمکی اعتبارسنجی
+  installingDockerCredentialHelper: نصب ابزار کمکی docker-credential
+  installingHelpers: نصب ابزارهای کمکی
+  installingImageScanner: نصب اسکنر تصویر
+  installingK3s: نصب k3s
+  installingKubernetes: نصب Kubernetes
+  kubernetesComponents: اجزای Kubernetes
+  kubernetesDockerCompatibility: سازگاری Kubernetes با dockerd
+  mountingWslData: مانت کردن داده‌های WSL
+  preparingToStart: آماده‌سازی برای شروع
+  proxyConfigSetup: راه‌اندازی پیکربندی پروکسی
+  rancherDesktopGuestAgent: عامل مهمان Rancher Desktop
+  regeneratingConfiguration: بازسازی پیکربندی برای در نظر گرفتن فقدان مجوزها
+  registeringWslDistribution: ثبت توزیع WSL
+  removingExistingCertificates: حذف گواهی‌نامه‌های موجود
+  removingSpinkubeOperator: حذف operator spinkube
+  removingStaleState: حذف وضعیت قدیمی
+  removingTraefik: حذف Traefik
+  resettingKubernetes: بازنشانی Kubernetes
+  runningProvisioningScripts: اجرای اسکریپت‌های مقداردهی
+  runningUpdateCaCertificates: اجرای update-ca-certificates
+  settingDockerContext: تنظیم docker context
+  settingLimaPermissions: تنظیم مجوزهای Lima
+  settingUpDockerSocket: راه‌اندازی سوکت Docker
+  settingUpVirtualEthernet: راه‌اندازی اترنت مجازی
+  shuttingDown: خاموش شدن
+  skippingNodeChecksFlannel: رد شدن از بررسی نودها، flannel غیرفعال است
+  startingBackend: شروع Backend
+  startingBuildkit: شروع buildkit
+  startingContainerEngine: شروع موتور کانتینر
+  startingImageProxy: شروع پروکسی تصویر
+  startingK3s: شروع k3s
+  startingKubernetes: شروع Kubernetes
+  startingProxy: شروع پروکسی
+  startingService: شروع {service}
+  startingVirtualMachine: شروع ماشین مجازی
+  startingWslEnvironment: شروع محیط WSL
+  stoppingExistingInstance: متوقف کردن نمونه موجود
+  stoppingMockBackend: متوقف کردن بکند آزمایشی
+  stoppingServices: متوقف کردن سرویس‌ها
+  updatingClusterConfiguration: به‌روزرسانی پیکربندی خوشه
+  updatingEtcHosts: به‌روزرسانی /etc/hosts
+  updatingKubeconfig: به‌روزرسانی kubeconfig
+  updatingOutdatedVm: به‌روزرسانی ماشین مجازی قدیمی
+  updatingWslData: به‌روزرسانی داده‌های WSL
+  upgradingWslDistribution: ارتقا توزیع WSL
+  waitingForContainerEngine: در انتظار آماده شدن موتور کانتینر
+  waitingForKubernetesApi: در انتظار Kubernetes API
+  waitingForNodes: در انتظار نودها
+  waitingForServices: در انتظار سرویس‌ها
+  writingK3sConfiguration: نوشتن پیکربندی K3s
+
+snapshots:
+  action:
+    create: ایجاد Snapshot
+  card:
+    action:
+      remove: حذف
+      restore: بازیابی
+    created: ایجاد شده در '<b>'{date}'</b>' در ساعت '<b>'{time}'</b>'
+  create:
+    actions:
+      back: لغو
+      submit: ایجاد
+    description:
+      label: توضیحات
+    info: Rancher Desktop هنگام ایجاد Snapshot جدید موقتاً غیرقابل دسترس خواهد بود
+    name:
+      label: نام Snapshot
+    title: ایجاد Snapshot جدید
+  dialog:
+    buttons:
+      error: بستن
+    creating:
+      actions:
+        cancel: لغو
+      header: در حال ایجاد {snapshot}
+      message: لطفاً منتظر بمانید در حالی که snapshot '<b>'{snapshot}'</b>' در حال ایجاد است.'<br/>'این ممکن است بسته به منابع ماشین شما زمان‌بر باشد.'<br/>'Rancher Desktop در طول این عملیات موقتاً غیرقابل دسترس خواهد بود.'<br/><br/>'پس از تکمیل snapshot، VM راه‌اندازی مجدد خواهد شد.
+    delete:
+      actions:
+        # @reason دکمه لغو در دیالوگ حذف اسنپشات
+        cancel: لغو
+        # @reason دکمه تأیید حذف در دیالوگ حذف اسنپشات
+        ok: حذف
+      # @reason عنوان دیالوگ تأیید حذف دائمی اسنپشات
+      header: اسنپشات به‌طور دائمی حذف شود؟
+      # @reason متن اطلاعاتی در دیالوگ حذف — مقدار اصلی "text" است، عیناً حفظ می‌شود
+      info: text
+    generic:
+      header: عملیات snapshot در حال انجام
+      message: لطفاً منتظر بمانید در حالی که عملیات snapshot فعال است.<br/>این ممکن است بسته به منابع ماشین شما زمان‌بر باشد.<br/>Rancher Desktop در طول این عملیات موقتاً غیرقابل دسترس خواهد بود.<br/><br/>پس از تکمیل فرآیند snapshot، VM راه‌اندازی مجدد خواهد شد.
+    restore:
+      actions:
+        # @reason دکمه لغو در دیالوگ بازیابی اسنپشات
+        cancel: لغو
+        # @reason دکمه تأیید بازیابی در دیالوگ بازیابی اسنپشات
+        ok: بازیابی
+      error:
+        buttonText: خروج از Rancher Desktop
+        description: شکست در بازیابی snapshot '<b>'{snapshot}'</b>'.'<br/><br/>'Rancher Desktop یک بازنشانی کارخانه انجام داده و اکنون خارج خواهد شد. لطفاً قبل از راه‌اندازی مجدد Rancher Desktop و تلاش برای بازیابی دوباره snapshot، مشکلی که منجر به این خطا شده را برطرف کنید.
+        header: خطا در بازیابی snapshot
+      # @reason عنوان دیالوگ تأیید بازیابی اسنپشات
+      header: اسنپشات بازیابی شود؟
+      # @reason متن هشدار بازیابی اسنپشات که توضیح می‌دهد تنظیمات جاری جایگزین می‌شوند
+      info: بازیابی این اسنپشات، نصب فعلی شما را از جمله تنظیمات برگزیده جایگزین خواهد کرد. اگر پنجره تنظیمات برگزیده باز باشد، به‌صورت خودکار بسته شده و هر تغییر ذخیره‌نشده‌ای دور انداخته خواهد شد.
+    restoring:
+      actions:
+        # @reason دکمه لغو در دیالوگ در حال بازیابی
+        cancel: لغو
+      header: در حال بازگردانی {snapshot}
+      message: لطفاً صبر کنید تا عکس‌فوری '<b>'{snapshot}'</b>' بازگردانی شود. این کار بسته به منابع دستگاه شما ممکن است زمان‌بر باشد.<br/><br/>Rancher Desktop در طول این عملیات به‌طور موقت در دسترس نخواهد بود. پس از اتمام، ماشین مجازی با عکس‌فوری {snapshot} فعال مجدداً راه‌اندازی خواهد شد.
+    showLogs: نمایش گزارش‌ها
+  empty:
+    body: برای شروع روی ایجاد عکس‌فوری کلیک کنید
+    heading: عکس‌فوری‌ای یافت نشد
+    icon: icon-search
+  info:
+    create:
+      # @reason پیام لغو ایجاد اسنپشات با نام آن به‌صورت متغیر
+      cancel: ایجاد {snapshot} لغو شد
+      # @reason پیام موفقیت ایجاد اسنپشات با نام پررنگ‌شده
+      success: '''<b>''{snapshot}''</b>'' ایجاد شد'
+    delete:
+      # @reason پیام خطای حذف اسنپشات با جزئیات خطا
+      error: 'خطای حذف: {error}'
+      # @reason پیام موفقیت حذف اسنپشات با نام پررنگ‌شده
+      success: '''<b>''{snapshot}''</b>'' حذف شد'
+    lock:
+      # @reason پیام هشدار درباره فایل قفل اسنپشات که مدت غیرعادی باقی مانده؛ rdctl به‌عنوان شناسه فنی حفظ می‌شود
+      info: یک فایل قفل اسنپشات برای مدت غیرمعمول طولانی شناسایی شده است. اگر فکر می‌کنید این خطاست، می‌توانید با اجرای <code>rdctl snapshot unlock</code> فایل قفل را حذف کنید.
+    restore:
+      # @reason پیام لغو بازیابی اسنپشات با نام آن به‌صورت متغیر
+      cancel: بازیابی {snapshot} لغو شد
+      # @reason پیام موفقیت بازیابی اسنپشات با نام پررنگ‌شده
+      success: '''<b>''{snapshot}''</b>'' بازیابی شد'
+    when: ' در {time}'
+  title: عکس‌فوری‌ها
+
+sortableTable:
+  actionAvailability:
+    selected: '{actionable} انتخاب شده'
+    some: در دسترس برای {actionable} از {total} انتخاب شده
+  add: افزودن
+  addFilter: افزودن فیلتر
+  bulkActions:
+    collapsed:
+      label: عملیات
+  filterFor: فیلتر برای...
+  in: در
+  noActions: هیچ عملیاتی در دسترس نیست
+  noData: هیچ ردیفی مطابق با جستجوی شما یافت نشد.
+  noRows: ردیفی برای نمایش وجود ندارد.
+  paging:
+    generic: '{pages, plural, =0 {بدون مورد} =1 {{count} {count, plural, =1 {مورد} other {مورد}}} other {{from} - {to} از {count} مورد}}'
+  resetFilters: بازنشانی
+  search: فیلتر
+  selectCol: یک ستون را انتخاب کنید
+  tableHeader:
+    groupBy: گروه‌بندی بر اساس
+    noFilter: این ستون قابل فیلتر نیست بر اساس
+    show: نمایش
+
+sudoPrompt:
+  alwaysRunWithout: همیشه بدون دسترسی مدیریتی اجرا شود
+  buttonText: تأیید
+  explanation: 'این کار مسیرهای زیر را تغییر خواهد داد:'
+  message: 'Rancher Desktop به دسترسی مدیریتی ("دسترسی sudo") به دلایل زیر نیاز دارد:'
+  messageSecondPart: پرامپت پس از بستن این پنجره نمایش داده خواهد شد. لغو پرامپت یا غیرفعال‌سازی دسترسی مدیریتی نیازمند تغییر docker context به rancher-desktop است تا بتوانید از Rancher Desktop استفاده کنید.
+  reasons:
+    dockerSocket:
+      # @reason توضیح سوکت docker برای درخواست مجوز sudo — docker به‌عنوان اصطلاح فنی حفظ می‌شود
+      description: سازگاری با ابزارهایی را فراهم می‌کند که از سوکت docker بدون قابلیت استفاده از context های docker بهره می‌برند.
+      # @reason عنوان راه‌اندازی سوکت پیش‌فرض docker
+      title: راه‌اندازی سوکت پیش‌فرض docker
+    networking:
+      # @reason توضیح شبکه‌سازی پُلی برای درخواست مجوز sudo
+      description: شبکه‌سازی پُلی را فراهم می‌کند تا دسترسی به کانتینرها آسان‌تر باشد. اگر این مجوز داده نشود، کانتینرها فقط از طریق port forwarding در دسترس خواهند بود.
+      # @reason عنوان پیکربندی شبکه
+      title: پیکربندی شبکه
+  title: نیاز به دسترسی مدیریتی
+
+systemPreferences:
+  cpus: تعداد CPU
+  memory: حافظه (گیگابایت)
+
+telemetryOptIn:
+  fineprint: ارسال اطلاعات استفاده ناشناس، گزارش خطا و غیره برای کمک به بهبود Rancher Desktop. داده‌های شما با هیچ‌کس دیگری به اشتراک گذاشته نخواهد شد و هیچ اطلاعاتی درباره منابع یا نقاط پایانی خاصی که مستقر می‌کنید شامل نمی‌شود.
+  label: اجازه جمع‌آوری آمار ناشناس برای کمک به بهبود Rancher Desktop
+
+tray:
+  containerEngine: 'موتور کانتینر: {name}'
+  kubernetesContexts: Kubernetes Contexts
+  networkStatus: 'وضعیت شبکه: {status}'
+  noneFound: موردی یافت نشد
+  openDashboard: باز کردن داشبورد کلاستر
+  openMainWindow: باز کردن پنجره اصلی
+  openPreferences: باز کردن دیالوگ تنظیمات
+  quitRancherDesktop: خروج از Rancher Desktop
+  state:
+    disabled: Kubernetes غیرفعال است
+    error: Kubernetes با خطا مواجه شده است
+    started: Kubernetes در حال اجرا است
+    starting: Kubernetes در حال راه‌اندازی است
+    stopped: Kubernetes متوقف شده است
+    stopping: Kubernetes در حال خاموش شدن است
+  tooltip: Rancher Desktop
+
+troubleshooting:
+  debugMode: فعال‌سازی حالت اشکال‌زدایی
+  general:
+    factoryReset:
+      buttonText: بازنشانی کارخانه
+      description: بازنشانی کارخانه تمام تنظیمات Rancher Desktop را حذف خواهد کرد.
+      messageBox:
+        cancel: انصراف
+        checkboxLabel: نگه‌داشتن تصاویر Kubernetes ذخیره شده
+        detail: <p>انجام بازنشانی کارخانه، کلاستر و تمام تنظیمات Rancher Desktop را حذف کرده و Rancher Desktop را خاموش خواهد کرد. اگر قصد دارید به استفاده از Rancher Desktop ادامه دهید، باید آن را به صورت دستی راه‌اندازی کرده و دوباره راه‌اندازی اولیه را انجام دهید.</p><p>آیا مطمئن هستید که می‌خواهید همه‌چیز را بازنشانی کنید؟</p>
+        message: انجام بازنشانی کارخانه؟
+        ok: بازنشانی کارخانه
+        title: Rancher Desktop - بازنشانی کارخانه
+      title: بازنشانی کارخانه
+    logs:
+      buttonText: نمایش گزارش‌ها
+      description: نمایش گزارش‌های Rancher Desktop
+      title: گزارش‌ها
+  kubernetes:
+    resetKubernetes:
+      buttonText: بازنشانی Kubernetes
+      description: بازنشانی Kubernetes تمام workloads و پیکربندی را حذف خواهد کرد.
+      messageBox:
+        cancel: انصراف
+        checkboxLabel: حذف تصاویر کانتینر
+        message: بازنشانی Kubernetes؟
+        ok: بازنشانی
+        title: Rancher Desktop - بازنشانی Kubernetes
+      title: بازنشانی Kubernetes
+  needHelp: هنوز با مشکل مواجه هستید؟ یک بحث در کانال <b>#rancher-desktop</b> در <a href="https://slack.rancher.io/">Rancher Users Slack</a> شروع کنید یا <a href="https://github.com/rancher-sandbox/rancher-desktop/issues">یک مشکل گزارش دهید</a>.
+  title: عیب‌یابی
+
+unmetPrerequisites:
+  action: لطفاً مطمئن شوید همه الزامات برآورده شده‌اند و دوباره امتحان کنید. Rancher Desktop اکنون بسته خواهد شد.
+  buttonText: تأیید
+  message: 'Rancher Desktop نمی‌تواند راه‌اندازی شود زیرا الزامات موجود نیستند یا پیکربندی نشده‌اند:'
+  title: Rancher Desktop قادر به راه‌اندازی نیست
+
+updateStatus:
+  applyingUpdate: در حال اعمال به‌روزرسانی...
+  available: به‌روزرسانی به نسخه {version} در دسترس است
+  checkForUpdates: بررسی خودکار برای به‌روزرسانی‌ها
+  downloading: در حال دانلود... ({percent}%, {speed})
+  errorChecking: در بررسی برای به‌روزرسانی‌ها خطایی رخ داد.
+  releaseNotes: یادداشت‌های انتشار
+  restartNow: راه‌اندازی مجدد اکنون
+  restartToApply: برای اعمال به‌روزرسانی، برنامه را مجدداً راه‌اندازی کنید.
+  unsupported:
+    documentationLink: مستندات نصب
+    message: نسخه جدیدتر Rancher Desktop در دسترس است، اما در سیستم شما پشتیبانی نمی‌شود.
+    seeDocumentation: برای اطلاعات بیشتر لطفاً مراجعه کنید به
+    title: آخرین نسخه پشتیبانی نمی‌شود
+  updateAvailable: به‌روزرسانی در دسترس است
+
+validation:
+  cannotDecrease: امکان کاهش «{field}» از {from} به {to} وجود ندارد
+  cannotEnableWasmClassic: امکان فعال‌سازی WebAssembly با ذخیره‌سازی کلاسیک برای moby وجود ندارد.
+  cannotSwitchClassicWasm: امکان تغییر به ذخیره‌سازی کلاسیک برای moby هنگامی که WebAssembly فعال است وجود ندارد.
+  cannotSwitchMobyClassicWasm: امکان تغییر به موتور کانتینر moby با ذخیره‌سازی کلاسیک هنگامی که WebAssembly فعال است وجود ندارد.
+  duplicateEntries: 'فیلد «{field}» موارد تکراری دارد: «{duplicates}»'
+  errorsInProposedSettings: 'خطا در تنظیمات پیشنهادی:'
+  fieldLocked: فیلد «{field}» قفل شده است
+  invalidImageReference: '{field}: «{pattern}» یک مرجع تصویر را توصیف نمی‌کند'
+  invalidMapping: '{field}: «{value}» یک نگاشت معتبر نیست'
+  invalidName: '{field}: «{name}» یک نام نامعتبر است'
+  invalidPageName: '{field}: «{value}» نام صفحه معتبری برای پنجره تنظیمات نیست'
+  invalidTabName: '{field}: نام تب «{tabName}» برای صفحه تنظیمات «{page}» معتبر نیست'
+  invalidTag: '{field}: «{name}» تگ نامعتبر «{tag}» دارد'
+  invalidValue: 'مقدار نامعتبر برای «{field}»: <{value}>'
+  invalidValueEnum: 'مقدار نامعتبر برای «{field}»: <{value}>؛ باید یکی از {validValues} باشد'
+  kubernetesVersionNotFound: نسخه Kubernetes «{version}» یافت نشد.
+  nonStringTag: '{field}: «{name}» تگ غیررشته‌ای «{tag}» دارد'
+  notSupported: تغییر فیلد «{field}» از طریق API پشتیبانی نمی‌شود.
+  profileExpectedArray: 'خطا در فیلد ''{field}'': انتظار نوع آرایه بود، ''{value}'' دریافت شد'
+  profileExpectedType: 'خطا در فیلد ''{field}'': انتظار نوع {expectedType} بود، ''{value}'' دریافت شد'
+  profileExpectedTypeGotArray: 'خطا در فیلد ''{field}'': انتظار نوع {expectedType} بود، یک آرایه دریافت شد {value}'
+  proposedShouldBeObject: فیلد پیشنهادی «{field}» باید یک شیء باشد، <{value}> دریافت شد.
+  requiresArm: تنظیم {field} فقط در سیستم‌های aarch64 قابل فعال‌سازی است.
+  requiresNineP: تنظیم {field} فقط هنگامی قابل تغییر است که virtualMachine.mount.type برابر «{mountType}» باشد.
+  requiresVz: تنظیم {field} فقط هنگامی قابل فعال‌سازی است که virtual-machine.type برابر «{vmType}» باشد.
+  requiresWebAssembly: تنظیم {field} فقط هنگامی قابل تنظیم است که experimental.container-engine.web-assembly.enabled نیز فعال شده باشد.
+  settingRequires: تنظیم {field} به «{value}» مستلزم آن است که {otherField} برابر «{required}» باشد.
+  settingRequiresEither: تنظیم {field} به «{value}» مستلزم آن است که {otherField} برابر «{option1}» یا «{option2}» باشد.
+  shouldBeObject: تنظیم «{field}» باید یک شیء داخلی را دربرگیرد، اما <{value}> دریافت شد.
+  shouldBeSimple: تنظیم «{field}» باید یک مقدار ساده باشد، اما <{value}> دریافت شد.
+  vzArmMacOs: تنظیم {field} به «{vmType}» در ARM نیازمند macOS 13.3 (Ventura) یا بالاتر است.
+  vzIntelMacOs: تنظیم {field} به «{vmType}» در Intel نیازمند macOS 13.0 (Ventura) یا بالاتر است.
+
+virtualMachine:
+  mount:
+    type:
+      legend: نوع Mount
+      options:
+        9p:
+          # @reason توضیح روش mount با 9p با اشاره به دستگاه‌های QEMU virtio-9p-pci
+          description: سیستم فایل را از طریق دستگاه‌های virtio-9p-pci در QEMU در معرض دسترسی قرار می‌دهد.
+          # @reason برچسب شناسه فنی 9p — بدون ترجمه
+          label: 9p
+          options:
+            cacheMode:
+              legend: حالت Cache
+              options:
+                # @reason شناسه فنی — بدون ترجمه
+                fscache: fscache
+                # @reason شناسه فنی — بدون ترجمه
+                loose: loose
+                # @reason شناسه فنی — بدون ترجمه
+                mmap: mmap
+                # @reason شناسه فنی — بدون ترجمه
+                none: none
+              tooltip: سیاست caching که باید استفاده شود
+            mSizeInKib:
+              legend: اندازه حافظه در KiB
+              tooltip: حداکثر اندازه بسته در KiB
+            protocolVersion:
+              legend: نسخه پروتکل
+              options:
+                # @reason شناسه فنی — بدون ترجمه
+                9p2000: 9p2000
+                # @reason شناسه فنی — بدون ترجمه
+                9p2000L: 9p2000.L
+                # @reason شناسه فنی — بدون ترجمه
+                9p2000u: 9p2000.u
+              tooltip: نسخه پروتکل 9P
+            securityModel:
+              legend: مدل امنیتی
+              options:
+                # @reason شناسه فنی — بدون ترجمه
+                mapped-file: mapped-file
+                # @reason شناسه فنی — بدون ترجمه
+                mapped-xattr: mapped-xattr
+                # @reason شناسه فنی — بدون ترجمه
+                none: none
+                # @reason شناسه فنی — بدون ترجمه
+                passthrough: passthrough
+              tooltip: مدل امنیتی استفاده شده برای مسیر صادراتی
+        reverse-sshfs:
+          # @reason توضیح reverse-sshfs با اشاره به سرور SFTP — SFTP و reverse-sshfs حفظ می‌شوند
+          description: سیستم فایل را از طریق اجرای یک سرور SFTP در معرض دسترسی قرار می‌دهد.
+          # @reason برچسب شناسه فنی reverse-sshfs — بدون ترجمه
+          label: reverse-sshfs
+        virtiofs:
+          # @reason توضیح virtiofs با اشاره به Apple Virtualization framework
+          description: سیستم فایل را از طریق دستگاه دایرکتوری اشتراکی چارچوب Apple Virtualization در معرض دسترسی قرار می‌دهد.
+          # @reason برچسب شناسه فنی virtiofs — بدون ترجمه
+          label: virtiofs
+  proxy:
+    address: آدرس
+    addressTitle: آدرس پروکسی
+    authTitle: اطلاعات احراز هویت
+    label: فعال‌سازی پروکسی استفاده شده توسط rancher-desktop
+    legend: پروکسی WSL
+    noproxy:
+      errors:
+        duplicate: خطا، مورد تکراری است.
+      legend: لیست hostname های بدون پروکسی
+      placeholder: Hostname برای عدم هدایت به پروکسی
+    password: رمز عبور
+    port: پورت
+    username: نام کاربری
+  type:
+    legend: نوع ماشین مجازی
+    options:
+      qemu:
+        # @reason توضیح گزینه شبیه‌ساز QEMU
+        description: از شبیه‌ساز QEMU استفاده می‌کند.
+        # @reason برچسب QEMU — شناسه فنی، بدون ترجمه
+        label: QEMU
+      vz:
+        # @reason توضیح گزینه Apple Virtualization framework
+        description: از چارچوب Apple Virtualization استفاده می‌کند.
+        # @reason برچسب VZ — شناسه فنی، بدون ترجمه
+        label: VZ
+  useRosetta:
+    label: فعال‌سازی پشتیبانی Rosetta
+    legend: گزینه VZ
+
+volumes:
+  sortableTables:
+    noRows: هیچ والیومی برای نمایش وجود ندارد
+  files:
+    checkError: خطا در بررسی وضعیت volume
+    listError: 'خطا در لیست کردن فایل‌ها: {error}'
+    noFiles: این والیوم خالی است
+    loading: در حال بارگیری فایل‌های volume...
+    table:
+      header:
+        modified: تغییر یافته
+        name: نام
+        permissions: مجوزها
+        size: اندازه
+    title: فایل‌های Volume
+    volumeNotFound: Volume "{name}" یافت نشد
+  manage:
+    table:
+      header:
+        created: ایجاد شده
+        driver: درایور
+        mountpoint: نقطه Mount
+        volumeName: نام Volume
+  manager:
+    table:
+      action:
+        browse: مرور فایل‌ها
+        delete: حذف
+  title: Volumes
+
+webAssembly:
+  description: لطفاً قبل از فعال‌سازی قابلیت آزمایشی WebAssembly مستندات را مطالعه کنید!
+  enabled: فعال
+  label: WebAssembly (Wasm)
