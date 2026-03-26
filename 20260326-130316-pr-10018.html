@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Review: 20260326-130316-pr-10018</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Deep Review: 20260326-130316-pr-10018</h1>
+
+<table class="meta-table">
+<tr><td>Date</td><td>2026-03-26 13:03</td></tr>
+<tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+<tr><td>Round</td><td>2</td></tr>
+<tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+<tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10018" class="gh-ref" data-title="Use dynamic ports for Steve to avoid conflicts with other software" data-state="open" data-type="pr">#10018</a> — Use dynamic ports for Steve to avoid conflicts with other software</td></tr>
+<tr><td>Branch</td><td><code>steve-dynamic-ports</code></td></tr>
+<tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ba16a032a"><code>ba16a032a</code></a> Use dynamic ports for Steve to avoid conflicts with other software<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b69b292f7"><code>b69b292f7</code></a> Check Steve HTTP readiness instead of raw TCP connectivity<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/24e9a1bdd"><code>24e9a1bdd</code></a> Steve: Fix healthcheck<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fa2cbca72"><code>fa2cbca72</code></a> Steve: address AI review comments</td></tr>
+<tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.6, <span class="pill pill-codex">Codex</span> GPT 5.4, <span class="pill pill-gemini">Gemini</span> 3.1 Pro</td></tr>
+<tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> — no critical issues; the one important gap (dashboard button after Steve failure) is already tracked as <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a> and acknowledged by the reviewer</td></tr>
+<tr><td>Wall-clock time</td><td>24 min 30 s</td></tr>
+</table>
+
+<hr>
+
+<h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>This PR replaces Steve's hardcoded port 9443 with dynamically allocated ephemeral ports, resolving a long-standing conflict with other software (notably Logitech GHub). The implementation is clean: <code>getAvailablePorts()</code> binds all ports simultaneously to guarantee distinct values, the dashboard proxy is recreated per Steve start via wrapper functions that survive route re-registration, and a new <code>/api/steve-port</code> endpoint lets the dashboard discover the port at runtime. The health check was iteratively improved from raw TCP to an HTTPS probe against <code>/v1/namespaces</code>. All three agents agreed the code is well-structured; the only important finding (dashboard button enabled despite Steve failure) is already filed as <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a>.</p>
+<p><strong>Structure:</strong> 0 critical, 1 important, 7 suggestions. The PR has already been approved by @mook-as.</p>
+</div>
+
+<hr>
+
+<h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">¶</a></h2>
+
+<div class="card card-critical">
+<p>None.</p>
+</div>
+
+<hr>
+
+<h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">¶</a></h2>
+
+<div class="card card-important">
+<div class="finding-title" id="important-1">
+  <span class="finding-num">1.</span> Steve startup failure still enables the dashboard UI <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>
+  <a href="#important-1" class="pilcrow">¶</a>
+</div>
+
+<p>If <code>Steve.start()</code> throws, the catch block at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/background.ts#L1288">line 1288</a> logs the error but execution continues to <code>mainEvents.emit('k8s-check-state', mgr)</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/background.ts#L1296">line 1296</a>. The renderer enables the dashboard button solely based on <code>k8sState === K8s.State.STARTED</code>, so the dashboard appears accessible even though Steve is down. <code>git blame</code> attributes the swallowing <code>catch</code> to <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ba16a032a"><code>ba16a032a</code></a>. Already filed as <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a> and acknowledged by reviewer — not blocking merge.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/background.ts#L1278-L1301">background.ts</a></div>
+<pre data-start="1278" data-line="1288,1289,1296,1297"><code class="language-typescript">        if (enabledK8s) {
+          try {
+            const [stevePort] = await getAvailablePorts(1);
+
+            console.log(`Steve HTTPS port: ${ stevePort }`);
+            // Set the Steve HTTPS port for certificate checking before setting
+            // up Steve itself.
+            setSteveCertPort(stevePort);
+            await Steve.getInstance().start(stevePort);
+            DashboardServer.getInstance().setStevePort(stevePort); // recreate proxy middleware
+          } catch (ex) {
+            console.error('Failed to start Steve:', ex);
+          }
+        }
+      }
+
+      // Notify the tray and renderer after Steve is ready, so the dashboard
+      // button is only enabled when Steve can accept connections.
+      mainEvents.emit('k8s-check-state', mgr);
+      window.send('k8s-check-state', state);
+
+      if (state === K8s.State.STOPPING) {
+        Steve.getInstance().stop();
+      }</code></pre>
+
+<p><span class="fix-label">Fix:</span> either gate <code>k8s-check-state</code> emission on Steve success, or add a separate Steve-ready signal. The deferred approach (let Steve self-select a port and report it) would also solve this.</p>
+</div>
+
+<hr>
+
+<h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">¶</a></h2>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-1">
+  <span class="finding-num">1.</span> Race condition on fast K8s restart with port mismatch <span class="pill pill-gemini">Gemini</span>
+  <a href="#suggestion-1" class="pilcrow">¶</a>
+</div>
+
+<p>If K8s restarts quickly before the old Steve process emits its <code>close</code> event, <code>isRunning</code> is still <code>true</code> when <code>start()</code> is called with a new port. The method silently returns at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L48-L52">lines 48-52</a>, and <code>background.ts</code> proceeds to update the proxy to the new (unused) port. In practice, K8s restart cycles take many seconds while Steve exits promptly on SIGINT, making this window negligible.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L45-L55">pkg/rancher-desktop/backend/steve.ts</a></div>
+<pre data-start="45" data-line="48,49,50,51,52"><code class="language-typescript">  public async start(httpsPort: number) {
+    const { pid } = this.process || { };
+
+    if (this.isRunning &amp;&amp; pid) {
+      console.debug(`Steve is already running with pid: ${ pid }`);
+
+      return;
+    }
+
+    this.httpsPort = httpsPort;
+
+    const osSpecificName = /^win/i.test(os.platform()) ? 'steve.exe' : 'steve';</code></pre>
+
+<p><span class="fix-label">Fix:</span> either make <code>Steve.stop()</code> return a promise that resolves on process exit, or guard against mismatched ports:</p>
+<pre><code class="language-diff"> if (this.isRunning &amp;&amp; pid) {
++  if (this.httpsPort !== httpsPort) {
++    throw new Error(`Steve is shutting down on port ${ this.httpsPort }`);
++  }
+   console.debug(`Steve is already running with pid: ${ pid }`);
+   return;
+ }</code></pre>
+</div>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-2">
+  <span class="finding-num">2.</span> Test asserts behavior outside <code>getAvailablePorts</code> contract <span class="pill pill-codex">Codex</span>
+  <a href="#suggestion-2" class="pilcrow">¶</a>
+</div>
+
+<p><code>getAvailablePorts()</code> explicitly documents a TOCTOU window: ports are released before returning (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/utils/networks.ts#L20-L22">lines 20-22</a> of <code>networks.ts</code>). Rebinding returned ports in the test depends on no other process claiming them first, which can cause intermittent CI failures on busy hosts.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/utils/__tests__/networks.spec.ts#L20-L36">pkg/rancher-desktop/utils/__tests__/networks.spec.ts</a></div>
+<pre data-start="20" data-line="20,27,28,29"><code class="language-typescript">  it('returns usable ports', async() =&gt; {
+    const ports = await getAvailablePorts(2);
+
+    // Verify both returned ports can actually be bound.
+    for (const port of ports) {
+      const server = net.createServer();
+
+      await new Promise&lt;void&gt;((resolve, reject) =&gt; {
+        server.once('error', reject);
+        server.listen(port, '127.0.0.1', resolve);
+      });
+
+      await new Promise&lt;void&gt;((resolve) =&gt; {
+        server.close(() =&gt; resolve());
+      });
+    }
+  });</code></pre>
+
+<p><span class="fix-label">Fix:</span> test deterministic properties only:</p>
+<pre><code class="language-diff">-  it('returns usable ports', async() =&gt; {
++  it('returns distinct positive ports', async() =&gt; {
+     const ports = await getAvailablePorts(2);
+-    for (const port of ports) {
+-      // ... rebind attempt
+-    }
++    expect(new Set(ports).size).toBe(ports.length);
++    for (const port of ports) {
++      expect(port).toBeGreaterThan(0);
++    }
+   });</code></pre>
+</div>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-3">
+  <span class="finding-num">3.</span> Misleading docstring on <code>setStevePort()</code> <span class="pill pill-claude">Claude</span>
+  <a href="#suggestion-3" class="pilcrow">¶</a>
+</div>
+
+<p>The docstring says "Call this before each Steve start," but <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/background.ts#L1287"><code>background.ts:1287</code></a> calls it <em>after</em> <code>Steve.start()</code> succeeds (which is correct — proxies should point to where Steve is listening).</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/main/dashboardServer/index.ts#L70-L77">pkg/rancher-desktop/main/dashboardServer/index.ts</a></div>
+<pre data-start="70" data-line="72"><code class="language-typescript">  /**
+   * Update the Steve HTTPS port and recreate proxies with the new
+   * target.  Call this before each Steve start.
+   */
+  public setStevePort(stevePort: number) {
+    this.stevePort = stevePort;
+    this.createProxies();
+  }</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+<pre><code class="language-diff">-   * target.  Call this before each Steve start.
++   * target.  Call this after each successful Steve start.</code></pre>
+</div>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-4">
+  <span class="finding-num">4.</span> Dashboard proxy not cleared when Steve stops <span class="pill pill-gemini">Gemini</span>
+  <a href="#suggestion-4" class="pilcrow">¶</a>
+</div>
+
+<p>When Steve stops, <code>DashboardServer</code> still holds proxy middleware targeting the old ephemeral port. If another process binds that port, requests would be proxied to the wrong service. In practice, when K8s is STOPPING the dashboard button is disabled, so no user-initiated requests reach the proxy. Defense-in-depth, not a real exposure.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/background.ts#L1299-L1301">background.ts</a></div>
+<pre data-start="1299" data-line="1300"><code class="language-typescript">      if (state === K8s.State.STOPPING) {
+        Steve.getInstance().stop();
+      }</code></pre>
+
+<p><span class="fix-label">Fix:</span> <code>DashboardServer.getInstance().setStevePort(0)</code> after <code>Steve.stop()</code>.</p>
+</div>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-5">
+  <span class="finding-num">5.</span> Process error listener remains attached after spawn <span class="pill pill-gemini">Gemini</span>
+  <a href="#suggestion-5" class="pilcrow">¶</a>
+</div>
+
+<p>The <code>.once('error')</code> listener at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L109-L111">lines 109-111</a> is meant to catch spawn failures. If the process spawns successfully, this listener remains attached and would silently swallow a later runtime error by calling <code>reject()</code> on an already-resolved promise. Harmless in practice (Node.js ignores duplicate promise resolutions).</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L103-L112">pkg/rancher-desktop/backend/steve.ts</a></div>
+<pre data-start="103" data-line="109,110,111"><code class="language-typescript">    await new Promise&lt;void&gt;((resolve, reject) =&gt; {
+      this.process.once('spawn', () =&gt; {
+        this.isRunning = true;
+        console.debug(`Spawned child pid: ${ this.process.pid }`);
+        resolve();
+      });
+      this.process.once('error', (err) =&gt; {
+        reject(new Error(`Failed to spawn Steve: ${ err.message }`, { cause: err }));
+      });
+    });</code></pre>
+
+<p><span class="fix-label">Fix:</span> remove the listener upon successful spawn.</p>
+</div>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-6">
+  <span class="finding-num">6.</span> Inaccurate timeout message in <code>waitForReady</code> <span class="pill pill-gemini">Gemini</span>
+  <a href="#suggestion-6" class="pilcrow">¶</a>
+</div>
+
+<p>The error message calculates <code>60 * 500 / 1000 = 30</code> seconds, but each loop iteration also awaits <code>isPortReady()</code> which has its own 1000ms timeout. If every attempt times out, actual elapsed time is up to 90 seconds, not 30.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L135-L138">pkg/rancher-desktop/backend/steve.ts</a></div>
+<pre data-start="135" data-line="138"><code class="language-typescript">      await setTimeout(delayMs);
+    }
+
+    throw new Error(`Steve did not become ready after ${ maxAttempts * delayMs / 1000 } seconds`);</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+<pre><code class="language-diff">-throw new Error(`Steve did not become ready after ${ maxAttempts * delayMs / 1000 } seconds`);
++throw new Error(`Steve did not become ready after ${ maxAttempts } attempts`);</code></pre>
+</div>
+
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-7">
+  <span class="finding-num">7.</span> Redundant <code>setCertificateVerifyProc</code> on each health check <span class="pill pill-claude">Claude</span>
+  <a href="#suggestion-7" class="pilcrow">¶</a>
+</div>
+
+<p><code>Electron.session.fromPartition()</code> returns the same session for a given partition name. The <code>setCertificateVerifyProc</code> call at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L160">line 160</a> overwrites the previous callback on every iteration (up to 60 times in <code>waitForReady</code>). The function is identical each time, so this is harmless but redundant.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L157-L173">pkg/rancher-desktop/backend/steve.ts</a></div>
+<pre data-start="157" data-line="158,160"><code class="language-typescript">    return new Promise((resolve) =&gt; {
+      const session = Electron.session.fromPartition('steve-healthcheck', { cache: false });
+
+      session.setCertificateVerifyProc((request, callback) =&gt; {
+        if (request.hostname === '127.0.0.1') {
+          // We do not have any more information to narrow down the certificate;
+          // given that we're doing this in a private partition, it should be
+          // safe to allow all localhost certificates.  In particular, we do not
+          // get access to the port number, and all the Steve certificates have
+          // generic fields (e.g. subject).
+          callback(0);
+        } else {
+          // Unexpected request; not sure how this could happen in a new session,
+          // but we can at least pretend to do the right thing.
+          callback(-3); // Use Chromium's default verification.
+        }
+      });</code></pre>
+
+<p><span class="fix-label">Fix:</span> set the callback once in the constructor or on first call.</p>
+</div>
+
+<hr>
+
+<h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">¶</a></h2>
+
+<div class="card card-design">
+<h3 id="design-concerns">Concerns <a href="#design-concerns" class="pilcrow">¶</a></h3>
+
+<div class="finding-title" id="design-1">
+  <span class="finding-num">1.</span> (future) Port pre-allocation race <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>
+  <a href="#design-1" class="pilcrow">¶</a>
+</div>
+<p>The app pre-allocates Steve's port externally and races Steve to bind it. A cleaner design is to let Steve listen on port <code>0</code>, report its chosen port back, and have the caller read it. This would eliminate the TOCTOU window, the duplicate port state across <code>background.ts</code>/<code>DashboardServer</code>/<code>main/networking</code>, and the mismatch-on-restart race. Acknowledged by reviewer mook-as: "The correct fix is to have steve auto-select a port, and then have it report the port number. Will punt for now."</p>
+
+<h3 id="design-strengths">Strengths <a href="#design-strengths" class="pilcrow">¶</a></h3>
+
+<ol>
+<li>The <code>getAvailablePorts()</code> design of binding all ports simultaneously before releasing any elegantly prevents the "two calls get the same port" problem. The <code>TupleOf</code> type gives callers compile-time length guarantees. <span class="pill pill-claude">Claude</span></li>
+<li>The wrapper-function pattern in <code>DashboardServer.init()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/main/dashboardServer/index.ts#L101-L104">lines 101-104</a>) supports proxy recreation without re-registering Express routes — the falsy guard handles the window before first <code>setStevePort()</code> gracefully. <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span></li>
+<li>The health check evolution (TCP → HTTP → HTTPS <code>/v1/namespaces</code> probe) correctly addresses the real problem: Steve accepts connections before its API controllers finish schema discovery. <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span></li>
+<li>The tighter WebSocket upgrade matching (<code>req.url === key || req.url?.startsWith(key + '/')</code>) prevents accidental upgrades for unrelated routes. <span class="pill pill-gemini">Gemini</span></li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>The <code>getAvailablePorts</code> utility has solid unit test coverage (count, positivity, usability, distinctness, dynamic count). Untested scenarios by risk:</p>
+<ol>
+<li>Steve startup → proxy recreation → UI notification lifecycle — the core flow of the PR. Would require mocking Electron and K8s backend, which may not be practical in unit tests.</li>
+<li><code>/api/steve-port</code> endpoint returning the correct port (or 0 before first <code>setStevePort</code> call). A lightweight Express test could cover this.</li>
+<li>Steve failure path in <code>background.ts</code> — the catch block that suppresses errors and allows STARTED state emission.</li>
+<li><code>setSteveCertPort()</code> updating the certificate-error allowlist across port changes.</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>No documentation gaps. The PR description is thorough, commit messages are descriptive, and code comments explain the "why" for non-obvious decisions (TOCTOU window, certificate handling, proxy recreation pattern).</p>
+</div>
+
+<hr>
+
+<h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>Commits 1 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ba16a032a"><code>ba16a032a</code></a> — dynamic ports) and 2 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b69b292f7"><code>b69b292f7</code></a> — HTTP readiness check) are clean standalone concepts. Commit 3 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/24e9a1bdd"><code>24e9a1bdd</code></a> — fix healthcheck) patches commit 2's approach because HTTP redirects to HTTPS, but it is by a different author addressing reviewer feedback — keeping it separate is reasonable. Commit 4 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fa2cbca72"><code>fa2cbca72</code></a> — "address AI review comments") bundles several small fixes; the message could be more descriptive of the actual changes, but this is minor.</p>
+</div>
+
+<hr>
+
+<h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<ol>
+<li><strong>TOCTOU race in port allocation</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/utils/networks.ts#L20-L22"><code>utils/networks.ts:20-22</code></a>: <em>"The ports are released before returning, so there is a small TOCTOU race before the caller binds them."</em> Reviewer mook-as noted the correct long-term fix is to let Steve auto-select a port. The current approach is pragmatic; the race window is realistically a few hundred milliseconds.</li>
+<li><strong>Dashboard button enabled after Steve failure</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/background.ts#L1294-L1297"><code>background.ts:1294-1297</code></a>: The <code>k8s-check-state</code> emission is outside the Steve try/catch block, so it fires even when Steve throws. Filed as <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a>.</li>
+<li><strong>Health check certificate verification</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L160-L173"><code>steve.ts:160-173</code></a>: Accepts all localhost certificates in the <code>steve-healthcheck</code> session partition. Reviewer mook-as acknowledged this can be improved in the future.</li>
+<li><strong>Orphaned timer in health check</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fa2cbca72d6c9ac64cf7e0bfd577d3edc65ac92e/pkg/rancher-desktop/backend/steve.ts#L188-L195"><code>steve.ts:188-195</code></a>: The 1000ms timer in <code>isPortReady</code> is left running even if the request succeeds early. Reviewer mook-as explained this is safe: <code>req.abort()</code> on a completed request is a documented no-op.</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>None. All substantive reviewer comments were either addressed in subsequent commits or explicitly acknowledged as acceptable/deferred. Issue <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a> was filed during review and remains open as an intentional follow-up.</p>
+</div>
+
+<hr>
+
+<h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<h3 id="retro-claude"><span class="pill pill-claude">Claude</span> <a href="#retro-claude" class="pilcrow">¶</a></h3>
+<p>Claude Opus 4.6 produced a thorough, well-calibrated review. It correctly identified the <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a> gap as an acknowledged limitation rather than a new finding, and surfaced three unique suggestions (misleading docstring, silent stdio return, redundant cert proc). Its coverage was complete — every file reviewed with clear rationale. The verdict ("Approve with minor suggestions") accurately reflected the PR's quality. No false positives. Notably, Claude was the only agent to thoroughly document all four acknowledged limitations.</p>
+
+<h3 id="retro-codex"><span class="pill pill-codex">Codex</span> <a href="#retro-codex" class="pilcrow">¶</a></h3>
+<p>Codex GPT 5.4 was the fastest agent (221s) and produced a focused, concise review. Its two findings — Steve failure enabling the dashboard (Important) and the TOCTOU test flakiness (Suggestion) — were both well-supported with blame verification and concrete fix suggestions. The design observation about letting Steve self-select its port matched the reviewer's own assessment. Coverage was complete. No false positives. The "Changes requested" verdict was arguably too aggressive given that the important finding is already tracked as <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10060" class="gh-ref" data-title="Steve: Do not enable button if Steve fails to start correctly" data-state="open" data-type="issue">#10060</a>.</p>
+
+<h3 id="retro-gemini"><span class="pill pill-gemini">Gemini</span> <a href="#retro-gemini" class="pilcrow">¶</a></h3>
+<p>Gemini 3.1 Pro raised the most findings (4) and was the only agent to flag the fast-restart race condition and the proxy-to-released-port gap. However, it rated the restart race as Critical, which overstates the practical likelihood — K8s restart cycles are orders of magnitude slower than Steve process exit. The proxy gap was rated Important, but the dashboard button is disabled during STOPPING state, limiting exposure. Two unique suggestions (error listener, timeout message) were valid. Coverage was complete. One severity inflation (Critical → should be Suggestion).</p>
+
+<h3 id="retro-summary">Summary <a href="#retro-summary" class="pilcrow">¶</a></h3>
+
+<table class="retro-table">
+<thead>
+<tr><th>Metric</th><th><span class="pill pill-claude">Claude</span> Opus 4.6</th><th><span class="pill pill-codex">Codex</span> GPT 5.4</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr>
+</thead>
+<tbody>
+<tr><td>Duration</td><td>10:41</td><td>3:41</td><td>4:56</td></tr>
+<tr><td>Critical</td><td>0</td><td>0</td><td>1 (inflated)</td></tr>
+<tr><td>Important</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>Suggestion</td><td>3</td><td>1</td><td>2</td></tr>
+<tr><td>Design observations</td><td>5</td><td>2</td><td>3</td></tr>
+<tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Unique insights</td><td>3</td><td>1</td><td>3</td></tr>
+<tr><td>Files reviewed</td><td>8/8</td><td>8/8</td><td>8/8</td></tr>
+<tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+</tbody>
+</table>
+
+<p>All three agents achieved full file coverage with no false positives. Codex was fastest and most efficient (highest signal-to-noise). Claude provided the best-calibrated severity ratings and most comprehensive documentation of acknowledged limitations. Gemini contributed the most unique findings but overrated one severity. The multi-agent approach was valuable: Gemini's unique restart-race finding was a genuine insight (even if over-rated), and no single agent captured all seven consolidated suggestions.</p>
+</div>
+
+</main>
+
+<script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+<script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+</script>
+</body>
+</html>
