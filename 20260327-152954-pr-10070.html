@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Review: 20260327-152954-pr-10070</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Deep Review: 20260327-152954-pr-10070</h1>
+
+<table class="meta-table">
+<tr><td>Date</td><td>2026-03-27 15:29</td></tr>
+<tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+<tr><td>Round</td><td>1</td></tr>
+<tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+<tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10070" class="gh-ref" data-title="Fix no-proxy list and add domain/wildcard support" data-state="open" data-type="pr">#10070</a> — Fix no-proxy list and add domain/wildcard support</td></tr>
+<tr><td>Branch</td><td><code>fix-noproxy-list</code></td></tr>
+<tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/acf22fe17"><code>acf22fe17</code></a> Add domain name and wildcard support to no-proxy list<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/944856727"><code>944856727</code></a> Fix no-proxy list: guard StringList event and validate entries</td></tr>
+<tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.6, <span class="pill pill-codex">Codex</span> GPT 5.4, <span class="pill pill-gemini">Gemini</span> 3.1 Pro</td></tr>
+<tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> — IPv6 validation/iptables mismatch and policy.rules comment syntax need attention before merge</td></tr>
+<tr><td>Wall-clock time</td><td>15 min 43 s</td></tr>
+</table>
+
+<hr>
+
+<h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>This PR fixes the broken no-proxy list UI (missing <code>Array.isArray</code> guard on the StringList <code>@change</code> handler), adds input validation for noproxy entries, and routes domain-based entries through moproxy's <code>--policy</code> flag while keeping IP/CIDR entries on the iptables path. The implementation is well-structured, and the validator has thorough test coverage. The main concerns are that the validator accepts IPv6 addresses but the init script feeds them to IPv4-only <code>iptables</code>, and that the policy.rules fallback content uses <code>;</code> as a comment character, which may not be valid in moproxy's policy parser.</p>
+</div>
+
+<hr>
+
+<h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&para;</a></h2>
+
+<div class="card card-critical">
+<p>None.</p>
+</div>
+
+<hr>
+
+<h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&para;</a></h2>
+
+<!-- Important #1 -->
+<div class="card card-important">
+<div class="finding-title" id="important-1">
+  <span class="finding-num">1.</span> IPv6 entries pass validation but cause iptables failures <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>
+  <a href="#important-1" class="pilcrow">&para;</a>
+</div>
+
+<p>The validator accepts IPv6 addresses and CIDRs (with dedicated test cases at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/main/commandServer/__tests__/settingsValidator.spec.ts#L1020-L1029">settingsValidator.spec.ts:1020-1029</a>), but <code>writeProxySettings</code> in <code>wsl.ts</code> routes all IP entries to <code>MOPROXY_NOPROXY</code>. The init script at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/assets/scripts/moproxy.initd#L45">moproxy.initd:45</a> feeds each entry to <code>iptables --destination</code>, which supports only IPv4. An IPv6 entry like <code>::1</code> causes <code>iptables</code> to emit <code>host/network '::1' not found</code>. Since the init script does not use <code>ip6tables</code> to redirect IPv6 traffic either, IPv6 is already not proxied — making the bypass a no-op that only produces errors.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L671-L691">settingsValidator.ts</a></div>
+<pre data-start="671" data-line="675,680,689"><code class="language-typescript">  protected static isIPAddressOrCIDR(entry: string): boolean {
+    const slashIndex = entry.indexOf('/');
+
+    if (slashIndex === -1) {
+      return net.isIP(entry) !== 0;
+    }
+    const address = entry.substring(0, slashIndex);
+    const prefixStr = entry.substring(slashIndex + 1);
+    const ipVersion = net.isIP(address);
+
+    if (ipVersion === 0) {
+      return false;
+    }
+    if (!/^\d+$/.test(prefixStr)) {
+      return false;
+    }
+    const prefix = parseInt(prefixStr, 10);
+    const maxPrefix = ipVersion === 4 ? 32 : 128;
+
+    return prefix &gt;= 0 &amp;&amp; prefix &lt;= maxPrefix;
+  }</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L780-L795">wsl.ts</a></div>
+<pre data-start="780" data-line="783,784"><code class="language-typescript">    const ipEntries: string[] = [];
+    const domainRules: string[] = [];
+
+    for (const entry of proxy.noproxy) {
+      if (net.isIP(entry) !== 0 || entry.includes('/')) {
+        ipEntries.push(entry);
+      } else {
+        const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
+
+        domainRules.push(`dst domain ${ domain } direct`);
+      }
+    }
+
+    await this.writeFile('/etc/moproxy/policy.rules',
+      domainRules.length &gt; 0 ? `${ domainRules.join('\n') }\n` : '; no domain noproxy rules\n');
+    await this.modifyConf('moproxy', { MOPROXY_NOPROXY: ipEntries.join(',') });</code></pre>
+
+<p><span class="fix-label">Fix:</span> Either restrict the validator to IPv4 until the init script gains <code>ip6tables</code> support, or filter IPv6 entries in <code>writeProxySettings</code> so they do not reach <code>MOPROXY_NOPROXY</code>:</p>
+
+<pre><code class="language-diff"> for (const entry of proxy.noproxy) {
+-  if (net.isIP(entry) !== 0 || entry.includes('/')) {
++  const ipVersion = net.isIP(entry);
++  if (ipVersion === 4 || (entry.includes('/') &amp;&amp; net.isIP(entry.split('/')[0]) === 4)) {
+     ipEntries.push(entry);
+-  } else {
++  } else if (ipVersion === 0) {
+     const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
+     domainRules.push(`dst domain ${ domain } direct`);
+   }
++  // IPv6 entries are intentionally skipped — iptables is IPv4 only,
++  // and IPv6 traffic is not redirected through moproxy.
+ }</code></pre>
+</div>
+
+<!-- Important #2 -->
+<div class="card card-important">
+<div class="finding-title" id="important-2">
+  <span class="finding-num">2.</span> Policy.rules fallback uses <code>;</code> comment character, which may crash moproxy <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span>
+  <a href="#important-2" class="pilcrow">&para;</a>
+</div>
+
+<p>When no domain rules exist (the default state), this writes <code>; no domain noproxy rules</code> to the policy file. The <code>;</code> character is a comment delimiter in INI files (like <code>proxy.ini</code>), but moproxy's policy parser uses <code>#</code> for comments. If the parser rejects <code>;</code>, moproxy fails to start for every user who does not configure domain-based noproxy entries — that is, the common case.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L792-L793">wsl.ts</a></div>
+<pre data-start="780" data-line="793"><code class="language-typescript">    const ipEntries: string[] = [];
+    const domainRules: string[] = [];
+
+    for (const entry of proxy.noproxy) {
+      if (net.isIP(entry) !== 0 || entry.includes('/')) {
+        ipEntries.push(entry);
+      } else {
+        const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
+
+        domainRules.push(`dst domain ${ domain } direct`);
+      }
+    }
+
+    await this.writeFile('/etc/moproxy/policy.rules',
+      domainRules.length &gt; 0 ? `${ domainRules.join('\n') }\n` : '; no domain noproxy rules\n');
+    await this.modifyConf('moproxy', { MOPROXY_NOPROXY: ipEntries.join(',') });</code></pre>
+
+<p><span class="fix-label">Fix:</span> Replace the comment prefix:</p>
+
+<pre><code class="language-diff">-  domainRules.length &gt; 0 ? `${ domainRules.join('\n') }\n` : '; no domain noproxy rules\n');
++  domainRules.length &gt; 0 ? `${ domainRules.join('\n') }\n` : '# no domain noproxy rules\n');</code></pre>
+</div>
+
+<!-- Important #3 -->
+<div class="card card-important">
+<div class="finding-title" id="important-3">
+  <span class="finding-num">3.</span> Domain noproxy rules may not take effect on live settings update <span class="pill pill-claude">Claude</span>
+  <a href="#important-3" class="pilcrow">&para;</a>
+</div>
+
+<p>When the user changes proxy settings at runtime, <code>handleSettingsUpdate</code> writes the new <code>policy.rules</code> file and then sends SIGHUP via <code>reload</code>. SIGHUP causes moproxy to re-read its proxy server list (<code>--list</code>), but there is no documented behavior for reloading <code>--policy</code>. The subsequent <code>startService</code> calls <code>start --ifnotstarted</code>, which is a no-op because moproxy is already running. IP/CIDR changes take effect immediately through the iptables rebuild in the init script's <code>reload()</code>, but domain changes may require a full application restart.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L1704-L1716">wsl.ts</a></div>
+<pre data-start="1704" data-line="1707,1710,1711"><code class="language-typescript">  async handleSettingsUpdate(newConfig: BackendSettings): Promise&lt;void&gt; {
+    const proxy = newConfig.experimental.virtualMachine.proxy;
+
+    await this.writeProxySettings(proxy);
+    if (this.currentAction === Action.NONE &amp;&amp; this.process) {
+      if (proxy.enabled &amp;&amp; proxy.address &amp;&amp; proxy.port) {
+        await this.execService('moproxy', 'reload', '--ifstarted');
+        await this.startService('moproxy');
+      } else {
+        await this.stopService('moproxy');
+      }
+    }
+  }</code></pre>
+
+<p><span class="fix-label">Fix:</span> Replace <code>reload</code> + <code>start --ifnotstarted</code> with <code>stop</code> + <code>start</code> when the proxy is enabled, so moproxy re-reads both the server list and the policy file:</p>
+
+<pre><code class="language-diff">     if (proxy.enabled &amp;&amp; proxy.address &amp;&amp; proxy.port) {
+-      await this.execService('moproxy', 'reload', '--ifstarted');
+-      await this.startService('moproxy');
++      await this.stopService('moproxy');
++      await this.startService('moproxy');
+     } else {</code></pre>
+
+<p>Alternatively, verify that moproxy re-reads <code>--policy</code> on SIGHUP. If it does, this finding is void.</p>
+</div>
+
+<!-- Important #4 -->
+<div class="card card-important">
+<div class="finding-title" id="important-4">
+  <span class="finding-num">4.</span> Single-label hostnames rejected despite backend support <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>
+  <a href="#important-4" class="pilcrow">&para;</a>
+</div>
+
+<p>The domain validator requires at least two labels, rejecting single-label hostnames like <code>localhost</code>, <code>intranet</code>, or <code>wiki</code>. Corporate environments commonly bypass the proxy for internal short-names. Moproxy's <code>dst domain</code> policy mechanism handles single-label domains without issue. The test at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/main/commandServer/__tests__/settingsValidator.spec.ts#L1062-L1068">settingsValidator.spec.ts:1062-1068</a> explicitly codifies this rejection.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L693-L711">settingsValidator.ts</a></div>
+<pre data-start="693" data-line="701,702,703"><code class="language-typescript">  protected static isDomainName(entry: string): boolean {
+    const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
+
+    if (domain.length === 0 || domain.length &gt; 253) {
+      return false;
+    }
+    const labels = domain.split('.');
+
+    if (labels.length &lt; 2) {
+      return false;
+    }
+    const labelRE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;
+
+    return labels.every(label =&gt; labelRE.test(label));
+  }</code></pre>
+
+<p><span class="fix-label">Fix:</span> Remove the two-label requirement:</p>
+
+<pre><code class="language-diff">-    if (labels.length &lt; 2) {
+-      return false;
+-    }
+     const labelRE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/;</code></pre>
+</div>
+
+<hr>
+
+<h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&para;</a></h2>
+
+<!-- Suggestion #1 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-1">
+  <span class="finding-num">1.</span> Support <code>.example.com</code> wildcard convention <span class="pill pill-gemini">Gemini</span>
+  <a href="#suggestion-1" class="pilcrow">&para;</a>
+</div>
+
+<p>The validation accepts <code>*.example.com</code> but rejects <code>.example.com</code>, because splitting on <code>.</code> produces an empty first label that fails the regex. Since <code>.example.com</code> is a common convention in <code>NO_PROXY</code> environment variables (curl, wget, and others accept it), users who paste existing proxy bypass lists will hit validation errors.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L693-L695">settingsValidator.ts</a></div>
+<pre data-start="693" data-line="694"><code class="language-typescript">  protected static isDomainName(entry: string): boolean {
+    const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
+
+    if (domain.length === 0 || domain.length &gt; 253) {
+      return false;
+    }</code></pre>
+
+<p><span class="fix-label">Fix:</span> Also strip a leading <code>.</code>:</p>
+
+<pre><code class="language-diff">-    const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
++    const domain = entry.startsWith('*.') ? entry.substring(2) : entry.startsWith('.') ? entry.substring(1) : entry;</code></pre>
+
+<p>Apply the same normalization in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L787">wsl.ts:787</a>.</p>
+</div>
+
+<!-- Suggestion #2 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-2">
+  <span class="finding-num">2.</span> Wildcard-to-domain mapping deserves a comment <span class="pill pill-claude">Claude</span>
+  <a href="#suggestion-2" class="pilcrow">&para;</a>
+</div>
+
+<p>Both <code>*.example.com</code> and <code>example.com</code> produce the identical rule <code>dst domain example.com direct</code>. Whether moproxy's <code>dst domain</code> matches subdomains determines whether the wildcard form is meaningful. A one-line comment would prevent future readers from mistaking this for a bug.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L787-L789">wsl.ts</a></div>
+<pre data-start="787" data-line="787,788"><code class="language-typescript">        const domain = entry.startsWith('*.') ? entry.substring(2) : entry;
+
+        domainRules.push(`dst domain ${ domain } direct`);</code></pre>
+</div>
+
+<!-- Suggestion #3 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-3">
+  <span class="finding-num">3.</span> API and UI descriptions should reflect the expanded input types <span class="pill pill-codex">Codex</span>
+  <a href="#suggestion-3" class="pilcrow">&para;</a>
+</div>
+
+<p>The <code>noproxy</code> field now accepts IP addresses, CIDR subnets, domain names, and wildcard domains. The API spec (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/assets/specs/command-api.yaml#L757-L760">command-api.yaml:757-760</a>) and UI copy (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/assets/translations/en-us.yaml#L432-L434">en-us.yaml:432-434</a>) should be updated to document the supported formats.</p>
+</div>
+
+<hr>
+
+<h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&para;</a></h2>
+
+<h3 id="design-concerns">Concerns <a href="#design-concerns" class="pilcrow">&para;</a></h3>
+
+<div class="card card-design">
+<p><strong>1. Validation and backend classification may drift</strong> — The validator (<code>settingsValidator.ts</code>) and the backend classifier (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L780-L793">wsl.ts:780-793</a>) independently decide what constitutes an IP vs. a domain entry. They already diverge on IPv6: the validator accepts it, but the backend routes it to iptables. A shared classifier returning <code>{ ipv4Entries, ipv6Entries, domainEntries }</code> would eliminate this class of mismatch. <span class="pill pill-codex">Codex</span></p>
+</div>
+
+<h3 id="design-strengths">Strengths <a href="#design-strengths" class="pilcrow">&para;</a></h3>
+
+<div class="card card-design">
+<p><strong>1. Clean separation of concerns</strong> — The validator checks format; the backend classifies entries by routing mechanism. Each layer does one job. The split between iptables (IP/CIDR) and policy rules (domains) matches the underlying capabilities. <span class="pill pill-claude">Claude</span></p>
+
+<p><strong>2. Pattern reuse</strong> — The <code>Array.isArray</code> guard matches the established fix in <code>ContainerEngineAllowedImages.vue</code>, and <code>checkNoproxyList</code> follows the validator's existing conventions. <span class="pill pill-claude">Claude</span></p>
+
+<p><strong>3. Thorough validator tests</strong> — Eighteen test cases cover valid inputs, invalid inputs, edge cases, and platform gating. <span class="pill pill-claude">Claude</span></p>
+</div>
+
+<hr>
+
+<h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>The validator is well-tested. The following scenarios lack coverage, ranked by risk:</p>
+<ol>
+<li><strong>Backend entry classification</strong> (<code>writeProxySettings</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/acf22fe177b6c70bab550c9394b2b1450ccbbe94/pkg/rancher-desktop/backend/wsl.ts#L780-L795">wsl.ts:780-795</a>) — no tests cover the IP-vs-domain split, <code>*.</code> stripping, or policy.rules file format generation. This gap allowed the IPv6/iptables mismatch to pass undetected.</li>
+<li><strong>Live settings update with domain entries</strong> — no integration test verifies that changing domain noproxy entries at runtime takes effect in moproxy.</li>
+<li><strong>Moproxy startup with comment-only policy.rules</strong> — no test verifies that the fallback content is valid moproxy syntax.</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>The <code>command-api.yaml</code> (lines 757-760) and the UI copy in <code>en-us.yaml</code> (lines 432-434) describe <code>noproxy</code> as a hostname list. The PR now supports IPs, CIDRs, domains, and wildcards — those descriptions should be updated. <span class="pill pill-codex">Codex</span></p>
+</div>
+
+<hr>
+
+<h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>Clean two-commit structure: the first commit (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/944856727"><code>944856727</code></a>) fixes the immediate UI bug and adds validation; the second (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/acf22fe17"><code>acf22fe17</code></a>) adds domain/wildcard support. Each is a self-contained, reviewable unit with accurate messages.</p>
+</div>
+
+<hr>
+
+<h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&para;</a></h2>
+
+<h3 id="retro-claude"><span class="pill pill-claude">Claude</span> Opus 4.6 <a href="#retro-claude" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<p>Claude produced a focused, well-structured review with accurate findings. Its unique contribution was identifying the live-reload gap (Important #3) — the only agent to trace the <code>handleSettingsUpdate</code> path and recognize that SIGHUP may not reload the policy file. It also flagged the comment syntax issue as a suggestion, which the consolidation elevated to Important based on Gemini's independent corroboration.</p>
+<p>Claude missed the IPv6/iptables mismatch and the single-label hostname restriction, both caught by the other two agents. Its coverage was complete (all 5 files), and it produced zero false positives. Signal-to-noise ratio was excellent — every finding was actionable.</p>
+</div>
+
+<h3 id="retro-codex"><span class="pill pill-codex">Codex</span> GPT 5.4 <a href="#retro-codex" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<p>Codex delivered a concise review that correctly identified the two most impactful findings: the IPv6/iptables mismatch and the single-label hostname rejection. It was the only agent to flag the documentation gap in <code>command-api.yaml</code> and <code>en-us.yaml</code>. Its design observation about validation/backend drift was well-reasoned and directly supports Important #1.</p>
+<p>Codex missed the policy.rules comment syntax issue and the live-reload gap. Its coverage was complete (all 5 files), and it produced zero false positives. The review was notably terse — 92 lines total — but every line was relevant.</p>
+</div>
+
+<h3 id="retro-gemini"><span class="pill pill-gemini">Gemini</span> 3.1 Pro <a href="#retro-gemini" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<p>Gemini performed an exhaustive trace of the code, producing the most thorough analysis of the three agents. It independently identified the IPv6/iptables issue, the single-label hostname restriction, and the comment syntax concern — matching findings from both other agents. Its unique contribution was the <code>.example.com</code> convention suggestion (Suggestion #1).</p>
+<p>Gemini missed the live-reload gap that Claude caught. Its output was heavily polluted with internal thinking traces and tool-call planning (1,445 lines of raw output vs. ~200 lines of actual review content), making the findings difficult to extract. Coverage was complete (all 5 files), and it produced zero false positives. Gemini had a loop-recovery event (visible in stderr) but completed successfully.</p>
+</div>
+
+<h3 id="retro-summary">Summary <a href="#retro-summary" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<table class="retro-table">
+<tr><th>Metric</th><th><span class="pill pill-claude">Claude</span> Opus 4.6</th><th><span class="pill pill-codex">Codex</span> GPT 5.4</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr>
+<tr><td>Duration</td><td>5:44</td><td>5:09</td><td>4:33</td></tr>
+<tr><td>Critical</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Important</td><td>1</td><td>2</td><td>3</td></tr>
+<tr><td>Suggestion</td><td>2</td><td>0</td><td>1</td></tr>
+<tr><td>Design observations</td><td>3</td><td>2</td><td>0</td></tr>
+<tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Unique insights</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Files reviewed</td><td>5</td><td>5</td><td>5</td></tr>
+<tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+</table>
+
+<p>All three agents delivered value. Codex and Gemini caught the highest-impact finding (IPv6/iptables), while Claude uniquely identified the live-reload gap. Gemini produced the broadest set of findings but at the cost of a noisy output format. Codex was the most efficient — shortest duration, highest signal density. The multi-agent approach proved its worth: no single agent found all four Important issues.</p>
+</div>
+
+</main>
+
+<script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+<script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+</script>
+</body>
+</html>
