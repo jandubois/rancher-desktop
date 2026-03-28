@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260327-173423-pr-10070</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+  </style>
+</head>
+<body>
+<main>
+
+<h1>Deep Review: 20260327-173423-pr-10070</h1>
+
+<table class="meta-table">
+  <tr><td>Date</td><td>2026-03-27 17:34</td></tr>
+  <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+  <tr><td>Round</td><td>2</td></tr>
+  <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+  <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10070" class="gh-ref" data-title="Fix no-proxy list and add domain/wildcard support" data-state="open" data-type="pr">#10070</a> — Fix no-proxy list and add domain/wildcard support</td></tr>
+  <tr><td>Branch</td><td><code>fix-noproxy-list</code></td></tr>
+  <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4720eacfe">4720eacfe</a> Add domain name and wildcard support to no-proxy list<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/944856727">944856727</a> Fix no-proxy list: guard StringList event and validate entries</td></tr>
+  <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span></td></tr>
+  <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> — shell expansion semantics mask empty IP bypass lists; one important fix before merge</td></tr>
+  <tr><td>Wall-clock time</td><td>14 min 52 s</td></tr>
+</table>
+
+<!-- Executive Summary -->
+<h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+  <p>This PR fixes a broken no-proxy list UI (missing <code>Array.isArray</code> guard from the Vue 3 migration), adds input validation for noproxy entries (IPs, CIDRs, domains, wildcards), and extends the moproxy backend to route domain-based proxy bypass through moproxy's <code>--policy</code> flag while keeping IP/CIDR bypass in iptables. The implementation is clean and well-structured, with comprehensive validation tests. One important issue: the new entry-type splitting produces empty <code>MOPROXY_NOPROXY</code> values that the init script's <code>:-</code> expansion silently replaces with hardcoded defaults, preventing users from having domain-only bypass lists without IP bypasses.</p>
+</div>
+
+<!-- Critical Issues -->
+<h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">¶</a></h2>
+
+<div class="card card-critical">
+  <p>None.</p>
+</div>
+
+<!-- Important Issues -->
+<h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">¶</a></h2>
+
+<div class="card card-important">
+  <div class="finding-title" id="finding-1"><span class="finding-num">1.</span> Empty IP bypass lists fall back to shell defaults instead of staying empty <a href="#finding-1" class="pilcrow">¶</a></div>
+  <p><span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> — <code>moproxy.initd:25-26</code>, <code>wsl.ts:801-803</code> (important, regression)</p>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/assets/scripts/moproxy.initd#L24-L26">pkg/rancher-desktop/assets/scripts/moproxy.initd:24-26</a></div>
+  <pre class="language-bash" data-start="24" data-line="25,26"><code># Comma-separated lists of addresses to not redirect to the proxy
+: ${noproxy_rules:=${MOPROXY_NOPROXY:-"0.0.0.0/8,10.0.0.0/8,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.168.0.0/16,224.0.0.0/4,240.0.0.0/4"}}
+: ${noproxy6_rules:=${MOPROXY_NOPROXY6:-"::1/128,fc00::/7,fe80::/10"}}</code></pre>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L798-L804">pkg/rancher-desktop/src/main/networking/wsl.ts:798-804</a></div>
+  <pre class="language-typescript" data-start="798" data-line="801,802,803"><code>    await this.writeFile('/etc/moproxy/policy.rules',
+      domainRules.length > 0 ? `${ domainRules.join('\n') }\n` : '# no domain noproxy rules\n');
+    await this.modifyConf('moproxy', {
+      MOPROXY_NOPROXY:  ipv4Entries.join(','),
+      MOPROXY_NOPROXY6: ipv6Entries.join(','),
+    });
+  }</code></pre>
+
+  <p>When the user's noproxy list contains only domain entries (e.g., <code>["example.com"]</code>), <code>writeProxySettings()</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L801-L803">wsl.ts:801-803</a> writes <code>MOPROXY_NOPROXY=""</code> and <code>MOPROXY_NOPROXY6=""</code>. The POSIX <code>:-</code> operator in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/assets/scripts/moproxy.initd#L25-L26">moproxy.initd:25-26</a> treats empty strings as unset, restoring the hardcoded private IP ranges. The user cannot create a domain-only bypass list without also bypassing <code>10.0.0.0/8</code>, <code>192.168.0.0/16</code>, etc.</p>
+
+  <p>All three agents flagged this. Claude rated it a design observation (benign in practice because private IPs rarely need proxying). Codex rated it Important. Gemini rated it Critical and noted the IPv6 angle: <code>MOPROXY_NOPROXY6</code> defaults are silently injected for most users, then silently lost when a user adds any custom IPv6 entry.</p>
+
+  <p><strong>Assessment:</strong> Important, not Critical. The practical impact is benign — bypassing private IP ranges is almost always correct. But the semantic mismatch between user intent and system behavior is a real gap that the simple fix below eliminates.</p>
+
+  <p><span class="fix-label">Fix:</span> Change <code>:-</code> to <code>-</code> in <code>moproxy.initd</code> so that empty strings remain empty while truly unset variables still get defaults:</p>
+
+  <pre class="language-diff"><code>-: ${noproxy_rules:=${MOPROXY_NOPROXY:-"0.0.0.0/8,10.0.0.0/8,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.168.0.0/16,224.0.0.0/4,240.0.0.0/4"}}
+-: ${noproxy6_rules:=${MOPROXY_NOPROXY6:-"::1/128,fc00::/7,fe80::/10"}}
++: ${noproxy_rules:=${MOPROXY_NOPROXY-"0.0.0.0/8,10.0.0.0/8,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.168.0.0/16,224.0.0.0/4,240.0.0.0/4"}}
++: ${noproxy6_rules:=${MOPROXY_NOPROXY6-"::1/128,fc00::/7,fe80::/10"}}</code></pre>
+
+  <p>This preserves defaults on first boot (variable unset) while respecting explicit empty values from <code>writeProxySettings()</code>.</p>
+</div>
+
+<!-- Suggestions -->
+<h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">¶</a></h2>
+
+<!-- Suggestion 1 -->
+<div class="card card-suggestion">
+  <div class="finding-title" id="suggestion-1"><span class="finding-num">S1.</span> Duplicated domain prefix-stripping logic <a href="#suggestion-1" class="pilcrow">¶</a></div>
+  <p><span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> — <code>wsl.ts:793</code>, <code>settingsValidator.ts:700</code> (suggestion, gap)</p>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L790-L796">pkg/rancher-desktop/src/main/networking/wsl.ts:790-796</a></div>
+  <pre class="language-typescript" data-start="790" data-line="793"><code>      } else {
+        // Strip wildcard/dot prefix; moproxy's "dst domain" matches subdomains too.
+        const domain = entry.startsWith('*.') ? entry.substring(2) : entry.startsWith('.') ? entry.substring(1) : entry;
+
+        domainRules.push(`dst domain ${ domain } direct`);
+      }
+    }</code></pre>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/config/settingsValidator.ts#L697-L704">pkg/rancher-desktop/src/main/config/settingsValidator.ts:697-704</a></div>
+  <pre class="language-typescript" data-start="697" data-line="700"><code>  protected static isDomainName(entry: string): boolean {
+    // Strip wildcard or leading-dot prefix; both "*.example.com" and ".example.com"
+    // are common NO_PROXY conventions that mean "match this domain and subdomains".
+    const domain = entry.startsWith('*.') ? entry.substring(2) : entry.startsWith('.') ? entry.substring(1) : entry;
+
+    if (domain.length === 0 || domain.length > 253) {
+      return false;
+    }</code></pre>
+
+  <p>The wildcard/dot prefix-stripping logic is duplicated verbatim. If the convention for <code>.example.com</code> or <code>*.example.com</code> changes, both files must be updated in sync.</p>
+
+  <p><span class="fix-label">Fix:</span> Extract to a shared utility, or add a cross-reference comment in each location.</p>
+</div>
+
+<!-- Suggestion 2 -->
+<div class="card card-suggestion">
+  <div class="finding-title" id="suggestion-2"><span class="finding-num">S2.</span> <code>reload()</code> function lacks comment about policy file limitation <a href="#suggestion-2" class="pilcrow">¶</a></div>
+  <p><span class="pill pill-claude">Claude Opus 4.6</span> — <code>moproxy.initd:127-135</code> (suggestion, regression)</p>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/assets/scripts/moproxy.initd#L127-L135">pkg/rancher-desktop/assets/scripts/moproxy.initd:127-135</a></div>
+  <pre class="language-bash" data-start="127" data-line="127,128"><code>reload() {
+	ebegin "Reloading ${name}"
+	start-stop-daemon --signal HUP --pidfile "$pidfile"
+	iptables --table nat --flush MOPROXY
+	ip6tables --table nat --flush MOPROXY
+	add_noproxy_rules
+	add_redirect_rule iptables
+	add_redirect_rule ip6tables
+}</code></pre>
+
+  <p>The code at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L1719-L1720">wsl.ts:1719-1720</a> correctly uses stop+start instead of reload because SIGHUP does not reload the <code>--policy</code> file. But <code>reload()</code> itself has no comment about this limitation. Someone running <code>rc-service moproxy reload</code> manually would get stale domain rules with no indication.</p>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L1716-L1724">pkg/rancher-desktop/src/main/networking/wsl.ts:1716-1724</a></div>
+  <pre class="language-typescript" data-start="1716" data-line="1719,1720"><code>    await this.writeProxySettings(proxy);
+    if (this.currentAction === Action.NONE &amp;&amp; this.process) {
+      if (proxy.enabled &amp;&amp; proxy.address &amp;&amp; proxy.port) {
+        // Restart instead of reload: moproxy's SIGHUP handler only reloads the
+        // proxy server list, not the --policy file used for domain noproxy rules.
+        await this.stopService('moproxy');
+        await this.startService('moproxy');
+      } else {
+        await this.stopService('moproxy');</code></pre>
+
+  <p><span class="fix-label">Fix:</span> Add a comment to the <code>reload()</code> function:</p>
+
+  <pre class="language-diff"><code> reload() {
++	# Note: SIGHUP reloads the proxy server list only, not the --policy file.
++	# Domain noproxy rules require a full stop+start cycle.
+ 	ebegin "Reloading ${name}"</code></pre>
+</div>
+
+<!-- Suggestion 3 -->
+<div class="card card-suggestion">
+  <div class="finding-title" id="suggestion-3"><span class="finding-num">S3.</span> Missing test for empty noproxy array <a href="#suggestion-3" class="pilcrow">¶</a></div>
+  <p><span class="pill pill-claude">Claude Opus 4.6</span> — <code>settingsValidator.spec.ts</code> (suggestion, gap)</p>
+
+  <p>The test suite covers many edge cases but omits <code>noproxySetting([])</code>. An empty array is a valid input that exercises the change-detection return path.</p>
+
+  <p><span class="fix-label">Fix:</span></p>
+
+  <pre class="language-typescript"><code>it('should accept an empty noproxy list', () => {
+  const [needToUpdate, errors] = subject.validateSettings(cfg, noproxySetting([]));
+
+  expect({ needToUpdate, errors }).toEqual({ needToUpdate: true, errors: [] });
+});</code></pre>
+</div>
+
+<!-- Suggestion 4 -->
+<div class="card card-suggestion">
+  <div class="finding-title" id="suggestion-4"><span class="finding-num">S4.</span> Unsuppressed <code>ip6tables</code> errors when IPv6 is disabled <a href="#suggestion-4" class="pilcrow">¶</a></div>
+  <p><span class="pill pill-gemini">Gemini 3.1 Pro</span> — <code>moproxy.initd:88</code> (suggestion, enhancement)</p>
+
+  <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/assets/scripts/moproxy.initd#L86-L89">pkg/rancher-desktop/assets/scripts/moproxy.initd:86-89</a></div>
+  <pre class="language-bash" data-start="86" data-line="88"><code>create_moproxy_chain() {
+	iptables --table nat --new MOPROXY
+	ip6tables --table nat --new MOPROXY
+}</code></pre>
+
+  <p>If the host kernel has IPv6 disabled, <code>ip6tables</code> commands fail and produce error output on every start/stop/reload cycle. The service continues, but the log noise obscures real problems.</p>
+
+  <p><span class="fix-label">Fix:</span> Suppress stderr on <code>ip6tables</code> calls or guard them with a capability check:</p>
+
+  <pre class="language-diff"><code>-	ip6tables --table nat --new MOPROXY
++	ip6tables --table nat --new MOPROXY 2>/dev/null || true</code></pre>
+</div>
+
+<!-- Suggestion 5 -->
+<div class="card card-suggestion">
+  <div class="finding-title" id="suggestion-5"><span class="finding-num">S5.</span> UI copy underspecifies supported formats <a href="#suggestion-5" class="pilcrow">¶</a></div>
+  <p><span class="pill pill-codex">Codex GPT 5.4</span> — <code>en-us.yaml</code> (suggestion, gap)</p>
+
+  <p>The help text says "IP, CIDR, or domain" but does not mention the newly supported wildcard (<code>*.example.com</code>) and leading-dot (<code>.example.com</code>) conventions.</p>
+
+  <p><span class="fix-label">Fix:</span> Update the help text to include wildcard and leading-dot examples.</p>
+</div>
+
+<!-- Design Observations -->
+<h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">¶</a></h2>
+
+<h3>Concerns</h3>
+
+<div class="card card-design">
+  <p><strong>Noproxy parsing duplicated across validation and backend</strong> (in-scope) <span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/config/settingsValidator.ts">settingsValidator.ts</a> classifies entries as IP/CIDR vs. domain for validation. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts">wsl.ts</a> classifies them again with separate logic for routing. The two classifications must agree on every input; a drift between them would silently misroute traffic. A shared classifier would eliminate this category of bugs.</p>
+</div>
+
+<div class="card card-design">
+  <p><strong>Shell defaults silently override empty IP bypass lists</strong> (future) <span class="pill pill-claude">Claude Opus 4.6</span> — Even after the <code>:-</code> to <code>-</code> fix, the interaction between <code>writeProxySettings()</code> and the init script's default mechanism is non-obvious. The indirection (TypeScript writes conf &rarr; shell reads conf &rarr; shell applies defaults) makes debugging hard. A comment in <code>writeProxySettings()</code> explaining that empty IP lists intentionally fall back to shell-level private IP defaults (or no longer do, after the fix) would help future maintainers.</p>
+</div>
+
+<h3>Strengths</h3>
+
+<div class="card card-design">
+  <p><strong>Clean separation of IP vs. domain bypass</strong> <span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> — IPs/CIDRs route through iptables (kernel-level, zero overhead); domains route through moproxy's policy engine (application-level, can inspect SNI/Host headers). Each mechanism handles what it does best.</p>
+</div>
+
+<div class="card card-design">
+  <p><strong>Defense-in-depth validation</strong> <span class="pill pill-claude">Claude Opus 4.6</span> — The <code>Array.isArray</code> guard in the Vue component prevents non-array values from reaching the store, while <code>checkNoproxyList</code> validates at the API boundary. Both are needed: the Vue guard handles the StringList timing issue; the validator protects the CLI/API path.</p>
+</div>
+
+<div class="card card-design">
+  <p><strong>Stop/start instead of reload for policy changes</strong> <span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> — The code at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L1719-L1720">wsl.ts:1719-1720</a> correctly avoids <code>reload</code> because moproxy's SIGHUP handler does not re-read the <code>--policy</code> file. The comment explaining this decision is clear.</p>
+</div>
+
+<!-- Testing Assessment -->
+<h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+  <p>The 20 test cases in <code>settingsValidator.spec.ts</code> provide solid coverage of the validation logic: IPv4/IPv6 addresses and CIDRs, domain names with various prefix conventions, mixed entries, malformed entry rejection, duplicate detection, type checking, and platform gating.</p>
+
+  <p>Untested scenarios, ranked by risk:</p>
+  <ol>
+    <li>Backend/init-script interaction where <code>writeProxySettings()</code> emits empty <code>MOPROXY_NOPROXY</code> values (the regression in Finding 1)</li>
+    <li>Policy rules file generation from mixed IP/domain lists</li>
+    <li>Empty noproxy array <code>[]</code></li>
+    <li>IPv6 CIDR with out-of-range prefix (e.g., <code>::1/129</code>)</li>
+    <li>Entries with embedded whitespace or leading/trailing spaces</li>
+    <li>Live update path at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L1713">wsl.ts:1713</a> (stop/start cycle for domain policy changes)</li>
+  </ol>
+  <p>Items 1-2 and 6 involve WSL backend integration and are not unit-testable. Items 3-5 are straightforward additions to the existing test suite.</p>
+</div>
+
+<!-- Documentation Assessment -->
+<h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+  <ul>
+    <li>The <code>command-api.yaml</code> x-rd-usage description lists all accepted formats — good.</li>
+    <li>The <code>en-us.yaml</code> help text should mention wildcard and leading-dot conventions (see Suggestion 5).</li>
+    <li>The code comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L1719-L1720">wsl.ts:1719-1720</a> explains the reload-vs-restart decision clearly.</li>
+  </ul>
+</div>
+
+<!-- Commit Structure -->
+<h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+  <p>Clean two-commit structure. The first commit (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/944856727">944856727</a>) fixes the UI bug and adds validation; the second (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4720eacfe">4720eacfe</a>) adds domain/wildcard backend support. Each commit is self-contained with a descriptive message. The split allows the bug fix to merge independently.</p>
+</div>
+
+<!-- Acknowledged Limitations -->
+<h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+  <ul>
+    <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L792">wsl.ts:792</a>: <em>"Strip wildcard/dot prefix; moproxy's 'dst domain' matches subdomains too."</em> — Acknowledges that <code>*.example.com</code> and <code>.example.com</code> both collapse to <code>example.com</code> in the policy file. Correct behavior; clearly documented.</li>
+    <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4720eacfe3834c46cb1b5f74fe23777c94441172/pkg/rancher-desktop/src/main/networking/wsl.ts#L1719-L1720">wsl.ts:1719-1720</a>: <em>"Restart instead of reload: moproxy's SIGHUP handler only reloads the proxy server list, not the --policy file used for domain noproxy rules."</em> — Explains the design choice. The brief traffic interruption during stop+start is the correct tradeoff.</li>
+  </ul>
+</div>
+
+<!-- Agent Performance Retro -->
+<h2 id="agent-retro">Agent Performance Retro <a href="#agent-retro" class="pilcrow">¶</a></h2>
+
+<h3><span class="pill pill-claude">Claude Opus 4.6</span></h3>
+
+<div class="card card-neutral">
+  <p>Claude Opus 4.6 produced the most thorough review (145 lines). It identified all key issues, provided the most nuanced severity assessment, and was the only agent to document acknowledged limitations. It correctly identified the <code>:-</code> vs <code>-</code> issue but classified it as a future design concern rather than a regression — a reasonable judgment call given the benign practical impact, though the other agents' higher severity proved more appropriate once the full interaction was traced.</p>
+  <p><strong>Unique contributions:</strong> reload() comment gap (Suggestion 2), empty array test gap (Suggestion 3), acknowledged limitations section, shell defaults design observation.</p>
+  <p><strong>Accuracy:</strong> No false positives. All findings verified.</p>
+  <p><strong>Depth:</strong> Read all 7 files, traced callers/callees, ran git blame. Provided the most detailed design observations.</p>
+  <p><strong>Coverage:</strong> Complete — all 7 files accounted for.</p>
+</div>
+
+<h3><span class="pill pill-codex">Codex GPT 5.4</span></h3>
+
+<div class="card card-neutral">
+  <p>Codex GPT 5.4 produced a focused, concise review (74 lines) that zeroed in on the most impactful finding. It correctly rated the <code>:-</code> issue as Important and provided a clean fix suggestion. Its proposed diff was the most technically precise of the three.</p>
+  <p><strong>Unique contributions:</strong> UI copy underspecification (Suggestion 5).</p>
+  <p><strong>Accuracy:</strong> No false positives. The Important finding is verified.</p>
+  <p><strong>Depth:</strong> Moderate — traced the backend/init-script interaction thoroughly but did not explore acknowledged limitations or reload behavior.</p>
+  <p><strong>Coverage:</strong> Complete — all 7 files accounted for.</p>
+</div>
+
+<h3><span class="pill pill-gemini">Gemini 3.1 Pro</span></h3>
+
+<div class="card card-neutral">
+  <p>Gemini 3.1 Pro produced a thorough review (79 lines) that identified the same core finding as Codex but rated it Critical and added the IPv6 dimension — noting that default IPv6 bypasses are silently injected for most users, then silently lost when a custom IPv6 entry is added.</p>
+  <p><strong>Unique contributions:</strong> IPv6 default injection/loss angle on Finding 1, ip6tables error suppression (Suggestion 4).</p>
+  <p><strong>Accuracy:</strong> The Critical rating was too high given the benign practical impact. The suggested fix in the diff had a minor quoting issue (removed the outer <code>:=</code> brace expansion). Otherwise accurate.</p>
+  <p><strong>Depth:</strong> Good — traced the IPv6 path that other agents mentioned only in passing.</p>
+  <p><strong>Coverage:</strong> Complete — all 7 files accounted for.</p>
+</div>
+
+<h3>Summary</h3>
+
+<table class="retro-table">
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th><span class="pill pill-claude">Claude</span> Opus 4.6</th>
+      <th><span class="pill pill-codex">Codex</span> GPT 5.4</th>
+      <th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Duration</td><td>6:30</td><td>4:56</td><td>5:19</td></tr>
+    <tr><td>Critical</td><td>0</td><td>0</td><td>1 (downgraded)</td></tr>
+    <tr><td>Important</td><td>0 (upgraded)</td><td>1</td><td>0</td></tr>
+    <tr><td>Suggestion</td><td>3</td><td>0</td><td>1</td></tr>
+    <tr><td>Design observations</td><td>3</td><td>2</td><td>0</td></tr>
+    <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+    <tr><td>Unique insights</td><td>3</td><td>1</td><td>2</td></tr>
+    <tr><td>Files reviewed</td><td>7</td><td>7</td><td>7</td></tr>
+    <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+  </tbody>
+</table>
+
+<div class="card card-neutral" style="margin-top: 1.2rem;">
+  <p>All three agents converged on the same core finding (the <code>:-</code> vs <code>-</code> shell expansion issue), validating the multi-agent approach. Claude provided the broadest coverage with the most design context. Codex was the most efficient — fewest words, highest signal density. Gemini added the IPv6 angle that enriched the consolidated finding. Together they produced a more complete picture than any single agent would have.</p>
+</div>
+
+<!-- Review Process Notes -->
+<h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+  <p>No suggestions for skill improvements or repo context updates. The agents handled this shell-scripting + TypeScript + Vue review well, and the multi-agent convergence on the core finding confirms the approach works for cross-layer bugs.</p>
+</div>
+
+</main>
+
+<script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+<script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+</script>
+</body>
+</html>
