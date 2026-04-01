@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Review: 20260401-115927-pr-10070</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+<style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>Deep Review: 20260401-115927-pr-10070</h1>
+
+<table class="meta-table">
+<tr><td>Date</td><td>2026-04-01 11:59</td></tr>
+<tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+<tr><td>Round</td><td>3</td></tr>
+<tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+<tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10070" class="gh-ref" data-title="Fix no-proxy list and add domain/wildcard support" data-state="open" data-type="pr">#10070</a> — Fix no-proxy list and add domain/wildcard support</td></tr>
+<tr><td>Branch</td><td><code>fix-noproxy-list</code></td></tr>
+<tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ab511d93f"><code>ab511d93f</code></a> Fix no-proxy list: guard StringList event and validate entries<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c83f21bf7"><code>c83f21bf7</code></a> Add domain name and wildcard support to no-proxy list</td></tr>
+<tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.6, <span class="pill pill-codex">Codex</span> GPT 5.4, <span class="pill pill-gemini">Gemini</span> 3.1 Pro</td></tr>
+<tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> — two bugs in the initd script (IPv6 defaults dead code, ip6tables failure risk) and a misleading commit message need attention</td></tr>
+<tr><td>Wall-clock time</td><td>16 min 10 s</td></tr>
+</table>
+
+<hr>
+
+<h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>This PR fixes the Vue 3 <code>StringList</code> regression that broke the no-proxy list UI, adds validation for noproxy entries (IPs, CIDRs, domains, wildcards), and extends the moproxy backend to support domain-based proxy bypass through <code>policy.rules</code>. The implementation cleanly splits IP entries (iptables) from domain entries (moproxy policy), with 165 new test lines covering validation. Two initd script issues need fixing: IPv6 noproxy defaults never activate because the backend always writes <code>MOPROXY_NOPROXY6=""</code> and the shell expansion uses <code>-</code> instead of <code>:-</code>, and the new <code>ip6tables</code> calls can abort the entire service if IPv6 kernel support is unavailable.</p>
+</div>
+
+<hr>
+
+<h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">¶</a></h2>
+
+<div class="card card-critical">
+<p>None.</p>
+</div>
+
+<hr>
+
+<h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">¶</a></h2>
+
+<!-- IMPORTANT 1 -->
+<div class="card card-important">
+<div class="finding-title" id="important-1">
+<span class="finding-num">1.</span> IPv6 noproxy defaults never activate (important, regression) <span class="pill pill-claude">Claude</span>
+<a href="#important-1" class="pilcrow">¶</a>
+</div>
+
+<p>The default noproxy list in <code>config/settings.ts</code> contains only IPv4 entries, so <code>ipv6Entries</code> is always empty, producing <code>MOPROXY_NOPROXY6=""</code> in <code>/etc/conf.d/moproxy</code>. The inner expansion on <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L26">line 26</a> uses <code>-</code> (substitute only when <em>unset</em>), not <code>:-</code> (substitute when unset <em>or empty</em>). Since the variable is set to empty, the defaults <code>::1/128,fc00::/7,fe80::/10</code> never activate. All IPv6 TCP traffic on ports 80/443 — including loopback and link-local — gets redirected through moproxy.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L22-L29">pkg/rancher-desktop/assets/scripts/moproxy.initd</a></div>
+<pre data-start="22" data-line="25,26"><code class="language-bash"># Comma-separated list of port traffic to redirect to moproxy
+: ${ports_redirected:=${MOPROXY_REDIRECTED_PORT:-"80,443"}}
+# Comma-separated lists of addresses to not redirect to the proxy
+: ${noproxy_rules:=${MOPROXY_NOPROXY-"0.0.0.0/8,10.0.0.0/8,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.168.0.0/16,224.0.0.0/4,240.0.0.0/4"}}
+: ${noproxy6_rules:=${MOPROXY_NOPROXY6-"::1/128,fc00::/7,fe80::/10"}}
+
+command="'${MOPROXY_BINARY:-/usr/sbin/moproxy}'"
+command_args="--host ${host} --port ${port} ${moproxy_remotedns} --list ${proxy_list} --policy /etc/moproxy/policy.rules ${moproxy_args}"</code></pre>
+
+<p>The backend always writes <code>MOPROXY_NOPROXY6</code> via <code>modifyConf</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L800-L803">lines 800–803</a>, even when the list is empty.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L797-L804">pkg/rancher-desktop/backend/wsl.ts</a></div>
+<pre data-start="797" data-line="800,801,802,803"><code class="language-typescript">
+    await this.writeFile('/etc/moproxy/policy.rules',
+      domainRules.length > 0 ? `${ domainRules.join('\n') }\n` : '# no domain noproxy rules\n');
+    await this.modifyConf('moproxy', {
+      MOPROXY_NOPROXY:  ipv4Entries.join(','),
+      MOPROXY_NOPROXY6: ipv6Entries.join(','),
+    });
+  }</code></pre>
+
+<p>The <code>:-</code> to <code>-</code> change on <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L25">line 25</a> for <code>MOPROXY_NOPROXY</code> is intentionally correct: when all entries are domains, the IPv4 iptables list should be empty. But <code>MOPROXY_NOPROXY6</code> has a different invariant — no user-facing mechanism adds IPv6 entries, so falling back to sane defaults is always right.</p>
+
+<p><span class="fix-label">Fix:</span> use <code>:-</code> for <code>MOPROXY_NOPROXY6</code>:</p>
+
+<pre><code class="language-diff">-: ${noproxy6_rules:=${MOPROXY_NOPROXY6-"::1/128,fc00::/7,fe80::/10"}}
++: ${noproxy6_rules:=${MOPROXY_NOPROXY6:-"::1/128,fc00::/7,fe80::/10"}}</code></pre>
+</div>
+
+<!-- IMPORTANT 2 -->
+<div class="card card-important">
+<div class="finding-title" id="important-2">
+<span class="finding-num">2.</span> Service startup fails if ip6tables is unavailable (important, gap) <span class="pill pill-gemini">Gemini</span>
+<a href="#important-2" class="pilcrow">¶</a>
+</div>
+
+<p>This PR adds <code>ip6tables</code> throughout the initd script (the old version used only <code>iptables</code>). If <code>ip6tables</code> fails — for example, when IPv6 is disabled system-wide in WSL2 and the kernel module is unavailable — the <code>append</code> command at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L71">line 71</a> returns non-zero. Because <code>enable_redirection_to_moproxy_chain PREROUTING</code> is the last call in <code>enable()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L109">line 109</a>), and <code>enable()</code> is called from <code>start_post()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L120">line 120</a>), a non-zero exit propagates to OpenRC, which marks the service as failed. This breaks the proxy entirely, even for IPv4.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L66-L74">pkg/rancher-desktop/assets/scripts/moproxy.initd</a></div>
+<pre data-start="66" data-line="69,70,71"><code class="language-bash">enable_redirection_to_moproxy_chain() {
+	local chain="$1"
+	local cmd
+	for cmd in iptables ip6tables; do
+		if ! redirect_to_moproxy_chain "$cmd" check "$chain" &> /dev/null; then
+			redirect_to_moproxy_chain "$cmd" append "$chain"
+		fi
+	done
+}</code></pre>
+
+<p>The same risk applies to <code>create_moproxy_chain</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L88">line 88</a>), <code>add_noproxy_rules</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L62">line 62</a>), <code>add_redirect_rule ip6tables</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L107">line 107</a>), and <code>delete_moproxy_chain</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L94">line 94</a>).</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L102-L110">pkg/rancher-desktop/assets/scripts/moproxy.initd</a></div>
+<pre data-start="102" data-line="107,108,109"><code class="language-bash">enable() {
+	einfo "Starting the iptables rules to start redirection of ports ${ports_redirected} to ${name}"
+	create_moproxy_chain
+	add_noproxy_rules
+	add_redirect_rule iptables
+	add_redirect_rule ip6tables
+	enable_redirection_to_moproxy_chain OUTPUT
+	enable_redirection_to_moproxy_chain PREROUTING
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> add <code>return 0</code> at the end of functions that loop over both commands:</p>
+
+<pre><code class="language-diff"> enable_redirection_to_moproxy_chain() {
+     local chain="$1"
+     local cmd
+     for cmd in iptables ip6tables; do
+         if ! redirect_to_moproxy_chain "$cmd" check "$chain" &> /dev/null; then
+             redirect_to_moproxy_chain "$cmd" append "$chain"
+         fi
+     done
++    return 0
+ }</code></pre>
+</div>
+
+<hr>
+
+<h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">¶</a></h2>
+
+<!-- SUGGESTION 1 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-1">
+<span class="finding-num">1.</span> Commit message contradicts the code (suggestion, regression) <span class="pill pill-codex">Codex</span>
+<a href="#suggestion-1" class="pilcrow">¶</a>
+</div>
+
+<p>The commit message for <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c83f21bf7"><code>c83f21bf7</code></a> states "SIGHUP already reloads both the proxy list and the policy file." The code tells a different story: the comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L128-L129">moproxy.initd:128–129</a> says "SIGHUP reloads the proxy server list only, not the --policy file," and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L1718-L1721">wsl.ts:1718–1721</a> was changed from <code>reload</code> to <code>stop+start</code> precisely because SIGHUP does not reload the policy file. The commit message should be corrected before merge so the history matches the code.</p>
+</div>
+
+<!-- SUGGESTION 2 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-2">
+<span class="finding-num">2.</span> Missing <code>eend</code> in <code>reload()</code> (suggestion, gap) <span class="pill pill-gemini">Gemini</span>
+<a href="#suggestion-2" class="pilcrow">¶</a>
+</div>
+
+<p>The <code>reload</code> function calls <code>ebegin</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L130">line 130</a> but never calls <code>eend $?</code>, leaving OpenRC status output malformed. The backend no longer calls <code>reload</code> (it uses <code>stop+start</code>), but <code>reload</code> remains in <code>extra_started_commands</code> for manual use.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L127-L137">pkg/rancher-desktop/assets/scripts/moproxy.initd</a></div>
+<pre data-start="127" data-line="130"><code class="language-bash">reload() {
+	# SIGHUP reloads the proxy server list only, not the --policy file.
+	# Domain noproxy rules require a full stop+start cycle.
+	ebegin "Reloading ${name}"
+	start-stop-daemon --signal HUP --pidfile "$pidfile"
+	iptables --table nat --flush MOPROXY
+	ip6tables --table nat --flush MOPROXY
+	add_noproxy_rules
+	add_redirect_rule iptables
+	add_redirect_rule ip6tables
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+
+<pre><code class="language-diff">     add_redirect_rule iptables
+     add_redirect_rule ip6tables
++    eend $?
+ }</code></pre>
+</div>
+
+<!-- SUGGESTION 3 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-3">
+<span class="finding-num">3.</span> Semantic noproxy duplicates not detected (suggestion, gap) <span class="pill pill-claude">Claude</span>
+<a href="#suggestion-3" class="pilcrow">¶</a>
+</div>
+
+<p><code>*.example.com</code> and <code>.example.com</code> are semantically equivalent — both bypass <code>example.com</code> and its subdomains. <code>findDuplicates</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L720">line 720</a> uses string comparison, so both pass as non-duplicates. After <code>stripNoproxyPrefix</code> strips the prefixes, both produce <code>dst domain example.com direct</code> in the policy file. Duplicate moproxy rules are harmless, so this is cosmetic. Low priority.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L715-L724">pkg/rancher-desktop/main/commandServer/settingsValidator.ts</a></div>
+<pre data-start="715" data-line="720"><code class="language-typescript">    if (!Array.isArray(desiredValue) || desiredValue.some(s => typeof (s) !== 'string')) {
+      errors.push(this.invalidSettingMessage(fqname, desiredValue));
+
+      return false;
+    }
+    const duplicateValues = this.findDuplicates(desiredValue);
+
+    if (duplicateValues.length > 0) {
+      duplicateValues.sort(Intl.Collator().compare);
+      errors.push(`field "${ fqname }" has duplicate entries: "${ duplicateValues.join('", "') }"`);</code></pre>
+</div>
+
+<!-- SUGGESTION 4 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="suggestion-4">
+<span class="finding-num">4.</span> Unquoted <code>$3</code> in <code>redirect_to_moproxy_chain</code> (suggestion, gap) <span class="pill pill-gemini">Gemini</span>
+<a href="#suggestion-4" class="pilcrow">¶</a>
+</div>
+
+<p>The <code>$3</code> parameter (chain name) at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L44">line 44</a> is unquoted. It receives only hardcoded values (<code>OUTPUT</code>, <code>PREROUTING</code>), so this is safe in practice but inconsistent with the quoting of <code>$1</code> and <code>${ports_redirected}</code>.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L43-L45">pkg/rancher-desktop/assets/scripts/moproxy.initd</a></div>
+<pre data-start="43" data-line="44"><code class="language-bash">redirect_to_moproxy_chain() {
+	run_iptables "$1" --$2 $3 --protocol tcp --match multiport --dports "${ports_redirected}" --jump MOPROXY
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> <code>run_iptables "$1" "--$2" "$3" --protocol ...</code></p>
+</div>
+
+<hr>
+
+<h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">¶</a></h2>
+
+<div class="card card-design">
+<h3>Concerns</h3>
+
+<div class="finding-title" id="design-1">
+<span class="finding-num">1.</span> Stop+start on every settings change disrupts proxy connections unnecessarily (in-scope) <span class="pill pill-codex">Codex</span>
+<a href="#design-1" class="pilcrow">¶</a>
+</div>
+
+<p>The old <code>handleSettingsUpdate</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L1712-L1726">wsl.ts:1712–1726</a> called <code>execService('moproxy', 'reload', '--ifstarted')</code>, which preserved existing connections. The new code at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L1720-L1721">lines 1720–1721</a> does a full <code>stop+start</code> on every settings update — including changes unrelated to the proxy (VM sizing, allowed images, etc.). The stop+start is necessary when domain noproxy rules change (SIGHUP cannot reload <code>--policy</code>), but applying it unconditionally drops all proxied connections on every Apply.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L1712-L1726">pkg/rancher-desktop/backend/wsl.ts</a></div>
+<pre data-start="1712" data-line="1718,1719,1720,1721"><code class="language-typescript">  async handleSettingsUpdate(newConfig: BackendSettings): Promise&lt;void&gt; {
+    const proxy = newConfig.experimental.virtualMachine.proxy;
+
+    await this.writeProxySettings(proxy);
+    if (this.currentAction === Action.NONE &amp;&amp; this.process) {
+      if (proxy.enabled &amp;&amp; proxy.address &amp;&amp; proxy.port) {
+        // Restart instead of reload: moproxy's SIGHUP handler only reloads the
+        // proxy server list, not the --policy file used for domain noproxy rules.
+        await this.stopService('moproxy');
+        await this.startService('moproxy');
+      } else {
+        await this.stopService('moproxy');
+      }
+    }
+  }</code></pre>
+
+<p>A targeted fix would compare the previous and new proxy settings and choose reload vs. stop+start based on whether domain rules actually changed. This is not urgent for merge — the old code already touched moproxy on every settings change — but it is worth a follow-up.</p>
+
+<h3>Strengths</h3>
+
+<ul>
+<li>Splitting IP entries (iptables ACCEPT rules) from domain entries (moproxy <code>policy.rules</code>) leverages each mechanism's strengths: IPs stay in the kernel (fast, no DNS), domains use moproxy's SNI matching (semantically correct). <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></li>
+<li>Sharing <code>stripNoproxyPrefix()</code> between the validator and the backend prevents divergence between what the UI accepts and what the backend processes. <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span></li>
+<li>The <code>:-</code> to <code>-</code> change for <code>MOPROXY_NOPROXY</code> on <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L25">line 25</a> is a subtle but correct fix: when all noproxy entries are domains, the IPv4 iptables list should genuinely be empty rather than falling back to hardcoded defaults that contradict the user's configuration. <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span></li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>The 22 new tests in <code>settingsValidator.spec.ts</code> provide thorough coverage of validation: IPv4/IPv6 addresses, CIDR subnets (valid and invalid prefix lengths), domain names, wildcards, leading-dot notation, single-label hostnames, duplicates, non-array values, whitespace, mixed entries, platform gating, and the default-list-unchanged case. All 236 tests pass.</p>
+
+<p>Untested scenarios (ranked by risk):</p>
+<ol>
+<li><strong>Backend classification logic</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L785-L796">wsl.ts:785–796</a>) — no unit tests verify that <code>writeProxySettings</code> correctly routes entries to <code>ipv4Entries</code>, <code>ipv6Entries</code>, or <code>domainRules</code>. Misclassification would route entries to the wrong bypass mechanism.</li>
+<li><strong>Settings-update lifecycle</strong> — no test exercises the <code>handleSettingsUpdate</code> path at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L1712-L1726">wsl.ts:1712–1726</a>, so the stop+start behavior on unrelated settings changes is not covered.</li>
+<li><strong><code>stripNoproxyPrefix</code> edge cases</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/utils/networks.ts#L50-L52">utils/networks.ts:50–52</a>) — no dedicated tests for this shared function. It is implicitly tested through the validator, but edge cases (empty string, <code>"*"</code> alone, <code>"."</code> alone) are not covered.</li>
+<li><strong>Domain name length boundaries</strong> — no test for a 253-character domain (max valid) or 254-character (should reject), nor for 63-character labels (max) vs. 64-character (should reject).</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>The API spec (<code>command-api.yaml</code>), translation strings, and inline code comments are updated appropriately. The <code>reload()</code> comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L128-L129">moproxy.initd:128–129</a> is a useful caveat for manual invocations.</p>
+</div>
+
+<hr>
+
+<h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>The two-commit structure is clean: <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ab511d93f"><code>ab511d93f</code></a> fixes the UI bug and adds validation, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c83f21bf7"><code>c83f21bf7</code></a> adds domain/wildcard backend support. Each commit is self-contained.</p>
+<p>However, the message for <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c83f21bf7"><code>c83f21bf7</code></a> states "SIGHUP already reloads both the proxy list and the policy file" — the opposite of what the code does. The initd comment, the code change (reload → stop+start), and the commit message must agree. See <a href="#suggestion-1">Suggestion 1</a>.</p>
+</div>
+
+<hr>
+
+<h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/assets/scripts/moproxy.initd#L128-L129"><code>moproxy.initd:128–129</code></a>: <em>"SIGHUP reloads the proxy server list only, not the --policy file. Domain noproxy rules require a full stop+start cycle."</em> — The backend now uses stop+start (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c83f21bf76a2d39f32a63059c28e8ea7f06f3d73/pkg/rancher-desktop/backend/wsl.ts#L1720-L1721">wsl.ts:1720–1721</a>), so this limitation is correctly mitigated for programmatic use. The comment serves as documentation for manual <code>rc-service moproxy reload</code> invocations.</p>
+</div>
+
+<hr>
+
+<h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<h3><span class="pill pill-claude">Claude</span></h3>
+
+<p>Claude Opus 4.6 produced the deepest analysis, tracing the <code>MOPROXY_NOPROXY6</code> variable through the backend (<code>modifyConf</code>) to the shell script expansion and correctly identifying the <code>-</code> vs <code>:-</code> distinction. This required understanding both TypeScript and shell semantics across two files. It also identified the semantic duplicate issue with <code>*.example.com</code> vs <code>.example.com</code>. The coverage summary was thorough, and findings included concrete fix suggestions with trade-off analysis (Option A vs Option B). No false positives.</p>
+
+<h3><span class="pill pill-codex">Codex</span></h3>
+
+<p>Codex GPT 5.4 focused on the runtime lifecycle, identifying the stop+start regression relative to the old reload behavior and tracing the call chain through <code>background.ts:1498</code> → <code>handleSettingsUpdate</code>. It also caught the commit message contradiction — a detail the other agents missed. It ran the tests and confirmed they pass. The review was concise and accurate, though it missed the initd script issues (IPv6 defaults and ip6tables failure risk). No false positives.</p>
+
+<h3><span class="pill pill-gemini">Gemini</span></h3>
+
+<p>Gemini 3.1 Pro found the ip6tables service failure risk — the most operationally consequential gap, since it could break the proxy entirely for users with IPv6 disabled. It also caught two smaller initd script issues (unquoted <code>$3</code>, missing <code>eend</code>). However, it missed the IPv6 defaults dead code bug and the settings-update lifecycle concern. It praised the <code>:-</code> to <code>-</code> change as a strength without noticing that the same logic applied incorrectly to <code>MOPROXY_NOPROXY6</code>. No false positives.</p>
+
+<h3>Summary</h3>
+
+<table class="retro-table">
+<tr><th>Metric</th><th><span class="pill pill-claude">Claude</span> Opus 4.6</th><th><span class="pill pill-codex">Codex</span> GPT 5.4</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr>
+<tr><td>Duration</td><td>7:50</td><td>4:34</td><td>5:00</td></tr>
+<tr><td>Critical</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Important</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Suggestion</td><td>1</td><td>0</td><td>2</td></tr>
+<tr><td>Design observations</td><td>3</td><td>2</td><td>2</td></tr>
+<tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Unique insights</td><td>IPv6 defaults dead code, semantic duplicates</td><td>Commit message contradiction, settings-update lifecycle</td><td>ip6tables failure risk, missing eend, unquoted $3</td></tr>
+<tr><td>Files reviewed</td><td>8/8</td><td>8/8</td><td>8/8</td></tr>
+<tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+</table>
+
+<p>All three agents achieved full coverage with zero false positives. The multi-agent approach paid off: each agent found an important issue the others missed, and the consolidated findings cover the full risk surface. Claude went deepest on shell semantics, Codex caught the lifecycle and commit message issues, and Gemini identified the operational failure mode.</p>
+</div>
+
+<hr>
+
+<h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">¶</a></h2>
+
+<div class="card card-neutral">
+<p>No suggestions for skill improvements or repo context updates this round.</p>
+</div>
+
+</main>
+<script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+<script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+</script>
+</body>
+</html>
