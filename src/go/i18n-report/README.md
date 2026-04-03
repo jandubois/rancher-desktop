@@ -75,6 +75,7 @@ Accepts file arguments or reads from stdin.
 ```sh
 i18n-report merge --locale=de batch1.out batch2.out batch3.out
 i18n-report merge --locale=de < translations.txt
+i18n-report merge --locale=de --dry-run batch1.out   # preview without writing
 ```
 
 Input formats detected automatically:
@@ -84,7 +85,8 @@ Input formats detected automatically:
 
 The merge command preserves existing translations, adds new keys, and
 maintains `# @reason` comments. New entries override existing ones for
-the same key.
+the same key. Use `--dry-run` to preview additions and overwrites
+without modifying the locale file.
 
 ### untranslated
 
