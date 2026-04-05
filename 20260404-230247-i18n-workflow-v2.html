@@ -953,9 +953,10 @@ func reportMerge(root, locale string, files []string, dryRun bool, mode string, 
   <h3 id="retro-gemini">Gemini 3.1 Pro <a class="pilcrow" href="#retro-gemini">¶</a></h3>
 
   <div class="card card-neutral">
-    <p>Gemini was the fastest agent but also the least accurate. Pass 1 had 1 false positive: it misattributed the <code>exists</code> getter code (which correctly checks default before selected) to the <code>t</code> getter, producing a spurious "critical" finding. However, Gemini redeemed itself in pass 2 by uniquely finding the <code>t()</code> undefined in <code>&lt;script setup&gt;</code> bug (finding 8) and the static data() translations gap. Pass 4 identified the block scalar indentation stripping and the IntlMessageFormat locale mismatch for fallbacks.</p>
-    <p><strong>Unique contributions:</strong> <code>t()</code> in script setup (8), static data() translations, <code>serializeNode</code> TrimLeft (S24), IntlMessageFormat locale mismatch (S25).</p>
-    <p><strong>False positives:</strong> 1 (backwards locale fallback in pass 1).</p>
+    <p>Gemini was the fastest agent but consistently over-rated severity. It claimed "critical" findings in all 4 passes (6 total), yet none survived consolidation at that severity: pass 1's "backwards locale fallback" was a false positive (misattributed the <code>exists</code> getter code to the <code>t</code> getter), pass 1's locked-field finding was downgraded to important (same as the other agents' rating), pass 2's <code>t()</code> in script setup was downgraded to important (edge-case fallback path), pass 3's multi-line truncation overlapped a known design choice (<code>normalizeWhitespace</code>), and pass 4's two "critical" findings were a by-design whitespace collapse and a theoretical pluralization mismatch. The consolidated report has zero critical issues.</p>
+    <p>That said, Gemini found genuinely valuable issues the other agents missed: the <code>t()</code> undefined in <code>&lt;script setup&gt;</code> bug (finding 8), the static <code>data()</code> translations gap (finding 12), the block scalar indentation stripping (S24), and the IntlMessageFormat locale mismatch for fallbacks (S25).</p>
+    <p><strong>Unique contributions:</strong> <code>t()</code> in script setup (8), static data() translations (12), <code>serializeNode</code> TrimLeft (S24), IntlMessageFormat locale mismatch (S25).</p>
+    <p><strong>False positives:</strong> 1 (backwards locale fallback in pass 1). <strong>Severity inflation:</strong> 5 additional findings rated critical by Gemini but downgraded or rejected during consolidation.</p>
     <p><strong>Coverage:</strong> Marked the most files as "Trivial," potentially under-reviewing them.</p>
   </div>
 
@@ -973,18 +974,20 @@ func reportMerge(root, locale string, files []string, dryRun bool, mode string, 
       </thead>
       <tbody>
         <tr><td>Duration (pass 1)</td><td>889 s</td><td>492 s</td><td>333 s</td></tr>
-        <tr><td>Findings (pass 1)</td><td>6I 7S</td><td>3I 1S</td><td>2C 0I 0S</td></tr>
+        <tr><td>Findings (pass 1)</td><td>6I 7S</td><td>3I 1S</td><td>1fp 1I 0S*</td></tr>
         <tr><td>Duration (pass 2)</td><td>715 s</td><td>514 s</td><td>431 s</td></tr>
-        <tr><td>Findings (pass 2)</td><td>4I 4S</td><td>2I 1S + 1 dup</td><td>1C 4I 1S</td></tr>
+        <tr><td>Findings (pass 2)</td><td>4I 4S</td><td>2I 1S + 1 dup</td><td>5I 1S*</td></tr>
         <tr><td>Duration (pass 3)</td><td>935 s</td><td>490 s</td><td>411 s</td></tr>
-        <tr><td>Findings (pass 3)</td><td>2I 4S</td><td>2I 1S</td><td>1C 4I 0S</td></tr>
+        <tr><td>Findings (pass 3)</td><td>2I 4S</td><td>2I 1S</td><td>2I 0S* + 1 dup</td></tr>
         <tr><td>Duration (pass 4)</td><td>1080 s</td><td>481 s</td><td>288 s</td></tr>
-        <tr><td>Findings (pass 4)</td><td>empty</td><td>1I 2S + 1 dup</td><td>2C 2I 0S</td></tr>
+        <tr><td>Findings (pass 4)</td><td>empty</td><td>1I 2S + 1 dup</td><td>2I 0S* + 1 dup</td></tr>
         <tr><td>Design observations</td><td>2 concerns, 6 strengths</td><td>3 concerns, 3 strengths</td><td>2 concerns, 1 strength</td></tr>
         <tr><td>False positives</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Severity inflation</td><td>0</td><td>0</td><td>5</td></tr>
         <tr><td>Unique insights</td><td>8</td><td>5</td><td>4</td></tr>
       </tbody>
     </table>
+    <p><small>* Gemini rated 6 findings as "critical" across all 4 passes. All were downgraded during consolidation: 1 false positive, 4 downgraded to important or suggestion, 1 overlap with a known design choice. The consolidated report has zero critical issues. Counts above reflect post-consolidation severity.</small></p>
   </div>
 
   <hr>
