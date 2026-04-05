@@ -937,7 +937,7 @@ func reportMerge(root, locale string, files []string, dryRun bool, mode string, 
   <h3 id="retro-claude">Claude Opus 4.6 <a class="pilcrow" href="#retro-claude">¶</a></h3>
 
   <div class="card card-neutral">
-    <p>Claude produced the most comprehensive initial review (13 findings: 6 important, 7 suggestions) with full 114-file coverage. It was the only agent to identify the <code>raw=true</code> HTML escaping bugs (findings 2–3), the missing translation keys (finding 5), and the dead test code (finding 6). Pass 2 found the IntlMessageFormat crash risk, the hardcoded "Error" header, and the command-api.yaml CI gap. Pass 3 yielded the <code>reportValidateQuiet</code> divergence and yaml.go dead code. Pass 4 produced empty output — context overflow after 1080 s, the only agent failure across all passes.</p>
+    <p>Claude produced the most findings overall (10 important, 17 suggestions post-consolidation). It was the only agent to identify the <code>raw=true</code> HTML escaping bugs (findings 2–3), the missing translation keys (finding 5), and the dead test code (finding 6). Pass 2 found the IntlMessageFormat crash risk, the hardcoded "Error" header, and the command-api.yaml CI gap (3 important survived; pendingLocale race was downgraded to suggestion). Pass 3 yielded the <code>reportValidateQuiet</code> divergence (scalarStyle dead code was downgraded to suggestion). Pass 4 produced empty output — context overflow after 1080 s, the only agent failure across all passes.</p>
     <p><strong>Unique contributions:</strong> <code>raw=true</code> escaping (2–3), missing translation keys (5), dead test code (6), fragmented sentence (7), IntlMessageFormat crash (9), hardcoded "Error" (10), command-api.yaml CI (12), <code>reportValidateQuiet</code> divergence (13).</p>
     <p><strong>Coverage:</strong> Full file coverage in all 3 productive passes. No coverage misses detected.</p>
   </div>
@@ -945,7 +945,7 @@ func reportMerge(root, locale string, files []string, dryRun bool, mode string, 
   <h3 id="retro-codex">Codex GPT 5.4 <a class="pilcrow" href="#retro-codex">¶</a></h3>
 
   <div class="card card-neutral">
-    <p>Codex had the strongest focus on the Go tool's data integrity. It was the only agent to identify the IPC listener leak (finding 4), the merge duplicate key problem (14), the merge unknown key problem (15), and the non-mapping root truncation bug (16). Its scanner finding (<code>v-t</code> directive) was technically correct but minimal impact (1 key from an external library). Pass 2 caught the validate HTML attribute gap. Codex consistently produced the most actionable fix suggestions.</p>
+    <p>Codex had the strongest focus on the Go tool's data integrity (7 important, 3 suggestions post-consolidation). It was the only agent to identify the IPC listener leak (finding 4), the merge duplicate key problem (14), the merge unknown key problem (15), and the non-mapping root truncation bug (16). Its P1 scanner finding (<code>v-t</code> directive) was technically correct but dropped during consolidation — only 1 instance in the codebase, from an external library. Pass 2 caught the validate HTML attribute gap. Codex consistently produced the most actionable fix suggestions.</p>
     <p><strong>Unique contributions:</strong> IPC listener leak (4), validate HTML attrs (11), merge duplicates (14), merge unknown keys (15), merge non-mapping root (16).</p>
     <p><strong>Coverage:</strong> Full file coverage. No misses detected.</p>
   </div>
@@ -963,6 +963,7 @@ func reportMerge(root, locale string, files []string, dryRun bool, mode string, 
   <h3 id="retro-summary">Summary <a class="pilcrow" href="#retro-summary">¶</a></h3>
 
   <div class="card card-neutral">
+    <p>The table below shows post-consolidation finding counts — what survived into the final report at each severity. Raw agent claims that were downgraded, rejected, or dropped are listed in the reconciliation rows.</p>
     <table class="retro-table">
       <thead>
         <tr>
@@ -974,20 +975,23 @@ func reportMerge(root, locale string, files []string, dryRun bool, mode string, 
       </thead>
       <tbody>
         <tr><td>Duration (pass 1)</td><td>889 s</td><td>492 s</td><td>333 s</td></tr>
-        <tr><td>Findings (pass 1)</td><td>6I 7S</td><td>3I 1S</td><td>1fp 1I 0S*</td></tr>
+        <tr><td>Findings (pass 1)</td><td>6I 7S</td><td>2I 1S</td><td>1I 0S</td></tr>
         <tr><td>Duration (pass 2)</td><td>715 s</td><td>514 s</td><td>431 s</td></tr>
-        <tr><td>Findings (pass 2)</td><td>4I 4S</td><td>2I 1S + 1 dup</td><td>5I 1S*</td></tr>
+        <tr><td>Findings (pass 2)</td><td>3I 5S</td><td>2I 0S + 1 dup</td><td>1I 1S</td></tr>
         <tr><td>Duration (pass 3)</td><td>935 s</td><td>490 s</td><td>411 s</td></tr>
-        <tr><td>Findings (pass 3)</td><td>2I 4S</td><td>2I 1S</td><td>2I 0S* + 1 dup</td></tr>
+        <tr><td>Findings (pass 3)</td><td>1I 5S</td><td>2I 1S</td><td>0I 1S</td></tr>
         <tr><td>Duration (pass 4)</td><td>1080 s</td><td>481 s</td><td>288 s</td></tr>
-        <tr><td>Findings (pass 4)</td><td>empty</td><td>1I 2S + 1 dup</td><td>2I 0S* + 1 dup</td></tr>
+        <tr><td>Findings (pass 4)</td><td>empty</td><td>1I 1S + 1 dup</td><td>0I 2S</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>10I 17S</strong></td><td><strong>7I 3S</strong></td><td><strong>2I 4S</strong></td></tr>
         <tr><td>Design observations</td><td>2 concerns, 6 strengths</td><td>3 concerns, 3 strengths</td><td>2 concerns, 1 strength</td></tr>
         <tr><td>False positives</td><td>0</td><td>0</td><td>1</td></tr>
-        <tr><td>Severity inflation</td><td>0</td><td>0</td><td>5</td></tr>
+        <tr><td>Downgraded I→S</td><td>2</td><td>0</td><td>1</td></tr>
+        <tr><td>Dropped (dup/overlap)</td><td>0</td><td>1</td><td>4</td></tr>
+        <tr><td>Severity inflation (C→I or lower)</td><td>0</td><td>0</td><td>5</td></tr>
         <tr><td>Unique insights</td><td>8</td><td>5</td><td>4</td></tr>
       </tbody>
     </table>
-    <p><small>* Gemini rated 6 findings as "critical" across all 4 passes. All were downgraded during consolidation: 1 false positive, 4 downgraded to important or suggestion, 1 overlap with a known design choice. The consolidated report has zero critical issues. Counts above reflect post-consolidation severity.</small></p>
+    <p><strong>Reconciliation:</strong> Claude had 2 important findings downgraded to suggestion during consolidation (pendingLocale race P2, scalarStyle dead code P3). Codex had 1 important finding dropped (scanner v-t P1 — only 1 external-library instance). Gemini rated 6 findings as "critical" across all 4 passes; all were downgraded or rejected: 1 false positive (backwards fallback P1), 2 downgraded to important (locked-field P1, <code>t()</code> in script setup P2), 1 overlapped a known design choice (normalizeWhitespace P3), 2 downgraded to suggestion (TrimLeft P4, IntlMessageFormat locale P4). Gemini also had 4 important findings dropped as duplicates or overlaps of existing findings.</p>
   </div>
 
   <hr>
