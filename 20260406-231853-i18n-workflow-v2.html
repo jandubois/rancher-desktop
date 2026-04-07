@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260406-231853-i18n-workflow-v2</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+  </style>
+</head>
+<body>
+  <main>
+
+<h1>Deep Review: 20260406-231853-i18n-workflow-v2</h1>
+
+<table class="meta-table">
+<tr><td>Date</td><td>2026-04-06 23:18</td></tr>
+<tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+<tr><td>Round</td><td>4</td></tr>
+<tr><td>Mode</td><td>Thorough (4 passes)</td></tr>
+<tr><td>Author</td><td>@jandubois</td></tr>
+<tr><td>Branch</td><td><code>i18n-workflow-v2</code></td></tr>
+<tr><td>Commits</td><td>
+<code>224d1d811</code> Add German locale and restore locale name keys<br>
+<code>163632ec3</code> Remove stale keys and complete zh-hans translations<br>
+<code>b3958ea80</code> Replace hardcoded English strings with i18n t() calls<br>
+<code>6466a0f51</code> Translate tray menu, application menus, and image dialogs via i18n<br>
+<code>2f011ee5a</code> Use translation keys for page titles, nav labels, and preference tabs<br>
+<code>2b329d5e0</code> Add locale setting, main-process i18n, and language picker<br>
+<code>299c52707</code> Add translations README<br>
+<code>4926c5408</code> Add manifest cross-validation against locale registrations<br>
+<code>215f394d1</code> Add policy-aware check command<br>
+<code>70d4d1f57</code> Add translate modes: missing, improve, drift<br>
+<code>00f2ef76b</code> Add i18n-report validate command<br>
+<code>befdf756e</code> Add i18n-report drift command<br>
+<code>bcd2f4b15</code> Add source-text metadata and bootstrap command<br>
+<code>a6070d5ad</code> Add mode-dependent @override behavior in merge<br>
+<code>f5fbf0a86</code> Add leaf-level @override parsing and validation<br>
+<code>555fc44fd</code> Refactor merge to operate on yaml.Node trees<br>
+<code>351a2d845</code> Add locale manifest and i18n-report manifest command<br>
+<code>d31189706</code> Add --dry-run flag to merge subcommand<br>
+<code>41915830b</code> Include en-us annotations in translate report output<br>
+<code>589cb667e</code> Preserve existing comments when merging translations<br>
+<code>faca908e1</code> Add i18n-report README<br>
+<code>beb9c97d2</code> Add tests for i18n-report<br>
+<code>a7b8bc6c3</code> Add i18n-report tool with subcommand-based CLI<br>
+<code>1a9fdee4c</code> Scaffold i18n-report tool
+</td></tr>
+<tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.6, <span class="pill pill-codex">Codex</span> GPT 5.4, <span class="pill pill-gemini">Gemini</span> 3.1 Pro</td></tr>
+<tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one stale comment to update; all other findings are minor suggestions</td></tr>
+<tr><td>Wall-clock time</td><td><code>142 min 57 s</code></td></tr>
+</table>
+
+<hr>
+
+<h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>This branch adds a comprehensive i18n system to Rancher Desktop: a Go-based CLI tool (<code>i18n-report</code>) for translation management, main-process and renderer-side locale support with settings integration, and translation files for English, German, and Simplified Chinese. The implementation is well-architected with clean separation between main process (simple <code>{variable}</code> interpolation) and renderer (ICU MessageFormat via <code>intl-messageformat</code>), proper race-condition handling for locale switching, and a feature gate for gradual rollout. Four review passes across three agents found no critical issues, one important stale-comment issue, and 20 suggestions concentrated in the Go tooling's edge cases. The code is ready to merge after fixing the misleading comment.</p>
+</div>
+
+<hr>
+
+<h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&para;</a></h2>
+
+<div class="card card-critical">
+<p>None.</p>
+</div>
+
+<hr>
+
+<h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&para;</a></h2>
+
+<div class="card card-important">
+<div class="finding-title" id="I1"><span class="finding-num">I1.</span> Stale comment claims regex-matching still exists for locked-field detection <span class="pill pill-gemini">Gemini</span> (pass 3: <span class="pill pill-claude">Claude</span>) <a href="#I1" class="pilcrow">&para;</a></div>
+
+<p>This comment describes a problem already solved in this branch. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/config/commandLineOptions.ts#L142"><code>commandLineOptions.ts</code> line 142</a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/backend/backendHelper.ts#L171"><code>backendHelper.ts</code> line 171</a> both now use <code>settingsValidator.hasLockedFieldError</code> / <code>sv.hasLockedFieldError</code> instead of regex matching. The comment will mislead future developers into searching for non-existent regex patterns or attempting a refactoring that is already done. The same stale text appears in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/assets/translations/README.md#L167"><code>translations/README.md</code> line 167</a>.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L283-L298">pkg/rancher-desktop/main/commandServer/settingsValidator.ts</a></div>
+<pre data-start="283" data-line="288-292"><code class="language-typescript">      }
+      if (changeNeededHere) {
+        const isLocked = _.get(this.lockedSettings, `${ prefix }.${ k }`);
+
+        if (isLocked) {
+          // A delayed error condition, raised only if we try to change a field in a locked object.
+          // NOTE: commandLineOptions.ts and backendHelper.ts detect locked-field errors by
+          // regex-matching the English text. When removing the locale feature gate, refactor
+          // to return structured diagnostics instead of parsing translated strings.
+          errors.push(t('validation.fieldLocked', { field: `${ prefix }.${ k }` }));
+          this.isFatal = true;
+          this.hasLockedFieldError = true;
+        } else {
+          changeNeeded = true;
+        }
+      }</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+<pre><code class="language-diff">           // A delayed error condition, raised only if we try to change a field in a locked object.
+-          // NOTE: commandLineOptions.ts and backendHelper.ts detect locked-field errors by
+-          // regex-matching the English text. When removing the locale feature gate, refactor
+-          // to return structured diagnostics instead of parsing translated strings.
++          // Callers check hasLockedFieldError to detect this condition without
++          // parsing the translated error message.
+           errors.push(t('validation.fieldLocked', { field: `${ prefix }.${ k }` }));</code></pre>
+
+<p>(important, regression)</p>
+</div>
+
+<hr>
+
+<h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&para;</a></h2>
+
+<!-- S1 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S1"><span class="finding-num">S1.</span> <code>stripYAMLQuotes</code> double-quote unescaping order <span class="pill pill-claude">Claude</span> <a href="#S1" class="pilcrow">&para;</a></div>
+
+<p>Replacing <code>\\</code> before <code>\"</code> corrupts strings containing both sequences. Input <code>"foo\\\"bar"</code> yields <code>foo"bar</code> instead of <code>foo\"bar</code>. Practical impact is negligible &mdash; translation strings never contain literal backslash-quote sequences &mdash; but the fix is trivial.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/yaml.go#L185-L198">src/go/i18n-report/yaml.go</a></div>
+<pre data-start="185" data-line="193-194"><code class="language-go">// stripYAMLQuotes removes outer YAML quotes from a value string.
+func stripYAMLQuotes(s string) string {
+	if len(s) &gt;= 2 &amp;&amp; s[0] == '\'' &amp;&amp; s[len(s)-1] == '\'' {
+		inner := s[1 : len(s)-1]
+		return strings.ReplaceAll(inner, "''", "'")
+	}
+	if len(s) &gt;= 2 &amp;&amp; s[0] == '"' &amp;&amp; s[len(s)-1] == '"' {
+		inner := s[1 : len(s)-1]
+		inner = strings.ReplaceAll(inner, `\\`, `\`)
+		inner = strings.ReplaceAll(inner, `\"`, `"`)
+		return inner
+	}
+	return s
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> swap the replacement order.</p>
+<pre><code class="language-diff">  inner := s[1 : len(s)-1]
+- inner = strings.ReplaceAll(inner, `\\`, `\`)
+  inner = strings.ReplaceAll(inner, `\"`, `"`)
++ inner = strings.ReplaceAll(inner, `\\`, `\`)
+  return inner</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S2 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S2"><span class="finding-num">S2.</span> <code>ContainerInfo.vue</code> local <code>t()</code> wrapper drops interpolation args <span class="pill pill-claude">Claude</span> <a href="#S2" class="pilcrow">&para;</a></div>
+
+<p>This wrapper only passes the key, dropping the <code>args</code> parameter the store getter accepts. All currently used keys are plain strings, so this works today but is a latent foot-gun for future parameterized keys.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L119-L130">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+<pre data-start="119" data-line="124"><code class="language-typescript">import { ipcRenderer } from '@pkg/utils/ipcRenderer';
+
+// Router and Store
+const route = useRoute();
+const store = useStore();
+const t = (key: string) =&gt; store.getters['i18n/t'](key);
+
+// Template refs with proper typing
+const containerLogs = ref&lt;InstanceType&lt;typeof ContainerLogs&gt; | null&gt;(null);
+const containerShell = ref&lt;InstanceType&lt;typeof ContainerShell&gt; | null&gt;(null);
+const searchInput = ref&lt;HTMLInputElement | null&gt;(null);
+const activeTab = ref&lt;'tab-logs' | 'tab-shell'&gt;('tab-logs');</code></pre>
+
+<p><span class="fix-label">Fix:</span> <code>const t = (key: string, args?: Record&lt;string, unknown&gt;) =&gt; store.getters['i18n/t'](key, args);</code></p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S3 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S3"><span class="finding-num">S3.</span> Merge atomicity comment overpromises <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <a href="#S3" class="pilcrow">&para;</a></div>
+
+<p>Sequential <code>os.WriteFile</code> calls at lines 191 and 194 can still leave files inconsistent if the second write fails. Since <code>i18n-report meta</code> can regenerate metadata, this is self-healing. The comment should say so.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_merge.go#L167-L186">src/go/i18n-report/report_merge.go</a></div>
+<pre data-start="167" data-line="173-174"><code class="language-go">		fmt.Fprintf(os.Stderr, ", %d @override warnings", warned)
+	}
+	fmt.Fprintf(os.Stderr, ", %d total\n", total)
+	return nil
+}
+
+// Serialize locale file and prepare metadata before writing either,
+// so a failure in one doesn't leave the other in an inconsistent state.
+var buf strings.Builder
+serializeYAMLNode(&amp;buf, doc)
+localeData := []byte(buf.String())
+
+total := len(nodeAllLeaves(treeRoot))
+
+enKeys, err = loadYAMLFlat(enPath)
+if err != nil {
+	return fmt.Errorf("loading English for metadata: %w", err)
+}
+localeKeys := make(map[string]string, total)
+for k, e := range nodeAllLeaves(treeRoot) {</code></pre>
+
+<p><span class="fix-label">Fix:</span> append "If only one write succeeds, run <code>i18n-report meta --locale=&lt;code&gt;</code> to regenerate." to the comment.</p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S4 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S4"><span class="finding-num">S4.</span> Preferences window title does not react to locale changes <span class="pill pill-claude">Claude</span> <a href="#S4" class="pilcrow">&para;</a></div>
+
+<p>The Electron window title is set once at creation time. Unlike the reactive Vuex-powered content, the native title bar does not update when the locale changes. Since locale switching is feature-gated and rare, this is cosmetic.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/window/preferences.ts#L16-L32">pkg/rancher-desktop/window/preferences.ts</a></div>
+<pre data-start="16" data-line="21"><code class="language-typescript">/**
+ * Open the main window; if it is already open, focus it.
+ */
+export function openPreferences() {
+  const window = createWindow('preferences', `${ webRoot }/index.html#preferences`, {
+    title:           t('preferencesWindow.title'),
+    width:           768,
+    height:          512,
+    autoHideMenuBar: true,
+    resizable:       false,
+    minimizable:     false,
+    show:            false,
+    icon:            path.join(paths.resources, 'icons', 'logo-square-512.png'),
+    parent:          getWindow('main') ?? undefined,
+    webPreferences:  {
+      devTools:         !app.isPackaged,
+      nodeIntegration:  true,</code></pre>
+
+<p><span class="fix-label">Fix:</span> register an <code>onLocaleChange</code> callback that calls <code>window.setTitle(t('preferencesWindow.title'))</code>.</p>
+
+<p>(suggestion, gap)</p>
+</div>
+
+<!-- S5 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S5"><span class="finding-num">S5.</span> Localized validator output on CLI/API error surfaces <span class="pill pill-codex">Codex</span> <a href="#S5" class="pilcrow">&para;</a></div>
+
+<p>The <code>t()</code> calls make validator diagnostics locale-dependent. When a non-English locale is active, <code>rdctl</code> and the HTTP API return localized error text. The <code>hasLockedFieldError</code> flag handles the known parsing case, and the feature gate defaults to English. This is a future concern when the gate is removed &mdash; consider returning structured error codes alongside human-readable messages.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L260-L306">pkg/rancher-desktop/main/commandServer/settingsValidator.ts</a></div>
+<pre data-start="260" data-line="264,305"><code class="language-typescript">      if (typeof (allowedSettings[k]) === 'object') {
+        if (typeof (newSettings[k]) === 'object') {
+          changeNeeded = this.checkProposedSettings(mergedSettings, allowedSettings[k], currentSettings[k], newSettings[k], errors, fqname) || changeNeeded;
+        } else {
+          errors.push(t('validation.shouldBeObject', { field: fqname, value: newSettings[k] }));
+        }
+      } else if (typeof (newSettings[k]) === 'object') {
+        if (typeof allowedSettings[k] === 'function') {
+          // Special case for things like `.WSLIntegrations` which have unknown fields.
+          const validator: ValidatorFunc&lt;S, any, any, any&gt; = allowedSettings[k];
+
+          changeNeededHere = validator.call(this, mergedSettings, currentSettings[k], newSettings[k], errors, fqname);
+        } else {
+          // newSettings[k] should be valid JSON because it came from `JSON.parse(incoming-payload)`.
+          // It's an internal error (HTTP Status 500) if it isn't.
+          errors.push(t('validation.shouldBeSimple', { field: fqname, value: JSON.stringify(newSettings[k]) }));
+        }
+      } else if (typeof allowedSettings[k] === 'function') {
+        const validator: ValidatorFunc&lt;S, any, any, any&gt; = allowedSettings[k];
+
+        changeNeededHere = validator.call(this, mergedSettings, currentSettings[k], newSettings[k], errors, fqname);
+      } else {
+        errors.push(this.notSupported(fqname));
+      }
+      if (changeNeededHere) {
+        const isLocked = _.get(this.lockedSettings, `${ prefix }.${ k }`);
+
+        if (isLocked) {
+          // A delayed error condition, raised only if we try to change a field in a locked object.
+          // NOTE: commandLineOptions.ts and backendHelper.ts detect locked-field errors by
+          // regex-matching the English text. When removing the locale feature gate, refactor
+          // to return structured diagnostics instead of parsing translated strings.
+          errors.push(t('validation.fieldLocked', { field: `${ prefix }.${ k }` }));
+          this.isFatal = true;
+          this.hasLockedFieldError = true;
+        } else {
+          changeNeeded = true;
+        }
+      }
+    }
+
+    return changeNeeded;
+  }
+
+  protected invalidSettingMessage(fqname: string, desiredValue: any): string {
+    return t('validation.invalidValue', { field: fqname, value: JSON.stringify(desiredValue) });
+  }</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S6 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S6"><span class="finding-num">S6.</span> <code>translate</code>/<code>merge</code> cannot round-trip multiline translations <span class="pill pill-codex">Codex</span> <a href="#S6" class="pilcrow">&para;</a></div>
+
+<p>The text output format collapses multiline values into single lines. The JSON format (<code>--format json</code>) is lossless. Consider documenting this limitation or using JSON as the default for agent workflows.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_translate.go#L8-L20">src/go/i18n-report/report_translate.go</a></div>
+<pre data-start="8" data-line="11-15"><code class="language-go">	"strings"
+)
+
+// normalizeWhitespace collapses newlines and surrounding whitespace into
+// single spaces so that multiline values fit on one key=value output line.
+func normalizeWhitespace(s string) string {
+	return strings.Join(strings.Fields(s), " ")
+}
+
+func runTranslate(args []string) error {
+	fs := flag.NewFlagSet("translate", flag.ExitOnError)
+	locale := fs.String("locale", "", "Target locale code (required)")
+	mode := fs.String("mode", "missing", "Translate mode: missing, improve, drift")</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S7 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S7"><span class="finding-num">S7.</span> <code>--batch</code> without <code>--batches</code> silently returns all keys <span class="pill pill-gemini">Gemini</span> <a href="#S7" class="pilcrow">&para;</a></div>
+
+<p>Specifying <code>--batch 1</code> without <code>--batches</code> silently returns all keys instead of an error. If piped into an LLM, this wastes tokens without indicating a configuration mistake.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_translate.go#L127-L153">src/go/i18n-report/report_translate.go</a></div>
+<pre data-start="127" data-line="133-148"><code class="language-go">				pairs = append(pairs, kv{k, enEntries[k].value, enEntries[k].comment})
+			}
+		}
+	}
+
+	// Apply batch slicing if requested.
+	if batches &gt; 0 {
+		if batch &lt; 1 || batch &gt; batches {
+			return fmt.Errorf("--batch must be between 1 and %d", batches)
+		}
+		total := len(pairs)
+		size := (total + batches - 1) / batches
+		start := (batch - 1) * size
+		end := start + size
+		if start &gt; total {
+			start = total
+		}
+		if end &gt; total {
+			end = total
+		}
+		pairs = pairs[start:end]
+	}
+
+	if format == "json" {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(pairs)</code></pre>
+
+<p><span class="fix-label">Fix:</span> add mutual flag validation before slicing.</p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S8 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S8"><span class="finding-num">S8.</span> <code>drift</code> exits 0 even when drift is found <span class="pill pill-gemini">Gemini</span> <a href="#S8" class="pilcrow">&para;</a></div>
+
+<p>The <code>drift</code> subcommand always returns <code>nil</code>, even when drift is detected. The <code>check --policy=shipping</code> command handles drift for CI, but <code>drift</code> itself is not usable in shell conditionals.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_drift.go#L93-L135">src/go/i18n-report/report_drift.go</a></div>
+<pre data-start="93" data-line="98-134"><code class="language-go">		if _, inLocale := localeLeaves[key]; !inLocale {
+			orphanedMeta = append(orphanedMeta, key)
+		}
+	}
+
+	// Print results.
+	if len(drifted) == 0 &amp;&amp; len(missingMeta) == 0 &amp;&amp; len(orphanedMeta) == 0 {
+		fmt.Printf("No drift detected for %s.\n", locale)
+		return nil
+	}
+
+	sort.Slice(drifted, func(i, j int) bool { return drifted[i].Key &lt; drifted[j].Key })
+	sort.Strings(missingMeta)
+	sort.Strings(orphanedMeta)
+
+	if len(drifted) &gt; 0 {
+		fmt.Printf("Found %d drifted keys in %s:\n", len(drifted), locale)
+		for _, d := range drifted {
+			suffix := ""
+			if d.Override {
+				suffix = " (@override)"
+			}
+			fmt.Printf("  %s%s\n", d.Key, suffix)
+		}
+	}
+
+	if len(missingMeta) &gt; 0 {
+		fmt.Printf("\n%d keys missing metadata:\n", len(missingMeta))
+		for _, key := range missingMeta {
+			fmt.Printf("  %s\n", key)
+		}
+		fmt.Fprintf(os.Stderr, "Run 'i18n-report meta --locale=%s' to generate missing metadata.\n", locale)
+	}
+
+	if len(orphanedMeta) &gt; 0 {
+		fmt.Printf("\n%d orphaned metadata entries:\n", len(orphanedMeta))
+		for _, key := range orphanedMeta {
+			fmt.Printf("  %s\n", key)
+		}
+	}
+
+	return nil
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> return a non-nil error when drift is detected.</p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S9 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S9"><span class="finding-num">S9.</span> <code>findLocaleEnum</code> silently skips nested slices <span class="pill pill-gemini">Gemini</span> <a href="#S9" class="pilcrow">&para;</a></div>
+
+<p>Only traverses maps, not arrays. If the OpenAPI schema introduces <code>allOf</code> or <code>parameters</code> arrays in the hierarchy above the <code>locale</code> property, the function silently returns nil.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_manifest.go#L136-L158">src/go/i18n-report/report_manifest.go</a></div>
+<pre data-start="136" data-line="143-147"><code class="language-go">	return nil, fmt.Errorf("could not find locale enum in command-api.yaml")
+}
+return locales, nil
+}
+
+// findLocaleEnum searches a parsed YAML structure for a "locale" property
+// definition that contains an "enum" list, returning the enum values.
+func findLocaleEnum(v interface{}) []string {
+	m, ok := v.(map[string]interface{})
+	if !ok {
+		return nil
+	}
+
+	// If this map has a "locale" key whose value has an "enum", that's it.
+	if locale, found := m["locale"]; found {
+		if localeMap, ok := locale.(map[string]interface{}); ok {
+			if enumVal, hasEnum := localeMap["enum"]; hasEnum {
+				if items, ok := enumVal.([]interface{}); ok {
+					var result []string
+					for _, item := range items {
+						if s, ok := item.(string); ok {
+							result = append(result, s)
+						}</code></pre>
+
+<p><span class="fix-label">Fix:</span> add a <code>[]interface{}</code> branch to traverse arrays.</p>
+
+<p>(suggestion, gap)</p>
+</div>
+
+<!-- S10 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S10"><span class="finding-num">S10.</span> Duplicate metadata coherence logic in <code>report_check.go</code> <span class="pill pill-gemini">Gemini</span> <a href="#S10" class="pilcrow">&para;</a></div>
+
+<p><code>reportCheckPolicy</code> calls <code>reportValidateQuiet()</code>, which invokes <code>validateLocale()</code> &mdash; already enforcing metadata coherence. The subsequent metadata check in lines 164&ndash;189 duplicates this. The check command's version provides a named "metadata coherent" line for CI readability, so this may be intentional.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_check.go#L155-L195">src/go/i18n-report/report_check.go</a></div>
+<pre data-start="155" data-line="160-190"><code class="language-go">			staleCount++
+		}
+	}
+	printResult("no stale keys", staleCount == 0, countDetail(staleCount))
+
+	// Validate passes.
+	validateErr := reportValidateQuiet(root, locale)
+	printResult("validate passes", validateErr == nil, errString(validateErr))
+
+	// Metadata coherent.
+	meta, metaErr := loadMetadata(root, locale)
+	if metaErr != nil {
+		printResult("metadata readable", false, metaErr.Error())
+	} else {
+		missingMeta := 0
+		for k := range localeKeys {
+			if _, inEn := enKeys[k]; !inEn {
+				continue
+			}
+			if _, inMeta := meta[k]; !inMeta {
+				missingMeta++
+			}
+		}
+		orphanedMeta := 0
+		for k := range meta {
+			if _, inLocale := localeKeys[k]; !inLocale {
+				orphanedMeta++
+			}
+		}
+		metaOk := missingMeta == 0 &amp;&amp; orphanedMeta == 0
+		detail := ""
+		if !metaOk {
+			detail = fmt.Sprintf("%d missing, %d orphaned", missingMeta, orphanedMeta)
+		}
+		printResult("metadata coherent", metaOk, detail)
+	}
+
+	// Shipping-only checks.
+	if policy == "shipping" {
+		// No missing keys.
+		missingCount := 0</code></pre>
+
+<p>(suggestion, enhancement)</p>
+</div>
+
+<!-- S11 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S11"><span class="finding-num">S11.</span> <code>nodeSetLeaf</code> silently destroys leaf values on scalar-to-mapping conversion <span class="pill pill-claude">Claude</span> <a href="#S11" class="pilcrow">&para;</a></div>
+
+<p>When a leaf key is converted to a mapping (conflicting hierarchy), the existing value is silently destroyed with only a stderr warning. In practice, well-formed locale files never have conflicting hierarchies, but returning an error would be safer.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/yaml.go#L261-L281">src/go/i18n-report/yaml.go</a></div>
+<pre data-start="261" data-line="268-274"><code class="language-go">				valNode.Style = scalarStyle(value)
+				// Preserve existing comment if no new comment provided.
+				if comment != "" {
+					current.Content[keyIdx].HeadComment = comment
+				}
+			} else {
+				// Descend into existing mapping.
+				if valNode.Kind != yaml.MappingNode {
+					// Convert scalar to mapping (key was a leaf, now has children).
+					fmt.Fprintf(os.Stderr, "Warning: converting scalar %q to mapping\n", strings.Join(parts[:i+1], "."))
+					valNode.Kind = yaml.MappingNode
+					valNode.Value = ""
+					valNode.Content = nil
+				}
+				current = valNode
+			}
+		} else {
+			// Key does not exist — insert in sorted position.
+			if isLeaf {
+				keyNode := &amp;yaml.Node{
+					Kind:  yaml.ScalarNode,</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S12 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S12"><span class="finding-num">S12.</span> <code>flattenYAML</code> converts YAML null to <code>"&lt;nil&gt;"</code> <span class="pill pill-claude">Claude</span> <a href="#S12" class="pilcrow">&para;</a></div>
+
+<p><code>fmt.Sprintf("%v", nil)</code> produces <code>"&lt;nil&gt;"</code>, disagreeing with <code>loadYAMLWithComments</code> which stores the node's literal value. Translation values should always be strings (never null), so practical impact is negligible.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/yaml.go#L12-L30">src/go/i18n-report/yaml.go</a></div>
+<pre data-start="12" data-line="26"><code class="language-go">// flattenYAML flattens a nested YAML map into dotted keys.
+func flattenYAML(prefix string, node map[string]interface{}) map[string]string {
+	result := make(map[string]string)
+	for k, v := range node {
+		key := k
+		if prefix != "" {
+			key = prefix + "." + k
+		}
+		switch val := v.(type) {
+		case map[string]interface{}:
+			for fk, fv := range flattenYAML(key, val) {
+				result[fk] = fv
+			}
+		default:
+			result[key] = fmt.Sprintf("%v", val)
+		}
+	}
+	return result
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> <code>if val == nil { result[key] = "" } else { result[key] = fmt.Sprintf("%v", val) }</code></p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S13 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S13"><span class="finding-num">S13.</span> JSONL detection relies on first character being <code>{</code> <span class="pill pill-claude">Claude</span> <a href="#S13" class="pilcrow">&para;</a></div>
+
+<p>A raw flat-text file whose first line starts with <code>{</code> (e.g., an ICU MessageFormat value) would be misidentified as JSONL. The fallback path handles this gracefully (non-JSON lines are skipped), but the error message would be confusing.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_merge.go#L216-L237">src/go/i18n-report/report_merge.go</a></div>
+<pre data-start="216" data-line="226"><code class="language-go">
+	// Detect JSONL by checking whether the first non-whitespace character is '{'.
+	// Sufficient for the agent output formats we consume.
+	firstLine := ""
+	for _, line := range strings.Split(content, "\n") {
+		if trimmed := strings.TrimSpace(line); trimmed != "" {
+			firstLine = trimmed
+			break
+		}
+	}
+	if len(firstLine) &gt; 0 &amp;&amp; firstLine[0] == '{' {
+		var extracted strings.Builder
+		for _, line := range strings.Split(content, "\n") {
+			line = strings.TrimSpace(line)
+			if line == "" || line[0] != '{' {
+				continue
+			}
+			var msg struct {
+				Message struct {
+					Role    string          `json:"role"`
+					Content json.RawMessage `json:"content"`
+				} `json:"message"`</code></pre>
+
+<p><span class="fix-label">Fix:</span> strengthen the heuristic by also checking <code>json.Valid([]byte(firstLine))</code>.</p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S14 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S14"><span class="finding-num">S14.</span> Locale switches can settle on wrong language after rapid A&rarr;B&rarr;A <span class="pill pill-codex">Codex</span> <a href="#S14" class="pilcrow">&para;</a></div>
+
+<p>The <code>pendingLocale</code> guard skips the revert to A (because <code>currentLocale</code> is still A), but the in-flight load of B completes and commits B. The code has an acknowledged comment, but it says "may be dropped" which understates the issue &mdash; the app ends up on the wrong locale. In practice, the race window is negligible because locales are pre-loaded.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/i18n.ts#L121-L145">pkg/rancher-desktop/main/i18n.ts</a></div>
+<pre data-start="121" data-line="125-136"><code class="language-typescript">  mainEvents.on('settings-update', async(settings) =&gt; {
+    const raw = settings?.application?.locale;
+    const locale = (!raw || raw === 'none') ? 'en-us' : raw;
+
+    if (locale !== currentLocale) {
+      // Rapid A-&gt;B-&gt;A switches may be dropped because the final locale
+      // equals currentLocale. Acceptable: locales are pre-loaded, so the
+      // race window is negligible.
+      pendingLocale = locale;
+      if (!await loadLocale(locale)) {
+        return; // load failed, stay on current locale
+      }
+      if (pendingLocale !== locale) {
+        return; // superseded by a newer locale change
+      }
+      currentLocale = locale;
+      for (const callback of [...localeChangeCallbacks]) {
+        try {
+          callback();
+        } catch (err) {
+          console.error('Locale change callback failed:', err);
+        }
+      }
+    }
+  });</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S15 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S15"><span class="finding-num">S15.</span> <code>untranslated</code> scans narrower file set than rest of toolchain <span class="pill pill-codex">Codex</span> <a href="#S15" class="pilcrow">&para;</a></div>
+
+<p><code>findUntranslated()</code> only walks <code>pkg/rancher-desktop</code> with <code>.vue</code>/<code>.ts</code> extensions, while the shared scanner covers <code>.js</code> and root-level files like <code>background.ts</code>.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_untranslated.go#L79-L95">src/go/i18n-report/report_untranslated.go</a></div>
+<pre data-start="79" data-line="84-87"><code class="language-go">//
+// Known gaps: Electron menu labels (main/mainmenu.ts), error dialog calls
+// (showErrorBox in tray.ts, settingsImpl.ts), port forwarding error messages
+// (backend/kube/client.ts), and template-literal strings lack a reliable
+// structural pattern to scan for without drowning in false positives.
+func findUntranslated(root string, includeDescriptions bool) ([]untranslatedHit, error) {
+	srcDir := filepath.Join(root, "pkg", "rancher-desktop")
+	files, err := scanSourceFiles(srcDir, []string{".vue", ".ts"})
+	if err != nil {
+		return nil, err
+	}
+
+	var hits []untranslatedHit
+
+	// Electron dialog strings: title/message/detail with hardcoded English.
+	dialogFields := "title|message|detail"
+	if includeDescriptions {</code></pre>
+
+<p>(suggestion, gap)</p>
+</div>
+
+<!-- S16 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S16"><span class="finding-num">S16.</span> <code>reportCheckBasic</code> couples unused-key linting with locale validation <span class="pill pill-gemini">Gemini</span> <a href="#S16" class="pilcrow">&para;</a></div>
+
+<p>Running <code>i18n-report check --locale de</code> without <code>--policy</code> fails if en-us has unused keys &mdash; a global concern unrelated to the target locale. The <code>--policy</code> flag (intended for CI) does not have this problem.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_check.go#L68-L97">src/go/i18n-report/report_check.go</a></div>
+<pre data-start="68" data-line="73-92"><code class="language-go">		if _, found := localeKeys[k]; !found {
+			missingCount++
+		}
+	}
+
+	passed := true
+	printResult := func(label string, count int) {
+		status := "OK"
+		if count &gt; 0 {
+			status = "FAIL"
+			passed = false
+		}
+		fmt.Printf("  %-30s %3d  %s\n", label+":", count, status)
+	}
+
+	printResult("unused keys", unusedCount)
+	printResult("stale keys in "+locale, staleCount)
+	printResult("keys missing from "+locale, missingCount)
+
+	if passed {
+		fmt.Println("All checks passed.")
+		return nil
+	}
+	return fmt.Errorf("checks failed")
+}
+
+// reportCheckPolicy runs policy-aware checks on a locale.
+//
+// Experimental policy:
+//   - manifest valid</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S17 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S17"><span class="finding-num">S17.</span> <code>extractDataAttrs</code> regex misses single-quoted attributes <span class="pill pill-gemini">Gemini</span> <a href="#S17" class="pilcrow">&para;</a></div>
+
+<p>Only matches double-quoted attributes. All Vue templates in this codebase use double quotes, so practical impact is nil.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_validate.go#L218-L229">src/go/i18n-report/report_validate.go</a></div>
+<pre data-start="218" data-line="224-225"><code class="language-go">	return result
+}
+
+// tagRe matches HTML-like tags: &lt;tag&gt;, &lt;/tag&gt;, &lt;tag/&gt;, &lt;tag attr="..."&gt;.
+var tagRe = regexp.MustCompile(`&lt;/?(\w+)[^&gt;]*/?&gt;`)
+
+// attrRe matches HTML attributes of the form name="value".
+var attrRe = regexp.MustCompile(`(data-\w+)="([^"]*)"`)
+
+// checkTags verifies that the locale value contains the same HTML-like
+// tag names as the English source, and that required data-* attributes
+// are preserved (runtime handlers depend on these).</code></pre>
+
+<p>(suggestion, gap)</p>
+</div>
+
+<!-- S18 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S18"><span class="finding-num">S18.</span> <code>handleNavigateClick</code> checks only <code>event.target</code>, not ancestors <span class="pill pill-claude">Claude</span> <a href="#S18" class="pilcrow">&para;</a></div>
+
+<p>If a translator wraps link text in a nested element (e.g., <code>&lt;em&gt;WebAssembly&lt;/em&gt;</code>), the click target lacks the data attribute and the handler silently does nothing. Currently no translations nest elements inside anchor tags.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/components/Preferences/navigateClick.ts#L1-L19">pkg/rancher-desktop/components/Preferences/navigateClick.ts</a></div>
+<pre data-start="1" data-line="9-10"><code class="language-typescript">/**
+ * Click handler for data-navigate attributes in translated HTML strings.
+ * Parses "Page,tab" from the attribute and calls the navigate function.
+ */
+export function handleNavigateClick(
+  event: MouseEvent,
+  navigate: (navItem: string, tab?: string) =&gt; void,
+): void {
+  const target = event.target as HTMLElement;
+  const nav = target?.getAttribute('data-navigate');
+
+  if (nav) {
+    // data-navigate values from translations are not validated against known
+    // page names; malformed values produce a no-op navigation.
+    const [navItem, tab] = nav.split(',');
+
+    navigate(navItem, tab);
+  }
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> use <code>closest('[data-navigate]')</code> to walk up the DOM.</p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S19 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S19"><span class="finding-num">S19.</span> Image deletion dialogs use generic "OK"/"Cancel" <span class="pill pill-claude">Claude</span> <a href="#S19" class="pilcrow">&para;</a></div>
+
+<p>The old code used "Yes"/"No"; the new code uses <code>generic.ok</code>/<code>generic.cancel</code>. Other destructive dialogs in the codebase use specific action labels (e.g., "Delete Workloads", "Discard changes"). Using generic "OK" for image deletion is less informative.</p>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<!-- S20 -->
+<div class="card card-suggestion">
+<div class="finding-title" id="S20"><span class="finding-num">S20.</span> <code>mainmenu.ts</code> discards <code>onLocaleChange</code> cleanup function <span class="pill pill-claude">Claude</span> <a href="#S20" class="pilcrow">&para;</a></div>
+
+<p>The returned cleanup function is discarded, inconsistent with the Tray which stores and calls its cleanup in <code>hide()</code>. The application menu lives for the process lifetime, making cleanup unnecessary in practice.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/mainmenu.ts#L17-L30">pkg/rancher-desktop/main/mainmenu.ts</a></div>
+<pre data-start="17" data-line="24"><code class="language-typescript">  const menuItems: MenuItem[] = getApplicationMenu();
+  const menu = Menu.buildFromTemplate(menuItems);
+
+  Menu.setApplicationMenu(menu);
+}
+
+// Rebuild the application menu after the locale has been loaded.
+onLocaleChange(() =&gt; buildApplicationMenu());
+
+function getApplicationMenu(): MenuItem[] {
+  switch (process.platform) {
+  case 'darwin':
+    return getMacApplicationMenu();
+  case 'linux':</code></pre>
+
+<p>(suggestion, regression)</p>
+</div>
+
+<hr>
+
+<h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&para;</a></h2>
+
+<h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&para;</a></h3>
+
+<div class="card card-design">
+<p><strong>Translated error messages in HTTP API responses</strong> (future) &mdash; The settings validator now produces translated error messages via <code>t()</code>. External tools calling the API would receive localized errors. The <code>hasLockedFieldError</code> flag handles the known parsing case, but the broader pattern of returning translated error strings in API responses may need revisiting when the feature gate is removed. Consider returning structured error codes alongside human-readable messages. <span class="pill pill-codex">Codex</span></p>
+</div>
+
+<div class="card card-design">
+<p><strong>Manifest is not the runtime source of truth</strong> (future) &mdash; <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/i18n.ts"><code>main/i18n.ts</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/store/i18n.js"><code>store/i18n.js</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/commandServer/settingsValidator.ts"><code>settingsValidator.ts</code></a> all discover locales by enumerating YAML files, while manifest status is only enforced by the Go tooling. Making <code>meta/locales.yaml</code> authoritative at runtime would prevent an accidentally-added partial locale file from becoming selectable. <span class="pill pill-codex">Codex</span></p>
+</div>
+
+<div class="card card-design">
+<p><strong>Locale-loading state machine duplicated</strong> (in-scope) &mdash; The locale-switching logic exists in both <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/i18n.ts"><code>main/i18n.ts</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/store/i18n.js"><code>store/i18n.js</code></a> with subtly different race-condition handling. A shared "last request wins" pattern would remove a class of ordering bugs. <span class="pill pill-codex">Codex</span></p>
+</div>
+
+<h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&para;</a></h3>
+
+<div class="card card-design">
+<ul>
+<li><strong>Two-tier i18n architecture</strong> &mdash; Main process uses lightweight <code>{variable}</code> interpolation; renderer uses full ICU MessageFormat. The right tradeoff for their respective needs. <span class="pill pill-claude">Claude</span></li>
+<li><strong>Race-condition handling in <code>i18n.ts</code></strong> &mdash; The <code>pendingLocale</code> mechanism correctly handles most rapid locale switches. The callback array is copied before iteration to handle self-unregistering callbacks. <span class="pill pill-claude">Claude</span></li>
+<li><strong>Feature gate design</strong> &mdash; Hiding the locale selector when <code>locale === 'none'</code> provides a clean rollout path enforced at validation, UI, and both i18n modules. <span class="pill pill-claude">Claude</span></li>
+<li><strong>AST-level YAML manipulation</strong> &mdash; Using <code>gopkg.in/yaml.v3</code> node trees in <code>nodeSetLeaf</code> and <code>removeKeyFromNode</code> preserves whitespace, comments, and structural integrity during merges. <span class="pill pill-gemini">Gemini</span></li>
+<li><strong>Comprehensive Go tooling</strong> &mdash; The <code>i18n-report</code> CLI covers the full translation lifecycle with 14 subcommands, significantly reducing the chance of translation regressions. <span class="pill pill-claude">Claude</span></li>
+<li><strong>Defensive <code>intlCache</code> invalidation</strong> &mdash; The store clears the entire formatter cache before setting the new locale, preventing stale cached results. <span class="pill pill-claude">Claude</span></li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>Test coverage is solid overall. The Go tool has comprehensive test suites (3,000+ lines across 12 test files). The settings validator has new test cases for locale handling, and the <code>UpdateStatus</code> component test was improved to use real translations instead of mocks.</p>
+
+<p>Untested scenarios ranked by risk:</p>
+<ol>
+<li><strong>Main-process locale switching</strong> &mdash; <code>initMainI18n()</code>, <code>loadLocale()</code>, and the <code>onLocaleChange</code> callback mechanism have no direct unit tests. The rapid A&rarr;B&rarr;A race guard and callback error handling are complex enough to warrant coverage.</li>
+<li><strong>Tray menu label refresh</strong> &mdash; The <code>onLocaleChange</code> &rarr; <code>updateMenu()</code> path is untested.</li>
+<li><strong>Renderer i18n store fallback</strong> &mdash; The fallback to <code>en-us</code> when locale loading fails (<code>store/i18n.js</code> lines 222&ndash;228) is untested.</li>
+<li><strong><code>handleNavigateClick</code></strong> &mdash; The new shared utility has no unit tests despite being used by two components.</li>
+<li><strong>E2E tests with non-English locale</strong> &mdash; All e2e/bats tests run with default English locale; none exercise localized error messages through <code>rdctl</code>.</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<ul>
+<li><strong><code>translations/README.md</code></strong> (216 lines): comprehensive guidance for the translation workflow, key conventions, and the <code>data-navigate</code>/<code>data-action</code> patterns for HTML in translations.</li>
+<li><strong><code>i18n-report/README.md</code></strong> (255 lines): documents all subcommands with examples. Both READMEs were added in appropriate commits.</li>
+<li><strong>Inline comments</strong> are well-placed: race-condition notes in <code>i18n.ts</code>, feature-gate explanation in <code>ApplicationGeneral.vue</code>, scanner-gap awareness in translation files.</li>
+<li><strong>Gap</strong>: The stale NOTE comment in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L289-L291"><code>settingsValidator.ts</code></a> (finding <a href="#I1">I1</a>) and its echo in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/assets/translations/README.md#L167"><code>translations/README.md</code></a> should be updated.</li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>The 24 commits follow a logical progression: scaffolding &rarr; core tool features (merge, validate, drift, translate) &rarr; metadata and manifest &rarr; settings integration and locale picker &rarr; renderer i18n (page titles, nav labels) &rarr; main-process i18n (tray, menus, dialogs) &rarr; translation data (removing stale keys, adding German). Each commit represents a coherent concept. No fixup commits. The split between Go tool and TypeScript/Vue commits is clean.</p>
+</div>
+
+<hr>
+
+<h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<ol>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/store/i18n.js#L158-L165"><code>store/i18n.js:158-165</code></a> &mdash; "Acceptable overhead with a small number of locales; revisit if locale count grows significantly." Currently 3 locales; would need attention at ~10+.</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/i18n.ts#L64-L66"><code>main/i18n.ts:64-66</code></a> &mdash; "Placeholders are replaced iteratively; in theory a value containing '{other}' could match a later placeholder, but no current usage does."</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/i18n.ts#L126-L128"><code>main/i18n.ts:126-128</code></a> &mdash; "Rapid A-&gt;B-&gt;A switches may be dropped because the final locale equals currentLocale. Acceptable: locales are pre-loaded, so the race window is negligible." See <a href="#S14">S14</a> for a more precise characterization.</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/main/deploymentProfiles.ts#L13-L15"><code>main/deploymentProfiles.ts:13-15</code></a> &mdash; "t() uses English fallback here because deployment profiles are read during early startup, before initMainI18n() has loaded the user's locale."</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/src/go/i18n-report/report_validate.go#L379"><code>report_validate.go:379</code></a> &mdash; "Known limitation: does not handle ICU single-quote escaping (e.g., '{')."</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/assets/specs/command-api.yaml#L600-L604"><code>command-api.yaml:600-604</code></a> &mdash; Hardcoded locale enum must be kept in sync with <code>meta/locales.yaml</code> and <code>settingsValidator.ts</code>. The <code>i18n-report manifest</code> cross-validates, but CI integration is not yet done.</li>
+<li>Known scanner gaps &mdash; The <code>i18n-report</code> scanner does not detect <code>showErrorBox</code> calls or port forwarding errors in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224d1d811b584a5b91b2d59bf6124e4e348e63da/pkg/rancher-desktop/backend/kube/client.ts"><code>backend/kube/client.ts</code></a>.</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&para;</a></h2>
+
+<h3 id="retro-claude"><span class="pill pill-claude">Claude</span> <a href="#retro-claude" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<p><strong>Pass 1</strong> (4 suggestions): Focused on code correctness in the Go tool and Vue component robustness. Unique contributions: <code>stripYAMLQuotes</code> unescaping order (<a href="#S1">S1</a>), <code>ContainerInfo.vue</code> args (<a href="#S2">S2</a>), preferences window title reactivity (<a href="#S4">S4</a>). All findings were well-evidenced with code snippets and line numbers. Gave the branch a clean "approve" verdict &mdash; overly optimistic given the stale comment issue other agents caught.</p>
+
+<p><strong>Pass 2</strong> (2 important, 1 suggestion &mdash; all downgraded to suggestions post-consolidation): Found <code>nodeSetLeaf</code> data loss (<a href="#S11">S11</a>), <code>flattenYAML</code> null rendering (<a href="#S12">S12</a>), and JSONL detection heuristic (<a href="#S13">S13</a>). Good depth on YAML edge cases. Wrote review to <code>.scratch/</code> instead of stdout (required manual retrieval).</p>
+
+<p><strong>Pass 3</strong> (1 important &rarr; restated, 3 suggestions): Restated finding #10 (stale comment) &mdash; already known from pass 1. Found <code>handleNavigateClick</code> closest() issue (<a href="#S18">S18</a>), generic dialog buttons (<a href="#S19">S19</a>), and cleanup function discard (<a href="#S20">S20</a>). New findings showed diminishing returns &mdash; S19 and S20 are minor nits.</p>
+
+<p><strong>Pass 4</strong>: Empty output. No new findings.</p>
+
+<p>Coverage: Reviewed all 114 files across all passes. No coverage misses.</p>
+</div>
+
+<h3 id="retro-codex"><span class="pill pill-codex">Codex</span> <a href="#retro-codex" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<p><strong>Pass 1</strong> (2 important, 1 suggestion): Strongest pass 1 performance. Unique contributions: localized validator output on CLI/API surfaces (<a href="#S5">S5</a> &mdash; downgraded from important), multiline round-trip loss (<a href="#S6">S6</a> &mdash; downgraded). Correctly identified the merge write-failure concern (<a href="#S3">S3</a>, shared with Claude). Traced through call chains from <code>settingsValidator.ts</code> to <code>commandLineOptions.ts</code> and e2e tests. 880s &mdash; longest of the three agents.</p>
+
+<p><strong>Pass 2</strong> (1 important, 1 suggestion &mdash; important downgraded): Found the locale A&rarr;B&rarr;A race (<a href="#S14">S14</a>) &mdash; a genuine insight that refined the acknowledged limitation's characterization. Also found the <code>untranslated</code> scope gap (<a href="#S15">S15</a>). The race condition finding showed deep understanding of async JavaScript scheduling.</p>
+
+<p>Coverage: Reviewed all 114 files. No coverage misses. Codex produced the most nuanced analysis of cross-component interactions.</p>
+</div>
+
+<h3 id="retro-gemini"><span class="pill pill-gemini">Gemini</span> <a href="#retro-gemini" class="pilcrow">&para;</a></h3>
+
+<div class="card card-neutral">
+<p><strong>Pass 1</strong> (2 important, 3 suggestions &mdash; both important downgraded): Found <code>--batch</code>/<code>--batches</code> dependency (<a href="#S7">S7</a>), drift exit code (<a href="#S8">S8</a>), <code>findLocaleEnum</code> array traversal (<a href="#S9">S9</a>), stale regex comment (<a href="#I1">I1</a> &mdash; the only finding that survived at important severity across all agents), and duplicate metadata check (<a href="#S10">S10</a>). Good breadth across the Go tool.</p>
+
+<p><strong>Pass 2</strong> (1 important, 1 suggestion &mdash; important downgraded): Found <code>reportCheckBasic</code> unused-key coupling (<a href="#S16">S16</a>) and single-quote regex (<a href="#S17">S17</a>). The unused-key coupling is a valid design concern.</p>
+
+<p>Coverage: Reviewed all 114 files. No coverage misses.</p>
+</div>
+
+<h3 id="retro-summary">Summary <a href="#retro-summary" class="pilcrow">&para;</a></h3>
+
+<table class="retro-table">
+<tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.6</th><th><span class="pill pill-codex">Codex</span> GPT 5.4</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr>
+<tr><td>Duration (pass 1)</td><td>~600s</td><td>880s</td><td>473s</td></tr>
+<tr><td>Findings (pass 1)</td><td>0C 0I 4S</td><td>0C 0I 3S</td><td>0C 1I 4S</td></tr>
+<tr><td>Duration (pass 2)</td><td>~600s</td><td>625s</td><td>475s</td></tr>
+<tr><td>Findings (pass 2)</td><td>0C 0I 3S</td><td>0C 0I 2S</td><td>0C 0I 2S</td></tr>
+<tr><td>Duration (pass 3)</td><td>864s</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>Findings (pass 3)</td><td>0C 0I 3S + 1 dup</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>Duration (pass 4)</td><td>889s</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td>Findings (pass 4)</td><td>0C 0I 0S</td><td>&mdash;</td><td>&mdash;</td></tr>
+<tr><td><strong>Totals</strong></td><td>0C 0I 10S</td><td>0C 0I 5S</td><td>0C 1I 6S</td></tr>
+<tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Downgraded</td><td>2 (I&rarr;S)</td><td>3 (I&rarr;S)</td><td>3 (I&rarr;S)</td></tr>
+<tr><td>Unique insights</td><td>8</td><td>3</td><td>5</td></tr>
+</table>
+
+<div class="card card-neutral">
+<p><strong>Reconciliation</strong>: Codex P1 I1 (localized validator output): important &rarr; <a href="#S5">S5</a>. Codex P1 I2 (multiline round-trip): important &rarr; <a href="#S6">S6</a>. Codex P2 I1 (locale race): important &rarr; <a href="#S14">S14</a>. Gemini P1 I1 (batch/batches): important &rarr; <a href="#S7">S7</a> (downgraded because CLI tool UX, not runtime bug). Gemini P1 I2 (drift exit code): important &rarr; <a href="#S8">S8</a> (downgraded because <code>check</code> command handles CI). Gemini P2 I1 (reportCheckBasic): important &rarr; <a href="#S16">S16</a>. Claude P2 I1 (nodeSetLeaf): important &rarr; <a href="#S11">S11</a>. Claude P2 I2 (flattenYAML null): important &rarr; <a href="#S12">S12</a>. Claude P3 I1: dropped as duplicate of known finding #10 (Gemini P1 S2), promoted to consolidated <a href="#I1">I1</a>.</p>
+
+<p>All three agents achieved full file coverage with zero false positives. Gemini was the only agent to identify the stale-comment issue that became the sole important finding. Codex provided the deepest cross-component analysis. Claude had the best coverage of YAML edge cases in the Go tool but was overly generous in its initial verdict.</p>
+</div>
+
+<hr>
+
+<h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>No process improvement suggestions for this review.</p>
+</div>
+
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+  </script>
+</body>
+</html>
