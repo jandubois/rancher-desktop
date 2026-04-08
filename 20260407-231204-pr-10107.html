@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Review: PR #10107 — Add i18n-report CLI tool</title>
+<style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+<main>
+
+<h1>Deep Review: PR #10107 <a class="pilcrow" href="#">&para;</a></h1>
+
+<table class="meta-table">
+<tr><td>Date</td><td>2026-04-07 23:12</td></tr>
+<tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+<tr><td>Round</td><td>1</td></tr>
+<tr><td>Mode</td><td>Thorough (3 passes)</td></tr>
+<tr><td>Author</td><td>@jandubois</td></tr>
+<tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10107">#10107</a> &mdash; Add i18n-report CLI tool for translation maintenance</td></tr>
+<tr><td>Branch</td><td><code>i18n-report-tool</code></td></tr>
+<tr><td>Commits</td><td>
+55afbf72d Add manifest cross-validation against locale registrations<br>
+ac694117f Add policy-aware check command<br>
+e047f1be9 Add translate modes: missing, improve, drift<br>
+c26053079 Add i18n-report validate command<br>
+b2072e912 Add i18n-report drift command<br>
+e8a47104d Add source-text metadata and bootstrap command<br>
+784cabdeb Add mode-dependent @override behavior in merge<br>
+e91d0abb0 Add leaf-level @override parsing and validation<br>
+61628dc3b Refactor merge to operate on yaml.Node trees<br>
+980e65dc7 Add locale manifest and i18n-report manifest command<br>
+d01586c24 Add --dry-run flag to merge subcommand<br>
+5c44dce71 Include en-us annotations in translate report output<br>
+72ec91977 Preserve existing comments when merging translations<br>
+787276b66 Add i18n-report README<br>
+9da057b3c Add tests for i18n-report<br>
+9cc7de442 Add i18n-report tool with subcommand-based CLI<br>
+60ecc42f0 Scaffold i18n-report tool
+</td></tr>
+<tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.6, <span class="pill pill-codex">Codex</span> GPT 5.4, <span class="pill pill-gemini">Gemini</span> 3.1 Pro</td></tr>
+<tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; 4 important issues (tag validation, silent drift check, missing file handling, source locale metadata)</td></tr>
+<tr><td>Wall-clock time</td><td>46 min 11 s</td></tr>
+</table>
+
+<hr>
+
+<h2 id="executive-summary">Executive Summary <a class="pilcrow" href="#executive-summary">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>This PR adds <code>i18n-report</code>, a 6,625-line Go CLI tool with 14 subcommands for maintaining Rancher Desktop's translation files. The code is clean, well-tested, and the AST-level YAML manipulation design is a strong foundation for preserving translator annotations through merge operations. No critical issues were found. Four important issues should be addressed before merge: tag validation produces false positives on angle-bracket placeholders in translation strings, the drift check silently passes when metadata is unreadable, locale commands fail on non-existent locale files instead of treating them as empty, and the <code>remove</code> command incorrectly attempts metadata cleanup for the source locale.</p>
+</div>
+
+<hr>
+
+<h2 id="consolidated-findings">Consolidated Findings <a class="pilcrow" href="#consolidated-findings">&para;</a></h2>
+
+<h3 class="section-critical">Critical Issues <a class="pilcrow" href="#consolidated-findings">&para;</a></h3>
+<p>None.</p>
+
+<h3 id="important-issues" class="section-important">Important Issues <a class="pilcrow" href="#important-issues">&para;</a></h3>
+
+<!-- ═══════════════ I1 ═══════════════ -->
+<div class="card card-important" id="I1">
+<div class="finding-title"><span class="finding-num">I1.</span> Tag validation false positives on angle-bracket placeholders — <span class="pill pill-codex">Codex</span> <a class="pilcrow" href="#I1">&para;</a></div>
+
+<p>The <code>tagRe</code> regex matches angle-bracket placeholders like <code>&lt;ingress-name&gt;</code> as HTML tag <code>ingress</code> (since <code>\w+</code> captures up to the hyphen). The en-us.yaml string at key <code>ingress-ip-domain</code> contains <code>&lt;ingress-name&gt;.&lt;namespace-name&gt;.&lt;ip address of ingress controller&gt;</code>, which produces synthetic tag names <code>ingress</code>, <code>namespace</code>, and <code>ip</code>. Translations that omit these non-HTML markers trigger false validation errors.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_validate.go#L222-L256">src/go/i18n-report/report_validate.go:222-256</a></div>
+<pre class="language-go" data-start="222" data-line="222,230-256"><code>var tagRe = regexp.MustCompile(`&lt;/?(\w+)[^&gt;]*/?>`)
+
+// attrRe matches HTML attributes of the form name="value" or name='value'.
+var attrRe = regexp.MustCompile(`(data-\w+)=(?:"([^"]*)"|'([^']*)')`)
+
+// checkTags verifies that the locale value contains the same HTML-like
+// tag names as the English source, and that required data-* attributes
+// are preserved (runtime handlers depend on these).
+func checkTags(key, enValue, localeValue string) []validationError {
+	enTags := extractTagNames(enValue)
+	localeTags := extractTagNames(localeValue)
+
+	var errors []validationError
+
+	for tag, enCount := range enTags {
+		localeCount := localeTags[tag]
+		if localeCount &lt; enCount {
+			errors = append(errors, validationError{
+				Key:     key,
+				Check:   "tag",
+				Message: fmt.Sprintf("missing &lt;%s&gt; tag (expected %d, found %d)", tag, enCount, localeCount),
+			})
+		}
+	}
+
+	for tag, localeCount := range localeTags {
+		enCount := enTags[tag]
+		if localeCount &gt; enCount {
+			errors = append(errors, validationError{
+				Key:     key,
+				Check:   "tag",
+				Message: fmt.Sprintf("unexpected &lt;%s&gt; tag (expected %d, found %d)", tag, enCount, localeCount),
+			})
+		}
+	}</code></pre>
+
+<p><span class="fix-label">Fix:</span> restrict tag matching to a known set of inline HTML tags (<code>a</code>, <code>b</code>, <code>br</code>, <code>code</code>, <code>em</code>, <code>i</code>, <code>strong</code>, <code>span</code>, <code>p</code>, <code>li</code>, <code>ul</code>, <code>ol</code>), or exclude tokens containing hyphens or spaces from tag matching.</p>
+
+<p><em>(important, regression)</em></p>
+</div>
+
+<!-- ═══════════════ I2 ═══════════════ -->
+<div class="card card-important" id="I2">
+<div class="finding-title"><span class="finding-num">I2.</span> Drift check silently passes when metadata load fails — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#I2">&para;</a></div>
+
+<p>The error from <code>loadMetadata</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_check.go#L166">report_check.go:166</a> is discarded. When <code>loadMetadata</code> returns a non-nil error (e.g., corrupt file), <code>meta</code> is nil, and the <code>if meta != nil</code> guard at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_check.go#L180">report_check.go:180</a> skips the entire drift check. For shipping policy, this silently reports drift as not-checked rather than failing.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_check.go#L164-L194">src/go/i18n-report/report_check.go:164-194</a></div>
+<pre class="language-go" data-start="164" data-line="166,180"><code>	// Load metadata for the drift check below. Metadata coherence is already
+	// covered by the "validate passes" check above (validateLocale checks it).
+	meta, _ := loadMetadata(root, locale)
+
+	// Shipping-only checks.
+	if policy == "shipping" {
+		// No missing keys.
+		missingCount := 0
+		for k := range enKeys {
+			if _, found := localeKeys[k]; !found {
+				missingCount++
+			}
+		}
+		printResult("no missing keys", missingCount == 0, countDetail(missingCount))
+
+		// No drifted keys.
+		if meta != nil {
+			driftCount := 0
+			for k := range localeKeys {
+				enValue, inEn := enKeys[k]
+				storedSource, inMeta := meta[k]
+				if !inEn || !inMeta {
+					continue
+				}
+				if enValue != storedSource {
+					driftCount++
+				}
+			}
+			printResult("no drifted keys", driftCount == 0, countDetail(driftCount))
+		}
+	}</code></pre>
+
+<p><span class="fix-label">Fix:</span> propagate the error when policy is <code>shipping</code>:</p>
+<pre class="language-diff"><code>-meta, _ := loadMetadata(root, locale)
++meta, metaErr := loadMetadata(root, locale)
++if meta == nil &amp;&amp; policy == "shipping" {
++    printResult("no drifted keys", false, "metadata unreadable")
++}</code></pre>
+
+<p><em>(important, regression)</em></p>
+</div>
+
+<!-- ═══════════════ I3 ═══════════════ -->
+<div class="card card-important" id="I3">
+<div class="finding-title"><span class="finding-num">I3.</span> <code>loadYAMLFlat</code> fails on non-existent locale files — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#I3">&para;</a></div>
+
+<p>Unlike <code>loadYAMLDocument</code> (line 209), which returns an empty document for non-existent files, <code>loadYAMLFlat</code> fails with a raw "no such file or directory" error. This breaks <code>translate --mode=missing</code> for brand-new locales &mdash; the primary bootstrap use case, where ALL keys should be reported as missing.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/yaml.go#L36-L47">src/go/i18n-report/yaml.go:36-47</a></div>
+<pre class="language-go" data-start="36" data-line="37-41"><code>// loadYAMLFlat loads a YAML file and returns flattened key-value pairs.
+func loadYAMLFlat(path string) (map[string]string, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var raw map[string]interface{}
+	if err := yaml.Unmarshal(data, &amp;raw); err != nil {
+		return nil, fmt.Errorf("parsing %s: %w", path, err)
+	}
+	return flattenYAML("", raw), nil
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> add the same <code>os.IsNotExist</code> guard:</p>
+<pre class="language-diff"><code> func loadYAMLFlat(path string) (map[string]string, error) {
+     data, err := os.ReadFile(path)
++    if os.IsNotExist(err) {
++        return make(map[string]string), nil
++    }
+     if err != nil {
+         return nil, err
+     }</code></pre>
+
+<p><em>(important, gap)</em></p>
+</div>
+
+<!-- ═══════════════ I4 ═══════════════ -->
+<div class="card card-important" id="I4">
+<div class="finding-title"><span class="finding-num">I4.</span> <code>remove</code> pipe mode attempts metadata cleanup for source locale — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#I4">&para;</a></div>
+
+<p><code>findTranslationFiles</code> returns ALL <code>.yaml</code> files including <code>en-us.yaml</code>. When keys are removed from <code>en-us.yaml</code>, the code derives <code>locale = "en-us"</code> and calls <code>removeMetadataKeys</code> &mdash; a no-op today but semantically wrong. The <code>--stale</code> mode correctly skips <code>en-us.yaml</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_remove.go#L79-L80">report_remove.go:79-80</a>, creating an inconsistency.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_remove.go#L47-L63">src/go/i18n-report/report_remove.go:47-63</a></div>
+<pre class="language-go" data-start="47" data-line="55-57"><code>	for _, path := range targets {
+		removed, err := removeKeysFromFile(path, keySet)
+		if err != nil {
+			return err
+		}
+		if removed > 0 {
+			relPath, _ := filepath.Rel(root, path)
+			fmt.Fprintf(os.Stderr, "Removed %d keys from %s\n", removed, relPath)
+			locale := strings.TrimSuffix(filepath.Base(path), ".yaml")
+			if err := removeMetadataKeys(root, locale, keySet); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span> skip metadata cleanup for <code>en-us.yaml</code>:</p>
+<pre class="language-diff"><code>     if removed > 0 {
+-        locale := strings.TrimSuffix(filepath.Base(path), ".yaml")
+-        if err := removeMetadataKeys(root, locale, keySet); err != nil {
+-            return err
++        base := filepath.Base(path)
++        if base != "en-us.yaml" {
++            locale := strings.TrimSuffix(base, ".yaml")
++            if err := removeMetadataKeys(root, locale, keySet); err != nil {
++                return err
++            }
+         }
+     }</code></pre>
+
+<p><em>(important, regression)</em></p>
+</div>
+
+<h3 id="suggestions" class="section-suggestion">Suggestions <a class="pilcrow" href="#suggestions">&para;</a></h3>
+
+<!-- ═══════════════ S1 ═══════════════ -->
+<div class="card card-suggestion" id="S1">
+<div class="finding-title"><span class="finding-num">S1.</span> Double loading of en-us.yaml in <code>reportMerge</code> — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S1">&para;</a></div>
+
+<p><code>loadYAMLFlat(enPath)</code> is called at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L108">report_merge.go:108</a> for unknown-key validation and again at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L185">report_merge.go:185</a> for metadata generation. The file won't change during a single invocation. Similarly, <code>nodeAllLeaves(treeRoot)</code> is called at lines 183 and 190, traversing the same tree twice.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L107-L108">src/go/i18n-report/report_merge.go:107-108</a></div>
+<pre class="language-go" data-start="107" data-line="107-108"><code>	enPath := translationsPath(root, "en-us.yaml")
+	enKeys, err := loadYAMLFlat(enPath)</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L183-L192">src/go/i18n-report/report_merge.go:183-192</a></div>
+<pre class="language-go" data-start="183" data-line="183,185,189-190"><code>	total := len(nodeAllLeaves(treeRoot))
+
+	enKeys, err = loadYAMLFlat(enPath)
+	if err != nil {
+		return fmt.Errorf("loading English for metadata: %w", err)
+	}
+	localeKeys := make(map[string]string, total)
+	for k, e := range nodeAllLeaves(treeRoot) {
+		localeKeys[k] = e.value
+	}</code></pre>
+
+<p><span class="fix-label">Fix:</span> remove the second <code>loadYAMLFlat</code> call and reuse the <code>nodeAllLeaves</code> result.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S2 ═══════════════ -->
+<div class="card card-suggestion" id="S2">
+<div class="finding-title"><span class="finding-num">S2.</span> manifest default behavior doesn't match README — <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <a class="pilcrow" href="#S2">&para;</a></div>
+
+<p>The <code>--cross-validate</code> flag defaults to <code>false</code>, but the README describes the full cross-check as default behavior. Users following the documented invocation get only a manifest dump, not the consistency check.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_manifest.go#L15-L18">src/go/i18n-report/report_manifest.go:15-18</a></div>
+<pre class="language-go" data-start="15" data-line="17"><code>func runManifest(args []string) error {
+	fs := flag.NewFlagSet("manifest", flag.ExitOnError)
+	crossValidate := fs.Bool("cross-validate", false, "Also check locale registrations in command-api.yaml")
+	fs.Parse(args)</code></pre>
+
+<p><span class="fix-label">Fix:</span> make cross-validation the default, or update the README to document <code>--cross-validate</code> as required.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S3 ═══════════════ -->
+<div class="card card-suggestion" id="S3">
+<div class="finding-title"><span class="finding-num">S3.</span> README overstates <code>dynamic</code> command — <span class="pill pill-codex">Codex</span> <a class="pilcrow" href="#S3">&para;</a></div>
+
+<p>The README says <code>dynamic</code> finds template literals "or concatenation", but <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/scan.go#L48-L51">scan.go:48-51</a> only matches backtick templates with <code>${...}</code>. The README also says merge writes "blank lines between top-level groups", while <code>serializeYAMLNode</code> explicitly does not.</p>
+
+<p><span class="fix-label">Fix:</span> tighten the README to match the current implementation.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S4 ═══════════════ -->
+<div class="card card-suggestion" id="S4">
+<div class="finding-title"><span class="finding-num">S4.</span> Path traversal for command-api.yaml — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S4">&para;</a></div>
+
+<p><code>translationsPath(root, "../specs/command-api.yaml")</code> uses <code>../specs/</code> to escape the translations directory. A direct <code>filepath.Join(root, "pkg", "rancher-desktop", "assets", "specs", "command-api.yaml")</code> would be clearer.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_manifest.go#L46">src/go/i18n-report/report_manifest.go:46</a></div>
+<pre class="language-go" data-start="46" data-line="46"><code>	apiPath := translationsPath(root, "../specs/command-api.yaml")</code></pre>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S5 ═══════════════ -->
+<div class="card card-suggestion" id="S5">
+<div class="finding-title"><span class="finding-num">S5.</span> Duplicate doc comment on <code>extractICUConstructs</code> — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S5">&para;</a></div>
+
+<p>Two doc comment paragraphs repeat the function description. Merge into one.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_validate.go#L372-L379">src/go/i18n-report/report_validate.go:372-379</a></div>
+<pre class="language-go" data-start="372" data-line="377-379"><code>// extractICUConstructs parses top-level ICU plural/select/selectordinal
+// constructs from a message string. It finds patterns like:
+//
+//	{count, plural, one {item} other {items}}
+//
+// and returns the variable name, keyword, and branch labels.
+// extractICUConstructs finds top-level ICU plural/select constructs.
+// Known limitation: does not handle ICU single-quote escaping (e.g., '{').</code></pre>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S6 ═══════════════ -->
+<div class="card card-suggestion" id="S6">
+<div class="finding-title"><span class="finding-num">S6.</span> <code>null</code> vs <code>[]</code> for empty JSON output — <span class="pill pill-gemini">Gemini</span> <a class="pilcrow" href="#S6">&para;</a></div>
+
+<p>Several report commands initialize result slices as <code>var items []string</code> (nil). When <code>--format json</code> is used, <code>json.Encoder</code> outputs <code>null</code> instead of <code>[]</code>. Initialize via <code>make([]string, 0)</code> for consistent empty arrays.</p>
+
+<p><em>(suggestion, enhancement)</em></p>
+</div>
+
+<!-- ═══════════════ S7 ═══════════════ -->
+<div class="card card-suggestion" id="S7">
+<div class="finding-title"><span class="finding-num">S7.</span> Extra blank line at <code>yaml.go:332</code> — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S7">&para;</a></div>
+
+<p>Double blank line between <code>nodeGetLeaf</code> and <code>nodeFindKey</code>. Every other function boundary uses a single blank line.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S8 ═══════════════ -->
+<div class="card card-suggestion" id="S8">
+<div class="finding-title"><span class="finding-num">S8.</span> <code>dialogPattern</code> compiled inside function body — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S8">&para;</a></div>
+
+<p>Unlike other patterns declared at package level, <code>dialogPattern</code> is compiled inside <code>findUntranslated</code>. A brief comment explaining why (shape depends on <code>includeDescriptions</code> flag) would remove the asymmetry.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S9 ═══════════════ -->
+<div class="card card-suggestion" id="S9">
+<div class="finding-title"><span class="finding-num">S9.</span> <code>nodeSetLeaf</code> doesn't clear Content when converting MappingNode to ScalarNode — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S9">&para;</a></div>
+
+<p>Setting <code>Kind</code> to <code>ScalarNode</code> without clearing <code>Content</code> leaves orphaned child nodes. Not a data corruption issue (serializer dispatches on <code>Kind</code>), but a memory hygiene gap.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/yaml.go#L260-L265">src/go/i18n-report/yaml.go:260-265</a></div>
+<pre class="language-go" data-start="260" data-line="262"><code>			if isLeaf {
+				// Update leaf value.
+				valNode.Kind = yaml.ScalarNode
+				valNode.Tag = ""
+				valNode.Value = value
+				valNode.Style = scalarStyle(value)</code></pre>
+
+<p><span class="fix-label">Fix:</span> add <code>valNode.Content = nil</code> after setting <code>Kind</code>.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S10 ═══════════════ -->
+<div class="card card-suggestion" id="S10">
+<div class="finding-title"><span class="finding-num">S10.</span> No locale code format validation on <code>--locale</code> flag — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S10">&para;</a></div>
+
+<p>A value like <code>../../etc/config</code> would cause <code>translationsPath</code> to construct a path outside the translations directory. Limited blast radius (local CLI tool), but a simple regex validation would prevent accidental misuse.</p>
+
+<p><em>(suggestion, gap)</em></p>
+</div>
+
+<!-- ═══════════════ S11 ═══════════════ -->
+<div class="card card-suggestion" id="S11">
+<div class="finding-title"><span class="finding-num">S11.</span> Experimental policy doesn't emit "locale registered" success line — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S11">&para;</a></div>
+
+<p>When the locale IS registered, no success line is printed. All other checks always print their result. This makes check output inconsistent.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_check.go#L126-L134">src/go/i18n-report/report_check.go:126-134</a></div>
+<pre class="language-go" data-start="126" data-line="126-134"><code>	if manifestErr == nil {
+		localeInfo, registered := m.Locales[locale]
+		if !registered {
+			printResult("locale registered in manifest", false, "not found in meta/locales.yaml")
+		} else if policy == "shipping" &amp;&amp; localeInfo.Status != StatusShipping &amp;&amp; localeInfo.Status != StatusSource {
+			printResult("locale status matches policy", false,
+				fmt.Sprintf("locale status is %q, shipping policy requires \"shipping\" or \"source\"", localeInfo.Status))
+		}
+	}</code></pre>
+
+<p><span class="fix-label">Fix:</span> add an <code>else</code> clause to print the success case.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S12 ═══════════════ -->
+<div class="card card-suggestion" id="S12">
+<div class="finding-title"><span class="finding-num">S12.</span> <code>translate --mode=missing</code> text output is lossy with no warning — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S12">&para;</a></div>
+
+<p><code>normalizeWhitespace</code> collapses multiline English source values into a single line. The doc comment acknowledges this, but there's no runtime warning. Add a stderr warning when multiline values are present.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_translate.go#L11-L17">src/go/i18n-report/report_translate.go:11-17</a></div>
+<pre class="language-go" data-start="11" data-line="11-17"><code>// normalizeWhitespace collapses newlines and surrounding whitespace into
+// single spaces so that multiline values fit on one key=value output line.
+// This makes the text format lossy for multiline values; use --format json
+// for a lossless round-trip through translate and merge.
+func normalizeWhitespace(s string) string {
+	return strings.Join(strings.Fields(s), " ")
+}</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_translate.go#L184">src/go/i18n-report/report_translate.go:184</a></div>
+<pre class="language-go" data-start="184" data-line="184"><code>		fmt.Printf("%s=%s\n", p.Key, normalizeWhitespace(p.Value))</code></pre>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<!-- ═══════════════ S13 ═══════════════ -->
+<div class="card card-suggestion" id="S13">
+<div class="finding-title"><span class="finding-num">S13.</span> Dry-run inflates <code>added</code> count for duplicate entries — <span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#S13">&para;</a></div>
+
+<p>The duplicate-key check allows identical duplicates through. In dry-run mode, the tree is never modified, so every occurrence of a new key increments <code>added</code>. When merging overlapping batches, dry-run reports an inflated count.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L97-L104">src/go/i18n-report/report_merge.go:97-104</a></div>
+<pre class="language-go" data-start="97" data-line="100-103"><code>	// Reject conflicting duplicate keys in input.
+	seen := make(map[string]string, len(newEntries))
+	for _, e := range newEntries {
+		if prev, exists := seen[e.key]; exists &amp;&amp; prev != e.value {
+			return fmt.Errorf("conflicting values for key %q in input:\n  first:  %s\n  second: %s", e.key, prev, e.value)
+		}
+		seen[e.key] = e.value
+	}</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L122-L140">src/go/i18n-report/report_merge.go:122-140</a></div>
+<pre class="language-go" data-start="122" data-line="124-127"><code>	// Apply new entries to the tree, respecting mode.
+	var added, overwritten, skipped, warned int
+	for _, e := range newEntries {
+		existingVal, _, found := nodeGetLeaf(treeRoot, e.key)
+		if found {
+			hasOverride := nodeHasOverride(treeRoot, e.key)
+
+			// In improve mode, skip @override keys unless --include-overrides.
+			if mode == "improve" &amp;&amp; hasOverride &amp;&amp; !includeOverrides {
+				skipped++
+				if dryRun {
+					fmt.Printf("skip %s (@override)\n", e.key)
+				}
+				continue
+			}
+
+			if existingVal != e.value {
+				overwritten++
+				if dryRun {</code></pre>
+
+<p><span class="fix-label">Fix:</span> deduplicate <code>newEntries</code> before the apply loop.</p>
+
+<p><em>(suggestion, regression)</em></p>
+</div>
+
+<hr>
+
+<h2 id="design-observations">Design Observations <a class="pilcrow" href="#design-observations">&para;</a></h2>
+
+<h3 id="strengths">Strengths <a class="pilcrow" href="#strengths">&para;</a></h3>
+
+<div class="card card-design">
+<ul>
+<li><strong>AST-level YAML manipulation</strong> &mdash; operating on <code>yaml.v3</code> node trees instead of marshaling through Go structs preserves comments, annotations, and formatting through merge operations. This is the right call for a translation workflow tool. [<span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>]</li>
+<li><strong>Three-format auto-detection in <code>extractTranslationText</code></strong> &mdash; the JSONL &rarr; markdown fence &rarr; raw text pipeline handles realistic translator output formats without pre-processing. [<span class="pill pill-claude">Claude</span>]</li>
+<li><strong>Policy-aware checking</strong> &mdash; the <code>experimental</code> vs <code>shipping</code> policy split maps well to the locale lifecycle, enforcing incrementally stricter requirements as a locale matures. [<span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span>]</li>
+<li><strong>Metadata-based drift detection</strong> &mdash; storing the English source text at translation time (rather than just a hash) enables meaningful diff output and is more debuggable. [<span class="pill pill-claude">Claude</span>]</li>
+<li><strong>Sorted insertion</strong> &mdash; <code>nodeInsertSorted</code> keeps YAML output deterministic regardless of insertion order, important for clean diffs in version control. [<span class="pill pill-claude">Claude</span>]</li>
+</ul>
+</div>
+
+<h3 id="concerns">Concerns <a class="pilcrow" href="#concerns">&para;</a></h3>
+
+<div class="card card-neutral">
+<ul>
+<li><strong>(future)</strong> <code>loadYAMLFlat</code> and <code>loadYAMLDocument</code> have subtly different semantics for missing files and value representation. <code>loadYAMLFlat</code> unmarshals through <code>map[string]interface{}</code> (where YAML booleans/numbers become Go types), while the Node tree preserves raw strings. A unified loading abstraction would prevent future divergence. [<span class="pill pill-claude">Claude</span>]</li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="testing-assessment">Testing Assessment <a class="pilcrow" href="#testing-assessment">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>Test coverage is solid for a CLI tool of this nature. All test files pass. Key untested scenarios (by risk):</p>
+<ol>
+<li><code>validate</code> with angle-bracket placeholder text like <code>&lt;ingress-name&gt;</code> &mdash; would have caught I1</li>
+<li><code>translate --mode=missing</code> on a non-existent locale file &mdash; would have caught I3</li>
+<li><code>remove</code> pipe mode verifying metadata is NOT cleaned up for en-us &mdash; would have caught I4</li>
+<li><code>merge</code> dry-run with duplicate input entries &mdash; would have caught S13</li>
+<li><code>stripYAMLQuotes</code> with combined <code>\\\"</code> escape sequences</li>
+<li><code>crossValidateManifest</code> with locale enum at non-standard nesting depth</li>
+</ol>
+</div>
+
+<hr>
+
+<h2 id="documentation-assessment">Documentation Assessment <a class="pilcrow" href="#documentation-assessment">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>The README is comprehensive and well-structured. Two corrections needed:</p>
+<ul>
+<li><code>manifest</code> subcommand documentation should mention <code>--cross-validate</code> flag (S2)</li>
+<li><code>dynamic</code> command description overstates capabilities (S3)</li>
+<li>Merge formatting claim contradicts code comment (S3)</li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="commit-structure">Commit Structure <a class="pilcrow" href="#commit-structure">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>The 17 commits tell a clean story: scaffold &rarr; core CLI &rarr; tests &rarr; README &rarr; features layered incrementally. Each commit is self-contained and builds on the previous one. No fixup commits patching earlier mistakes. Commit messages accurately describe their changes.</p>
+</div>
+
+<hr>
+
+<h2 id="acknowledged-limitations">Acknowledged Limitations <a class="pilcrow" href="#acknowledged-limitations">&para;</a></h2>
+
+<div class="card card-neutral">
+<ul>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_validate.go#L379">report_validate.go:379</a> &mdash; "Known limitation: does not handle ICU single-quote escaping (e.g., '{')." Reasonable for the current translation corpus.</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_merge.go#L175-L178">report_merge.go:175-178</a> &mdash; crash between locale write and metadata write can leave metadata stale, with recovery via <code>i18n-report meta</code>. Acceptable for a dev tool.</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_untranslated.go#L80-L83">report_untranslated.go:80-83</a> &mdash; known scanning gaps for showErrorBox calls, port forwarding errors, and template literals. Documented with specific file references.</li>
+<li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/55afbf72db389bd7a601e6b13604b3398976095d/src/go/i18n-report/report_translate.go#L11-L14">report_translate.go:11-14</a> &mdash; text format is lossy for multiline values. Documented; JSON format available for lossless round-trip.</li>
+</ul>
+</div>
+
+<hr>
+
+<h2 id="agent-retro">Agent Performance Retro <a class="pilcrow" href="#agent-retro">&para;</a></h2>
+
+<h3 id="retro-claude"><span class="pill pill-claude">Claude</span> <a class="pilcrow" href="#retro-claude">&para;</a></h3>
+
+<div class="card card-neutral">
+<p>Claude delivered the most valuable review across all three passes. In pass 1, it identified the drift check silent pass (I2) &mdash; a genuine reliability issue. In pass 2, it found the <code>loadYAMLFlat</code> missing-file inconsistency (I3) and the <code>remove</code> pipe mode metadata issue (I4) &mdash; both practical bugs that would affect real workflows. In pass 3, it found the dry-run count inflation (S13).</p>
+
+<p>Claude ran <code>git blame</code> systematically (22 git calls in pass 1), properly classifying findings as regressions vs gaps. It reviewed all 39 changed files and provided a complete coverage summary. One false positive: the <code>stripYAMLQuotes</code> escape ordering claim (pass 1 I1) &mdash; the current code is actually correct for all valid YAML inputs.</p>
+</div>
+
+<h3 id="retro-codex"><span class="pill pill-codex">Codex</span> <a class="pilcrow" href="#retro-codex">&para;</a></h3>
+
+<div class="card card-neutral">
+<p>Codex provided the most impactful single finding: the tag validation false positive on angle-bracket placeholders (I1), which it verified by tracing through actual locale file content and running the tool against the real repo. It also raised valid concerns about the manifest/cross-validate feature depending on future PRs, though these are by-design since this is the first PR in a series.</p>
+
+<p>Codex ran 66 tool calls including 15 git operations, 13 <code>go test</code> runs, and 9 grep searches &mdash; the most thorough tool usage of any agent. It was dropped from pass 2 due to GPT 5.4 capacity exhaustion.</p>
+</div>
+
+<h3 id="retro-gemini"><span class="pill pill-gemini">Gemini</span> <a class="pilcrow" href="#retro-gemini">&para;</a></h3>
+
+<div class="card card-neutral">
+<p>Gemini's pass 1 was notable for a fabricated critical finding (C1) claiming <code>@override</code> annotations were corrupted by a global find-and-replace into <code>@pkg/rancher-desktop/mixins/vue-select-overrides.js</code>. No such string exists in the codebase &mdash; a complete hallucination. Its other pass 1 findings were either documented limitations or intentional design choices.</p>
+
+<p>In pass 2, Gemini produced several theoretical findings about sequence node data loss, head comment deletion, and non-deterministic map iteration &mdash; all valid in theory but inapplicable to Rancher Desktop's locale files (no arrays, no data-* attributes with dashes). The <code>null</code> vs <code>[]</code> JSON output finding (S6) was the one genuine new contribution.</p>
+
+<p>In pass 3, Gemini restated three known findings despite explicit instructions not to, producing zero new actionable findings.</p>
+
+<p>Gemini ran 0 tool calls across all passes &mdash; it reviewed the diff from the prompt only, with no independent verification via <code>git blame</code> or file reading.</p>
+</div>
+
+<h3 id="retro-summary">Summary <a class="pilcrow" href="#retro-summary">&para;</a></h3>
+
+<table class="retro-table">
+<tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.6</th><th><span class="pill pill-codex">Codex</span> GPT 5.4</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr>
+<tr><td>Duration (pass 1)</td><td>431 s</td><td>617 s</td><td>214 s</td></tr>
+<tr><td>Findings (pass 1)</td><td>0C 1I 6S</td><td>0C 3I 2S</td><td>0C 0I 1S</td></tr>
+<tr><td>Tool calls (pass 1)</td><td>38 (Read 15, Bash 23)</td><td>66 (exec 66)</td><td>0</td></tr>
+<tr><td>Duration (pass 2)</td><td>635 s</td><td>11 s</td><td>382 s</td></tr>
+<tr><td>Findings (pass 2)</td><td>0C 2I 4S</td><td>&mdash;</td><td>0C 0I 0S</td></tr>
+<tr><td>Tool calls (pass 2)</td><td>56 (Read, Bash)</td><td>&mdash;</td><td>11</td></tr>
+<tr><td>Duration (pass 3)</td><td>662 s</td><td>&mdash;</td><td>247 s</td></tr>
+<tr><td>Findings (pass 3)</td><td>0C 0I 1S</td><td>&mdash;</td><td>0C 0I 0S</td></tr>
+<tr><td>Tool calls (pass 3)</td><td>47</td><td>&mdash;</td><td>0</td></tr>
+<tr><td><strong>Totals</strong></td><td><strong>0C 3I 11S</strong></td><td><strong>0C 1I 1S</strong></td><td><strong>0C 0I 1S</strong></td></tr>
+<tr><td>False positives</td><td>1</td><td>0</td><td>5</td></tr>
+<tr><td>Downgraded</td><td>0</td><td>2 (I&rarr;S)</td><td>2 (C&rarr;drop, I&rarr;drop)</td></tr>
+<tr><td>Dropped</td><td>0</td><td>0</td><td>7 (restated/known)</td></tr>
+<tr><td>Unique insights</td><td>I2, I3, I4, S1, S4&ndash;S5, S7&ndash;S13</td><td>I1</td><td>S6</td></tr>
+<tr><td>Coverage misses</td><td>0</td><td>0</td><td>Multiple (no tool use)</td></tr>
+</table>
+
+<div class="card card-neutral" style="margin-top: 1.2rem;">
+<p><strong>Reconciliation:</strong> Claude P1 I1 (stripYAMLQuotes escape order): dropped as false positive. Codex P1 I1 (manifest-dependent commands): downgraded to not-a-finding (by-design for first PR in series). Codex P1 I2 (cross-validate assumes future settings): same. Gemini P1 C1 (@override corruption): dropped as fabricated. Gemini P1 C2 (multiline merge): dropped as documented limitation. Gemini P1 I1 (nested ICU depth): dropped as intentional design, documented in code. Gemini P1 I2 (untranslated punctuation): dropped as conservative by design. Gemini P1 I3 (line-level skip): dropped as conservative by design. Gemini P2 findings: C1 (sequences) inapplicable, I1&ndash;I4 theoretical/restated, I5 (data-* dashes) inapplicable, I6 (non-deterministic) negligible risk, I7 (unclosed ICU) suggestion-level. Gemini P3: all 3 findings restated known issues.</p>
+</div>
+
+<hr>
+
+<h2 id="process-notes">Review Process Notes <a class="pilcrow" href="#process-notes">&para;</a></h2>
+
+<div class="card card-neutral">
+<p>No process improvements or repo context updates identified.</p>
+</div>
+
+</main>
+
+<script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+<script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+</script>
+</body>
+</html>
