@@ -519,3 +519,12 @@ Untested scenarios (ranked by risk):
 #### Documentation Assessment
 
 The inline code documentation accurately captures the architectural constraints (e.g., explaining the TOCTOU race for port binding). No user-facing documentation updates are strictly required since port assignment is an internal detail, though the elimination of the `9443` port conflict is worth highlighting in user-facing release notes.
+
+## Resolution
+
+| | |
+|---|---|
+| **Addressed** | 2026-04-06 |
+| **Commit** | Retroactively marked as addressed |
+
+Findings from this review were addressed before resolution tracking was added.
