@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Review: PR #10114 — Latch: Add reset capability, tests</title>
+<style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+</style>
+<script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+</head>
+<body>
+<main>
+
+<!-- ────────────────── Header ────────────────── -->
+<h1 id="title">Deep Review: PR #10114<a class="pilcrow" href="#title">&#182;</a></h1>
+
+<table class="meta-table">
+<tr><td>Date</td><td>2026-04-08 19:15</td></tr>
+<tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+<tr><td>Round</td><td>1</td></tr>
+<tr><td>Mode</td><td>Thorough (2 passes)</td></tr>
+<tr><td>Author</td><td><a href="https://github.com/mook-as">@mook-as</a></td></tr>
+<tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10114">#10114</a> &mdash; Latch: Add reset capability, tests</td></tr>
+<tr><td>Branch</td><td><code>latch-reset</code></td></tr>
+<tr><td>Commits</td><td><code><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4d4920f1dfdb3f79c11323a6b78def10fcad634d">4d4920f1d</a></code> Latch: Add reset capability, tests</td></tr>
+<tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span></td></tr>
+<tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one test exercises the wrong code path; fix before merge</td></tr>
+<tr><td>Wall-clock time</td><td><code>55 min 28 s</code></td></tr>
+</table>
+
+<hr>
+
+<!-- ────────────────── Executive Summary ────────────────── -->
+<h2 id="executive-summary">Executive Summary<a class="pilcrow" href="#executive-summary">&#182;</a></h2>
+
+<div class="card card-neutral">
+<p>This PR rewrites the <code>Latch</code> utility from a thin <code>new Promise()</code> wrapper into a resettable thenable with generic type parameters, adding a <code>reset()</code> method for reconnection scenarios. The implementation uses a dual-promise state machine (<code>Promise.allSettled</code> over value and reset signals) that handles concurrent waiters, resets, and rejection cleanup correctly. One test targets the wrong method and should be fixed; the remaining findings are minor style and coverage improvements.</p>
+</div>
+
+<hr>
+
+<!-- ────────────────── Critical Issues ────────────────── -->
+<h2 id="critical-issues" class="section-critical">Critical Issues<a class="pilcrow" href="#critical-issues">&#182;</a></h2>
+
+<div class="card card-neutral">
+<p>None.</p>
+</div>
+
+<hr>
+
+<!-- ────────────────── Important Issues ────────────────── -->
+<h2 id="important-issues" class="section-important">Important Issues<a class="pilcrow" href="#important-issues">&#182;</a></h2>
+
+<!-- I1 -->
+<div class="card card-important" id="I1">
+<div class="finding-title"><span class="finding-num">I1.</span> Test exercises resolve() instead of reset() for unhandled rejection prevention <span class="pill pill-gemini">Gemini 3.1 Pro</span><a class="pilcrow" href="#I1">&#182;</a></div>
+
+<p>The comment claims the test verifies that internal promise rejection does not cause an <code>UnhandledPromiseRejectionWarning</code>. But <code>resolve()</code> never rejects a promise &mdash; it resolves both <code>state.promise</code> and <code>state.reset</code>. The method that internally rejects the old promise is <code>reset()</code>, where <code>oldPromise.promise.catch(() =&gt; {})</code> guards against the warning. This test passes vacuously and does not verify the guard.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L48-L55">pkg/rancher-desktop/utils/__tests__/latch.spec.ts</a></div>
+<pre class="language-typescript" data-start="48" data-line="48-51"><code>  it('can be resolved without any handlers', async() =&gt; {
+    // If the latch resolves and it internally rejects a promise, it should not
+    // cause an UnhandledPromiseRejectionWarning even if we never await the latch.
+    Latch().resolve();
+
+    // Wait a tick to allow any unhandled microtask rejections to surface.
+    await new Promise(resolve =&gt; setTimeout(resolve, 10));
+  }, 100);</code></pre>
+
+<p>The <code>resolve()</code> method (lines 124-127) resolves both underlying promises; it never triggers rejection:</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L124-L127">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="124"><code>    resolve(value: T) {
+      state.promise.resolve(value);
+      state.reset.resolve(ResetState.SETTLED);
+    },</code></pre>
+
+<p>The <code>reset()</code> method (lines 138-141) is where the rejection guard lives:</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L138-L141">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="138"><code>      oldReset.resolve(ResetState.RESET);
+      // Prevent UnhandledPromiseRejectionWarning, because we don't know what
+      // dummy value to resolve with.
+      oldPromise.promise.catch(() =&gt; {});</code></pre>
+
+<p><span class="fix-label">Fix:</span> change the test to call <code>reset()</code>:</p>
+
+<pre class="language-diff"><code>-  it('can be resolved without any handlers', async() =&gt; {
+-    // If the latch resolves and it internally rejects a promise, it should not
++  it('can be reset without any handlers', async() =&gt; {
++    // If the latch is reset and it internally rejects the old promise, it should not
+     // cause an UnhandledPromiseRejectionWarning even if we never await the latch.
+-    Latch().resolve();
++    Latch().reset();
+
+     // Wait a tick to allow any unhandled microtask rejections to surface.
+     await new Promise(resolve =&gt; setTimeout(resolve, 10));
+   }, 100);</code></pre>
+</div>
+
+<!-- I2 -->
+<div class="card card-important" id="I2">
+<div class="finding-title"><span class="finding-num">I2.</span> Missing test: multiple concurrent awaiters on the same Latch <span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#I2">&#182;</a></div>
+
+<p>Every test exercises a single caller awaiting the latch. In production, multiple callers await the same Latch concurrently &mdash; <code>protocolsRegistered</code> is awaited at two sites in <code>background.ts</code>, and <code>hasCredentials</code> is awaited by every concurrent <code>fetchAPI</code> call in <code>credentials.ts</code>. The new implementation starts an independent <code>waitForSettled()</code> loop per <code>.then()</code> call. While correct, this fan-out behavior through the custom thenable protocol should be pinned by a test.</p>
+
+<p><span class="fix-label">Fix:</span> add a test:</p>
+
+<pre class="language-typescript"><code>it('supports multiple concurrent awaiters', async() =&gt; {
+  const latch = Latch&lt;number&gt;();
+  const p1 = expect(latch).resolves.toBe(42);
+  const p2 = expect(latch).resolves.toBe(42);
+  setTimeout(() =&gt; latch.resolve(42), 0);
+  await Promise.all([p1, p2]);
+}, 100);</code></pre>
+</div>
+
+<hr>
+
+<!-- ────────────────── Suggestions ────────────────── -->
+<h2 id="suggestions" class="section-suggestion">Suggestions<a class="pilcrow" href="#suggestions">&#182;</a></h2>
+
+<!-- S1 -->
+<div class="card card-suggestion" id="S1">
+<div class="finding-title"><span class="finding-num">S1.</span> Comment says "resolved" but means "settled" <span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#S1">&#182;</a></div>
+
+<p><code>ResetState.SETTLED</code> covers both resolution and rejection, but the comment implies only the fulfillment path. This misleads readers tracing the rejection flow.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L66-L70">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="66" data-line="68"><code>      if (r.status === 'fulfilled') {
+        if (r.value === ResetState.SETTLED) {
+          // The latch was resolved; return the resolved value.
+          return p;
+        }</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+
+<pre class="language-diff"><code> if (r.value === ResetState.SETTLED) {
+-  // The latch was resolved; return the resolved value.
++  // The latch was settled (resolved or rejected); return the result.
+   return p;
+ }</code></pre>
+</div>
+
+<!-- S2 -->
+<div class="card card-suggestion" id="S2">
+<div class="finding-title"><span class="finding-num">S2.</span> <code>return Promise.reject()</code> in async functions creates unnecessary intermediate Promises <span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#S2">&#182;</a></div>
+
+<p>In an async function, <code>return Promise.reject(x)</code> creates a rejected Promise that the async wrapper unwraps &mdash; one extra allocation per rejection. <code>throw x</code> is equivalent and more idiomatic.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L92-L97">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="92" data-line="92,97"><code>        return Promise.resolve(result.value) as any;
+      } else {
+        if (typeof onrejected === 'function') {
+          return onrejected(result.reason);
+        }
+        return Promise.reject(result.reason);</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L106-L107">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="106" data-line="107"><code>        }
+        return Promise.reject(result.reason);</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L122">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="122" data-line="122"><code>      return result.status === 'fulfilled' ? result.value : Promise.reject(result.reason);</code></pre>
+
+<p><span class="fix-label">Fix</span> (same pattern at all three sites):</p>
+
+<pre class="language-diff"><code>-  return Promise.reject(result.reason);
++  throw result.reason;</code></pre>
+</div>
+
+<!-- S3 -->
+<div class="card card-suggestion" id="S3">
+<div class="finding-title"><span class="finding-num">S3.</span> Unnecessary <code>Promise.resolve()</code> wrapping <span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#S3">&#182;</a></div>
+
+<p>In an async function, <code>return value</code> already wraps the value in a resolved Promise.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L92">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="92" data-line="92"><code>        return Promise.resolve(result.value) as any;</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+
+<pre class="language-diff"><code>-  return Promise.resolve(result.value) as any;
++  return result.value as any;</code></pre>
+</div>
+
+<!-- S4 -->
+<div class="card card-suggestion" id="S4">
+<div class="finding-title"><span class="finding-num">S4.</span> Missing test: <code>finally</code> on a rejected latch <span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#S4">&#182;</a></div>
+
+<p>The <code>finally</code> test (line 175) exercises only the resolved path. The rejection path through <code>finally</code> (lines 112-123) is untested.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L112-L123">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="112" data-line="122"><code>    async finally(onfinally) {
+      const result = await waitForSettled();
+
+      // The latch was settled; call the finally callback.
+      if (typeof onfinally === 'function') {
+        // If the return value is a promise, await on it so we can propagate
+        // any rejections from it.
+        await Promise.resolve(onfinally());
+      }
+
+      return result.status === 'fulfilled' ? result.value : Promise.reject(result.reason);
+    },</code></pre>
+
+<p><span class="fix-label">Fix:</span> add a test:</p>
+
+<pre class="language-typescript"><code>it('runs finally callback on rejection', async() =&gt; {
+  const error = new Error('test');
+  const latch = Latch();
+  let finallyCalled = false;
+  latch.finally(() =&gt; {
+    finallyCalled = true;
+  });
+  const assertion = expect(latch).rejects.toThrow(error);
+  setTimeout(() =&gt; {
+    expect(finallyCalled).toBe(false);
+    latch.reject(error);
+  }, 0);
+  expect(finallyCalled).toBe(false);
+  await assertion;
+  expect(finallyCalled).toBe(true);
+}, 100);</code></pre>
+</div>
+
+<!-- S5 -->
+<div class="card card-suggestion" id="S5">
+<div class="finding-title"><span class="finding-num">S5.</span> Latch is no longer <code>instanceof Promise</code> <span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#S5">&#182;</a></div>
+
+<p>The old Latch was a decorated <code>new Promise()</code>, so <code>latch instanceof Promise</code> returned <code>true</code>. The new Latch is a plain object implementing the thenable protocol, so <code>instanceof Promise</code> returns <code>false</code>. No current caller checks <code>instanceof Promise</code> on a Latch, and <code>[Symbol.toStringTag]</code> at line 143 preserves debugger display. However, the <code>Latch&lt;T&gt;</code> interface at line 23 claims <code>extends Promise&lt;T&gt;</code>, creating a type/runtime mismatch that could surprise future callers.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L23">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="23" data-line="23"><code>interface Latch&lt;T&gt; extends Promise&lt;T&gt; {</code></pre>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L143">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="143" data-line="143"><code>    [Symbol.toStringTag]: Promise.prototype[Symbol.toStringTag],</code></pre>
+
+<p><span class="fix-label">Fix:</span> add a JSDoc note on the factory function:</p>
+
+<pre class="language-diff"><code> /**
+  * Creates a Latch that is an extension of a Promise that can be resolved via
+  * calling a method on that Promise.
++ *
++ * Note: The returned object implements the Promise thenable protocol (then,
++ * catch, finally) but is not an instanceof Promise.
+  */</code></pre>
+</div>
+
+<!-- S6 -->
+<div class="card card-suggestion" id="S6">
+<div class="finding-title"><span class="finding-num">S6.</span> Export <code>Latch</code> interface to simplify typing at call sites <span class="pill pill-gemini">Gemini 3.1 Pro</span><a class="pilcrow" href="#S6">&#182;</a></div>
+
+<p>The <code>Latch&lt;T&gt;</code> interface is not exported, forcing call sites like <code>windowsIntegrationManager.ts</code> to use the verbose <code>ReturnType&lt;typeof Latch&lt;void&gt;&gt;</code>. Exporting the interface lets callers write <code>Latch&lt;void&gt;</code> directly.</p>
+
+<div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4d4920f1dfdb3f79c11323a6b78def10fcad634d/pkg/rancher-desktop/utils/latch.ts#L23-L30">pkg/rancher-desktop/utils/latch.ts</a></div>
+<pre class="language-typescript" data-start="23" data-line="23"><code>interface Latch&lt;T&gt; extends Promise&lt;T&gt; {
+  /** Calling the resolve() method resolves the Latch. */
+  resolve(value: T): void;
+  /** Calling the reject() method rejects the Latch. */
+  reject(reason: any): void;
+  /** Calling the reset() method resets the Latch to an unresolved state. */
+  reset(): void;
+}</code></pre>
+
+<p><span class="fix-label">Fix:</span></p>
+
+<pre class="language-diff"><code>-interface Latch&lt;T&gt; extends Promise&lt;T&gt; {
++export interface Latch&lt;T&gt; extends Promise&lt;T&gt; {</code></pre>
+</div>
+
+<hr>
+
+<!-- ────────────────── Design Observations ────────────────── -->
+<h2 id="design-observations" class="section-design">Design Observations<a class="pilcrow" href="#design-observations">&#182;</a></h2>
+
+<div class="card card-design">
+<h3 id="strengths">Strengths<a class="pilcrow" href="#strengths">&#182;</a></h3>
+
+<ul>
+<li><strong>Dual-promise state machine.</strong> The <code>waitForSettled</code> loop using <code>Promise.allSettled</code> over value and reset signals is an elegant mechanism for resettable promises. Existing awaiters transparently loop to the new generation after a reset, with no caller coordination required. <span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-codex">Codex GPT 5.4</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span></li>
+
+<li><strong>Correct rejection cleanup.</strong> The <code>reset()</code> method at line 140 attaches <code>.catch(() =&gt; {})</code> before rejecting the old promise, preventing <code>UnhandledPromiseRejectionWarning</code> when no consumer has attached a handler. <span class="pill pill-claude">Claude Opus 4.6</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span></li>
+
+<li><strong>Backward-compatible API.</strong> The rewrite preserves the existing <code>await latch</code> pattern while adding <code>reset()</code> and generic typing. Existing call sites (<code>credentials.ts</code>, <code>k3sHelper.ts</code>, <code>iterator.ts</code>, <code>protocols.ts</code>) require no changes. <span class="pill pill-codex">Codex GPT 5.4</span></li>
+</ul>
+</div>
+
+<hr>
+
+<!-- ────────────────── Testing Assessment ────────────────── -->
+<h2 id="testing-assessment">Testing Assessment<a class="pilcrow" href="#testing-assessment">&#182;</a></h2>
+
+<div class="card card-neutral">
+<p>The test suite covers the core Latch lifecycle: resolve, reject, reset, chained <code>then</code>/<code>catch</code>/<code>finally</code>, pre-resolution, invalid callbacks, and reset-while-pending.</p>
+
+<p>Untested scenarios ranked by risk:</p>
+
+<ol>
+<li><strong>Multiple concurrent awaiters</strong> (I2) &mdash; exercises the fan-out behavior of the custom <code>then</code> under the production usage pattern.</li>
+<li><strong>Unhandled rejection on reset</strong> (I1) &mdash; the existing test targets the wrong method and proves nothing about the guard.</li>
+<li><strong><code>finally</code> on rejected latch</strong> (S4) &mdash; exercises the rejection propagation path in <code>finally</code>.</li>
+<li><strong>Idempotent resolve/reject</strong> &mdash; calling <code>resolve()</code> twice or <code>resolve()</code> then <code>reject()</code> should be a no-op for the second call.</li>
+<li><strong><code>.then(onFulfilled, onRejected)</code> where latch rejects</strong> &mdash; the <code>onrejected</code> parameter of <code>then</code> is never tested directly.</li>
+</ol>
+</div>
+
+<hr>
+
+<!-- ────────────────── Documentation Assessment ────────────────── -->
+<h2 id="documentation-assessment">Documentation Assessment<a class="pilcrow" href="#documentation-assessment">&#182;</a></h2>
+
+<div class="card card-neutral">
+<p>The JSDoc on the <code>Latch</code> interface and factory function is adequate. Inline comments in <code>waitForSettled</code> and <code>reset</code> explain the non-obvious mechanisms. The misleading comment at line 68 is flagged in <a href="#S1">S1</a>.</p>
+</div>
+
+<hr>
+
+<!-- ────────────────── Acknowledged Limitations ────────────────── -->
+<h2 id="acknowledged-limitations">Acknowledged Limitations<a class="pilcrow" href="#acknowledged-limitations">&#182;</a></h2>
+
+<div class="card card-neutral">
+<ul>
+<li><strong>Line 73:</strong> <code>// This should never reject.</code> &mdash; documents that <code>state.reset</code> is never expected to reject; the <code>throw r.reason</code> is defensive. The change does not alter the likelihood of this path being reached.</li>
+</ul>
+</div>
+
+<hr>
+
+<!-- ────────────────── Agent Performance Retro ────────────────── -->
+<h2 id="agent-retro">Agent Performance Retro<a class="pilcrow" href="#agent-retro">&#182;</a></h2>
+
+<div class="card card-neutral">
+
+<h3 id="retro-claude"><span class="pill pill-claude">Claude Opus 4.6</span><a class="pilcrow" href="#retro-claude">&#182;</a></h3>
+<p>Claude delivered the most comprehensive review with 1 important finding and 5 suggestions, all valid. It traced all Latch call sites across the codebase, ran the test suite, checked <code>instanceof Promise</code> usage, and verified with <code>git blame</code> that findings were regressions or gaps. Claude's pass 2 timed out at 900s with no output &mdash; likely exceeded context during deep exploration with the larger follow-up prompt.</p>
+<p><strong>Tool call highlights (pass 1):</strong> 28 calls (15 Grep, 8 Bash, 5 Read). Ran <code>git blame</code> 4 times to verify regression classifications. Executed the Jest test suite to confirm all tests pass. Broad grep coverage of callers (<code>protocolsRegistered</code>, <code>hasCredentials</code>, <code>pendingNetworkSetup</code>).</p>
+
+<h3 id="retro-codex"><span class="pill pill-codex">Codex GPT 5.4</span><a class="pilcrow" href="#retro-codex">&#182;</a></h3>
+<p>Codex found no issues and rated the PR clean. It explored broadly (33 tool calls), reading all caller files and running interactive tests via <code>tsx</code> and <code>node</code>, but concluded everything was correct. Its testing assessment suggested useful scenarios (Promise interop, concurrent waiters across reset boundaries) but did not flag them as findings.</p>
+<p><strong>Tool call highlights (pass 1):</strong> 33 calls (all <code>exec_command</code>). Ran 6 <code>yarn</code>/<code>tsx</code> interactive tests to verify Latch behavior at runtime. Checked <code>gh api</code> for PR comments. Searched for <code>Promise.race/all/allSettled</code> usage with Latches. High effort, low yield.</p>
+
+<h3 id="retro-gemini"><span class="pill pill-gemini">Gemini 3.1 Pro</span><a class="pilcrow" href="#retro-gemini">&#182;</a></h3>
+<p>Gemini found the strongest individual finding (I1: flawed test) that the other agents missed. It focused on verifying TypeScript compilation and wrote a standalone <code>unhandled.js</code> script to test rejection behavior. In pass 2, it identified the unexported interface (S6). No <code>git blame</code> usage, consistent with known Gemini behavior.</p>
+<p><strong>Tool call highlights (pass 1):</strong> 19 calls (12 shell, 4 write_file, 3 grep). Wrote test files to verify TypeScript behavior and unhandled rejection scenarios. Spent several calls trying to run <code>tsc</code> (version/config issues). No <code>git blame</code> &mdash; classifications relied on code reading.</p>
+
+<h3 id="retro-summary">Summary<a class="pilcrow" href="#retro-summary">&#182;</a></h3>
+
+<table class="retro-table">
+<tr><th></th><th><span class="pill pill-claude">Claude Opus 4.6</span></th><th><span class="pill pill-codex">Codex GPT 5.4</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th></tr>
+<tr><td>Duration (pass 1)</td><td>952s</td><td>251s</td><td>288s</td></tr>
+<tr><td>Findings (pass 1)</td><td>0C 1I 5S</td><td>0C 0I 0S</td><td>0C 1I 0S</td></tr>
+<tr><td>Tool calls (pass 1)</td><td>28 (Grep 15, Bash 8)</td><td>33 (exec_command 33)</td><td>19 (shell 12, write 4)</td></tr>
+<tr><td>Duration (pass 2)</td><td>900s (timeout)</td><td>&mdash;</td><td>714s</td></tr>
+<tr><td>Findings (pass 2)</td><td>empty output</td><td>&mdash;</td><td>0C 0I 1S</td></tr>
+<tr><td>Tool calls (pass 2)</td><td>N/A</td><td>&mdash;</td><td>N/A</td></tr>
+<tr><td><strong>Totals</strong></td><td>0C 1I 5S</td><td>0C 0I 0S</td><td>0C 1I 1S</td></tr>
+<tr><td>Design observations</td><td>3</td><td>1</td><td>1</td></tr>
+<tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>Unique insights</td><td>5 (S1-S5)</td><td>0</td><td>2 (I1, S6)</td></tr>
+<tr><td>Files reviewed</td><td>3/3</td><td>3/3</td><td>3/3</td></tr>
+<tr><td>Coverage misses</td><td>0</td><td>1 (missed I1)</td><td>0</td></tr>
+</table>
+
+<p><strong>Reconciliation:</strong> No severity changes during consolidation. All findings accepted at their original severity. Codex's coverage miss: it reviewed <code>latch.spec.ts</code> and reported "no issues" while Gemini found the flawed test (I1).</p>
+</div>
+
+<hr>
+
+<!-- ────────────────── Review Process Notes ────────────────── -->
+<h2 id="review-process-notes">Review Process Notes<a class="pilcrow" href="#review-process-notes">&#182;</a></h2>
+
+<div class="card card-neutral">
+<p>No suggestions for this review.</p>
+</div>
+
+</main>
+
+<!-- Prism.js syntax highlighting -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-diff.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+</script>
+</body>
+</html>
