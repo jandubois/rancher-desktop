@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260409-163158-pr-10114</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260409-163158-pr-10114</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-04-09 16:32</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>2</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/mook-as">@mook-as</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10114" class="gh-ref" data-title="Latch: Add reset capability, tests" data-state="open" data-type="pr">#10114</a> — Latch: Add reset capability, tests</td></tr>
+      <tr><td>Branch</td><td><code>latch-reset</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4d4920f1d"><code>4d4920f1d</code></a> Latch: Add reset capability, tests<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/531ebaab6"><code>531ebaab6</code></a> Latch: Address (AI) reviews</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.6, <span class="pill pill-codex">Codex</span> GPT 5.4, <span class="pill pill-gemini">Gemini</span> 3.1 Pro</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; no blocking issues; all findings are minor cleanups or doc improvements</td></tr>
+      <tr><td>Wall-clock time</td><td><code>45 min 2 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 2 replaces the round-1 <code>Promise.allSettled</code>-based implementation with an <code>Object.create(Promise.prototype, …)</code> thenable that delegates through a <code>waitForSettled()</code> loop over captured <code>PromiseWithResolvers</code> snapshots — one for the value, one for a <code>ResetState</code> enum. The design correctly handles resets without ever rejecting an internal promise on the happy path, eliminating the round-1 unhandled-rejection hazard, and the test suite grew from 12 to 16 cases to cover multi-waiter, reject-then-reset, and finally-on-reject paths. No reviewer found a merge-blocking issue; remaining feedback is limited to a misleading commit-message bullet, an unnecessary type cast, a stale interface docstring, and one test-coverage gap.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Misleading bullet in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/531ebaab6"><code>531ebaab6</code></a> commit message contradicts the code <span class="pill pill-claude">Claude</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+    <p>The commit message claims: &gt; Avoid adding a <code>catch</code> on the old promise when resetting, to ensure we do not hide an unhandled rejection.</p>
+    <p>But <code>reset()</code> at line 111 still attaches a catch:</p>
+      <pre><code class="language-ts">// Attach a catch to the old promise to avoid unhandled rejections if
+// it was rejected.
+oldPromise.promise.catch(() =&gt; { /* ignore */ });</code></pre>
+    <p>The actual change in the commit is that <code>reset()</code> no longer explicitly calls <code>oldPromise.reject(new Error(&#39;Latch reset&#39;))</code> — the forced rejection was removed. The existing <code>.catch</code> was kept, now serving to absorb a <em>user-supplied</em> rejection rather than an internally-injected one. A future reader doing <code>git log</code> or <code>git blame</code> on <code>reset()</code> will read the bullet, check the code, and be confused.</p>
+    <p>Fix: if the author rebases before merge, reword the bullet. Suggested phrasing:</p>
+    <p>&gt; - reset() no longer explicitly rejects the old promise; the existing <code>.catch</code> is kept only to absorb a user-supplied rejection so <code>reject(); reset()</code> sequences do not emit an unhandled-rejection warning.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Unnecessary and semantically wrong type assertion on <code>Object.create</code> <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L69-L79">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="69" data-line="74"><code class="language-ts">      }
+      // The latch was reset; loop and wait again with new state.
+    }
+  }
+
+  return Object.create((Promise.prototype as Latch&lt;T&gt;), {
+    then: {
+      value(onfulfilled?: ((value: T) =&gt; any) | null, onrejected?: ((reason: any) =&gt; any) | null) {
+        return waitForSettled().then(onfulfilled, onrejected);
+      },
+    },</code></pre>
+    <p><code>Object.create</code> is typed <code>create(o: object | null, properties: PropertyDescriptorMap &amp; ThisType&lt;any&gt;): any</code> in <code>lib.es5.d.ts</code>. <code>Promise.prototype</code> already satisfies <code>object</code> — no cast is needed. The cast <code>Promise.prototype as Latch&lt;T&gt;</code> is also semantically wrong because <code>Promise.prototype</code> is not a <code>Latch&lt;T&gt;</code> instance; it lacks <code>resolve</code>, <code>reject</code>, and <code>reset</code>. The assertion silently hides type mistakes a reader would want to catch, and because <code>Object.create</code> returns <code>any</code> the enclosing function&#39;s declared return type <code>Latch&lt;T&gt;</code> still holds after the cast is removed.</p>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-  return Object.create((Promise.prototype as Latch&lt;T&gt;), {
++  return Object.create(Promise.prototype, {
+     then: {</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>reset()</code> JSDoc does not document the synchronous-reset-after-reject constraint <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L23-L34">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="23" data-line="28-29"><code class="language-ts">interface Latch&lt;T&gt; extends Promise&lt;T&gt; {
+  /** Calling the resolve() method resolves the Latch. */
+  resolve(value: T): void;
+  /** Calling the reject() method rejects the Latch. */
+  reject(reason: any): void;
+  /** Calling the reset() method resets the Latch to an unresolved state. */
+  reset(): void;
+}
+
+/**
+ * ResetState is the enum value of `state.reset` that indicates whether the
+ * latch was settled or reset.  This is used to determine whether we should</code></pre>
+    <p>The <code>.catch(() =&gt; {})</code> at line 111 is attached synchronously during <code>reset()</code>. It reliably suppresses the <code>UnhandledPromiseRejectionWarning</code> only when <code>reset()</code> runs in the same microtask as <code>reject()</code>. If a caller rejects in one turn and defers <code>reset()</code> to a later turn — a plausible &quot;reconnect after error&quot; pattern — Node may emit the warning before the <code>.catch</code> is attached. The test at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L157-L169"><code>latch.spec.ts:157-169</code></a> pins the same-microtask case but the constraint is nowhere in the user-facing interface docs.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L152-L174">pkg/rancher-desktop/utils/__tests__/latch.spec.ts</a></div>
+      <pre data-start="152" data-line="157-169"><code class="language-typescript">
+    for (const [i, expected] of inputs.entries()) {
+      const assertion = expected instanceof Error
+        ? expect(latch).rejects.toThrow(expected)
+        : expect(latch).resolves.toBe(expected);
+      let settled = false;
+      setTimeout(() =&gt; {
+        expect(settled).toBe(false);
+        if (expected instanceof Error) {
+          latch.reject(expected);
+        } else {
+          latch.resolve(expected);
+        }
+        settled = true;
+      }, 0);
+      expect(settled).toBe(false);
+      await assertion;
+      expect(settled).toBe(true);
+
+      // Reset at least once after each iteration; also test that we can call it
+      // multiple times in a row.
+      for (let j = 0; j &lt; i + 1; ++j) {
+        latch.reset();</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L106-L115">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="106" data-line="111"><code class="language-typescript">        state.reset = Promise.withResolvers&lt;ResetState&gt;();
+        // Resolve the reset state, so `waitForSettled` will loop.
+        oldReset.resolve(ResetState.RESET);
+        // Attach a catch to the old promise to avoid unhandled rejections if
+        // it was rejected.
+        oldPromise.promise.catch(() =&gt; { /* ignore */ });
+      },
+    },
+  });
+}</code></pre>
+    <p>Fix: document the contract where callers will see it.</p>
+      <pre><code class="language-diff">-  /** Calling the reset() method resets the Latch to an unresolved state. */
++  /**
++   * Resets the latch to an unresolved state.  If the latch had been rejected,
++   * `reset()` must be called in the same microtask as `reject()` to suppress
++   * an unhandled-rejection warning; otherwise attach a `.catch()` first.
++   */
+   reset(): void;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>Latch&lt;T&gt;</code> interface docstring no longer reflects the stateful multi-generation design <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L12-L28">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="12" data-line="17-23"><code class="language-ts">WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/**
+ * Interface Latch is a simple extension on Promise that is resolved via calling
+ * a method.  It is essentially a simplified barrier.
+ *
+ * @see https://en.wikipedia.org/wiki/Barrier_(computer_science)
+ */
+interface Latch&lt;T&gt; extends Promise&lt;T&gt; {
+  /** Calling the resolve() method resolves the Latch. */
+  resolve(value: T): void;
+  /** Calling the reject() method rejects the Latch. */
+  reject(reason: any): void;
+  /** Calling the reset() method resets the Latch to an unresolved state. */</code></pre>
+    <p>The &quot;simple extension on Promise&quot; / &quot;simplified barrier&quot; framing fit the pre-existing write-once latch but does not capture the new semantics. The same description is repeated on the factory at line 44-46. After the rewrite, <code>Latch</code> is a resettable thenable whose <code>then</code>/<code>catch</code>/<code>finally</code> are custom overrides on an <code>Object.create(Promise.prototype, ...)</code> object, supports multiple waiters, and exposes an idempotent <code>resolve</code> / <code>reject</code> that become no-ops between calls to <code>reset()</code>. None of this is in the docs, and these are exactly the behaviors that will surprise future callers.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L39-L51">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="39" data-line="44-46"><code class="language-typescript">  SETTLED,
+  /** The latch was reset. */
+  RESET,
+}
+
+/**
+ * Creates a Latch that is an extension of a Promise that can be resolved via
+ * calling a method on that Promise.
+ */
+export default function Latch&lt;T = void&gt;(): Latch&lt;T&gt; {
+  /**
+   * The state of the latch, which includes the promise that will be resolved
+   * when the latch is settled and the promise that will be resolved when the</code></pre>
+    <p>Fix: expand the interface docstring to note (1) the object is a Promise-shaped thenable, not a native Promise instance with internal slots; (2) <code>resolve()</code> / <code>reject()</code> are no-ops after the first settle until <code>reset()</code> is called; (3) waiters attached before a <code>reset()</code> still observe the prior resolution if it already landed, waiters attached after <code>reset()</code> wait for the next settle. Update the factory comment at line 44-46 accordingly, and drop &quot;simple extension on Promise&quot; / &quot;simplified barrier&quot; as it now undersells the complexity.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Missing test: waiter spans a reset <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+    <p>The new <code>can handle multiple waiters</code> test at line 109-118 only covers waiters that all attach before a single <code>resolve</code>. The round-2 rewrite&#39;s main subtlety lives at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L60-L71"><code>latch.ts:60-71</code></a>, where <code>waitForSettled</code> captures <code>state</code> in a snapshot and loops when the captured <code>reset</code> promise resolves with <code>RESET</code>. No test exercises one waiter registered before <code>reset()</code> and a second waiter registered after, both observing the same eventual resolution — precisely the code path the snapshot-and-loop pattern exists to support.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L55-L76">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="55" data-line="60-71"><code class="language-typescript">    promise: Promise.withResolvers&lt;T&gt;(),
+    reset:   Promise.withResolvers&lt;ResetState&gt;(),
+  };
+
+  /** Wait for the latch to be settled, looping while it&#39;s reset. */
+  async function waitForSettled(): Promise&lt;T&gt; {
+    while (true) {
+      // Capture the promises, so if somebody resolves, then resets, we still
+      // return the result of the first resolution.
+      const { reset: { promise: reset }, promise: { promise: p } } = state;
+
+      if (await reset === ResetState.SETTLED) {
+        // The latch was settled; return the result.
+        return p;
+      }
+      // The latch was reset; loop and wait again with new state.
+    }
+  }
+
+  return Object.create((Promise.prototype as Latch&lt;T&gt;), {
+    then: {
+      value(onfulfilled?: ((value: T) =&gt; any) | null, onrejected?: ((reason: any) =&gt; any) | null) {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L104-L123">pkg/rancher-desktop/utils/__tests__/latch.spec.ts</a></div>
+      <pre data-start="104" data-line="109-118"><code class="language-typescript">      expect(rejected).toBe(false);
+      rejected = true;
+      latch.reject(error);
+    }, 0);
+    expect(rejected).toBe(false);
+    await assertion;
+    expect(rejected).toBe(true);
+  }, 100);
+
+  it(&#39;can chain catch without a callback&#39;, async() =&gt; {
+    const error = new Error(&#39;test&#39;);
+    const latch = Latch();
+    const chained = latch.catch();
+    const assertion = expect(chained).rejects.toThrow(error);
+    setTimeout(() =&gt; {
+      latch.reject(error);
+    }, 0);
+    await assertion;
+  }, 100);
+</code></pre>
+    <p>Fix: add a test such as:</p>
+      <pre><code class="language-ts">it(&#39;handles waiters that span a reset&#39;, async() =&gt; {
+  const latch = Latch&lt;number&gt;();
+  const first = latch.then(v =&gt; v);
+  latch.reset();
+  const second = latch.then(v =&gt; v);
+  latch.resolve(7);
+  await expect(Promise.all([first, second])).resolves.toEqual([7, 7]);
+}, 100);</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> <code>await reset === ResetState.SETTLED</code> precedence is correct but easy to misread <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L61-L71">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="61" data-line="66"><code class="language-ts">    while (true) {
+      // Capture the promises, so if somebody resolves, then resets, we still
+      // return the result of the first resolution.
+      const { reset: { promise: reset }, promise: { promise: p } } = state;
+
+      if (await reset === ResetState.SETTLED) {
+        // The latch was settled; return the result.
+        return p;
+      }
+      // The latch was reset; loop and wait again with new state.
+    }</code></pre>
+    <p>Per the ECMAScript grammar, <code>UnaryExpression</code> (which includes <code>await</code>) binds tighter than <code>===</code>, so this parses as <code>(await reset) === ResetState.SETTLED</code>. That is the intended behavior, but the alternative reading <code>await (reset === ResetState.SETTLED)</code> is a common misreading of similar constructs. One set of parentheses disambiguates at no runtime cost.</p>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-      if (await reset === ResetState.SETTLED) {
++      if ((await reset) === ResetState.SETTLED) {</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> Export a named type alias to replace <code>ReturnType&lt;typeof Latch&lt;void&gt;&gt;</code> at call sites <span class="pill pill-gemini">Gemini</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L18-L28">pkg/rancher-desktop/utils/latch.ts</a></div>
+      <pre data-start="18" data-line="23"><code class="language-ts"> * Interface Latch is a simple extension on Promise that is resolved via calling
+ * a method.  It is essentially a simplified barrier.
+ *
+ * @see https://en.wikipedia.org/wiki/Barrier_(computer_science)
+ */
+interface Latch&lt;T&gt; extends Promise&lt;T&gt; {
+  /** Calling the resolve() method resolves the Latch. */
+  resolve(value: T): void;
+  /** Calling the reject() method rejects the Latch. */
+  reject(reason: any): void;
+  /** Calling the reset() method resets the Latch to an unresolved state. */</code></pre>
+    <p>The author declined exporting the <code>Latch</code> interface directly in round 1 because <code>export default function Latch</code> collides with <code>export interface Latch</code> under the same name. A distinct alias avoids the collision and lets callers write a concise name instead of <code>ReturnType&lt;typeof Latch&lt;void&gt;&gt;</code>, which now appears three times in <code>windowsIntegrationManager.ts:64,66</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L59-L69">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="59" data-line="64"><code class="language-typescript">}
+
+type SyncState =
+  { state: SyncStateKey.IDLE } |
+  /** The `active` promise will be resolved once the current sync is complete. */
+  { state: SyncStateKey.ACTIVE, active: ReturnType&lt;typeof Latch&lt;void&gt;&gt; } |
+  /** The `queued` promise will be resolved after the current sync +1 is complete. */
+  { state: SyncStateKey.QUEUED, active: ReturnType&lt;typeof Latch&lt;void&gt;&gt;, queued: ReturnType&lt;typeof Latch&lt;void&gt;&gt; };
+
+/**
+ * DiagnosticKey limits the `key` argument of the diagnostic events.</code></pre>
+    <p>Fix: add a named type alias at the bottom of <code>latch.ts</code>:</p>
+      <pre><code class="language-ts">export type LatchOf&lt;T = void&gt; = Latch&lt;T&gt;;</code></pre>
+    <p>Then <code>windowsIntegrationManager.ts</code> becomes:</p>
+      <pre><code class="language-ts">import Latch, { LatchOf } from &#39;@pkg/utils/latch&#39;;
+
+type SyncState =
+  { state: SyncStateKey.IDLE } |
+  { state: SyncStateKey.ACTIVE, active: LatchOf } |
+  { state: SyncStateKey.QUEUED, active: LatchOf, queued: LatchOf };</code></pre>
+    <p>This addresses the ergonomic concern from round 1&#39;s declined S6 without reusing the name that caused the collision. Purely optional — <code>ReturnType&lt;typeof Latch&lt;void&gt;&gt;</code> is correct as-is.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Masquerading as <code>Promise.prototype</code> blurs the contract between native Promise and thenable.<em></em> <code>(future)</code> <code>[Codex GPT 5.4]</code> The round-2 implementation makes one reference represent multiple settlement generations and inherits from <code>Promise.prototype</code> to keep <code>latch instanceof Promise</code> true. The trade-off is that any API that distinguishes native promises from thenables (Promise-brand checks in host code, debugger hooks, <code>Promise.resolve(latch)</code> identity preservation) sees a Promise without the internal slots a native Promise has. An alternative design would expose a resettable controller with an explicit <code>wait(): Promise&lt;T&gt;</code> that returns a real native promise per generation. It would make the generation boundary visible in the API shape, remove the need for <code>Object.create(Promise.prototype, ...)</code>, and cleanly answer the &quot;waiters before vs after reset&quot; question. Not in-scope for this PR — the current callers do not depend on the distinction — but worth revisiting if the number of <code>reset()</code> consumers grows.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Enum-based reset signal replaces the round-1 rejection hazard.</strong> <code>[Claude Opus 4.6, Codex GPT 5.4, Gemini 3.1 Pro]</code> The <code>ResetState.SETTLED | RESET</code> enum on <code>state.reset</code> cleanly removes the round-1 pattern where the reset signal was itself a rejected promise that could leak as <code>UnhandledPromiseRejectionWarning</code>. This is a meaningful correctness improvement, not just a rename.</li>
+      <li><em></em>Snapshot-and-loop pattern in <code>waitForSettled</code>.<em></em> <code>[Claude Opus 4.6, Gemini 3.1 Pro]</code> Destructuring <code>{ reset, p }</code> at the top of the <code>while(true)</code> loop at line 64 guarantees that a waiter who was mid-await when <code>resolve(V)</code> fired still receives <code>V</code> even if <code>reset()</code> lands immediately after. Tracing the interleavings (resolve-then-reset, reset-then-resolve, reset-then-reset-then-resolve) confirms the invariant holds.</li>
+      <li><em></em><code>instanceof Promise</code> preserved via <code>Object.create(Promise.prototype, ...)</code>.<em></em> The round-2 rewrite deliberately keeps the <code>instanceof Promise</code> guarantee by inheriting from <code>Promise.prototype</code> rather than returning a plain object. This addresses round-1 S5 directly and is pinned by <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L22-L25"><code>latch.spec.ts:22-25</code></a>. The trade-off is discussed under Concerns.</li>
+      <li><em></em><code>ResetState</code> hoisted out of the factory.<em></em> <code>[Claude Opus 4.6]</code> Moving the enum to module scope (line 37-42) eliminates a per-call instantiation that added no value. Small correctness-adjacent improvement from <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/531ebaab6"><code>531ebaab6</code></a>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Test coverage is solid: 16 cases exercise resolve/reject with and without values, <code>.then</code>/<code>.catch</code>/<code>.finally</code> with and without callbacks and with non-function arguments, multiple waiters attached before a resolve, reset after settle, multiple resets in a row, reset while pending, reset-after-reject-without-handlers, <code>finally</code> on both resolve and reject, and the resolve-before-await fast path.</p>
+    <p>Untested scenarios ranked by risk:</p>
+    <ol>
+      <li><strong>Waiter spans a reset</strong> (S5). The snapshot-and-loop design exists to support this exact case; it is the most important gap.</li>
+      <li><strong>Native-promise interop.</strong> <code>Promise.resolve(latch)</code>, <code>Promise.all([latch, nativePromise])</code>, and <code>Promise.race([...])</code> exercise whether the thenable works in the standard combinators. These are the most likely real-world usage and rely on the <code>.then</code> override being correctly reachable.</li>
+      <li><strong>Post-reset rejection.</strong> Confirming that <code>reset()</code> followed by <code>reject()</code> behaves identically to rejecting a fresh latch (the new rejection should affect only the new generation, and the old generation&#39;s <code>.catch(() =&gt; {})</code> should suppress nothing).</li>
+      <li><em></em><code>.finally</code> callback that throws.<em></em> Whether the thrown error replaces or masks the original rejection, following Promise semantics.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li>Copyright year is correctly 2026 on both the new test file and the modified <code>latch.ts</code>.</li>
+      <li>The <code>Latch&lt;T&gt;</code> interface docstring at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/latch.ts#L17-L22"><code>latch.ts:17-22</code></a> and the factory docstring at line 44-47 still describe &quot;simple extension on Promise&quot; / &quot;simplified barrier&quot; — see S4.</li>
+      <li>The <code>reset()</code> JSDoc at line 28-29 omits the synchronous-reset-after-reject constraint — see S3.</li>
+      <li>The inline comments in <code>waitForSettled</code> (line 62-63) and <code>reset</code> (line 107-110) accurately explain intent and are a net improvement over the round-1 version.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The history is clean: one feature commit (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4d4920f1d"><code>4d4920f1d</code></a>) plus one review-response commit (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/531ebaab6"><code>531ebaab6</code></a>). Per the review instructions, review-response commits may remain separate to keep the PR reviewable across rebases. The only issue is the misleading bullet in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/531ebaab6"><code>531ebaab6</code></a>&#39;s commit message — see S1. No scope-splitting needed; the PR is focused on a single utility.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Unhandled rejection when a latch is rejected and never awaited or reset</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L160-L162"><code>pkg/rancher-desktop/utils/__tests__/latch.spec.ts:160-162</code></a></li>
+    </ul>
+    <p>  <code></code><code>ts   // Note that it _should_ cause an UnhandledPromiseRejectionWarning if we   // never reset the latch, but testing for that is not possible with jest   // because it always catches it and fails the test.   </code><code></code></p>
+    <p>  The author deliberately chose not to proactively suppress rejections inside <code>reject()</code>. This is defensible — a dropped rejection should be visible — and is documented in the test. The round-2 rewrite does not make this limitation worse; <code>reset()</code> still suppresses rejections it catches, and the untested path remains the one where a caller rejects, never awaits, and never resets. See S3 for the related documentation improvement.</p>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The dismissed round-1 review and the author&#39;s 2026-04-09 comment cover every round-1 item explicitly:</p>
+    <ul>
+      <li><em>Multi-waiter test</em> — implemented at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/531ebaab63cc724cb7f039fc59611ff343485f18/pkg/rancher-desktop/utils/__tests__/latch.spec.ts#L109-L118"><code>latch.spec.ts:109-118</code></a>.</li>
+      <li><em>Convert reset signal from rejection to enum</em> — implemented via <code>ResetState</code>.</li>
+      <li>*Export <code>Latch</code> interface* — explicitly declined by the author due to the <code>interface Latch</code> / <code>function Latch</code> name collision. S7 above sketches a workaround (distinct alias name) but the ergonomic cost of <code>ReturnType&lt;typeof Latch&lt;void&gt;&gt;</code> is low and the author&#39;s rationale for keeping it is reasonable.</li>
+    </ul>
+    <p>No unresolved substantive feedback.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude delivered the deepest review: 6 of the 7 consolidated suggestions, the full set of design strengths, the misleading-commit-bullet catch (S1), the unnecessary-cast catch (S2), and the most concrete untested scenarios. It traced the full set of <code>resolve</code>/<code>reject</code>/<code>reset</code> interleavings against the snapshot-and-loop pattern and correctly flagged that the waiter-spans-a-reset case is uncovered. It also recognized that round-1 S6 was explicitly declined by the author and did not re-raise it.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex produced one suggestion plus a design concern and converged on two of the same testing gaps Claude identified (mixed-generation waiters, native-promise interop). Its design observation about an explicit <code>wait()</code> API is legitimate future-work commentary — the author deliberately preserved <code>instanceof Promise</code> for round 2, so the trade-off is a known choice, not an oversight. Codex&#39;s coverage summary marked <code>latch.spec.ts</code> as covered by S1 even though S1 is about <code>latch.ts</code>; this is a bookkeeping miss but not a substantive coverage gap.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini found one suggestion (the <code>LatchOf</code> type alias workaround to round-1 S6) and wrote unusually strong praise of the design (<code>&quot;exceptionally elegant&quot;</code>, <code>&quot;brilliant design&quot;</code>). The praise is accurate but thin on tracing — Gemini did not dig into the commit message, the cast on <code>Object.create</code>, or the waiter-spans-a-reset gap. Gemini&#39;s suggestion required re-reading the author&#39;s explicit round-1 decline, and the workaround (using a distinct alias name) is a legitimate way to address the ergonomic concern without the name collision the author objected to.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.6</th><th><span class="pill pill-codex">Codex</span> GPT 5.4</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Findings</td><td>0C 6I→S 6S</td><td>0C 0I 1S</td><td>0C 0I 1S</td></tr>
+        <tr><td>Design observations</td><td>4 strengths, 0 concerns</td><td>1 concern, 2 strengths</td><td>3 strengths, 0 concerns</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>S1 (commit bullet), S2 (cast), S3 (reset JSDoc), S6 (parens)</td><td>Design concern (wait() API)</td><td>S7 (type alias workaround)</td></tr>
+        <tr><td>Files reviewed</td><td>3/3</td><td>3/3</td><td>3/3</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>1 (S1 mis-attributed to test file)</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td>6</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Claude was the most valuable reviewer in this round, finding 6 of the 7 consolidated suggestions and every verified design strength. Codex and Gemini each contributed one distinct suggestion that Claude did not cover (Codex&#39;s design concern about the resettable-thenable API shape, Gemini&#39;s workaround for the round-1 naming collision). None of the three agents found anything worse than suggestion severity, which is consistent with the code quality of this focused rewrite.</p>
+    <p><strong>Reconciliation:</strong> Claude&#39;s raw output counted 6 suggestions post-consolidation, all accepted without severity change. Codex&#39;s S1 (&quot;no longer a native promise&quot;) was accepted as a design observation (Concerns) rather than a finding — the author explicitly addressed <code>instanceof Promise</code> preservation, so the regression claim is mitigated and the remaining concern is alternative-design commentary, not actionable. Gemini&#39;s S1 was accepted as-is and consolidated as S7.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Add to <code>deep-review-context.md</code>:<em></em> &quot;When <code>pkg/rancher-desktop/utils/latch.ts</code> is modified, every caller of <code>Latch()</code> (currently <code>iterator.ts</code>, <code>protocols.ts</code>, <code>k3sHelper.ts</code>, <code>credentials.ts</code>, <code>windowsIntegrationManager.ts</code>) should be checked for API-shape assumptions. The file is a small but load-bearing utility — a regression here surfaces only at runtime.&quot; Would have saved the agents a round of grep-and-trace in this review and can be generalized to future Latch changes.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
