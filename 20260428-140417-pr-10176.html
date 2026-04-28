@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260428-140417-pr-10176</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260428-140417-pr-10176</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-04-28 14:04</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>4</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176" class="gh-ref" data-title="rddepman: record and verify artifact digests in dependencies.yaml" data-state="open" data-type="pr">#10176</a> — rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/aa1fb9b26"><code>aa1fb9b26</code></a> rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; Round 3&#39;s I1 (codesign cache-hit) is repaired with a <code>.unsigned</code> sidecar, Round 3 S2/S3/S6/S7/S9/S10/S12 all landed; two new Important findings remain (RancherDashboard cache-hit bypasses the new digest check, and <code>downloadTarGZ</code>/<code>downloadZip</code> now overwrite locked binaries on Windows).</td></tr>
+      <tr><td>Wall-clock time</td><td><code>1 h 14 min 30 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The Round 3 backlog landed cleanly: the codesign + cache-hit interaction that re-downloaded Docker CLI on every macOS postinstall is fixed by keeping the verified bytes at <code>${destPath}.unsigned</code> and hashing that on re-runs (Round 3 I1); <code>MobyOpenAPISpec</code> overrides <code>latestVersion</code> so only the winner&#39;s commit is resolved (Round 3 S2); <code>parseSha256Checksum</code> now accepts case-insensitive hex and normalises to lowercase (Round 3 S3); <code>downloadAndHash</code> preserves the served bytes to <code>os.tmpdir()</code> on mismatch with the path included in the error (Round 3 S6); <code>download()</code> ignores <code>EACCES</code> on the cache-hit access check (Round 3 S7); <code>readDependencyManifest</code> rejects array/scalar <code>version</code> values (Round 3 S9); the <code>gnuLine</code> regex bounds the hex prefix (Round 3 S10); and <code>dependencies.yaml</code> now carries an in-file &quot;do not edit comments&quot; header (Round 3 S12).</p>
+    <p>Two new Important findings surface from the Round 3 → Round 4 changes:</p>
+    <ol>
+      <li>The Round 3 S1 follow-up was applied to <code>downloadTarGZ</code> and <code>downloadZip</code> — they now persist the archive next to <code>destPath</code> and re-extract on every postinstall — but the same skip-on-cache-hit pattern still lives in <code>RancherDashboard.download()</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L406"><code>scripts/dependencies/tools.ts:406</code></a>, where an existing <code>resources/rancher-dashboard</code> directory short-circuits before <code>download()</code> is ever called (I1, Codex). The PR&#39;s stated invariant (&quot;every install path verifies the recorded digest&quot;) therefore does not hold for that one dependency.</li>
+      <li>The &quot;always re-extract&quot; policy <code>downloadTarGZ</code>/<code>downloadZip</code> now use means a developer running <code>yarn postinstall</code> on Windows while Rancher Desktop is running will fail when <code>fs.copyFile</code> tries to overwrite a locked <code>helm.exe</code> / <code>docker.exe</code> (I2, Gemini). Pre-PR the helpers skipped extraction entirely on cache hit, so the lock was never touched.</li>
+    </ol>
+    <p>The remaining surface is suggestion-grade: bump-time double-hashing in <code>downloadAndHash</code> (every artifact is sha256&#39;d twice when the upstream sidecar is also sha256), three Round 3 Suggestions still outstanding (windows/arm64 in <code>getChecksums</code> matrices, <code>MACOS_RUNNER</code> hard-coding, <code>Sha256Checksum</code> return type round-trip), per-version archive caches that accumulate after a bump (<code>wix314rtm.zip</code>, <code>lima.*.v1.2.1.rd2.tgz</code>), a hand-edit hazard where <code>{ apiVersion, commit: &#39;&#39; }</code> produces a malformed Moby URL, and a few defensive nits.</p>
+    <p>Verdict: merge with the two Important fixes folded in. Everything else is non-blocking polish.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> <code>RancherDashboard.download()</code> skips checksum verification on cache hit <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L398-L415">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="398" data-line="403-410"><code class="language-ts">  async download(context: DownloadContext): Promise&lt;void&gt; {
+    const baseURL = `https://github.com/rancher-sandbox/${ this.githubRepo }/releases/download/desktop-v${ context.dependencies.rancherDashboard.version }`;
+    const archiveName = &#39;rancher-dashboard-desktop-embed.tar.gz&#39;;
+    const url = `${ baseURL }/${ archiveName }`;
+    const destPath = path.join(context.resourcesDir, &#39;rancher-dashboard.tgz&#39;);
+    const expectedChecksum = lookupChecksum(context, this.name, archiveName);
+    const rancherDashboardDir = path.join(context.resourcesDir, &#39;rancher-dashboard&#39;);
+
+    if (fs.existsSync(rancherDashboardDir)) {
+      console.log(`${ rancherDashboardDir } already exists, not re-downloading.`);
+
+      return;
+    }
+
+    await download(
+      url,
+      destPath,
+      {</code></pre>
+    <p>The PR routes <code>downloadTarGZ</code> and <code>downloadZip</code> through the persistent archive + cache-hit hash check (<code>scripts/lib/download.ts:206, 256</code>), so <code>Helm</code>, <code>Trivy</code>, <code>Steve</code>, <code>WasmShims</code>, and <code>SpinCLI</code> now verify the manifest digest against the on-disk archive on every postinstall. <code>RancherDashboard.download()</code> retained its older custom guard: a bare <code>fs.existsSync(rancherDashboardDir)</code> check that returns before <code>download()</code> is invoked. <code>expectedChecksum</code> is computed at line 403 but never reaches <code>download()</code> — it is dead code on the cache-hit path.</p>
+    <p>A previous extraction left half-complete by a crash between <code>fs.promises.mkdir(rancherDashboardDir, …)</code> (line 420) and the <code>tar -xf</code> that follows therefore satisfies the existence check forever; the manifest&#39;s pinned sha256 is never compared to anything. The same hole swallows a directory left over from an older version that was never removed during a downgrade.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L415-L425">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="415" data-line="420"><code class="language-typescript">      {
+        expectedChecksum,
+        access: fs.constants.W_OK,
+      });
+
+    await fs.promises.mkdir(rancherDashboardDir, { recursive: true });
+
+    const args = [&#39;tar&#39;, &#39;-xf&#39;, destPath];
+
+    if (os.platform().startsWith(&#39;win&#39;)) {
+      // On Windows, force use the bundled bsdtar.</code></pre>
+    <p>Fix: gate the existing-directory short-circuit on a stamp file written <em>after</em> a successful extraction, and tear the directory down when the stamp is missing or stale:</p>
+      <pre><code class="language-diff"> const expectedChecksum = lookupChecksum(context, this.name, archiveName);
+ const rancherDashboardDir = path.join(context.resourcesDir, &#39;rancher-dashboard&#39;);
++const stampPath = path.join(rancherDashboardDir, &#39;.source-sha256&#39;);
+
+-if (fs.existsSync(rancherDashboardDir)) {
++const stamp = await fs.promises.readFile(stampPath, &#39;utf-8&#39;).catch(() =&gt; &#39;&#39;);
++if (fs.existsSync(rancherDashboardDir) &amp;&amp; stamp === expectedChecksum) {
+   console.log(`${ rancherDashboardDir } already exists, not re-downloading.`);
+
+   return;
+ }
++await fs.promises.rm(rancherDashboardDir, { recursive: true, force: true, maxRetries: 10 });</code></pre>
+    <p>…and write <code>stampPath</code> only after the <code>tar -xf</code> resolves. (important, gap)</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> <code>downloadTarGZ</code>/<code>downloadZip</code> overwrite locked binaries on every postinstall <span class="pill pill-gemini">Gemini</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/download.ts#L203-L233">scripts/lib/download.ts</a></div>
+      <pre data-start="203" data-line="208-228"><code class="language-ts">
+  // Persist the verified archive next to destPath; download() handles
+  // the cache-hit checksum check against the manifest.
+  await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
+
+  // Re-extract on every postinstall so destPath always reflects the
+  // current archive, even after a version bump that re-downloaded
+  // tgzPath above.
+  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), `rd-${ path.basename(destPath, &#39;.exe&#39;) }-`));
+  const args = [&#39;tar&#39;, &#39;-zxf&#39;, tgzPath, &#39;--directory&#39;, workDir, fileToExtract];
+
+  try {
+    if (os.platform().startsWith(&#39;win&#39;)) {
+      // On Windows, force use the bundled bsdtar.
+      // We may find GNU tar on the path, which looks at the Windows-style path
+      // and considers C:\Temp to be a reference to a remote host named `C`.
+      const systemRoot = process.env.SystemRoot;
+
+      if (!systemRoot) {
+        throw new Error(&#39;Could not find system root&#39;);
+      }
+      args[0] = path.join(systemRoot, &#39;system32&#39;, &#39;tar.exe&#39;);
+    }
+    await simpleSpawn(args[0], args.slice(1));
+    await fs.promises.copyFile(path.join(workDir, fileToExtract), destPath);
+    await fs.promises.chmod(destPath, mode);
+  } finally {
+    fs.rmSync(workDir, { recursive: true, maxRetries: 10 });
+  }
+
+  return destPath;</code></pre>
+    <p>Round 3 S1 noted that the archive helpers skipped <code>download()</code>&#39;s checksum check on cache hits. Round 4 fixed that by always re-extracting the (verified) archive. The regression: pre-PR the helpers had an <code>fs.promises.access(destPath, …)</code> early-return that left an existing <code>destPath</code> untouched on cache hits; Round 4 removes the guard, so <code>fs.copyFile</code> now overwrites <code>destPath</code> on every postinstall.</p>
+    <p>A developer running <code>yarn postinstall</code> on Windows while Rancher Desktop is running holds an exclusive lock on <code>resources/win32/bin/helm.exe</code>, <code>docker.exe</code>, and the other Round-4-affected binaries; <code>copyFile</code> then fails with <code>EBUSY</code> / <code>EPERM</code>. The same scenario on macOS / Linux is benign because the OS allows overwriting an executable while a process has it mapped.</p>
+    <p>Fix: skip the extract / copy step when the on-disk binary already matches the verified archive — for example, compare mtimes:</p>
+      <pre><code class="language-diff">   await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
++
++  const statDest = await fs.promises.stat(destPath).catch(() =&gt; null);
++  const statTgz = await fs.promises.stat(tgzPath);
++  if (statDest &amp;&amp; statDest.mtimeMs &gt;= statTgz.mtimeMs) {
++    return destPath;
++  }</code></pre>
+    <p>mtime compare is cheap and works for both helpers; an alternative is a sidecar stamp matching the manifest digest, but that is heavier and duplicates the <code>tgzPath</code> cache-hit logic. (important, regression)</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>downloadAndHash</code> hashes every artifact twice when verifying sha256 <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L236-L246">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="236" data-line="241"><code class="language-ts">          `The sidecar checksum file did not list this artifact (filename mismatch, ` +
+          `unsupported sidecar format, or missing entry).`,
+        );
+      }
+
+      const actual = await hashFile(tempPath, options.verify.algorithm);
+
+      if (actual !== options.verify.expected) {
+        // Preserve the bytes outside workDir before the finally cleanup
+        // removes them, so the maintainer can inspect what was served
+        // (often an HTML error page or a CDN redirect, not the artifact).</code></pre>
+    <p>When <code>options.verify.algorithm === &#39;sha256&#39;</code> (the case for kuberlr, helm, docker, dockerCompose, dockerBuildx, ECR, steve, SpinCLI, the spelling tool, and a handful of others), the file is hashed once for verification then re-hashed to produce the recorded digest, even though the two hashes are identical. Bump-time only — <code>rddepman</code> runs daily under throttle, and individual artifacts run up to ~60 MB — so the cost is real but small.</p>
+    <p>Fix: reuse the verified digest when the upstream algorithm is sha256:</p>
+      <pre><code class="language-diff">-      const actual = await hashFile(tempPath, options.verify.algorithm);
+-
+-      if (actual !== options.verify.expected) {
+-        …
+-      }
+-    }
+-
+-    const sha256 = await hashFile(tempPath, &#39;sha256&#39;);
+-
+-    return `sha256:${ sha256 }`;
++      const sha256 = await hashFile(tempPath, &#39;sha256&#39;);
++      const actual = options.verify.algorithm === &#39;sha256&#39;
++        ? sha256
++        : await hashFile(tempPath, options.verify.algorithm);
++
++      if (actual !== options.verify.expected) {
++        …
++      }
++      return `sha256:${ sha256 }`;
++    }
++
++    return `sha256:${ await hashFile(tempPath, &#39;sha256&#39;) }`;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Several <code>getChecksums</code> matrices omit windows/arm64 <span class="pill pill-gemini">Gemini</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L53-L67">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="53" data-line="58-62"><code class="language-ts">    return await downloadFunc(`${ baseURL }/${ archiveName }`, path.join(context.binDir, binName), options);
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const baseURL = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const upstream = await fetchUpstreamChecksums(`${ baseURL }/checksums.txt`);
+    const platforms: [string, string][] = [
+      [&#39;linux&#39;, &#39;amd64&#39;], [&#39;linux&#39;, &#39;arm64&#39;],
+      [&#39;darwin&#39;, &#39;amd64&#39;], [&#39;darwin&#39;, &#39;arm64&#39;],
+      [&#39;windows&#39;, &#39;amd64&#39;],
+    ];
+    const result: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const [goPlatform, arch] of platforms) {
+      const archiveName = `kuberlr_${ version }_${ goPlatform }_${ arch }` + (goPlatform === &#39;windows&#39; ? &#39;.zip&#39; : &#39;.tar.gz&#39;);</code></pre>
+    <p><code>KuberlrAndKubectl</code>, <code>Helm</code>, <code>DockerCLI</code>, <code>DockerBuildx</code>, <code>ECRCredHelper</code>, <code>Steve</code>, and <code>SpinCLI</code> enumerate the five-entry matrix above, while peer dependencies <code>DockerCompose</code> and <code>DockerProvidedCredHelpers</code> enumerate a six-entry matrix that includes <code>[&#39;windows&#39;, &#39;arm64&#39;]</code>. Each <code>download()</code> <em>does</em> request the windows arm64 artifact when <code>M1=1</code> is set, so a Windows ARM64 cross-build calls <code>lookupChecksum(context, &#39;helm&#39;, &#39;helm-windows-arm64.exe&#39;)</code> and trips the &quot;No checksum recorded&quot; diagnostic. The official <code>.github/workflows/package.yaml</code> matrix sets <code>M1=1</code> only on macOS arm64 (lines 229-231), so no shipping CI build hits this path; the asymmetry remains a real foot-gun for any developer cross-building on Windows ARM64. Round 3 demoted this to a Suggestion on the same reasoning; nothing has changed in Round 4, so re-raising at the same severity.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L224-L236">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="224" data-line="229-231"><code class="language-typescript">      result[executableName] = await downloadAndHash(url, verify ? { verify } : undefined);
+    }
+
+    return result;
+  }
+}
+
+export class DockerCompose extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;dockerCompose&#39;;
+  readonly githubOwner = &#39;docker&#39;;
+  readonly githubRepo = &#39;compose&#39;;
+
+  async download(context: DownloadContext): Promise&lt;void&gt; {</code></pre>
+    <p>Fix: confirm intent. Either drop <code>isM1</code> from the windows-only <code>download()</code> paths so windows-arm64 fails up-front, or extend each <code>getChecksums</code> matrix with the missing entry. Document the chosen convention once in <code>scripts/dependencies/global.ts</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Persistent archives accumulate after a version bump <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/wix.ts#L40-L50">scripts/dependencies/wix.ts</a></div>
+      <pre data-start="40" data-line="45"><code class="language-ts">      throw new Error(`Could not parse WiX version ${ context.dependencies.wix.version }`);
+    }
+
+    const hostDir = path.join(context.resourcesDir, &#39;host&#39;);
+    const wixDir = path.join(hostDir, &#39;wix&#39;);
+    const archivePath = path.join(hostDir, `${ tagName }.zip`);
+    // The archive name never includes the patch version.
+    const archiveName = `wix${ version.major }${ version.minor }-binaries.zip`;
+    const url = `https://github.com/wixtoolset/wix3/releases/download/${ tagName }/${ archiveName }`;
+
+    await fs.promises.mkdir(wixDir, { recursive: true });</code></pre>
+    <p><code>Wix</code>, <code>Lima</code>, and <code>Qemu</code> invoke <code>download()</code> directly with the version embedded in the cache filename, so a bump from <code>lima 1.2.1.rd2</code> to <code>1.2.1.rd3</code> writes <code>lima.macos-15.amd64.v1.2.1.rd3.tgz</code> next to the existing <code>…rd2.tgz</code>. The old archive lives forever on the developer&#39;s disk, and a new orphan appears on every bump. The <code>.unsigned</code> sidecars introduced for codesign callers (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/download.ts#L67-L94"><code>scripts/lib/download.ts:67-94</code></a>) compound this — every codesigned binary now keeps a same-name <code>.unsigned</code> peer that the codesign cache hit re-reads. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/packaging/electron-builder.yml#L20-L22"><code>electron-builder.yml:20-22</code></a> excludes <code>*.tar.gz</code>/<code>*.zip</code>/<code>*.unsigned</code> from the package, so this is not a shipping concern, only a developer-disk one.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/download.ts#L62-L99">scripts/lib/download.ts</a></div>
+      <pre data-start="62" data-line="67-94"><code class="language-typescript">  const expectedChecksum = options.expectedChecksum;
+  const overwrite = options.overwrite ?? false;
+  const access = options.access ?? fs.constants.X_OK;
+
+  // Codesign rewrites destPath in place, so its bytes no longer match
+  // the upstream digest.  Keep the verified bytes at .unsigned and
+  // hash that on cache-hit checks.
+  const hashTarget = options.codesign ? `${ destPath }.unsigned` : destPath;
+
+  if (!overwrite) {
+    try {
+      await fs.promises.access(destPath, access);
+      if (expectedChecksum) {
+        try {
+          const actualChecksum = await hashFile(hashTarget, &#39;sha256&#39;);
+
+          if (actualChecksum === expectedChecksum) {
+            console.log(`${ destPath } already exists with expected checksum, not re-downloading.`);
+
+            return;
+          }
+          console.log(`${ destPath } exists but sha256 of ${ hashTarget } differs ([${ actualChecksum }] vs expected [${ expectedChecksum }]); re-downloading.`);
+        } catch (ex: any) {
+          if (ex.code !== &#39;ENOENT&#39;) {
+            throw ex;
+          }
+          console.log(`${ destPath } exists but ${ hashTarget } is missing; re-downloading.`);
+        }
+      } else {
+        console.log(`${ destPath } already exists, not re-downloading.`);
+
+        return;
+      }
+    } catch (ex: any) {
+      // EACCES means destPath exists but lacks the requested mode (e.g.,
+      // a previous run wrote 0644 where this run wants X_OK).  Treat as
+      // stale state and redownload.
+      if (ex.code !== &#39;ENOENT&#39; &amp;&amp; ex.code !== &#39;EACCES&#39;) {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/packaging/electron-builder.yml#L15-L27">packaging/electron-builder.yml</a></div>
+      <pre data-start="15" data-line="20-22"><code class="language-yaml">- &#39;!resources/linux/qemu*.tgz&#39;
+- &#39;!resources/linux/staging/&#39;
+- &#39;!resources/win32/staging/&#39;
+- &#39;!resources/host/&#39;
+- &#39;!resources/**/*.js.map&#39;
+- &#39;!resources/**/*.unsigned&#39;
+- &#39;!resources/**/*.tar.gz&#39;
+- &#39;!resources/**/*.zip&#39;
+files:
+- dist/app/**/*
+- &#39;!**/node_modules/*/prebuilds/!(${platform}*)/*.node&#39;
+mac:
+  darkModeSupport: true</code></pre>
+    <p>Fix (any one is enough): drop <code>v${ version }</code> from the cache filename so a bump overwrites the old archive; or sweep <code>resources/${ platform }/lima.*.tgz</code> and <code>qemu.*.tgz</code> (and the Wix <code>hostDir/*.zip</code>) at postinstall start, keeping only the archive whose basename matches the current <code>dependencies.yaml</code> version.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Empty <code>commit</code> survives manifest validation and produces a malformed Moby URL <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L130-L146">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="130" data-line="135-141"><code class="language-ts">
+  for (const [name, entry] of Object.entries(raw)) {
+    if (!entry || typeof entry !== &#39;object&#39; || !(&#39;version&#39; in entry)) {
+      throw new Error(`Entry ${ name } in ${ path } is missing a &quot;version&quot; field`);
+    }
+    const version = entry.version;
+    const valid = typeof version === &#39;string&#39; ||
+      (typeof version === &#39;object&#39; &amp;&amp; version !== null &amp;&amp; !Array.isArray(version));
+
+    if (!valid) {
+      throw new Error(`Entry ${ name } in ${ path } has invalid version ${ JSON.stringify(version) }; expected a string or { apiVersion, commit }`);
+    }
+    const checksums: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const [file, value] of Object.entries(entry.checksums ?? {})) {
+      checksums[file] = parseSha256Checksum(value);
+    }</code></pre>
+    <p>Round 3 S9&#39;s structural validator accepts any non-array object for <code>version</code>, including <code>{ apiVersion: &#39;v1.54&#39;, commit: &#39;&#39; }</code>. A hand-edited <code>dependencies.yaml</code> that drops the commit string then flows into <code>MobyOpenAPISpec.download</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/moby-openapi.ts#L30-L33"><code>moby-openapi.ts:30-33</code></a>), which substitutes the empty value into <code>https://raw.githubusercontent.com/moby/moby//api/docs/v1.54.yaml</code> (double slash). The 404 surfaces as a generic download error, not as a manifest-edit diagnostic — the maintainer chases the network, not the YAML.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/moby-openapi.ts#L25-L38">scripts/dependencies/moby-openapi.ts</a></div>
+      <pre data-start="25" data-line="30-33"><code class="language-typescript">  readonly githubOwner = &#39;moby&#39;;
+  readonly githubRepo = &#39;moby&#39;;
+  readonly releaseFilter = &#39;custom&#39;;
+
+  async download(context: DownloadContext): Promise&lt;void&gt; {
+    const { apiVersion, commit } = context.dependencies.mobyOpenAPISpec.version;
+    const baseUrl = `https://raw.githubusercontent.com/${ this.githubOwner }/${ this.githubRepo }/${ commit }/api/docs`;
+    const fileName = `v${ apiVersion }.yaml`;
+    const url = `${ baseUrl }/${ fileName }`;
+    const outPath = path.join(process.cwd(), &#39;src&#39;, &#39;go&#39;, &#39;wsl-helper&#39;, &#39;pkg&#39;, &#39;dockerproxy&#39;, &#39;swagger.yaml&#39;);
+    const modifiedPath = path.join(path.dirname(outPath), &#39;swagger-modified.yaml&#39;);
+
+    await download(url, outPath, {
+      expectedChecksum: lookupChecksum(context, this.name, fileName),</code></pre>
+    <p><code>getAvailableVersions</code> deliberately stuffs <code>commit: &#39;&#39;</code> into its return value to defer the per-version <code>listCommits</code> call, so any tightening must allow that intermediate state but reject the same shape on read from disk.</p>
+    <p>Fix: validate the loaded shape per-key in <code>readDependencyManifest</code> — for <code>mobyOpenAPISpec</code>, require <code>apiVersion</code> and <code>commit</code> to be non-empty strings — or reject empty <code>commit</code> at the top of <code>MobyOpenAPISpec.download()</code>:</p>
+      <pre><code class="language-diff">   async download(context: DownloadContext): Promise&lt;void&gt; {
+     const { apiVersion, commit } = context.dependencies.mobyOpenAPISpec.version;
++    if (!apiVersion || !commit) {
++      throw new Error(`mobyOpenAPISpec entry must specify both apiVersion and commit; got ${ JSON.stringify({ apiVersion, commit }) }`);
++    }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Module-level manifest cache assumes the on-disk file equals the snapshot <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L462-L506">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="462" data-line="467-501"><code class="language-ts">
+    return v.apiVersion;
+  }
+}
+
+/** Shared cache so all GlobalDependency subclasses read DEP_VERSIONS_PATH once. */
+let depManifestCache: Promise&lt;DependencyManifest&gt; | undefined;
+
+function getCachedManifest(): Promise&lt;DependencyManifest&gt; {
+  depManifestCache ||= readDependencyManifest(DEP_VERSIONS_PATH);
+
+  return depManifestCache;
+}
+
+/**
+ * A GlobalDependency is a dependency where the version is managed in the file
+ * {@link DEP_VERSIONS_PATH}.
+ */
+export function GlobalDependency&lt;T extends abstract new(...args: any[]) =&gt; VersionedDependency&gt;(Base: T) {
+  abstract class GlobalDependency extends Base {
+    /** The name of this dependency; it must be a key in DEP_VERSIONS_PATH. */
+    abstract name: keyof DependencyVersions;
+
+    get currentVersion(): Promise&lt;Version&gt; {
+      return getCachedManifest().then(m =&gt; m[this.name].version);
+    }
+
+    async updateManifest(newVersion: Version, newChecksums: Record&lt;string, Sha256Checksum&gt;): Promise&lt;Set&lt;string&gt;&gt; {
+      // Clone so writes here do not mutate the value other readers see.
+      const manifest = structuredClone(await getCachedManifest());
+
+      // The cast trusts the subclass to pass a Version that matches its
+      // own DependencyVersions field; rddepman builds the call from
+      // `dep.getChecksums(latestVersion)` whose return type already
+      // depends on the dependency&#39;s own version shape.
+      (manifest as any)[this.name] = { version: newVersion, checksums: newChecksums };
+      await writeDependencyManifest(DEP_VERSIONS_PATH, manifest);
+
+      return new Set([DEP_VERSIONS_PATH]);
+    }
+  }
+
+  return GlobalDependency;
+}
+</code></pre>
+    <p>The module-scope cache holds the manifest snapshot from when <code>rddepman</code> first reads it. Every iteration of the <code>needToCreatePR</code> loop in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/rddepman.ts#L287-L300"><code>rddepman.ts:287-300</code></a> runs <code>git checkout -b … MAIN_BRANCH</code>, which restores the on-disk file to the main-branch state. <code>updateManifest</code> reads from the cache rather than the freshly checked out file — fine today because both are equal, fragile against any future change that mutates <code>dependencies.yaml</code> between bumps (an intermediate fix-up commit, parallel branches, a long-running session). The previous per-class <code>#depVersionsCache</code> had the same shape per factory invocation; moving it to module scope makes the implicit assumption load-bearing across every <code>GlobalDependency</code> subclass simultaneously.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/rddepman.ts#L282-L305">scripts/rddepman.ts</a></div>
+      <pre data-start="282" data-line="287-300"><code class="language-typescript">      });
+    }
+  }));
+
+  // create a branch for each version update, make changes, and make a PR from the branch
+  for (const { dependency, currentVersion, latestVersion } of needToCreatePR) {
+    const branchName = getBranchName(dependency.name, currentVersion, latestVersion);
+    const commitMessage = `Bump ${ dependency.name } from ${ printable(currentVersion) } to ${ printable(latestVersion) }`;
+
+    // Compute fresh checksums before branching so that an upstream verification
+    // failure aborts the bump before any git state changes.
+    console.log(`Computing checksums for ${ dependency.name } ${ printable(latestVersion) }...`);
+    const newChecksums = await dependency.getChecksums(latestVersion);
+
+    git(&#39;checkout&#39;, &#39;-b&#39;, branchName, MAIN_BRANCH);
+    git(&#39;add&#39;, ...await dependency.updateManifest(latestVersion, newChecksums));
+    git(&#39;commit&#39;, &#39;--signoff&#39;, &#39;--message&#39;, commitMessage);
+    git(&#39;push&#39;, &#39;--force&#39;, `https://${ process.env.GITHUB_TOKEN }@github.com/${ GITHUB_OWNER }/${ GITHUB_REPO }`);
+    await createDependencyBumpPR(dependency, currentVersion, latestVersion);
+  }
+}
+
+(async() =&gt; {
+  await checkDependencies();</code></pre>
+    <p>Fix: drop the cache from the write path; re-read on each <code>updateManifest</code> call:</p>
+      <pre><code class="language-diff">   async updateManifest(newVersion: Version, newChecksums: Record&lt;string, Sha256Checksum&gt;): Promise&lt;Set&lt;string&gt;&gt; {
+-    const manifest = structuredClone(await getCachedManifest());
++    const manifest = await readDependencyManifest(DEP_VERSIONS_PATH);
+     (manifest as any)[this.name] = { version: newVersion, checksums: newChecksums };
+     await writeDependencyManifest(DEP_VERSIONS_PATH, manifest);
++    depManifestCache = undefined;
+     return new Set([DEP_VERSIONS_PATH]);
+   }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> <code>spawnSync(&#39;codesign&#39;, …)</code> exit status is not checked <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/download.ts#L125-L148">scripts/lib/download.ts</a></div>
+      <pre data-start="125" data-line="130-143"><code class="language-ts">    }
+    const mode =
+            (access &amp; fs.constants.X_OK) ? 0o755 : (access &amp; fs.constants.W_OK) ? 0o644 : 0o444;
+
+    await fs.promises.chmod(tempPath, mode);
+    if (options.codesign) {
+      const unsignedPath = `${ destPath }.unsigned`;
+
+      await fs.promises.rename(tempPath, unsignedPath);
+      await fs.promises.copyFile(unsignedPath, destPath);
+      await fs.promises.chmod(destPath, mode);
+      spawnSync(
+        &#39;codesign&#39;,
+        [&#39;--force&#39;, &#39;--sign&#39;, &#39;-&#39;, destPath],
+        { stdio: &#39;inherit&#39; },
+      );
+    } else {
+      await fs.promises.rename(tempPath, destPath);
+    }
+  } finally {
+    try {
+      await fs.promises.unlink(tempPath);
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {</code></pre>
+    <p><code>spawnSync</code> does not throw on a non-zero exit — if <code>codesign</code> fails (missing CLI, malformed binary), <code>destPath</code> is left as an unsigned copy of <code>unsignedPath</code>. The next postinstall hashes <code>unsignedPath</code>, finds the expected digest, returns early, and never retries the signing step. The same shape pre-dates this PR (the old code also ran <code>codesign</code> after the cache-hit return), but the new comment (&quot;Keep the verified bytes at .unsigned and hash that on cache-hit checks&quot;) implies a failure-tolerant design that does not yet exist.</p>
+    <p>Fix: check the exit status and surface a clear error:</p>
+      <pre><code class="language-diff">-      spawnSync(
++      const result = spawnSync(
+         &#39;codesign&#39;,
+         [&#39;--force&#39;, &#39;--sign&#39;, &#39;-&#39;, destPath],
+         { stdio: &#39;inherit&#39; },
+       );
++      if (result.status !== 0) {
++        await fs.promises.rm(unsignedPath, { force: true });
++        throw new Error(`codesign failed for ${ destPath } (exit ${ result.status })`);
++      }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> <code>downloadAndHash</code> mismatch artifacts accumulate in <code>os.tmpdir()</code> <span class="pill pill-claude">Claude</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L242-L253">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="242" data-line="247-248"><code class="language-ts">
+      if (actual !== options.verify.expected) {
+        // Preserve the bytes outside workDir before the finally cleanup
+        // removes them, so the maintainer can inspect what was served
+        // (often an HTML error page or a CDN redirect, not the artifact).
+        const basename = path.basename(new URL(url).pathname) || &#39;artifact&#39;;
+        const keepPath = path.join(os.tmpdir(), `rddepman-mismatch-${ basename }-${ Date.now() }`);
+
+        await fs.promises.copyFile(tempPath, keepPath);
+        throw new Error(
+          `Upstream checksum mismatch for ${ url }: ` +
+          `expected ${ options.verify.algorithm }:${ options.verify.expected }, got ${ options.verify.algorithm }:${ actual }. ` +</code></pre>
+    <p>The <code>Date.now()</code> suffix produces a fresh path on every mismatch, so a local maintainer running <code>rddepman</code> repeatedly accumulates one ~60 MB file per failed bump in <code>/tmp</code>. CI is ephemeral so the leak does not compound there.</p>
+    <p>Fix: drop <code>Date.now()</code> so subsequent mismatches overwrite the prior file, or include the constant filename in the error so the user knows to delete it:</p>
+      <pre><code class="language-diff">-        const keepPath = path.join(os.tmpdir(), `rddepman-mismatch-${ basename }-${ Date.now() }`);
++        const keepPath = path.join(os.tmpdir(), `rddepman-mismatch-${ basename }`);</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> <code>MobyOpenAPISpec.getAvailableVersions</code> smuggles an unset <code>commit</code> through the typed <code>Version</code> <span class="pill pill-claude">Claude</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/moby-openapi.ts#L94-L121">scripts/dependencies/moby-openapi.ts</a></div>
+      <pre data-start="94" data-line="99-116"><code class="language-ts">
+  // Returns each historical apiVersion with a placeholder commit;
+  // latestVersion resolves the real commit only for the winner.
+  // Resolving a commit per entry would burn one listCommits call per
+  // historical version for a field that rcompareVersions ignores.
+  async getAvailableVersions(): Promise&lt;MobyOpenAPISpecVersion[]&gt; {
+    const args = {
+      owner: this.githubOwner, repo: this.githubRepo, path: &#39;api/docs&#39;,
+    };
+    const response = await getOctokit().rest.repos.getContent(args);
+    const fileObjs = response.data as Partial&lt;{ name: string }&gt;[];
+    const versions: MobyOpenAPISpecVersion[] = [];
+
+    for (const fileObj of fileObjs) {
+      const match = fileObj.name?.match(/^v([0-9]+\.[0-9]+)\.yaml$/);
+
+      if (match) {
+        versions.push({ apiVersion: match[1], commit: &#39;&#39; });
+      }
+    }
+
+    return versions;
+  }
+
+  override get latestVersion(): Promise&lt;MobyOpenAPISpecVersion&gt; {
+    return (async() =&gt; {
+      const winner = await super.latestVersion as MobyOpenAPISpecVersion;
+</code></pre>
+    <p>The function returns <code>{ apiVersion, commit: &#39;&#39; }</code> to defer per-version commit resolution; the typed shape claims <code>commit</code> is a string, but the runtime contract is &quot;may be empty when produced by <code>getAvailableVersions</code>&quot;. <code>rcompareVersions</code> ignores <code>commit</code> and the <code>latestVersion</code> getter rewrites it before any caller sees the value, so the discrepancy stays invisible — until S4 above hits a hand-edit.</p>
+    <p>Fix (optional, paired with S4): split the type into a candidate shape (<code>commit?: string</code>) used only inside this class and a resolved shape (<code>commit: string</code>) exposed externally. Not worth doing if the alternative requires invasive plumbing through <code>Version</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> <code>downloadTarGZ</code>/<code>downloadZip</code> propagate <code>codesign</code> to inner <code>download()</code> if a future caller passes it <span class="pill pill-claude">Claude</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/download.ts#L201-L211">scripts/lib/download.ts</a></div>
+      <pre data-start="201" data-line="206"><code class="language-ts">
+  await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
+
+  // Persist the verified archive next to destPath; download() handles
+  // the cache-hit checksum check against the manifest.
+  await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
+
+  // Re-extract on every postinstall so destPath always reflects the
+  // current archive, even after a version bump that re-downloaded
+  // tgzPath above.
+  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), `rd-${ path.basename(destPath, &#39;.exe&#39;) }-`));</code></pre>
+    <p>The helper spreads its caller&#39;s options into the inner <code>download()</code> call without filtering. No caller passes <code>codesign: true</code> to an archive helper today, but if one ever did, <code>download()</code> would create <code>${ tgzPath }.unsigned</code>, copy it to <code>tgzPath</code>, and run <code>codesign --force --sign -</code> on a tar.gz — silently. The <code>ArchiveDownloadOptions</code> shape extends <code>DownloadOptions</code>, so the compiler invites the call.</p>
+    <p>Fix: drop options that do not apply to the archive download:</p>
+      <pre><code class="language-diff">-    await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
++    const { codesign: _ignored, ...rest } = options;
++    await download(url, tgzPath, { ...rest, access: fs.constants.W_OK });</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> <code>fetchUpstreamChecksums</code> regex admits md5-width hex <span class="pill pill-claude">Claude</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L278-L288">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="278" data-line="283"><code class="language-ts">  const body = await getResource(url);
+  const result: Record&lt;string, string&gt; = {};
+  // Bound the hex prefix to sha1/sha256/sha512 widths so a documentation
+  // line that happens to start with hex characters does not parse as a
+  // checksum entry.
+  const gnuLine = /^([0-9a-fA-F]{32,128})\s+\*?(.+?)\s*$/;
+  const bsdLine = /^[A-Z0-9]+\s*\((.+?)\)\s*=\s*([0-9a-fA-F]+)\s*$/;
+
+  for (const line of body.split(/\r?\n/)) {
+    let hex: string | undefined;
+    let fullName: string | undefined;</code></pre>
+    <p>Round 3 S10 tightened the prefix from <code>+</code> to <code>{32,128}</code> to reject documentation lines starting with a few hex characters. The bound still admits md5 (32) and sha1 (40) widths; current callers only pass sha256 / sha512 sidecars, so an md5 sidecar would parse and then trigger a confusing &quot;Upstream checksum mismatch&quot; rather than a parse-time rejection. Cosmetic; tightens the diagnostic.</p>
+    <p>Fix: anchor to the supported widths exactly:</p>
+      <pre><code class="language-diff">-  const gnuLine = /^([0-9a-fA-F]{32,128})\s+\*?(.+?)\s*$/;
++  // sha256 = 64, sha512 = 128. Reject md5 / sha1 widths so a
++  // mixed-algorithm sidecar fails parse, not verify.
++  const gnuLine = /^([0-9a-fA-F]{64}|[0-9a-fA-F]{128})\s+\*?(.+?)\s*$/;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S11">
+        <span class="finding-num">S11.</span> <code>MACOS_RUNNER</code> constant produces an HTTP failure rather than the bump-runner message <span class="pill pill-claude">Claude</span><a href="#S11" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/lima.ts#L19-L33">scripts/dependencies/lima.ts</a></div>
+      <pre data-start="19" data-line="24-28"><code class="language-ts">  lookupChecksum,
+  Sha256Checksum,
+} from &#39;@/scripts/lib/dependencies&#39;;
+import { simpleSpawn } from &#39;@/scripts/simple_process&#39;;
+
+// Names the macOS runner that builds the rancher-desktop-lima darwin
+// archive.  Both `download()` and `getChecksums()` embed this token in
+// artifact filenames, so update it here when upstream bumps the runner
+// (e.g. `macos-16`).
+const MACOS_RUNNER = &#39;macos-15&#39;;
+
+export class Lima extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;lima&#39;;
+  readonly githubOwner = &#39;rancher-sandbox&#39;;
+  readonly githubRepo = &#39;rancher-desktop-lima&#39;;</code></pre>
+    <p>When upstream <code>rancher-sandbox/rancher-desktop-lima</code> rolls to <code>macos-16</code>, the next bumped tag publishes <code>lima.macos-16.*.tar.gz</code>; <code>getChecksums()</code> keeps requesting <code>lima.macos-15.*</code> and <code>fetchUpstreamChecksums()</code> 404s. The behaviour matches the comment&#39;s &quot;update this constant&quot; workflow, but the failure is an HTTP error, not the readable bump-runner message the comment implies. Round 3 flagged this; nothing changed.</p>
+    <p>Fix (follow-up): list the release assets at bump time and match the prefix <code>lima.macos-*.{amd64,arm64}.tar.gz</code>, falling back to the constant only at install time.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S12">
+        <span class="finding-num">S12.</span> <code>lookupChecksum</code> returns raw <code>string</code>, throwing away <code>Sha256Checksum</code> <span class="pill pill-claude">Claude</span><a href="#S12" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L174-L206">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="174" data-line="179-201"><code class="language-ts"> * `docker-cli-monitor`).
+ */
+export async function readDependencyVersions(path: string): Promise&lt;DependencyVersions&gt; {
+  const manifest = await readDependencyManifest(path);
+  const versions: Partial&lt;DependencyVersions&gt; = {};
+
+  for (const name of Object.keys(manifest) as (keyof DependencyVersions)[]) {
+    (versions as any)[name] = manifest[name].version;
+  }
+
+  return versions as DependencyVersions;
+}
+
+/**
+ * Returns the stored sha256 for the given artifact as raw hex, with the
+ * `sha256:` prefix stripped so it slots straight into `download()`.  Throws
+ * if the artifact has no recorded checksum.
+ */
+export function lookupChecksum(
+  context: DownloadContext,
+  name: keyof DependencyVersions,
+  artifactName: string,
+): string {
+  const entry = context.dependencies[name];
+
+  if (!entry) {
+    throw new Error(`Dependency &quot;${ name }&quot; is not present in ${ DEP_VERSIONS_PATH }.`);
+  }
+  const prefixed = entry.checksums?.[artifactName];
+
+  if (!prefixed) {
+    const available = Object.keys(entry.checksums ?? {}).sort().join(&#39;, &#39;) || &#39;(none)&#39;;
+</code></pre>
+    <p><code>lookupChecksum</code> strips the <code>sha256:</code> prefix to fit <code>download()</code>&#39;s <code>expectedChecksum: string</code> shape, throwing away the type information that <code>Sha256Checksum</code> exists to preserve. Local enhancement: keep the prefixed value and let <code>download()</code> strip, or change <code>download()</code> to accept <code>Sha256Checksum</code>. Round 3 raised this; carry forward.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S13">
+        <span class="finding-num">S13.</span> WiX version retains a leading <code>v</code> while every other entry stores bare semver <span class="pill pill-claude">Claude</span><a href="#S13" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/pkg/rancher-desktop/assets/dependencies.yaml#L103-L115">pkg/rancher-desktop/assets/dependencies.yaml</a></div>
+      <pre data-start="103" data-line="108-110"><code class="language-yaml">    docker-credential-osxkeychain-v0.9.6.darwin-amd64: sha256:384097c8de1f99a4aa8b95604021bba143ff0fd07dc0fb209ad828c80baee4c4
+    docker-credential-osxkeychain-v0.9.6.darwin-arm64: sha256:b9be03f4b6f4ea57e5c4190c8c0e9cb8bb4f7923c2b6200d1583b8dc6d97b65a
+    docker-credential-wincred-v0.9.6.windows-amd64.exe: sha256:edc35bf65af2974b9287c067005929376eb56476f4c01277c54476d9f5bd9728
+    docker-credential-wincred-v0.9.6.windows-arm64.exe: sha256:4fb87b578809f718c28744da134729dc45a25668b0991281557605a4a2a317c8
+ECRCredentialHelper:
+  version: 0.12.0
+  checksums:
+    linux-amd64/docker-credential-ecr-login: sha256:a22ab6d59dbac777b8fb31984709461da00a4c778b6ae14c8d3729e8d5ded1a6
+    linux-arm64/docker-credential-ecr-login: sha256:5bdd30fb6c7a92462f5b454cce1aa906ca7926a6c2e39efad9613a7bf7661fac
+    darwin-amd64/docker-credential-ecr-login: sha256:c168e51ecfcc3a9e3704537da88bf65aa228d4223e80d363f9f346cde18af443
+    darwin-arm64/docker-credential-ecr-login: sha256:aa9e902a4dd80aa34ac0f753f6ab4723050b9d9846b07237ea56c5f814b9f457
+    windows-amd64/docker-credential-ecr-login.exe: sha256:1545d0c797ad7d539f0b85ef6c8702193a93764d537b01f93b55cefae994c9e1
+mobyOpenAPISpec:</code></pre>
+    <p>Pre-existing asymmetry; the migration to compound entries was a natural moment to normalise the value and drop <code>WiX.versionToTagName</code>&#39;s special parsing. Round 3 raised; carry forward. Skip if not worth the churn.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S14">
+        <span class="finding-num">S14.</span> <code>electron-builder.yml</code> exclusion <code>&#39;!resources/**/*.tar.gz&#39;</code> is broader than needed <span class="pill pill-claude">Claude</span><a href="#S14" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/packaging/electron-builder.yml#L16-L27">packaging/electron-builder.yml</a></div>
+      <pre data-start="16" data-line="21-22"><code class="language-yaml">- &#39;!resources/linux/staging/&#39;
+- &#39;!resources/win32/staging/&#39;
+- &#39;!resources/host/&#39;
+- &#39;!resources/**/*.js.map&#39;
+- &#39;!resources/**/*.unsigned&#39;
+- &#39;!resources/**/*.tar.gz&#39;
+- &#39;!resources/**/*.zip&#39;
+files:
+- dist/app/**/*
+- &#39;!**/node_modules/*/prebuilds/!(${platform}*)/*.node&#39;
+mac:
+  darkModeSupport: true</code></pre>
+    <p>The blanket patterns exclude every <code>.tar.gz</code> / <code>.zip</code> / <code>.unsigned</code> under <code>resources/</code>. None ship today (verified via <code>git ls-files</code>); a future feature that legitimately ships a tar.gz extension bundle would need to relax the pattern explicitly. Optional — the loose pattern is more durable as new dependency types are added.</p>
+    <p>Fix: pin the exclusions to the directories that actually accumulate cached archives (<code>resources/*/bin/</code>, <code>resources/*/internal/</code>, <code>resources/*/staging/</code>) rather than <code>**/*</code>.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <p><em></em>D1. <code>MobyOpenAPISpec</code> commit pinning has a soft failure mode for upstream security fixes<em></em> (future) <span class="pill pill-claude">Claude</span></p>
+    <p>The design correctly notes that pinning <code>commit</code> makes the install URL immutable, and <code>rcompareVersions</code> ignoring <code>commit</code> means a new commit on the same <code>apiVersion</code> does not auto-bump. Implication: a security fix to <code>v1.54.yaml</code> on <code>master</code> is invisible until someone manually edits <code>dependencies.yaml</code>. Worth documenting in the maintenance steps so the manual-edit case is not lost.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <p><strong>D2. Round 3 backlog cleared and the codesign repair is well-targeted</strong> (in-scope) <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></p>
+    <p>Round 3&#39;s I1 (codesign + cache-hit) is fixed by keeping the verified bytes at <code>${ destPath }.unsigned</code> and hashing that on cache-hit checks (<code>scripts/lib/download.ts:67-94, 130-143</code>). Round 3 S2/S3/S6/S7/S9/S10/S12 all landed. The codesign repair preserves the verified-before-sign ordering D3 (Round 3) noted, and adds a deterministic re-entry point.</p>
+    <p><em></em>D3. Computing checksums before <code>git checkout -b</code> aborts the bump cleanly<em></em> (in-scope) <span class="pill pill-claude">Claude</span></p>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/rddepman.ts#L291-L297"><code>rddepman.ts:291-297</code></a> resolves the new checksums before any branch is created, so an upstream verification failure leaves no orphan branch on disk. Right ordering for a long-running automation script.</p>
+    <p><strong>D4. Mismatch error preserves the served bytes for inspection</strong> (in-scope) <span class="pill pill-claude">Claude</span></p>
+    <p><code>downloadAndHash</code> copies the unmatched bytes to <code>os.tmpdir()/rddepman-mismatch-…</code> and includes the path in the error message. Most CDN swap-in failures look like an HTML error page; the saved file makes the cause obvious without re-running the bump.</p>
+    <p><em></em>D5. <code>DependencyManifest</code> mirrors the YAML shape; <code>DependencyVersions</code> is a derived view<em></em> (in-scope) <span class="pill pill-claude">Claude</span></p>
+    <p>The on-disk format and the in-memory type now match shape; the flat <code>DependencyVersions</code> projection (used by <code>lint-go.ts</code> and <code>docker-cli-monitor.ts</code> via <code>readDependencyVersions</code>) keeps legacy callers working without translation. mook-as&#39;s review thread on splitting <code>DependencyVersions</code> is addressed by this projection.</p>
+    <p><em></em>D6. <code>Sha256Checksum</code> template literal type plus <code>parseSha256Checksum</code> form a clean validation boundary<em></em> (in-scope) <span class="pill pill-claude">Claude</span></p>
+    <p><code>Sha256Checksum = \</code>sha256:${ string }\<code></code> plus the regex parser constrains the on-disk shape at the YAML edge. Type-system enforcement of the prefix keeps the encoding asymmetry (store with prefix, consume without) local to <code>lookupChecksum</code>.</p>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No unit or integration tests for <code>scripts/lib/dependencies.ts</code> or <code>scripts/lib/download.ts</code>. Round 1, Round 2, and Round 3 raised the same gap; the author marked it Skipped by choice in Round 2&#39;s resolution. The new surface area added by the PR continues to grow without coverage. Highest-leverage scenarios, ranked:</p>
+    <ol>
+      <li><code>download()</code> cache-hit logic with codesign vs. non-codesign — the <code>.unsigned</code> sibling, the EACCES fall-through, the hash mismatch re-download, and the codesign exit-status hole all have multi-state preconditions.</li>
+      <li><code>downloadTarGZ</code> / <code>downloadZip</code> cache-hit behaviour — would catch I2 above (locked <code>destPath</code> + always-extract).</li>
+      <li><code>RancherDashboard.download()</code> regression test — create <code>resources/rancher-dashboard</code> without an extracted-marker, run the dependency, assert the new digest is enforced. Would catch I1.</li>
+      <li><code>fetchUpstreamChecksums</code> parsing of GNU, GNU-binary, BSD, path-prefixed entries, basename-collision suppression, and CRLF lines.</li>
+      <li><code>parseSha256Checksum</code> happy / reject / case-fold cases.</li>
+      <li><code>readDependencyManifest</code> rejects malformed <code>version</code> shapes (missing, scalar checksums, empty <code>commit</code>).</li>
+      <li><code>getChecksums</code> parity per dependency: assert <code>Object.keys(getChecksums(currentVersion))</code> equals <code>Object.keys(manifest[name].checksums)</code>. Catches the windows/arm64 asymmetry from S2 without hitting the network.</li>
+    </ol>
+    <p>The repo already wires <code>scripts/lib/__tests__/build-utils.spec.ts</code>, so adding a fixture-driven <code>dependencies.spec.ts</code> next to it costs little.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><code>scripts/lib/dependencies.ts</code> exports carry useful JSDoc (<code>Sha256Checksum</code>, <code>parseSha256Checksum</code>, <code>lookupChecksum</code>, <code>downloadAndHash</code>, <code>fetchUpstreamChecksums</code>, the basename-aliasing rule, the new manifest header).</li>
+      <li><code>MobyOpenAPISpec.getAvailableVersions</code> and the <code>latestVersion</code> override carry the right comments — explaining the deferred commit resolution and the immutable-URL rationale.</li>
+      <li><code>dependencies.yaml</code> now carries the no-comments header (Round 3 S12).</li>
+      <li><code>MACOS_RUNNER</code> (S11) and <code>lookupChecksum</code> (S12) carry forward Round 3 documentation gaps.</li>
+    </ul>
+    <p>No user-facing documentation updates needed.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>WiX has no upstream checksum file</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/wix.ts#L33-L34"><code>scripts/dependencies/wix.ts:33-34</code></a>. Trust-on-first-use; consistent with the threat model.</li>
+      <li><strong>WasmShims has no upstream checksum file</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L597-L599"><code>scripts/dependencies/tools.ts:597-599</code></a>. Same trade-off.</li>
+      <li><em></em>DockerBuildx omits darwin from upstream <code>checksums.txt</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L208-L211"><code>scripts/dependencies/tools.ts:208-211</code></a>. Linked to upstream buildx#945. Linux/Windows entries still cross-check against the sidecar.</li>
+      <li><strong>Qemu does not yet publish linux/arm64</strong> — <code>scripts/dependencies/lima.ts:96, 119</code>. Mirrored by <code>Qemu.download</code>&#39;s early return.</li>
+      <li><strong>ECRCredHelper has no upstream checksum file</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L566-L567"><code>scripts/dependencies/tools.ts:566-567</code></a>. Bump-time digest only.</li>
+      <li><strong>Re-extract on every postinstall</strong> — <code>scripts/lib/download.ts:208-211, 258-260</code>. The author&#39;s intent is that <code>destPath</code> always reflects the verified archive after a bump, even with no version change. See I2 for the Windows lock impact.</li>
+      <li><strong>sha256 vs upstream sha512</strong> — Round 1 PR thread (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176#discussion_r3149345601">discussion_r3149345601</a>) resolved in favour of unified sha256 at install time.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>None. Round 1&#39;s open thread on splitting <code>DependencyVersions</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176#discussion_r3149342472">discussion_r3149342472</a>) is addressed by D5 above.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Highest finding volume of the round (4 raw Important, 7 Suggestions), of which 1 Important survived as the consolidated I1/I2 attribution and 4 of the raw Importants demoted to S1/S3/S4/S5 during consolidation. The surviving demotions track a calibration pattern worth flagging: I2 (double-hash) is bump-time perf only; I3 (empty commit URL) requires a hand-edit to trigger; I4 (module cache staleness) is benign today. Each is real but not user-blocking, and the Round 3 retro recorded the same calibration on Claude&#39;s N+1 finding. The unique inferences Claude carried — Wix/Lima/Qemu archive accumulation (S3), the codesign exit-status hole (S6), the md5-width regex window (S10), the codesign propagation through archive helpers (S9) — required tracing across multiple dependency classes and the <code>DownloadOptions</code> shape, which the other agents did not.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>One Important finding (RancherDashboard cache-hit bypass) that neither other agent raised. Codex traced the Round 4 fix that landed in <code>downloadTarGZ</code>/<code>downloadZip</code> to the carry-through gap in <code>RancherDashboard.download()</code>, which is exactly the structural inference Round 3&#39;s retro hoped Codex would keep doing. No suggestions — the rest of the review reads as terse confirmation that the surface is in good shape. False-positive count remains zero across rounds; Codex&#39;s calibration is consistently tight.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Two findings (one originally Critical, one Important), both verified against the code. C1 (windows/arm64 missing from <code>getChecksums</code> matrices) is a verbatim re-raise of Round 3 S4 at higher severity; the Round 3 reasoning that demoted it (no shipping CI build hits the path) still holds, so the consolidation re-applies the same demotion. I1 (locked <code>destPath</code> on Windows) is a genuine new regression caught only by Gemini, who reasoned about the fs.copyFile + EBUSY interaction with a running RD instance — none of the other agents explored Windows-specific failure modes. S1 (double-hash) duplicated Claude&#39;s I2; both arrived at the same fix. Coverage remains thinner than the other two agents (16/17 files &quot;Reviewed, no issues&quot;), and <code>git blame</code> is still skipped because of the daily-quota constraint.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>40m 00s</td><td>5m 51s</td><td>7m 01s</td></tr>
+        <tr><td>Findings</td><td>12S</td><td>1I</td><td>1I 2S</td></tr>
+        <tr><td>Tool calls</td><td>46 (Bash 22, Read 22, Grep 2)</td><td>53 (shell 51, stdin 2)</td><td>16 (run<em>shell</em>command 8, grep<em>search 6, read</em>file 2)</td></tr>
+        <tr><td>Design observations</td><td>6</td><td>1</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>10</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>18</td><td>18</td><td>18</td></tr>
+        <tr><td>Coverage misses</td><td>2</td><td>11</td><td>10</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>12S</strong></td><td><strong>1I</strong></td><td><strong>1I 2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>4 (I→S)</td><td>0</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <h3 id="reconciliation">Reconciliation <a href="#reconciliation" class="pilcrow">&#182;</a></h3>
+    <p>Severity changes during consolidation:</p>
+    <ul>
+      <li>Claude pass-1 I2 (double-hash in <code>downloadAndHash</code>): Important → Suggestion S1. Bump-time only and rate-capped by GitHub throttle; no user-facing impact.</li>
+      <li>Claude pass-1 I3 (empty commit URL): Important → Suggestion S4. Requires hand-edit to trigger; current code paths cannot produce it.</li>
+      <li>Claude pass-1 I4 (module-level manifest cache): Important → Suggestion S5. Benign today; no current code path mutates the file between cache populate and <code>updateManifest</code>.</li>
+      <li>Claude pass-1 I1 (Wix/Lima/Qemu archive accumulation): Important → Suggestion S3. Cosmetic (no shipping artefact); developer-disk cleanliness only.</li>
+      <li>Gemini pass-1 C1 (windows/arm64 missing): Critical → Suggestion S2. Same demotion as Round 3; the official <code>package.yaml</code> matrix does not exercise the failing path.</li>
+    </ul>
+    <h3 id="verified-against-current-code">Verified against current code <a href="#verified-against-current-code" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>I1 (Codex): <code>RancherDashboard.download()</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/tools.ts#L398-L410"><code>scripts/dependencies/tools.ts:398-410</code></a> matches the citation; <code>expectedChecksum</code> is computed at line 403, the <code>existsSync</code> guard at 406-410 returns before <code>download()</code> is invoked at 412.</li>
+      <li>I2 (Gemini): <code>downloadTarGZ</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/download.ts#L195-L234"><code>scripts/lib/download.ts:195-234</code></a> and <code>downloadZip</code> at <code>:245-273</code> both unconditionally extract and <code>copyFile</code> to <code>destPath</code>; no access check survives.</li>
+      <li>S3 (Claude): <code>Wix.download</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/dependencies/wix.ts#L45"><code>wix.ts:45</code></a> uses <code>${ tagName }.zip</code>, <code>Lima.download</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/pkg/rancher-desktop/backend/kube/lima.ts#L49"><code>lima.ts:49</code></a> and <code>Qemu.download</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/pkg/rancher-desktop/backend/kube/lima.ts#L107"><code>lima.ts:107</code></a> embed <code>v${ version }</code> in the cache filename.</li>
+      <li>S4 (Claude): <code>readDependencyManifest</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L135-L141"><code>dependencies.ts:135-141</code></a> validates only <code>typeof === &#39;object&#39; &amp;&amp; !Array.isArray</code>; <code>commit</code> emptiness is not checked.</li>
+      <li>S5 (Claude): <code>depManifestCache</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/aa1fb9b2611afac3c163ab8ee6434caf4bd0c3b5/scripts/lib/dependencies.ts#L467"><code>dependencies.ts:467</code></a> is module scope; <code>updateManifest</code> at <code>:495-501</code> reads from the cache.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>Add to the review dimensions a sub-bullet under &quot;Backwards compatibility / regressions&quot;: *When a prior round&#39;s fix changes a cached path&#39;s contract from &quot;skip on existence&quot; to &quot;always re-do,&quot; re-examine every host-OS-specific failure mode the old skip protected against. The classic shape is exclusive-lock filesystems (Windows): the skip silently dodged <code>EBUSY</code> on a held-open binary, the always-re-do path now hits it on every run.*</li>
+    </ul>
+    <p>  <em>Why this generalises:</em> I2 caught Round 4&#39;s Windows regression   because Gemini reasoned about the OS-level lock semantics that   Round 3 S1&#39;s &quot;always verify&quot; suggestion silently changed.   Equivalent shapes: a chmod made conditional now races a concurrent   process; a temp-file rename made unconditional now collides with a   reader holding the old inode; an extract-over-symlink hits noexec   mounts. The underlying principle is &quot;removing a guard relaxes a   precondition the platform may still enforce.&quot;</p>
+    <ul>
+      <li>Add to the review dimensions, under &quot;Cross-component carry-through&quot;: <em>When a finding is fixed for one consumer of a shared helper, enumerate every other consumer of the same pattern and check that the fix applies there too. The originating helper is one of N callers; an architectural fix at a single call site leaves the pattern open in the others.</em></li>
+    </ul>
+    <p>  <em>Why this generalises:</em> I1 caught the RancherDashboard gap because   Codex carried the Round 3 S1 fix forward across all consumers of   the &quot;extract + cache&quot; pattern. Single-call-site fixes invite this   exact shape of regression.</p>
+    <p><strong>Repo context updates</strong></p>
+    <p>None this round. The Round 3 context update on tracing helper-script deletions through the new types continues to apply implicitly.</p>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
