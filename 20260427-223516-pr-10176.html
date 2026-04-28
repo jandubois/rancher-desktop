@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260427-223516-pr-10176</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260427-223516-pr-10176</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-04-27 22:35</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>3</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176" class="gh-ref" data-title="rddepman: record and verify artifact digests in dependencies.yaml" data-state="open" data-type="pr">#10176</a> — rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9ef66aaca"><code>9ef66aaca</code></a> rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; Round 2&#39;s S3 fix introduced a real regression for <code>codesign</code>-using callers; one-line guard restores the fast path and the rest are non-blocking.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>24 min 16 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>All nine Round 2 suggestions landed in this commit. The schema / helper plumbing is in good shape: the <code>Moby</code> comment was rewritten, the basename-collision suppression in <code>fetchUpstreamChecksums</code> shipped, the manifest cache is now module-scoped, the <code>populate-dependency-checksums.ts</code> migration script was deleted, the dead <code>checksumAlgorithm</code> plumbing is gone, the <code>lookupChecksum</code> error path now distinguishes &quot;dependency missing&quot; from &quot;artifact missing,&quot; <code>RawEntry.checksums</code> is typed optional, and the <code>chartFilename</code>/<code>crdsFilename</code> indentation is back in sync.</p>
+    <p>The notable new finding is a regression introduced by Round 2&#39;s S3 fix itself: <code>download()</code> now hashes existing destination files against the upstream-pinned sha256 before short-circuiting, but call sites that combine <code>expectedChecksum</code> with <code>codesign</code> (DockerCLI on darwin at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L160-L163"><code>scripts/dependencies/tools.ts:160-163</code></a>, DockerProvidedCredHelpers on darwin at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L489-L495"><code>scripts/dependencies/tools.ts:489-495</code></a>) now compare the locally-resigned Mach-O bytes against the upstream pre-signature digest. The post-codesign hash never matches; every macOS postinstall re-downloads and re-signs Docker CLI and the Docker credential helpers, and the postinstall fails offline even when a known-good signed binary is on disk. I1 below proposes a one-line <code>codesign</code> short-circuit.</p>
+    <p>The rest of the surface produces refinement-grade suggestions: archive helpers (<code>downloadTarGZ</code> / <code>downloadZip</code>) skip the same way Round 2&#39;s S3 explicitly scoped out (S1); <code>MobyOpenAPISpec.getAvailableVersions</code> resolves a commit for every historical apiVersion when only the winner is used (S2); a small set of <code>getChecksums</code> enumerations omit windows/arm64 while a few peer enumerations include it (S4); the <code>parseSha256Checksum</code> regex rejects uppercase hex from manual edits (S3); and a handful of polish items (Sha256Checksum return type, diagnostic preservation in <code>downloadAndHash</code>, <code>readDependencyManifest</code> schema validation, GNU regex tightening, MACOS_RUNNER hard-coding, WiX <code>v</code>-prefix asymmetry, in-file no-comments warning).</p>
+    <p>Verdict: merge with the codesign fix folded in; everything else is non-blocking.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> <code>codesign</code> callers re-download every postinstall — <code>expectedChecksum</code> compared against post-signature bytes <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/download.ts#L62-L92">scripts/lib/download.ts</a></div>
+      <pre data-start="62" data-line="67-87"><code class="language-ts">  const expectedChecksum = options.expectedChecksum;
+  const overwrite = options.overwrite ?? false;
+  const access = options.access ?? fs.constants.X_OK;
+
+  if (!overwrite) {
+    try {
+      await fs.promises.access(destPath, access);
+      if (expectedChecksum) {
+        const actualChecksum = await hashFile(destPath, &#39;sha256&#39;);
+
+        if (actualChecksum === expectedChecksum) {
+          console.log(`${ destPath } already exists with expected checksum, not re-downloading.`);
+
+          return;
+        }
+        console.log(`${ destPath } exists but sha256 differs ([${ actualChecksum }] vs expected [${ expectedChecksum }]); re-downloading.`);
+      } else {
+        console.log(`${ destPath } already exists, not re-downloading.`);
+
+        return;
+      }
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {
+        throw ex;
+      }
+    }
+  }
+  console.log(`Downloading ${ url } to ${ destPath }...`);
+  await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
+  const response = await fetchWithRetry(url);
+</code></pre>
+    <p>Round 2&#39;s S3 fix added the cache-hit checksum check at lines 69-77 so that a corrupted local file no longer poisons subsequent installs. That check fires regardless of <code>options.codesign</code>, but <code>download()</code> applies an ad-hoc signature to <code>destPath</code> after writing it (lines 126-131 in the same file):</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/download.ts#L121-L136">scripts/lib/download.ts</a></div>
+      <pre data-start="121" data-line="126-131"><code class="language-typescript">        console.error(ex);
+      }
+    }
+  }
+
+  if (options.codesign) {
+    spawnSync(
+      &#39;codesign&#39;,
+      [&#39;--force&#39;, &#39;--sign&#39;, &#39;-&#39;, destPath],
+      { stdio: &#39;inherit&#39; },
+    );
+  }
+}
+
+/**
+ * Streams the file at `filePath` through the named hash and returns the</code></pre>
+      <pre><code class="language-ts">if (options.codesign) {
+  spawnSync(
+    &#39;codesign&#39;,
+    [&#39;--force&#39;, &#39;--sign&#39;, &#39;-&#39;, destPath],
+    { stdio: &#39;inherit&#39; },
+  );
+}</code></pre>
+    <p><code>codesign --force --sign -</code> rewrites the Mach-O LC<em>CODE</em>SIGNATURE load command in place, mutating the file bytes. The first install passes the pre-signature checksum check (the file is hashed in <code>tempPath</code> before <code>chmod</code>/<code>rename</code>/<code>codesign</code>, lines 104-115), so the upstream-pinned sha256 is verified against the as-downloaded artifact correctly. On the <em>next</em> postinstall, however, the file at <code>destPath</code> is the post-signature variant, and the cache-hit path at line 70 hashes it against the same pre-signature <code>expectedChecksum</code>. The hashes never match, so the binary is re-downloaded and re-signed every time.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/download.ts#L99-L120">scripts/lib/download.ts</a></div>
+      <pre data-start="99" data-line="104-115"><code class="language-typescript">  try {
+    const file = fs.createWriteStream(tempPath);
+
+    await response.body.pipeTo(stream.Writable.toWeb(file));
+
+    if (expectedChecksum) {
+      const actualChecksum = await hashFile(tempPath, &#39;sha256&#39;);
+
+      if (actualChecksum !== expectedChecksum) {
+        throw new Error(`Expecting URL ${ url } to have sha256 [${ expectedChecksum }], got [${ actualChecksum }]`);
+      }
+    }
+    const mode =
+            (access &amp; fs.constants.X_OK) ? 0o755 : (access &amp; fs.constants.W_OK) ? 0o644 : 0o444;
+
+    await fs.promises.chmod(tempPath, mode);
+    await fs.promises.rename(tempPath, destPath);
+  } finally {
+    try {
+      await fs.promises.unlink(tempPath);
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {</code></pre>
+    <p>Affected call sites:</p>
+      <pre><code class="language-ts">// scripts/dependencies/tools.ts:160-163 — DockerCLI.download
+const expectedChecksum = lookupChecksum(context, this.name, executableName);
+const codesign = process.platform === &#39;darwin&#39;;
+
+await download(dockerURL, destPath, { expectedChecksum, codesign });
+
+// scripts/dependencies/tools.ts:489-495 — DockerProvidedCredHelpers.download
+const expectedChecksum = lookupChecksum(context, this.name, fullBinName);
+// ...
+const codesign = context.platform === &#39;darwin&#39;;
+
+promises.push(download(sourceURL, destPath, { expectedChecksum, codesign } ));</code></pre>
+    <p>Impact: every macOS <code>yarn postinstall</code> after the first re-downloads and re-signs the Docker CLI plus all Docker credential helpers (<code>docker-credential-osxkeychain</code> today; the same pattern applies if darwin grows more named helpers). Worst case is a developer running <code>yarn postinstall</code> offline after a fresh install: there is a known-good signed binary on disk, but <code>download()</code> rejects it and fails the network fetch.</p>
+    <p>Fix: short-circuit when <code>options.codesign</code> was applied. The first install verified the upstream digest in <code>tempPath</code> before signing, so the on-disk file is provably the verified artifact plus a locally-applied signature; comparing it back to the pre-signature digest is meaningless for re-installs.</p>
+      <pre><code class="language-diff">       await fs.promises.access(destPath, access);
+       if (expectedChecksum) {
++        if (options.codesign) {
++          // Codesign rewrites destPath after download, so the on-disk
++          // bytes no longer match the upstream-pinned digest.  Trust
++          // the previously-verified-then-resigned file.
++          console.log(`${ destPath } already exists (locally signed), not re-downloading.`);
++
++          return;
++        }
+         const actualChecksum = await hashFile(destPath, &#39;sha256&#39;);</code></pre>
+    <p>Codex flagged this. Verified against the current code at the lead worktree: <code>download()</code> lines 66-88 + 126-131 in <code>scripts/lib/download.ts</code>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L160-L163"><code>tools.ts:160-163</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L489-L495"><code>tools.ts:489-495</code></a>. (important, regression)</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Archive helpers (<code>downloadTarGZ</code> / <code>downloadZip</code>) skip checksum verification when extracted output exists <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/download.ts#L170-L227">scripts/lib/download.ts</a></div>
+      <pre data-start="170" data-line="175-222"><code class="language-ts"> * @param url The URL to download.
+ * @param destPath The path to download to, including the executable name.
+ * @param options Additional options for the download.
+ * @returns The full path of the final binary.
+ */
+export async function downloadTarGZ(url: string, destPath: string, options: ArchiveDownloadOptions = {}): Promise&lt;string&gt; {
+  const overwrite = options.overwrite ?? false;
+  const access = options.access ?? fs.constants.X_OK;
+
+  if (!overwrite) {
+    try {
+      await fs.promises.access(destPath, access);
+      console.log(`${ destPath } already exists, not re-downloading.`);
+
+      return destPath;
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {
+        throw ex;
+      }
+    }
+  }
+  const binaryBasename = path.basename(destPath, &#39;.exe&#39;);
+  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), `rd-${ binaryBasename }-`));
+  const fileToExtract = options.entryName || path.basename(destPath);
+
+  try {
+    const tgzPath = path.join(workDir, `${ binaryBasename }.tar.gz`);
+    const args = [&#39;tar&#39;, &#39;-zxf&#39;, tgzPath, &#39;--directory&#39;, workDir, fileToExtract];
+    const mode =
+            (access &amp; fs.constants.X_OK) ? 0o755 : (access &amp; fs.constants.W_OK) ? 0o644 : 0o444;
+
+    await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
+    if (os.platform().startsWith(&#39;win&#39;)) {
+      // On Windows, force use the bundled bsdtar.
+      // We may find GNU tar on the path, which looks at the Windows-style path
+      // and considers C:\Temp to be a reference to a remote host named `C`.
+      const systemRoot = process.env.SystemRoot;
+
+      if (!systemRoot) {
+        throw new Error(&#39;Could not find system root&#39;);
+      }
+      args[0] = path.join(systemRoot, &#39;system32&#39;, &#39;tar.exe&#39;);
+    }
+    await simpleSpawn(args[0], args.slice(1));
+    await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
+    await fs.promises.copyFile(path.join(workDir, fileToExtract), destPath);
+    await fs.promises.chmod(destPath, mode);
+  } finally {
+    fs.rmSync(workDir, { recursive: true, maxRetries: 10 });
+  }
+
+  return destPath;
+}
+
+/**
+ * Download a zip file to a temp dir, expand,
+ * and move the expected binary to the final dir
+ *</code></pre>
+    <p>Round 2&#39;s S3 fix taught <code>download()</code> to re-hash an existing destination against the pinned digest before short-circuiting, but the archive helpers retained the pre-existing access-only short circuit. Helm at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L121-L124"><code>scripts/dependencies/tools.ts:121-124</code></a>, Trivy at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L324"><code>tools.ts:324</code></a>, Steve at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L391-L396"><code>tools.ts:391-396</code></a>, the WasmShims at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L621-L625"><code>tools.ts:621-625</code></a>, and the SpinCLI archive at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L709-L718"><code>tools.ts:709-718</code></a> all go through <code>downloadTarGZ</code> with <code>expectedChecksum</code> set, but on subsequent postinstalls the helper returns at the access check and never invokes the inner <code>download()</code> that would have verified the archive. The same hole exists in <code>downloadZip</code> at lines 233-268 (used by KuberlrAndKubectl on Windows at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L50-L55"><code>tools.ts:50-55</code></a>).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L116-L129">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="116" data-line="121-124"><code class="language-typescript">    const archiveName = `helm-v${ context.dependencies.helm.version }-${ context.goPlatform }-${ arch }.tar.gz`;
+    const helmURL = `https://get.helm.sh/${ archiveName }`;
+
+    await downloadTarGZ(helmURL, path.join(context.binDir, exeName(context, &#39;helm&#39;)), {
+      expectedChecksum: lookupChecksum(context, this.name, archiveName),
+      entryName:        `${ context.goPlatform }-${ arch }/${ exeName(context, &#39;helm&#39;) }`,
+    });
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const platforms: [string, string][] = [
+      [&#39;linux&#39;, &#39;amd64&#39;], [&#39;linux&#39;, &#39;arm64&#39;],
+      [&#39;darwin&#39;, &#39;amd64&#39;], [&#39;darwin&#39;, &#39;arm64&#39;],
+      [&#39;windows&#39;, &#39;amd64&#39;],</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L45-L60">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="45" data-line="50-55"><code class="language-typescript">    const expectedChecksum = lookupChecksum(context, this.name, archiveName);
+    const binName = exeName(context, &#39;kuberlr&#39;);
+    const options: ArchiveDownloadOptions = {
+      expectedChecksum,
+      entryName: `${ platformDir }/${ binName }`,
+    };
+    const downloadFunc = context.platform.startsWith(&#39;win&#39;) ? downloadZip : downloadTarGZ;
+
+    return await downloadFunc(`${ baseURL }/${ archiveName }`, path.join(context.binDir, binName), options);
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const baseURL = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const upstream = await fetchUpstreamChecksums(`${ baseURL }/checksums.txt`);
+    const platforms: [string, string][] = [
+      [&#39;linux&#39;, &#39;amd64&#39;], [&#39;linux&#39;, &#39;arm64&#39;],</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L319-L329">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="319" data-line="324"><code class="language-typescript">    const trivySHA = lookupChecksum(context, this.name, archiveName);
+    const trivyDir = context.dependencyPlatform === &#39;wsl&#39; ? &#39;staging&#39; : &#39;internal&#39;;
+    const trivyPath = path.join(context.resourcesDir, &#39;linux&#39;, trivyDir, &#39;trivy&#39;);
+
+    // trivy.tgz files are top-level tarballs - not wrapped in a labelled directory :(
+    await downloadTarGZ(trivyURL, trivyPath, { expectedChecksum: trivySHA });
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const versionWithV = `v${ version }`;
+    const trivyURLBase = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases`;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L386-L401">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="386" data-line="391-396"><code class="language-typescript">    }
+
+    return result;
+  }
+}
+
+export class RancherDashboard extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;rancherDashboard&#39;;
+  readonly githubOwner = &#39;rancher-sandbox&#39;;
+  readonly githubRepo = &#39;rancher-desktop-dashboard&#39;;
+  readonly releaseFilter = &#39;custom&#39;;
+
+  async download(context: DownloadContext): Promise&lt;void&gt; {
+    const baseURL = `https://github.com/rancher-sandbox/${ this.githubRepo }/releases/download/desktop-v${ context.dependencies.rancherDashboard.version }`;
+    const archiveName = &#39;rancher-dashboard-desktop-embed.tar.gz&#39;;
+    const url = `${ baseURL }/${ archiveName }`;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L616-L630">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="616" data-line="621-625"><code class="language-typescript">      expectedChecksum: lookupChecksum(context, this.name, crdsFilename),
+    });
+
+    const chartFilename = `cert-manager-v${ context.dependencies.certManager.version }.tgz`;
+    const chartURL = `https://charts.jetstack.io/charts/${ chartFilename }`;
+
+    await download(chartURL, path.join(context.resourcesDir, &#39;cert-manager.tgz&#39;), {
+      expectedChecksum: lookupChecksum(context, this.name, chartFilename),
+    });
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const base = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const crdsFilename = &#39;cert-manager.crds.yaml&#39;;
+    const chartFilename = `cert-manager-v${ version }.tgz`;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L704-L723">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="704" data-line="709-718"><code class="language-typescript">      const ext = platform === &#39;windows&#39; ? &#39;.zip&#39; : &#39;.tar.gz&#39;;
+      const archiveName = `spin-v${ version }-${ platform }-${ arch }${ ext }`;
+
+      result[archiveName] = await downloadAndHash(`${ baseURL }/${ archiveName }`, {
+        verify: { algorithm: &#39;sha256&#39;, expected: upstream[archiveName] },
+      });
+    }
+
+    return result;
+  }
+}
+
+export class SpinKubePlugin extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;spinKubePlugin&#39;;
+  readonly githubOwner = &#39;spinframework&#39;;
+  readonly githubRepo = &#39;spin-plugin-kube&#39;;
+
+  download(context: DownloadContext): Promise&lt;void&gt; {
+    // We don&#39;t download anything there; `resources/setup-spin` does the installation.
+    return Promise.resolve();</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/download.ts#L228-L268">scripts/lib/download.ts</a></div>
+      <pre data-start="228" data-line="233-268"><code class="language-typescript"> * @param url The URL to download.
+ * @param destPath The path to download to, including the executable name.
+ * @param options Additional options for the download.
+ * @returns The full path of the final binary.
+ */
+export async function downloadZip(url: string, destPath: string, options: ArchiveDownloadOptions = {}): Promise&lt;string&gt; {
+  const overwrite = options.overwrite ?? false;
+  const access = options.access ?? fs.constants.X_OK;
+
+  if (!overwrite) {
+    try {
+      await fs.promises.access(destPath, access);
+      console.log(`${ destPath } already exists, not re-downloading.`);
+
+      return destPath;
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {
+        throw ex;
+      }
+    }
+  }
+  const binaryBasename = path.basename(destPath, &#39;.exe&#39;);
+  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), `rd-${ binaryBasename }-`));
+  const fileToExtract = options.entryName || path.basename(destPath);
+  const mode =
+        (access &amp; fs.constants.X_OK) ? 0o755 : (access &amp; fs.constants.W_OK) ? 0o644 : 0o444;
+
+  try {
+    const zipPath = path.join(workDir, `${ binaryBasename }.zip`);
+    const args = [&#39;unzip&#39;, &#39;-q&#39;, &#39;-o&#39;, zipPath, fileToExtract, &#39;-d&#39;, workDir];
+
+    await download(url, zipPath, { ...options, access: fs.constants.W_OK });
+    execFileSync(args[0], args.slice(1), { stdio: &#39;inherit&#39; });
+    fs.copyFileSync(path.join(workDir, fileToExtract), destPath);
+    fs.chmodSync(destPath, mode);
+  } finally {
+    fs.rmSync(workDir, { recursive: true, maxRetries: 10 });
+  }
+
+  return destPath;
+}</code></pre>
+    <p>Round 2&#39;s S3 explicitly scoped this out: *&quot;The archive helpers (<code>downloadTarGZ</code>, <code>downloadZip</code>) skip the same way after extraction; addressing them needs a sidecar stamp file or similar, which is out of scope for this PR.&quot;* That reasoning still holds: the verified artefact is the archive, not the extracted file, so a hash check on <code>destPath</code> would have to either redownload the archive every run (wasteful) or persist a stamp recording &quot;we extracted from this verified source.&quot; Track as a follow-up.</p>
+    <p>Fix: in a follow-up PR, persist a <code>${ destPath }.checksum</code> sidecar after a successful extract, write the pinned <code>sha256:</code> and the source URL, and skip the redownload only when the sidecar matches.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>MobyOpenAPISpec.getAvailableVersions</code> makes ~35 GitHub API calls and uses one <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/moby-openapi.ts#L90-L120">scripts/dependencies/moby-openapi.ts</a></div>
+      <pre data-start="90" data-line="95-115"><code class="language-ts">    const url = `https://raw.githubusercontent.com/${ this.githubOwner }/${ this.githubRepo }/${ version.commit }/api/docs/${ fileName }`;
+
+    return { [fileName]: await downloadAndHash(url) };
+  }
+
+  async getAvailableVersions(): Promise&lt;MobyOpenAPISpecVersion[]&gt; {
+    const args = {
+      owner: this.githubOwner, repo: this.githubRepo, path: &#39;api/docs&#39;,
+    };
+    const response = await getOctokit().rest.repos.getContent(args);
+    const fileObjs = response.data as Partial&lt;{ name: string }&gt;[];
+    const apiVersions: string[] = [];
+
+    for (const fileObj of fileObjs) {
+      const match = fileObj.name?.match(/^v([0-9]+\.[0-9]+)\.yaml$/);
+
+      if (match) {
+        apiVersions.push(match[1]);
+      }
+    }
+
+    return Promise.all(apiVersions.map(async(apiVersion) =&gt; ({
+      apiVersion,
+      commit: await this.latestCommitForApiVersion(apiVersion),
+    })));
+  }
+
+  // Compare the API version only.  The pinned commit makes the install
+  // URL immutable, so a new commit on the same apiVersion cannot change
+  // what postinstall fetches and does not warrant an auto-bump.  To
+  // adopt a new commit, edit dependencies.yaml manually.</code></pre>
+    <p><code>api/docs</code> lists roughly 35 historical <code>vX.Y.yaml</code> files. The map at line 111-114 spawns one <code>listCommits</code> request per entry. Only the highest <code>apiVersion</code> survives <code>rcompareVersions</code> at line 121-123, so the other ~34 commit lookups are discarded. The throttling handler at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L548"><code>scripts/lib/dependencies.ts:548</code></a> caps the damage at delay rather than failure, but the budget is real (a typical rddepman cron runs authenticated against a 5000/hr limit shared by every dep).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L543-L553">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="543" data-line="548"><code class="language-typescript">
+  if (_octokit &amp;&amp; _octokitAuthToken === personalAccessToken) {
+    return _octokit;
+  }
+
+  function makeLimitHandler(type: string, maxRetries: number): NonNullable&lt;ThrottlingOptions[&#39;onSecondaryRateLimit&#39;]&gt; {
+    return (retryAfter, options, octokit, retryCount) =&gt; {
+      function getOpt(prop: string) {
+        return options &amp;&amp; (prop in options) ? (options as any)[prop] : `(unknown ${ prop })`;
+      }
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/moby-openapi.ts#L116-L128">scripts/dependencies/moby-openapi.ts</a></div>
+      <pre data-start="116" data-line="121-123"><code class="language-typescript">
+  // Compare the API version only.  The pinned commit makes the install
+  // URL immutable, so a new commit on the same apiVersion cannot change
+  // what postinstall fetches and does not warrant an auto-bump.  To
+  // adopt a new commit, edit dependencies.yaml manually.
+  rcompareVersions(version1: MobyOpenAPISpecVersion, version2: MobyOpenAPISpecVersion): -1 | 0 | 1 {
+    return super.rcompareVersions(version1.apiVersion, version2.apiVersion);
+  }
+
+  // Resolves the latest commit on the default branch that touched
+  // `api/docs/v${ apiVersion }.yaml`.  rddepman pins this SHA in
+  // `dependencies.yaml` so install-time downloads target an immutable URL.
+  protected async latestCommitForApiVersion(apiVersion: string): Promise&lt;string&gt; {</code></pre>
+    <p>Fix: defer the commit lookup until after <code>latestVersion</code> picks the winner. One sketch:</p>
+      <pre><code class="language-diff">-    return Promise.all(apiVersions.map(async(apiVersion) =&gt; ({
+-      apiVersion,
+-      commit: await this.latestCommitForApiVersion(apiVersion),
+-    })));
++    return apiVersions.map(apiVersion =&gt; ({ apiVersion, commit: &#39;&#39; }));
+   }
++
++  override async latestVersion(): Promise&lt;MobyOpenAPISpecVersion&gt; {
++    const winner = await super.latestVersion();
++    return { ...winner, commit: await this.latestCommitForApiVersion(winner.apiVersion) };
++  }</code></pre>
+    <p><code>getChecksums(version)</code> already trusts the caller&#39;s commit, so it keeps working unchanged. Update <code>currentVersion</code> only if the diff between the cached <code>commit</code> and the resolved <code>commit</code> matters; with the design choice that commit-only changes are not auto-bumped (<code>rcompareVersions</code> ignores <code>commit</code>), the cached value need not be re-resolved.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>parseSha256Checksum</code> rejects uppercase hex from manual edits <span class="pill pill-gemini">Gemini</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L86-L101">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="86" data-line="91-96"><code class="language-ts"> */
+export type Sha256Checksum = `sha256:${ string }`;
+
+/**
+ * Parses a raw string as a {@link Sha256Checksum}.  Throws unless the value
+ * has the form `sha256:&lt;64 hex chars&gt;`.
+ */
+export function parseSha256Checksum(value: unknown): Sha256Checksum {
+  if (typeof value !== &#39;string&#39; || !/^sha256:[0-9a-f]{64}$/.test(value)) {
+    throw new Error(`Invalid sha256 checksum ${ JSON.stringify(value) }; expected &quot;sha256:&lt;64 hex chars&gt;&quot;`);
+  }
+
+  return value as Sha256Checksum;
+}
+
+/**</code></pre>
+    <p><code>rddepman</code> writes lowercase hex consistently, so this is a strictly manual-edit hazard. A maintainer pasting an upstream hex digest that came from a generator using uppercase will trip the validator on the next postinstall. The error message names the file and the offending value, so the failure is recoverable; cosmetic but worth a one-line fix.</p>
+      <pre><code class="language-diff">-  if (typeof value !== &#39;string&#39; || !/^sha256:[0-9a-f]{64}$/.test(value)) {
++  if (typeof value !== &#39;string&#39; || !/^sha256:[0-9a-f]{64}$/i.test(value)) {
+     throw new Error(`Invalid sha256 checksum ${ JSON.stringify(value) }; expected &quot;sha256:&lt;64 hex chars&gt;&quot;`);
+   }
+
+-  return value as Sha256Checksum;
++  return value.toLowerCase() as Sha256Checksum;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Several <code>getChecksums</code> enumerations omit windows/arm64 while peer dependencies record it <span class="pill pill-gemini">Gemini</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L54-L68">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="54" data-line="59-63"><code class="language-ts">  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const baseURL = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const upstream = await fetchUpstreamChecksums(`${ baseURL }/checksums.txt`);
+    const platforms: [string, string][] = [
+      [&#39;linux&#39;, &#39;amd64&#39;], [&#39;linux&#39;, &#39;arm64&#39;],
+      [&#39;darwin&#39;, &#39;amd64&#39;], [&#39;darwin&#39;, &#39;arm64&#39;],
+      [&#39;windows&#39;, &#39;amd64&#39;],
+    ];
+    const result: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const [goPlatform, arch] of platforms) {
+      const archiveName = `kuberlr_${ version }_${ goPlatform }_${ arch }` + (goPlatform === &#39;windows&#39; ? &#39;.zip&#39; : &#39;.tar.gz&#39;);
+</code></pre>
+    <p><code>KuberlrAndKubectl</code>, <code>Helm</code>, <code>DockerCLI</code>, <code>DockerBuildx</code>, <code>ECRCredHelper</code>, <code>Steve</code>, and <code>SpinCLI</code> enumerate this five-entry matrix; <code>DockerCompose</code> (line 249-253) and <code>DockerProvidedCredHelpers</code> (line 511-517) instead generate a six-entry matrix that includes windows/arm64 (or aarch64). The corresponding <code>download()</code> methods <em>do</em> handle windows/arm64 — every one uses <code>arch = context.isM1 ? &#39;arm64&#39; : &#39;amd64&#39;</code> and constructs a windows-arm64 filename when <code>M1=1</code> is set — so a Windows host running <code>yarn postinstall</code> with <code>M1=1</code> would call <code>lookupChecksum(context, &#39;dockerCLI&#39;, &#39;docker-windows-arm64.exe&#39;)</code> and trip the &quot;No checksum recorded&quot; diagnostic. The official <code>.github/workflows/package.yaml</code> matrix sets <code>M1=1</code> only on <code>mac/aarch64</code> (lines 229-231), so no shipping CI build hits this path; the asymmetry still surfaces for any developer cross-building on Windows ARM64.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L224-L258">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="224" data-line="229-253"><code class="language-typescript">      result[executableName] = await downloadAndHash(url, verify ? { verify } : undefined);
+    }
+
+    return result;
+  }
+}
+
+export class DockerCompose extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;dockerCompose&#39;;
+  readonly githubOwner = &#39;docker&#39;;
+  readonly githubRepo = &#39;compose&#39;;
+
+  async download(context: DownloadContext): Promise&lt;void&gt; {
+    const baseUrl = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ context.dependencies.dockerCompose.version }`;
+    const arch = context.isM1 ? &#39;aarch64&#39; : &#39;x86_64&#39;;
+    const executableName = exeName(context, `docker-compose-${ context.goPlatform }-${ arch }`);
+    const url = `${ baseUrl }/${ executableName }`;
+    const destPath = path.join(context.dockerPluginsDir, exeName(context, &#39;docker-compose&#39;));
+    const expectedChecksum = lookupChecksum(context, this.name, executableName);
+
+    await download(url, destPath, { expectedChecksum });
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const baseUrl = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const platforms: [string, string][] = [
+      [&#39;linux&#39;, &#39;x86_64&#39;], [&#39;linux&#39;, &#39;aarch64&#39;],
+      [&#39;darwin&#39;, &#39;x86_64&#39;], [&#39;darwin&#39;, &#39;aarch64&#39;],
+      [&#39;windows&#39;, &#39;x86_64&#39;], [&#39;windows&#39;, &#39;aarch64&#39;],
+    ];
+    const result: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const [goPlatform, arch] of platforms) {
+      const executableName = `docker-compose-${ goPlatform }-${ arch }` + (goPlatform === &#39;windows&#39; ? &#39;.exe&#39; : &#39;&#39;);
+      const url = `${ baseUrl }/${ executableName }`;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L506-L522">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="506" data-line="511-517"><code class="language-typescript">      linux:   [&#39;docker-credential-secretservice&#39;, &#39;docker-credential-pass&#39;],
+      darwin:  [&#39;docker-credential-osxkeychain&#39;],
+      windows: [&#39;docker-credential-wincred&#39;],
+    };
+
+    for (const [goPlatform, names] of Object.entries(credHelperNames)) {
+      for (const arch of [&#39;amd64&#39;, &#39;arm64&#39;]) {
+        for (const baseName of names) {
+          matrix.push({ goPlatform, arch, baseName, isWindows: goPlatform === &#39;windows&#39; });
+        }
+      }
+    }
+
+    const result: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const { goPlatform, arch, baseName, isWindows } of matrix) {
+      const fullBaseName = `${ baseName }-v${ version }.${ goPlatform }-${ arch }`;</code></pre>
+    <p>Whether this is a real regression or a no-op depends on what each upstream actually publishes — <code>dockerProvidedCredentialHelpers</code> publishes <code>docker-credential-wincred-vX.windows-arm64.exe</code> (recorded in <code>dependencies.yaml</code>), <code>dockerCompose</code> publishes <code>docker-compose-windows-aarch64.exe</code> (recorded). For <code>rancher-sandbox/rancher-desktop-docker-cli</code>, <code>helm</code>, <code>steve</code>, <code>buildx</code>, <code>kuberlr</code>, ECR, and SpinCLI, the upstream may or may not publish windows-arm64 binaries; a pre-PR <code>findChecksum</code> would have also failed if the artefact was missing from the upstream sidecar.</p>
+    <p>Fix: confirm the intent. Either drop the <code>isM1</code> branch from each windows-only <code>download()</code> (clarifying that windows arm64 is unsupported and the one-line crash is intentional), or extend the seven <code>getChecksums</code> matrices so every platform/arch combination the download path can request is recorded. Document the choice once in <code>scripts/dependencies/global.ts</code> so the pattern is consistent.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> <code>lookupChecksum</code> returns raw <code>string</code>, throwing away the <code>Sha256Checksum</code> template-literal type <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L174-L206">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="174" data-line="179-201"><code class="language-ts">/**
+ * Returns the stored sha256 for the given artifact as raw hex, with the
+ * `sha256:` prefix stripped so it slots straight into `download()`.  Throws
+ * if the artifact has no recorded checksum.
+ */
+export function lookupChecksum(
+  context: DownloadContext,
+  name: keyof DependencyVersions,
+  artifactName: string,
+): string {
+  const entry = context.dependencies[name];
+
+  if (!entry) {
+    throw new Error(`Dependency &quot;${ name }&quot; is not present in ${ DEP_VERSIONS_PATH }.`);
+  }
+  const prefixed = entry.checksums?.[artifactName];
+
+  if (!prefixed) {
+    const available = Object.keys(entry.checksums ?? {}).sort().join(&#39;, &#39;) || &#39;(none)&#39;;
+
+    throw new Error(
+      `No checksum recorded for ${ name } artifact &quot;${ artifactName }&quot; in ${ DEP_VERSIONS_PATH }. ` +
+      `Available: ${ available }`,
+    );
+  }
+
+  return prefixed.slice(&#39;sha256:&#39;.length);
+}
+
+/**
+ * Downloads `url` to a temporary file, hashes it with sha256, and returns the
+ * prefixed checksum.  When `options.verify` is provided, also hashes the file
+ * with the given algorithm and confirms it matches the expected value;</code></pre>
+    <p>The function strips the <code>sha256:</code> prefix to fit <code>download()</code>&#39;s <code>expectedChecksum: string</code> shape, throwing away the type information that <code>Sha256Checksum</code> exists to preserve. Local enhancement: keep the prefixed value and let <code>download()</code> handle the strip, or change <code>download()</code> to accept <code>Sha256Checksum</code>. Minor.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> <code>downloadAndHash</code> deletes the temp artefact on logical error <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L204-L249">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="204" data-line="209-244"><code class="language-ts"> * Downloads `url` to a temporary file, hashes it with sha256, and returns the
+ * prefixed checksum.  When `options.verify` is provided, also hashes the file
+ * with the given algorithm and confirms it matches the expected value;
+ * rddepman uses this to cross-check upstream checksum files at bump time.
+ */
+export async function downloadAndHash(
+  url: string,
+  options: { verify?: { algorithm: &#39;sha256&#39; | &#39;sha512&#39;, expected: string | undefined } } = {},
+): Promise&lt;Sha256Checksum&gt; {
+  const workDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), &#39;rddepman-&#39;));
+  const tempPath = path.join(workDir, &#39;artifact&#39;);
+
+  try {
+    await download(url, tempPath, { overwrite: true, access: fs.constants.W_OK });
+
+    if (options.verify) {
+      if (!options.verify.expected) {
+        throw new Error(
+          `No upstream ${ options.verify.algorithm } checksum found for ${ url }. ` +
+          `The sidecar checksum file did not list this artifact (filename mismatch, ` +
+          `unsupported sidecar format, or missing entry).`,
+        );
+      }
+
+      const actual = await hashFile(tempPath, options.verify.algorithm);
+
+      if (actual !== options.verify.expected) {
+        throw new Error(
+          `Upstream checksum mismatch for ${ url }: ` +
+          `expected ${ options.verify.algorithm }:${ options.verify.expected }, got ${ options.verify.algorithm }:${ actual }`,
+        );
+      }
+    }
+
+    const sha256 = await hashFile(tempPath, &#39;sha256&#39;);
+
+    return `sha256:${ sha256 }`;
+  } finally {
+    await fs.promises.rm(workDir, { recursive: true, maxRetries: 10 });
+  }
+}
+
+/**
+ * Fetches a `sha256sum` or `sha512sum` file and returns a map from filename
+ * to raw hex checksum.  Recognises GNU `&lt;hex&gt; [* ]&lt;filename&gt;` and BSD
+ * `&lt;ALG&gt; (&lt;filename&gt;) = &lt;hex&gt;` line formats.  Indexes each entry by its</code></pre>
+    <p>The <code>finally</code> block deletes <code>workDir</code> after every exit, including the verification-mismatch throws at lines 220-225 and 230-235. The error message names the URL and the two hashes, but the maintainer has no way to inspect what was actually served — for a security-relevant helper, a downloaded HTML error page (200 OK with a benign <code>Content-Type</code>) would be silently discarded.</p>
+    <p>Fix: on mismatch, move the temp artefact to <code>os.tmpdir()/rddepman-mismatch-&lt;basename&gt;-&lt;timestamp&gt;</code> before throwing, and include that path in the error message. The <code>finally</code> removes only the empty <code>workDir</code> afterward.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> <code>download()</code> cache-hit path re-throws <code>EACCES</code> <span class="pill pill-claude">Claude</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/download.ts#L61-L92">scripts/lib/download.ts</a></div>
+      <pre data-start="61" data-line="66-87"><code class="language-ts">export async function download(url: string, destPath: string, options: DownloadOptions = {}): Promise&lt;void&gt; {
+  const expectedChecksum = options.expectedChecksum;
+  const overwrite = options.overwrite ?? false;
+  const access = options.access ?? fs.constants.X_OK;
+
+  if (!overwrite) {
+    try {
+      await fs.promises.access(destPath, access);
+      if (expectedChecksum) {
+        const actualChecksum = await hashFile(destPath, &#39;sha256&#39;);
+
+        if (actualChecksum === expectedChecksum) {
+          console.log(`${ destPath } already exists with expected checksum, not re-downloading.`);
+
+          return;
+        }
+        console.log(`${ destPath } exists but sha256 differs ([${ actualChecksum }] vs expected [${ expectedChecksum }]); re-downloading.`);
+      } else {
+        console.log(`${ destPath } already exists, not re-downloading.`);
+
+        return;
+      }
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {
+        throw ex;
+      }
+    }
+  }
+  console.log(`Downloading ${ url } to ${ destPath }...`);
+  await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
+  const response = await fetchWithRetry(url);
+</code></pre>
+    <p>If <code>destPath</code> exists but does not satisfy the access mask (typically because a previous run wrote it <code>0644</code> and this run wants <code>X_OK</code>), <code>fs.promises.access</code> throws <code>EACCES</code> and the download aborts. Pre-PR behaviour, but the cache-hit branch this PR added invites a reader to expect robust handling of stale state. One-line:</p>
+      <pre><code class="language-diff">-    if (ex.code !== &#39;ENOENT&#39;) {
++    if (ex.code !== &#39;ENOENT&#39; &amp;&amp; ex.code !== &#39;EACCES&#39;) {
+       throw ex;
+     }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> <code>MACOS_RUNNER</code> constant produces an HTTP failure rather than the clear bump message its comment implies <span class="pill pill-claude">Claude</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/lima.ts#L19-L33">scripts/dependencies/lima.ts</a></div>
+      <pre data-start="19" data-line="24-28"><code class="language-ts">  lookupChecksum,
+  Sha256Checksum,
+} from &#39;@/scripts/lib/dependencies&#39;;
+import { simpleSpawn } from &#39;@/scripts/simple_process&#39;;
+
+// Names the macOS runner that builds the rancher-desktop-lima darwin
+// archive.  Both `download()` and `getChecksums()` embed this token in
+// artifact filenames, so update it here when upstream bumps the runner
+// (e.g. `macos-16`).
+const MACOS_RUNNER = &#39;macos-15&#39;;
+
+export class Lima extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;lima&#39;;
+  readonly githubOwner = &#39;rancher-sandbox&#39;;
+  readonly githubRepo = &#39;rancher-desktop-lima&#39;;</code></pre>
+    <p>When upstream <code>rancher-sandbox/rancher-desktop-lima</code> rolls to <code>macos-16</code>, the next bumped tag will publish <code>lima.macos-16.{amd64,arm64}.tar.gz</code>; <code>getChecksums()</code> continues to request <code>lima.macos-15.*</code> and <code>fetchUpstreamChecksums()</code> 404s on the sidecar lookup. The commit&#39;s stated workflow (&quot;bump this constant when upstream updates&quot;) still works, but the failure mode is an HTTP error, not the runner-mismatch message the comment suggests.</p>
+    <p>Fix (follow-up): list the release assets at bump time and match the prefix <code>lima.macos-*.{amd64,arm64}.tar.gz</code>, falling back to the constant only at install time.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> <code>readDependencyManifest</code> accepts any <code>unknown</code> for <code>version</code> <span class="pill pill-claude">Claude</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L135-L148">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="135" data-line="140-143"><code class="language-ts">    const checksums: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const [file, value] of Object.entries(entry.checksums ?? {})) {
+      checksums[file] = parseSha256Checksum(value);
+    }
+    (manifest as any)[name] = {
+      version: entry.version,
+      checksums,
+    };
+  }
+
+  return manifest as DependencyManifest;
+}
+</code></pre>
+    <p><code>entry.version</code> is typed <code>unknown</code>. A future YAML edit that puts <code>version: [1, 2]</code> or <code>version: null</code> for a string-typed dependency parses without error; the failure surfaces deep in <code>download()</code> as a <code>[object Object]</code> or <code>undefined</code>-segmented URL. Adding a narrow guard here (<code>typeof === &#39;string&#39; || (typeof === &#39;object&#39; &amp;&amp; version !== null)</code>) names the offending key in the diagnostic.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> <code>fetchUpstreamChecksums</code> GNU regex matches any hex-prefixed line <span class="pill pill-claude">Claude</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/dependencies.ts#L254-L264">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="254" data-line="259"><code class="language-ts"> * `downloadAndHash` returns.
+ */
+export async function fetchUpstreamChecksums(url: string): Promise&lt;Record&lt;string, string&gt;&gt; {
+  const body = await getResource(url);
+  const result: Record&lt;string, string&gt; = {};
+  const gnuLine = /^([0-9a-fA-F]+)\s+\*?(.+?)\s*$/;
+  const bsdLine = /^[A-Z0-9]+\s*\((.+?)\)\s*=\s*([0-9a-fA-F]+)\s*$/;
+
+  for (const line of body.split(/\r?\n/)) {
+    let hex: string | undefined;
+    let fullName: string | undefined;</code></pre>
+    <p>A documentation line beginning with hex chars and whitespace would parse as a checksum entry. Bound the prefix to the sha1/sha256/sha512 family:</p>
+      <pre><code class="language-diff">-  const gnuLine = /^([0-9a-fA-F]+)\s+\*?(.+?)\s*$/;
++  const gnuLine = /^([0-9a-fA-F]{32,128})\s+\*?(.+?)\s*$/;</code></pre>
+    <p>Edge-case hardening; no current sidecar exhibits the pattern.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S11">
+        <span class="finding-num">S11.</span> WiX version retains a leading <code>v</code> while every other entry stores bare semver <span class="pill pill-claude">Claude</span><a href="#S11" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/pkg/rancher-desktop/assets/dependencies.yaml#L103-L115">pkg/rancher-desktop/assets/dependencies.yaml</a></div>
+      <pre data-start="103" data-line="108-110"><code class="language-yaml">    docker-credential-wincred-v0.9.6.windows-arm64.exe: sha256:4fb87b578809f718c28744da134729dc45a25668b0991281557605a4a2a317c8
+ECRCredentialHelper:
+  version: 0.12.0
+  checksums:
+    linux-amd64/docker-credential-ecr-login: sha256:a22ab6d59dbac777b8fb31984709461da00a4c778b6ae14c8d3729e8d5ded1a6
+    linux-arm64/docker-credential-ecr-login: sha256:5bdd30fb6c7a92462f5b454cce1aa906ca7926a6c2e39efad9613a7bf7661fac
+    darwin-amd64/docker-credential-ecr-login: sha256:c168e51ecfcc3a9e3704537da88bf65aa228d4223e80d363f9f346cde18af443
+    darwin-arm64/docker-credential-ecr-login: sha256:aa9e902a4dd80aa34ac0f753f6ab4723050b9d9846b07237ea56c5f814b9f457
+    windows-amd64/docker-credential-ecr-login.exe: sha256:1545d0c797ad7d539f0b85ef6c8702193a93764d537b01f93b55cefae994c9e1
+mobyOpenAPISpec:
+  version:
+    apiVersion: &quot;1.54&quot;
+    commit: 5c80a6e8264b09b309ccaf48ac08eef68ec4ccb6</code></pre>
+    <p>Pre-existing; the migration to compound entries was a natural moment to normalise the value and drop <code>WiX.versionToTagName</code>&#39;s special parsing. Skip if not worth the churn.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S12">
+        <span class="finding-num">S12.</span> <code>dependencies.yaml</code> lacks an in-file no-comments warning <span class="pill pill-claude">Claude</span><a href="#S12" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/pkg/rancher-desktop/assets/dependencies.yaml#L1-L6">pkg/rancher-desktop/assets/dependencies.yaml</a></div>
+      <pre data-start="1" data-line="1"><code class="language-ts">lima:
+  version: 1.2.1.rd2
+  checksums:
+    lima.macos-15.amd64.tar.gz: sha256:a07cb70ddf5d15c4b79b07fcada348390d6ef9657941d7b91d2b3dd2632d04a6
+    lima.macos-15.arm64.tar.gz: sha256:8de45e3f8b531c3fc0cd27274c2043c61e5ba3056ee1da3e8ada5b1fc73e177a
+    lima.linux.amd64.tar.gz: sha256:6d7c21dda20558bc2be1fe17015b86b9d48f05fa95a87288a78446e8a78f4a02</code></pre>
+    <p>The constraint is real (<code>Extension.updateManifest</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/extension-data.ts#L65-L71"><code>scripts/lib/extension-data.ts:65-71</code></a> deliberately uses string replace to <em>preserve</em> comments in <code>extension-data.yaml</code>, so the divergence is intentional). The warning lives only in the writer&#39;s JSDoc; a contributor adding a <code># bump after upstream fixes X</code> comment to the YAML will lose it on the next bump silently.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/lib/extension-data.ts#L60-L76">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="60" data-line="65-71"><code class="language-typescript">    // Extensions are pulled via `docker pull`, not downloaded as files.
+    return Promise.resolve({});
+  }
+
+  async updateManifest(newVersion: string, _newChecksums: Record&lt;string, Sha256Checksum&gt;): Promise&lt;Set&lt;string&gt;&gt; {
+    // We want to try to keep the YAML comments; so we do string replace instead.
+    const fileContents = await fs.promises.readFile(EXTENSION_PATH, &#39;utf-8&#39;);
+    const oldRef = `${ this.name }:${ await this.currentVersion }`;
+    const newRef = `${ this.name }:${ newVersion }`;
+    const newContents = fileContents.replaceAll(oldRef, newRef);
+
+    await fs.promises.writeFile(EXTENSION_PATH, newContents, &#39;utf-8&#39;);
+    await generateExtensionMarketplaceData();
+
+    return new Set([EXTENSION_PATH, EXTENSION_OUTPUT_PATH]);
+  }
+</code></pre>
+    <p>Fix: add a one-line header comment to the YAML file so the rule is visible at the point of editing:</p>
+      <pre><code class="language-yaml"># Comments in this file are stripped by the next rddepman bump.
+# Document non-obvious version pins in scripts/dependencies/&lt;name&gt;.ts instead.</code></pre>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <p>None this round.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <p><strong>D1. Round 2 review backlog cleared in one commit</strong> (in-scope) <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></p>
+    <p>Every Round 2 suggestion landed: S1 Moby comment (rewritten lines 117-123), S2 basename suppression (lines 283-301), S3 cache-hit checksum (lines 69-77 — see I1 for the regression introduced), S4 module-scoped cache (lines 443-450), S5 migration script removed, S6 <code>checksumAlgorithm</code> plumbing removed, S7 lookupChecksum error split, S8 <code>RawEntry.checksums?</code> typed optional, S9 alignment fixed. The sequencing was clean and the regressions are contained to the S3 fix&#39;s interaction with <code>codesign</code>.</p>
+    <p><strong>D2. Codesign verifies the upstream artefact before signing</strong> (in-scope) <span class="pill pill-codex">Codex</span></p>
+    <p><code>download()</code> hashes <code>tempPath</code> in lines 104-110 before the <code>chmod</code>/<code>rename</code>/<code>codesign</code> sequence at lines 111-131. The upstream-pinned sha256 is therefore verified against the as-downloaded bytes, not the post-signature variant — which is the right place to check. The follow-up gap is only on cache hit (I1).</p>
+    <p><em></em>D3. <code>getChecksums</code> returns <code>Sha256Checksum</code> template literals<em></em> (in-scope) <span class="pill pill-claude">Claude</span></p>
+    <p>The template-literal type <code>\</code>sha256:${ string }\<code></code> plus <code>parseSha256Checksum</code> constrain the on-disk shape at the type boundary. Type-system enforcement of the prefix is the correct way to keep encoding asymmetry (store with prefix, consume without) local to <code>lookupChecksum</code>.</p>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No tests added; pre-existing gap. The new surface area added by this PR is large (<code>parseSha256Checksum</code>, <code>readDependencyManifest</code>, <code>writeDependencyManifest</code>, <code>lookupChecksum</code>, <code>downloadAndHash</code>, <code>fetchUpstreamChecksums</code>, <code>hashFile</code>, plus the <code>download()</code> cache-hit branch) and <code>scripts/lib/__tests__/build-utils.spec.ts</code> already wires up the test infrastructure. Round 1 raised this; Round 2&#39;s resolution table marked it Skipped by author choice. Cheap, high-leverage scenarios remain (no change from Round 2):</p>
+    <ol>
+      <li><code>parseSha256Checksum</code> happy and reject cases.</li>
+      <li><code>fetchUpstreamChecksums</code> round-trip on GNU, GNU-binary, and BSD sidecars; path-prefixed entries; basename collision suppression; CRLF handling.</li>
+      <li><code>readDependencyManifest</code> round-trip with <code>writeDependencyManifest</code>.</li>
+      <li><code>lookupChecksum</code> <code>(none)</code> and &quot;Available: …&quot; branches.</li>
+      <li><code>download()</code> cache-hit checksum branch (absent / matching / stale). Would have caught I1 at unit-test time.</li>
+      <li><code>getChecksums</code> parity per dependency: assert <code>Object.keys(getChecksums(currentVersion))</code> equals <code>Object.keys(manifest[name].checksums)</code>. Catches the windows/arm64 asymmetry from S4 without hitting the network.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><code>scripts/lib/dependencies.ts</code> exports all carry useful JSDoc (<code>Sha256Checksum</code>, <code>parseSha256Checksum</code>, <code>lookupChecksum</code>, <code>downloadAndHash</code>, <code>fetchUpstreamChecksums</code>, the basename-aliasing rule).</li>
+      <li><code>MobyOpenAPISpec.rcompareVersions</code> comment now describes the actual rationale (immutable commit URL → no auto-bump for commit-only changes); Round 2 S1 fully addressed.</li>
+      <li><code>writeDependencyManifest</code> carries the no-comments warning, but the YAML file itself lacks an in-place reminder — see S12.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/lima.ts#L24-L28"><code>scripts/dependencies/lima.ts:24-28</code></a> (MACOS_RUNNER) understates the failure mode — see S8.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>WiX has no upstream checksum file</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/wix.ts#L33-L34"><code>scripts/dependencies/wix.ts:33-34</code></a>. Trust-on-first-use; consistent with the threat model.</li>
+      <li><strong>WasmShims has no upstream checksum file</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L597-L599"><code>scripts/dependencies/tools.ts:597-599</code></a>. Same trade-off.</li>
+      <li><em></em>DockerBuildx omits darwin from upstream <code>checksums.txt</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L208-L211"><code>scripts/dependencies/tools.ts:208-211</code></a>. Linked to upstream buildx#945. Linux/Windows entries still cross-check against the sidecar.</li>
+      <li><strong>Qemu does not yet publish linux/arm64</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/lima.ts#L119"><code>scripts/dependencies/lima.ts:119</code></a>. Mirrored by <code>Qemu.download</code>&#39;s early return.</li>
+      <li><strong>ECRCredHelper has no upstream checksum file</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9ef66aaca844543fecf3aa5bc74ee9f4d781e375/scripts/dependencies/tools.ts#L566-L567"><code>scripts/dependencies/tools.ts:566-567</code></a>. Bump-time digest only.</li>
+      <li><strong>sha256 vs upstream sha512</strong> — Round 1 PR thread (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176#discussion_r3149345601">discussion_r3149345601</a>) resolved in favour of unified sha256 at install time; the code matches.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>None. Round 1&#39;s open thread on splitting <code>DependencyVersions</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176#discussion_r3149342472">discussion_r3149342472</a>) is addressed by the unified <code>DependencyManifest</code> shape (Round 2 D1).</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Found the highest-volume issues this round (one Important, six Suggestions, plus the design strengths). The N+1 GitHub API call in <code>MobyOpenAPISpec.getAvailableVersions</code> (S2) required tracing <code>getAvailableVersions</code> → <code>latestVersion</code> → <code>rcompareVersions</code> to see that 34 of 35 commit lookups are discarded — a chain Round 2 missed when adopting D2. Two Important findings were downgraded during consolidation: I2 (no unit tests) is a Round 1/2 testing gap that Round 2 marked Skipped by author choice and folds into the Testing Assessment, and I3 (WiX/MobyOpenAPISpec parameter narrowing) is a soundness issue that the codebase has carried for AlpineLimaISO since before this PR — dropped after the regression-label gate.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Caught the Important regression of the round (I1, codesign + expectedChecksum interaction) and the related archive-helper gap (I2 → S1). The codesign finding is the cleanest example of &quot;the fix introduced a new failure mode&quot;: Round 2&#39;s S3 explicitly added the cache-hit hash check, and Codex was the only agent to trace it through the post-write <code>codesign</code> step. The archive-helper gap is real but Round 2 explicitly scoped it out, so consolidation demoted it to Suggestion.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Two findings, both verified. I1 (windows/arm64 asymmetry) is real asymmetry but hypothetical impact: the official build matrix sets <code>M1=1</code> only on <code>mac/aarch64</code>, so no shipping CI build hits the <code>lookupChecksum</code> failure path; pre-PR the same windows-arm64 request would have failed at upstream sidecar lookup if the artefact was missing. Demoted to Suggestion S4 with the observation that some peer dependencies (<code>DockerCompose</code>, <code>DockerProvidedCredHelpers</code>) do record windows/arm64. S1 (uppercase regex) is a legitimate maintainability nit. Coverage was thinner than the other two agents — 16/17 files marked &quot;Reviewed, no issues&quot; with two findings total — but each finding was correct.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>16m 51s</td><td>5m 42s</td><td>11m 07s</td></tr>
+        <tr><td>Findings</td><td>1I 6S</td><td>1I 1S</td><td>2S</td></tr>
+        <tr><td>Tool calls</td><td>42 (Bash 19, Read 14, Grep 8)</td><td>41 (shell 41)</td><td>26 (run<em>shell</em>command 16, grep<em>search 7, read</em>file 3)</td></tr>
+        <tr><td>Design observations</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>6</td><td>2</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>17</td><td>17</td><td>17</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 6S</strong></td><td><strong>1I 1S</strong></td><td><strong>2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>3 (I→S)</td><td>1 (I→S)</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>1</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <h3 id="reconciliation">Reconciliation <a href="#reconciliation" class="pilcrow">&#182;</a></h3>
+    <p>Severity changes during consolidation:</p>
+    <ul>
+      <li>Codex pass-1 I2 (archive helpers skip on cache hit): Important → Suggestion S1. Round 2&#39;s S3 explicitly scoped the archive-helper gap out of the cache-hit fix; the verified artefact is the archive, not the extracted file, so addressing it requires a sidecar stamp rather than a one-line guard.</li>
+      <li>Gemini pass-1 I1 (windows/arm64 missing): Important → Suggestion S4. Hypothetical impact only — the official <code>package.yaml</code> matrix does not exercise the <code>M1=1</code>-on-Windows path, and pre-PR <code>findChecksum</code> would have failed for the same missing-upstream case.</li>
+      <li>Claude pass-1 I1 (N+1 GitHub API calls): Important → Suggestion S2. Bump-time only, capped by the existing throttle handler; inefficiency rather than user-facing failure.</li>
+      <li>Claude pass-1 I2 (no unit tests): Important → Testing Assessment. Round 1/2 gap, marked Skipped by author choice in Round 2&#39;s resolution.</li>
+      <li>Claude pass-1 I3 (WiX/MobyOpenAPISpec parameter narrowing): dropped. Pre-existing soundness pattern (AlpineLimaISO in the base) and not reachable in practice — rddepman dispatches each dependency to its own typed <code>latestVersion</code>/<code>rcompareVersions</code>. The PR adds two more sites of the same pattern but introduces no new failure mode.</li>
+      <li>Claude pass-1 I4 (no-comments policy): Important → Suggestion S12. Documentation gap, not a code defect.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>Add to the review dimensions a sub-bullet under &quot;Backwards compatibility / regressions&quot;: <em>When a prior round&#39;s fix added a new check, look for paths where the post-write state differs from the as-downloaded state (codesigning, chmod, in-place rewrites). The check sees the post-write bytes and may mismatch a digest recorded over the as-downloaded bytes.</em></li>
+    </ul>
+    <p>  <em>Why this generalises:</em> the rancher-desktop fix exposed the   pattern through a single agent (Codex) tracing <code>download()</code> past   the cache-hit hash to the trailing <code>codesign</code> call. The underlying   shape is broader — any helper that hashes a destination it later   mutates will produce the same false-mismatch loop. Common shapes:   setuid bits added after install, locale-baked binaries patched   in-place, install-time symlink rewriting.</p>
+    <p><strong>Repo context updates</strong></p>
+    <p>None this round. Round 2&#39;s repo-context suggestion about tracing helper scripts through new types was accepted into the context file and applied here implicitly — <code>populate-dependency-checksums.ts</code> deletion was traced as part of the Round 2 carry-through check.</p>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
