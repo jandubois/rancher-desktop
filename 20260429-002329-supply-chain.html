@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Supply Chain Scan: 20260429-002329-supply-chain</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Supply Chain Scan: 20260429-002329-supply-chain</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-04-29 00:28</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Branch</td><td><code>rddepman-digests</code> @ <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/93e43cf1d"><code>93e43cf1d</code></a></td></tr>
+      <tr><td>Kind</td><td>Supply chain scan</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">22 open issues</span> &mdash; (1 high, 9 medium, 12 advisory) — strong custom-manifest pinning, but several inline downloads and self-fetches still unverified</td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <table class="summary-table">
+      <thead><tr><th>Ecosystem</th><th>Items</th><th>Pinned</th><th>Open issues</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Go modules</td><td>12 modules</td><td>9 with <code>go.sum</code>; workspace <code>go.work.sum</code> present</td><td>0</td><td>Dependabot ✓ — gomod</td></tr>
+        <tr><td>Node (Yarn-berry)</td><td>1 root + 1 nested package.json</td><td><code>yarn.lock</code> (1607/1694 descriptors carry checksums)</td><td>1 advisory</td><td>Dependabot ✓ — npm; nested manifest covered by parent</td></tr>
+        <tr><td>Python (pip)</td><td>1 <code>requirements.txt</code></td><td>0 hashed</td><td>1 (test fixture)</td><td>No bot</td></tr>
+        <tr><td>GitHub Actions</td><td>109 <code>uses:</code> references</td><td>84 SHA-pinned, 25 local/docker</td><td>0</td><td>Dependabot ✓ — github-actions</td></tr>
+        <tr><td>Workflow tokens</td><td>25 <code>permissions:</code> declarations</td><td>—</td><td>8 missing block + several broad scopes</td><td>—</td></tr>
+        <tr><td>Container images</td><td>1 Dockerfile (4 FROMs) + 1 k8s manifest</td><td>0 digest-pinned</td><td>4 (test fixtures)</td><td>—</td></tr>
+        <tr><td>Submodules</td><td>4 (bats-core/*)</td><td>All gitlink-pinned by git</td><td>0</td><td>—</td></tr>
+        <tr><td>Custom manifest</td><td><code>pkg/rancher-desktop/assets/dependencies.yaml</code> (25 entries)</td><td>22 with sha256 + lookupChecksum at every call site</td><td>2 (delegate paths)</td><td>Bumped daily by <code>rddepman.yaml</code></td></tr>
+        <tr><td>Inline downloads</td><td>6 candidate URLs</td><td>0 verified</td><td>6</td><td>—</td></tr>
+        <tr><td>Run-from-network</td><td>4 commands</td><td>2 pinned (Go module proxy)</td><td>2 floating</td><td>—</td></tr>
+        <tr><td><code>git clone</code> in scripts</td><td>1</td><td>0 SHA-pinned</td><td>1 (tag-pinned)</td><td>—</td></tr>
+        <tr><td>Tool archive installs</td><td>2 (<code>spin templates install --tar</code>)</td><td>0 verified</td><td>2 + falls back to <code>main</code></td><td>—</td></tr>
+        <tr><td>Self-fetch from own remote</td><td>1 unpinned</td><td>—</td><td>1 (<code>main</code> branch)</td><td>—</td></tr>
+        <tr><td>Insecure transport</td><td>1 (localhost dev)</td><td>—</td><td>1 advisory</td><td>—</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <hr>
+    <h2 id="pinned-dependencies" class="section-design">Pinned dependencies <a href="#pinned-dependencies" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="go-modules">Go modules <a href="#go-modules" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>12 modules listed in <code>go.work</code>; <code>go.work.sum</code> present (9 modules carry their own <code>go.sum</code>; the two zero-require modules <code>extension-proxy</code> and <code>spin-stub</code> legitimately have no <code>go.sum</code>).</li>
+      <li>One <code>replace</code> directive in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/src/go/guestagent/go.mod#L120"><code>src/go/guestagent/go.mod:120</code></a>: <code>github.com/lima-vm/lima =&gt; github.com/rancher-sandbox/lima v1.0.3-0.20250115235144-24eb898b3a96</code> — a pseudo-version, hash-verified via <code>go.sum</code>.</li>
+    </ul>
+    </div>
+    <div class="card card-design">
+    <h3 id="node-yarn-berry">Node (Yarn-berry) <a href="#node-yarn-berry" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Single committed lockfile (<code>yarn.lock</code>, yarn-berry, 1607 <code>checksum:</code> lines across 1694 descriptors) with <code>--immutable</code> enforced in CI.</li>
+      <li>The 87-descriptor gap consists of platform-conditioned <code>@esbuild/*</code> entries (e.g. <code>@esbuild/aix-ppc64@npm:0.27.1</code> carries <code>conditions: os=aix &amp; cpu=ppc64</code>); yarn-berry never installs them on this platform, so the missing <code>checksum:</code> is benign. (See retro R2.)</li>
+      <li><code>.yarnrc.yml</code> sets <code>enableScripts: false</code>.</li>
+      <li>Nested <code>pkg/rancher-desktop/sudo-prompt/package.json</code> is covered by the root lockfile.</li>
+    </ul>
+    </div>
+    <div class="card card-design">
+    <h3 id="github-actions">GitHub Actions <a href="#github-actions" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>All 109 <code>uses:</code> references are either SHA-pinned with a <code># vX.Y.Z</code> comment or local-action / <code>docker://</code> references. <em></em>Zero unpinned <code>uses:</code> lines.<em></em></li>
+    </ul>
+    </div>
+    <div class="card card-design">
+    <h3 id="custom-manifest-dependencies-yaml">Custom manifest (`dependencies.yaml`) <a href="#custom-manifest-dependencies-yaml" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>22 of 25 entries carry a populated <code>checksums:</code> block keyed by upstream filename. Every download path under <code>scripts/dependencies/*.ts</code> calls <code>lookupChecksum()</code> (which throws on missing entries) and feeds the result to <code>download({ expectedChecksum })</code>, which sha256-verifies the bytes. <code>downloadAndHash()</code> additionally cross-checks against the upstream sidecar at bump time.</li>
+      <li>The manifest is updated daily by <code>.github/workflows/rddepman.yaml</code>.</li>
+      <li>The 3 entries with empty <code>checksums: {}</code> (<code>golangci-lint</code>, <code>check-spelling</code>, <code>spinKubePlugin</code>) document themselves as no-op delegates; the actual fetch happens elsewhere — see Open Issues for the two that are not separately verified.</li>
+    </ul>
+    </div>
+    <div class="card card-design">
+    <h3 id="submodules">Submodules <a href="#submodules" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Four submodules under <code>bats/</code> (<code>bats-core</code>, <code>bats-assert</code>, <code>bats-support</code>, <code>bats-file</code>) — gitlink-pinned by git design. <code>branch = master</code> is set but no <code>update = none/remote</code> and no CI auto-roll job; pinned.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="open-issues" class="section-critical">Open issues <a href="#open-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <h3 id="high-curl-bash-equivalents-and-self-fetches-from-a-moving-ref">High — `curl | bash` equivalents and self-fetches from a moving ref <a href="#high-curl-bash-equivalents-and-self-fetches-from-a-moving-ref" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/scripts/windows-setup.ps1#L49"><code>scripts/windows-setup.ps1:49</code></a><em></em> — <code>Invoke-WebRequest -UseBasicParsing -Uri &#39;https://get.scoop.sh&#39; | Invoke-Expression</code>. PowerShell equivalent of <code>curl … | sh</code>; whoever controls <code>get.scoop.sh</code> gets arbitrary code execution on the developer machine. Pin the URL to a 40-hex commit on the scoop installer repo, download to disk, verify a stored sha256, then execute. (See wiki §3.5; PowerShell threat model identical to shell.)</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/scripts/windows-setup.ps1#L74"><code>scripts/windows-setup.ps1:74</code></a><em></em> — fetches <code>install-wsl.ps1</code>, <code>restart-helpers.ps1</code>, <code>sudo-install-wsl.ps1</code>, <code>uninstall-wsl.ps1</code> from <code>https://raw.githubusercontent.com/rancher-sandbox/rancher-desktop/main/scripts/windows/$file</code>. The <code>main</code> branch is mutable; anyone with push access controls these bytes. Replace with a relative path (these files live next to the caller) or pin to a 40-hex SHA.</li>
+    </ul>
+    </div>
+    <div class="card card-critical">
+    <h3 id="medium-unverified-inline-downloads-version-pinned-no-digest">Medium — unverified inline downloads (version-pinned, no digest) <a href="#medium-unverified-inline-downloads-version-pinned-no-digest" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><code>resources/setup-spin:38-43</code><em></em> — <code>spin templates install --update --tar https://github.com/spinframework/${repo}/archive/refs/tags/${SPIN_TEMPLATES_TAG}.tar.gz</code>, with a fallback to <code>…/refs/heads/main.tar.gz</code> on failure. The pinned-tag→fallback-to-main pattern actively undermines the pinning — a transient network error or a tag deletion silently degrades to the unpinned path. Drop the <code>main</code> fallback; make tag retrieval failure fatal. Track the tarball sha256 in <code>dependencies.yaml</code> (the <code>spinKubePlugin</code> entry already has an empty <code>checksums: {}</code> block ready to populate).</li>
+      <li><em></em><code>resources/setup-spin:53-59</code><em></em> — <code>spin plugins install --yes --url &quot;https://github.com/spinframework/spin-plugins/raw/refs/heads/main/manifests/${plugin}/${plugin}@${version}.json&quot;</code>, with a fallback to the unversioned <code>${plugin}.json</code>. Branch-pinned to <code>main</code>; mutable. The plugin manifest itself dictates what binary <code>spin plugins install</code> downloads, so compromise of the manifest is full RCE on the user&#39;s machine. Fetch from a tagged release URL or vendor the manifest bytes; verify a digest before passing the URL to <code>spin plugins install</code>.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/scripts/windows/install-wsl.ps1#L39"><code>scripts/windows/install-wsl.ps1:39</code></a><em></em> — <code>Invoke-WebRequest -Uri https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -OutFile $wslMsiFile</code>; <code>msiexec /i$wslMsiFile</code>. MSI is run with admin privileges with no signature/digest check beyond Windows&#39; built-in code-signing. Either record a sha256 in <code>dependencies.yaml</code> and verify before <code>msiexec</code>, or assert <code>Get-AuthenticodeSignature</code> reports <code>Valid</code> for a Microsoft signing chain.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/actions/setup-environment/action.yaml#L45-L46"><code>.github/actions/setup-environment/action.yaml:45-46</code></a><em></em> — <code>curl --location --output &quot;$bindir/yq.exe&quot; https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_windows_amd64.exe</code>. Version pinned, no digest. Pin a sha256 (yq publishes a <code>checksums.txt</code> sidecar at the same release) and <code>sha256sum -c</code> after download, or move yq to <code>dependencies.yaml</code>.</li>
+      <li><em></em><code>bats/Makefile:39, 44</code><em></em> — <code>wget --no-verbose $(JQ_URL)/jq-osx-amd64</code>, <code>wget --no-verbose $(JQ_URL)/jq-linux64</code>. <code>JQ_VERSION</code> defaults to <code>1.7.1</code>. jq publishes a sha256 sidecar (<code>sha256sum.txt</code>); add a <code>sha256sum --check</code> step after each <code>wget</code>.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/test.yaml#L20"><code>.github/workflows/test.yaml:20</code></a><em></em> — <code>go install mvdan.cc/sh/v3/cmd/shfmt@latest</code>. Floating <code>@latest</code>; even though Go module proxy hash-verifies on fetch, the version itself is unpinned. Pin a concrete version (<code>@v3.x.y</code>) or add <code>shfmt</code> to <code>dependencies.yaml</code> so <code>rddepman</code> keeps it current.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/bats/scripts/ghcr-mirror.sh#L43"><code>bats/scripts/ghcr-mirror.sh:43</code></a><em></em> + <em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/bats/tests/helpers/images.bash#L11"><code>bats/tests/helpers/images.bash:11</code></a><em></em> — <code>IMAGES=(alpine busybox nginx python python:3.9-slim ruby tonistiigi/binfmt registry:2.8.1)</code> — most entries are bare image names (floating <code>:latest</code>); <code>skopeo copy --all &quot;docker://$IMAGE&quot; &quot;docker://$GHCR_REPO/$IMAGE&quot;</code>. The mirror runs ad-hoc, so the tests subsequently consume whatever was on Docker Hub at mirror time. Pin every entry to <code>image:tag@sha256:&lt;digest&gt;</code>; <code>skopeo</code> copies digests transparently.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/scripts/spelling.sh#L66"><code>scripts/spelling.sh:66</code></a><em></em> — <code>git -c advice.detachedHead=false clone --branch &quot;$version&quot; --depth 1 &quot;$repo&quot; &quot;$checkout&quot;</code> against <code>https://github.com/check-spelling/check-spelling</code>. Tag-pinned, not SHA-pinned; <code>--depth 1 --branch &lt;tag&gt;</code> makes a later upgrade-to-SHA require a re-clone. Replace <code>$version</code> with a 40-hex SHA from <code>dependencies.yaml</code> (the <code>check-spelling</code> entry has an empty <code>checksums: {}</code> block — populate it with the commit SHA, e.g. as a sidecar <code>commit:</code> field).</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/smoke-test.yaml#L66"><code>.github/workflows/smoke-test.yaml:66</code></a><em></em> — <code>curl -L -o rancher-desktop.AppImage &quot;${OBS_DOWNLOAD_URL}${artifact_name}&quot;</code>. The next line is <code>sha512sum rancher-desktop.AppImage &gt; rancher-desktop.AppImage.sha512sum</code> — a self-hash, not authentication. The artifact name is queried from the OBS index seconds before; an attacker who can swap the index can swap the binary. Either generate the sha512sum at OBS publish time and verify it here, or sign the AppImage and verify with <code>cosign verify-blob</code> / <code>gpg --verify</code>.</li>
+    </ul>
+    </div>
+    <div class="card card-critical">
+    <h3 id="medium-token-permissions">Medium — token permissions <a href="#medium-token-permissions" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>8 workflows lack a top-level <code>permissions:</code> block<em></em> (<code>kind: missing</code>): <code>codeql.yaml</code>, <code>docker-cli-monitor.yaml</code>, <code>linux-e2e.yaml</code>, <code>linux-release.yaml</code>, <code>macM1-e2e.yaml</code>, <code>package.yaml</code>, <code>screenshot.yaml</code>, <code>windows-e2e.yaml</code>. The default <code>GITHUB_TOKEN</code> for these repos has broad write scopes; without an explicit block the workflow runs with whatever the org default grants. Add <code>permissions: read-all</code> at the workflow level and grant per-job <code>write</code> only where needed.</li>
+      <li><em></em>Sensitive <code>write</code> scopes<em></em> on workflow- or job-level (<code>kind: sensitive-write</code>): <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/k3s-versions.yaml#L8"><code>k3s-versions.yaml:8</code></a> (<code>contents</code>), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/rddepman.yaml#L8"><code>rddepman.yaml:8</code></a> (<code>contents</code>), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/rdx-host-api-tests.yaml#L11"><code>rdx-host-api-tests.yaml:11</code></a> (<code>packages</code>), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/release-merge-to-main.yaml#L32"><code>release-merge-to-main.yaml:32</code></a> (<code>contents</code>), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/scorecard.yml#L26"><code>scorecard.yml:26</code></a> (<code>id-token</code>), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/smoke-test.yaml#L24"><code>smoke-test.yaml:24</code></a> (<code>contents</code>), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/upgrade-generate.yaml#L56"><code>upgrade-generate.yaml:56</code></a> (<code>contents</code>, declared at both workflow and job level), <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/yarn-dedupe.yaml#L9"><code>yarn-dedupe.yaml:9</code></a> (<code>contents</code>). Several are legitimate (the bot workflows have to push branches and open PRs); consolidate at the job level rather than the workflow level so unrelated jobs in the same workflow stay read-only.</li>
+    </ul>
+    </div>
+    <div class="card card-critical">
+    <h3 id="advisory">Advisory <a href="#advisory" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Corepack <code>packageManager</code> not hash-pinned<em></em> — <code>package.json</code> declares <code>&quot;packageManager&quot;: &quot;yarn@4.14.1&quot;</code>. Adding <code>+sha1.&lt;hex&gt;</code> (corepack supports it) verifies the yarn binary itself before execution.</li>
+      <li><strong>Test-fixture container images</strong> — <code>bats/tests/extensions/testdata/Dockerfile:1,6,12</code> (<code>registry.suse.com/bci/golang:latest</code> ×2, <code>registry.suse.com/bci/bci-minimal:16.0</code>) and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/e2e/assets/k8s-deploy-sample/nginx-sample-app.yaml#L19"><code>e2e/assets/k8s-deploy-sample/nginx-sample-app.yaml:19</code></a> (<code>image: nginx:latest</code>). Test scope, but pinning to <code>image:tag@sha256:&lt;digest&gt;</code> is cheap insurance and avoids flakiness when an upstream tag rolls.</li>
+      <li><em></em>Dockerfile FROM <code>${VAR}</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/bats/tests/compose/testdata/Dockerfile.nginx#L2"><code>bats/tests/compose/testdata/Dockerfile.nginx:2</code></a> and <code>bats/tests/compose/testdata/app/Dockerfile:2</code>. <code>${IMAGE_NGINX}</code>/<code>${IMAGE_PYTHON}</code> resolve via <code>bats/tests/helpers/images.bash</code>; pinning needs to happen at the helper (see ghcr-mirror open issue), not in the Dockerfiles themselves.</li>
+      <li><em></em>Test-fixture <code>requirements.txt</code> without hashes<em></em> — <code>bats/tests/compose/testdata/app/requirements.txt</code>; one unhashed dep, used inside a docker-compose test image. Still produces an unverified download every CI run.</li>
+      <li><strong>Floating Python major</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/actions/yarn-install/action.yaml#L27"><code>.github/actions/yarn-install/action.yaml:27</code></a>: <code>python-version: &#39;3.x&#39;</code>. Used only to install <code>setuptools</code>; pin to a concrete minor (the host Python toolchain is otherwise unused).</li>
+      <li><strong>Self-fetch of own release zip</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/linux-release.yaml#L36"><code>.github/workflows/linux-release.yaml:36</code></a>: <code>curl -L -o &quot;dist/${release_zip_name}&quot; &quot;https://github.com/${repository}/releases/download/${version_with_v}/${release_zip_name}&quot;</code>. Self-fetch from a tag-pinned URL; the bytes are the release we just published. Adding a sha512sum sidecar verification would be defense-in-depth against an attacker who can replace release assets without changing the tag.</li>
+      <li><em></em><code>gh release download</code> without verifier<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/workflows/smoke-test.yaml#L48-L55"><code>.github/workflows/smoke-test.yaml:48-55</code></a>: downloads <code>*.dmg</code>, <code>*.msi</code>, <code>rancher-desktop-linux-*.zip</code> and their <code>.sha512sum</code> sidecars but never runs <code>sha512sum -c</code>. The artifacts are then re-uploaded via <code>actions/upload-artifact@…</code>. Add a <code>sha512sum --check</code> step before re-upload.</li>
+      <li><em></em><code>dnf install</code> from a &quot;latest&quot; URL<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/.github/actions/setup-environment/action.yaml#L95"><code>.github/actions/setup-environment/action.yaml:95</code></a>: <code>dnf install --assumeyes &quot;https://dl.fedoraproject.org/pub/epel/epel-release-latest-${VERSION_ID%%.*}.noarch.rpm&quot;</code>. dnf signature-checks the package against the Fedora signing chain, but the URL itself is <code>latest</code>. Acceptable in CI because dnf authenticates the bytes regardless; flagged for completeness.</li>
+      <li><strong>Insecure transport — local dev plugins server</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/scripts/dev.ts#L67"><code>scripts/dev.ts:67</code></a>: <code>agent: new https.Agent({ rejectUnauthorized: false })</code>. Used only when <code>RD_ENV_PLUGINS_DEV</code> is set, against <code>https://localhost:8888/home</code>. Localhost-scoped — accept this and document the constraint, or fix the dev cert chain.</li>
+      <li><em></em>No bot coverage for <code>pip</code> requirements<em></em> — <code>bats/tests/compose/testdata/app/requirements.txt</code> is not in <code>dependabot.yml</code>. Low-risk because it is test scope, but a <code>package-ecosystem: pip</code> entry is one line.</li>
+      <li><strong>Custom manifest delegate paths surface as the two empty-checksum issues above</strong> — <code>golangci-lint</code> (verified via <code>go run …@v${ver}</code> and <code>scripts/go.sum</code>) is fine; the other two need fixing as described.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="retro-dependency-types-not-explicitly-covered">Retro: dependency types not explicitly covered <a href="#retro-dependency-types-not-explicitly-covered" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>R1. <em></em>PowerShell <code>IWR | iex</code> with multi-line continuation goes undetected.<em></em> The script&#39;s <code>curl_bash_equivalents[]</code> is empty even though <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/93e43cf1dc2c139b942846da627075ff7ecd95a7/scripts/windows-setup.ps1#L49-L50"><code>scripts/windows-setup.ps1:49-50</code></a> clearly contains the pattern:</p>
+      <pre><code class="language-powershell">Invoke-WebRequest -UseBasicParsing -Uri &#39;https://get.scoop.sh&#39; `
+    | Invoke-Expression</code></pre>
+    <p>The trailing backtick splits the pipeline across two lines; the script&#39;s regex appears to require both halves on the same line. <strong>Proposed change:</strong> before pattern matching, concatenate lines whose previous line ends in <code></code> <code> </code><code> (PowerShell line-continuation), then run the existing detector. Alternatively, add a second pass that finds </code>Invoke-WebRequest<code>/</code>iwr<code> references and looks ahead up to ~3 lines for a </code>| Invoke-Expression<code>/</code>| iex` consumer.</p>
+    <p>R2. <em></em>Yarn-berry <code>conditions:</code> filtering treated as missing-integrity.<em></em> The script reports 87 descriptors as <code>missing_integrity</code> in <code>yarn.lock</code>, but every one of them is a platform-specific optional dep gated by <code>conditions: os=X &amp; cpu=Y</code> and never installed on the host platform — yarn-berry intentionally omits the <code>checksum:</code> line in that case. <strong>Proposed change:</strong> when walking yarn-berry blocks, skip entries whose body contains <code>conditions:</code>. Optionally surface them under a separate <code>platform_conditioned: &lt;count&gt;</code> key so the report can mention them without flagging.</p>
+    <p>R3. <strong>Custom-manifest no-op delegates aren&#39;t traced automatically.</strong> The script reports <code>empty_checksum_blocks: 3</code> and lists the entry names, but stops there. In this scan I had to grep manually (<code>scripts/dependencies/tools.ts</code>) to find that the three entries delegate to <code>go run</code>, <code>scripts/spelling.sh</code>, and <code>resources/setup-spin</code>. <strong>Proposed change:</strong> when an entry name has an empty checksum block, look for a same-name class in the repo&#39;s dependency-management directory (<code>scripts/dependencies/*.ts</code> here, but configurable) and surface the <code>download()</code> body — when it is <code>Promise.resolve()</code>, find string literals that look like script paths (<code>scripts/*.sh</code>, <code>resources/*</code>) and emit them as <code>delegate: &lt;path&gt;</code> so Phase 2 can inline-download-rule them straight away.</p>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
