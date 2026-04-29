@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260428-210028-pr-10176</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260428-210028-pr-10176</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-04-28 21:00</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>7</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176" class="gh-ref" data-title="rddepman: record and verify artifact digests in dependencies.yaml" data-state="open" data-type="pr">#10176</a> — rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/77ca4a907"><code>77ca4a907</code></a> rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; Round 6&#39;s S1, S2, S3 (5 callsites), S6, S12, and S13 all landed; no critical or important issues survive consolidation. The remaining surface is Suggestion-grade polish, and every prior-round Skipped item stays Skipped.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>45 min 32 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 7 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/77ca4a907"><code>77ca4a907</code></a>) clears most of Round 6&#39;s suggestion list: <code>Moproxy.download</code> adds <code>-y</code> to <code>7z e</code> with a comment naming the partial-failure-retry hang it prevents (S1), <code>MobyOpenAPISpec.getAvailableVersions</code> introduces an internal <code>Candidate</code> type and materialises the <code>commit: &#39;&#39;</code> placeholder at the return boundary with a comment pointing at <code>latestVersion</code>&#39;s real-commit resolution (S2), the five <code>getChecksums</code> paths flagged for missing inline comments now each carry the &quot;upstream does not publish a checksum file&quot; one-liner (S3, ECRCredHelper / Moproxy / WSLDistro / CertManager / SpinOperator), <code>download()</code>&#39;s EACCES catch is dropped so the original error surfaces at the cache-check site (S6), <code>Sha256Checksum</code> and <code>parseSha256Checksum</code> JSDocs document the lowercase normalisation (S12), and <code>MANIFEST_HEADER</code> plus the live <code>dependencies.yaml</code> header now describe the compound-entry workflow and the hand-edit-must-recompute caveat (S13).</p>
+    <p>Codex raised one Important about <code>RancherDashboard.download</code> rm&#39;ing the existing extracted directory before <code>download()</code> succeeds; verified false-positive in conversation: the rm runs only when <code>stamp !== expectedChecksum</code>, which means the existing tree is by definition the wrong content, so preserving it would just leave a stale directory the cache check would refuse next time anyway. Claude raised four Important findings; one is resolved per Round 6&#39;s Resolution table (<code>getAvailableVersions</code> placeholder), one is a structural false positive (<code>MobyOpenAPISpec</code> extends <code>VersionedDependency</code> directly so the base <code>versionToTagName</code> is not on its chain at all), one is a Round 5/6 carry-over the author has already declined via inline comment (<code>downloadTarGZ</code>/<code>downloadZip</code> re-extract), and one is a theoretical codesign-cache-target concern in a developer-trusted tree that demotes to Suggestion. Gemini found nothing actionable.</p>
+    <p>What survives: six Suggestions (one carry-from-Claude-Important plus five fresh ones), the design observation about <code>DependencyVersions</code>/<code>DependencyManifest</code> parallel structures still being unresolved feedback, and the existing slate of Round 6 Skipped items as Acknowledged Limitations.</p>
+    <p>Verdict: merge as-is. The PR is at the polish ceiling for this scope.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>readDependencyManifest</code> accepts any non-array object as the version field, deferring shape validation to download time <span class="pill pill-claude">Claude</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/lib/dependencies.ts#L126-L163">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="126" data-line="131-158"><code class="language-ts">  version:    unknown;
+  checksums?: Record&lt;string, unknown&gt;;
+}
+
+/** Reads `dependencies.yaml` into the typed compound manifest. */
+export async function readDependencyManifest(path: string): Promise&lt;DependencyManifest&gt; {
+  const raw: Record&lt;string, RawEntry&gt; = YAML.parse(await fs.promises.readFile(path, &#39;utf-8&#39;));
+  const manifest: Partial&lt;DependencyManifest&gt; = {};
+
+  for (const [name, entry] of Object.entries(raw)) {
+    if (!entry || typeof entry !== &#39;object&#39; || !(&#39;version&#39; in entry)) {
+      throw new Error(`Entry ${ name } in ${ path } is missing a &quot;version&quot; field`);
+    }
+    const version = entry.version;
+    const valid = typeof version === &#39;string&#39; ||
+      (typeof version === &#39;object&#39; &amp;&amp; version !== null &amp;&amp; !Array.isArray(version));
+
+    if (!valid) {
+      throw new Error(`Entry ${ name } in ${ path } has invalid version ${ JSON.stringify(version) }; expected a string or { apiVersion, commit }`);
+    }
+    const checksums: Record&lt;string, Sha256Checksum&gt; = {};
+
+    for (const [file, value] of Object.entries(entry.checksums ?? {})) {
+      checksums[file] = parseSha256Checksum(value);
+    }
+    (manifest as any)[name] = {
+      version,
+      checksums,
+    };
+  }
+
+  return manifest as DependencyManifest;
+}
+
+/**
+ * Writes the manifest to disk in compound-entry form.  Always emits a
+ * leading header comment so contributors editing the YAML directly see
+ * the warning where they are editing; everything else round-trips</code></pre>
+    <p>A hand-edit that produces e.g. <code>lima.version: { foo: &#39;bar&#39; }</code> parses cleanly, then surfaces several layers later as a 404 with <code>[object Object]</code> in the URL. The compound shape is documented in the new <code>MANIFEST_HEADER</code>, but the parser does not enforce it.</p>
+    <p>Fix: dispatch on <code>name</code> and validate the expected per-key shape (e.g., for <code>mobyOpenAPISpec</code>, require <code>apiVersion</code> is a string and <code>commit</code> matches <code>/^[0-9a-f]{40}$/i</code>). The <code>commit</code> regex already lives at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/moby-openapi.ts#L32"><code>scripts/dependencies/moby-openapi.ts:32</code></a>; pulling it up to the parser catches the bad entry where the user is editing rather than where the URL fetch fails.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>downloadAndHash</code> writes mismatch bytes to a fixed path in <code>os.tmpdir()</code>, colliding silently across distinct URLs with the same basename <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/lib/dependencies.ts#L252-L273">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="252" data-line="257-268"><code class="language-ts">
+      const actual = options.verify.algorithm === &#39;sha256&#39;
+        ? sha256
+        : await hashFile(tempPath, options.verify.algorithm);
+
+      if (actual !== options.verify.expected) {
+        // Preserve the bytes outside workDir before the finally cleanup
+        // removes them, so the maintainer can inspect what was served
+        // (often an HTML error page or a CDN redirect, not the artifact).
+        const basename = path.basename(new URL(url).pathname) || &#39;artifact&#39;;
+        const keepPath = path.join(os.tmpdir(), `rddepman-mismatch-${ basename }`);
+
+        await fs.promises.copyFile(tempPath, keepPath);
+        throw new Error(
+          `Upstream checksum mismatch for ${ url }: ` +
+          `expected ${ options.verify.algorithm }:${ options.verify.expected }, got ${ options.verify.algorithm }:${ actual }. ` +
+          `Received bytes saved to ${ keepPath } for inspection.`,
+        );
+      }
+    }
+
+    return `sha256:${ sha256 }`;</code></pre>
+    <p>A repeated run against the same URL overwrites the prior file (good), but two distinct URLs that happen to share <code>basename</code> (<code>checksums.txt</code> is a common one) overwrite each other. The error message names the keep-path, so a maintainer triaging two mismatches in sequence finds only the latter file.</p>
+    <p>Fix: include a short content hash in the filename, e.g. <code>rddepman-mismatch-${ basename }-${ actualChecksum.slice(0, 8) }</code>, or use <code>mkdtemp</code> to give each mismatch a unique directory.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>7z e -y archive.xz</code> silently overwrites any sibling file inside <code>internalDir</code> matching the archive&#39;s entry name <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/wsl.ts#L37-L47">scripts/dependencies/wsl.ts</a></div>
+      <pre data-start="37" data-line="42"><code class="language-ts">    // moproxy uses xz with no tar wrapper; just decompress it manually.
+    // Keep archivePath beside moproxyPath so download() hits its cache on
+    // subsequent postinstall runs; electron-builder.yml excludes *.xz.
+    // Pass -y to auto-confirm the overwrite prompt; otherwise a
+    // leftover binName from a partial-failure retry stalls postinstall.
+    await simpleSpawn(&#39;7z&#39;, [&#39;e&#39;, &#39;-y&#39;, archivePath], { cwd: context.internalDir });
+    await fs.promises.rename(path.join(context.internalDir, binName), moproxyPath);
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    // Upstream does not publish a checksum file, so we record the sha256 we</code></pre>
+    <p>The <code>-y</code> flag (added Round 7) auto-confirms overwrite prompts, which is necessary for the partial-failure-retry case the comment names. It also, however, silently overwrites unrelated files in <code>internalDir</code> if 7z&#39;s archive ever contains an entry whose name collides. xz archives carry a single entry today, so the failure mode is purely hypothetical — but if upstream packaging changes (e.g. switches to a tar-inside-xz layout), the silent overwrite happens without diagnostic.</p>
+    <p>Fix: extract to a unique tmp dir like the <code>downloadTarGZ</code>/<code>downloadZip</code> flows (<code>fs.mkdtempSync</code>), then move the single expected entry into place. Aligns with the rest of the file and removes the implicit single-entry assumption.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>download()</code> cache check hashes only <code>${destPath}.unsigned</code> for codesigned binaries; tampering with the signed <code>destPath</code> is undetected <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/lib/download.ts#L64-L99">scripts/lib/download.ts</a></div>
+      <pre data-start="64" data-line="69-94"><code class="language-ts">  const access = options.access ?? fs.constants.X_OK;
+
+  // Codesign rewrites destPath in place, so its bytes no longer match
+  // the upstream digest.  Keep the verified bytes at .unsigned and
+  // hash that on cache-hit checks.
+  const hashTarget = options.codesign ? `${ destPath }.unsigned` : destPath;
+
+  if (!overwrite) {
+    try {
+      await fs.promises.access(destPath, access);
+      if (expectedChecksum) {
+        try {
+          const actualChecksum = await hashFile(hashTarget, &#39;sha256&#39;);
+
+          if (actualChecksum === expectedChecksum) {
+            console.log(`${ destPath } already exists with expected checksum, not re-downloading.`);
+
+            return;
+          }
+          console.log(`${ destPath } exists but sha256 of ${ hashTarget } differs ([${ actualChecksum }] vs expected [${ expectedChecksum }]); re-downloading.`);
+        } catch (ex: any) {
+          if (ex.code !== &#39;ENOENT&#39;) {
+            throw ex;
+          }
+          console.log(`${ destPath } exists but ${ hashTarget } is missing; re-downloading.`);
+        }
+      } else {
+        console.log(`${ destPath } already exists, not re-downloading.`);
+
+        return;
+      }
+    } catch (ex: any) {
+      if (ex.code !== &#39;ENOENT&#39;) {
+        throw ex;
+      }
+    }</code></pre>
+    <p>The codesign branch checks that <code>destPath</code> exists, then hashes the sibling <code>.unsigned</code>. If the signed binary at <code>destPath</code> is replaced with a corrupt or different file but <code>.unsigned</code> is left intact, the cache hit succeeds and the bad <code>destPath</code> survives. This is a developer-trusted-tree concern, not an attack vector — the practical likelihood is low. Pre-PR there was no checksum verification at all, so the new behaviour is a net improvement; flagging as Suggestion only because it inverts the strongest property the new code claims to provide.</p>
+    <p>Fix: delete <code>${destPath}.unsigned</code> after a successful codesign, so the cache shortcut is inapplicable for codesigned binaries. The next run re-downloads — the same cost the current logic already pays whenever <code>.unsigned</code> is missing.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> <code>MANIFEST_HEADER</code> warns &quot;the next bump will strip them&quot; but the warning is only visible in the regenerated file itself <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/lib/dependencies.ts#L162-L181">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="162" data-line="167-176"><code class="language-ts"> * leading header comment so contributors editing the YAML directly see
+ * the warning where they are editing; everything else round-trips
+ * through `YAML.stringify`, which drops any other comments on the next
+ * rddepman bump.
+ */
+const MANIFEST_HEADER = `# Regenerated by rddepman on every dependency bump.  Document non-obvious
+# version pins in scripts/dependencies/&lt;name&gt;.ts instead of inline comments
+# here — the next bump will strip them.
+#
+# Each entry pairs a version with a checksums map of upstream artifact
+# filenames; install-time downloads verify against the stored sha256.  To
+# bump, run \`yarn rddepman &lt;name&gt;\`.  Hand-edits to a version must
+# recompute the affected sha256 entries; stale digests fail postinstall
+# verification.
+`;
+
+export async function writeDependencyManifest(path: string, manifest: DependencyManifest): Promise&lt;void&gt; {
+  await fs.promises.writeFile(path, MANIFEST_HEADER + YAML.stringify(manifest), { encoding: &#39;utf-8&#39; });
+}
+</code></pre>
+    <p>A developer who hand-edits a comment in <code>dependencies.yaml</code> and later sees it disappear after a bump is unlikely to have read the file&#39;s first lines. The natural place to look for the warning is <code>CONTRIBUTING.md</code> or a README near <code>dependencies.yaml</code>. Mirroring the rule there would close the loop for a reader approaching the file fresh.</p>
+    <p>Fix (optional): add a one-paragraph note in <code>CONTRIBUTING.md</code> (or whichever doc currently covers contributor workflows) pointing at <code>scripts/dependencies/&lt;name&gt;.ts</code> as the durable home for non-obvious pin justifications.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> <code>MANIFEST_HEADER</code> source string and the live <code>dependencies.yaml</code> header are duplicated and will drift on the next edit <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+    <p>The header text is a literal in the source and an identical copy in the YAML. They match today; future edits to one without the other will desync until the next <code>rddepman</code> bump rewrites the YAML. Low risk because every bump regenerates the file, but readers between bumps see whichever copy was last written.</p>
+    <p>Fix (optional): accept the drift and rely on the next <code>rddepman</code> bump to refresh the YAML (current behaviour), or have <code>writeDependencyManifest</code> always rewrite the header even when the rest of the file is unchanged. The first option costs nothing.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <p><em></em>D1. Two parallel structures (<code>DependencyVersions</code> and <code>DependencyManifest</code>) for the same data<em></em> <em>(in-scope)</em> <span class="pill pill-claude">Claude</span></p>
+    <p>Carry-over from Round 6 D2 / mook-as inline review. <code>readDependencyManifest</code> produces <code>DependencyManifest</code> and <code>readDependencyVersions</code> flattens compound entries to a <code>name → version</code> map for <code>lint-go.ts</code> and <code>docker-cli-monitor.ts</code>. A single structure indexed by <code>name</code> with a <code>version</code> getter would let both callers share a model and remove the keep-them-in-sync risk. The two callers could read <code>manifest[name].version</code> directly without much ceremony. Worth pursuing as a follow-up if not blocking.</p>
+    <p><em></em>D2. <code>MobyOpenAPISpec</code>&#39;s composite version is a workaround for fetching from a mutable <code>master</code> URL<em></em> <em>(future)</em> <span class="pill pill-claude">Claude</span></p>
+    <p>The deeper issue is that the source URL (<code>raw.githubusercontent.com/moby/moby/master/api/docs/...</code>) is mutable; the PR&#39;s pinned-commit pattern is correct but it is the only dependency that needs it. Vendoring the moby spec into the repo (one yaml file) would eliminate the API call to resolve commits, the schema special case, and the validation surface — at the cost of someone remembering to refresh it. The current design is a fine compromise; listing here as a future option.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <p><strong>D3. Round 6 backlog substantially cleared</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></p>
+    <p>Round 6&#39;s S1 (<code>7z e -y</code>), S2 (<code>Candidate</code> type for <code>MobyOpenAPISpecVersion</code>), S3 (5 callsites with &quot;upstream does not publish a checksum file&quot; comments), S6 (EACCES catch dropped), S12 (lowercase-normalisation JSDoc), and S13 (manifest-header migration note) all landed cleanly. The Round 7 diff is six small files / 39 net lines and reads as deliberate cleanup rather than design churn.</p>
+    <p><em></em>D4. <code>Sha256Checksum</code> template-literal type plus <code>parseSha256Checksum</code> normalisation gives a single chokepoint<em></em> <em>(in-scope)</em> <span class="pill pill-claude">Claude</span></p>
+    <p>The brand type narrows what counts as a valid checksum, the parser rejects malformed input and normalises to lowercase, and the new JSDoc on both points at the comparison contract in <code>download()</code>. Good fence-post hygiene; a future test or fixture that constructs <code>Sha256Checksum</code> outside <code>parseSha256Checksum</code> is the only remaining regression hazard.</p>
+    <p><strong>D5. Compute-checksums-before-branching keeps failed bumps from leaving orphan branches</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></p>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/rddepman.ts#L291-L294"><code>scripts/rddepman.ts:291-294</code></a> runs <code>dep.getChecksums(latestVersion)</code> before any <code>git checkout -b</code>, so an upstream-mismatch failure aborts the bump before any git state changes. The right ordering, and a clear improvement over the pre-PR shape.</p>
+    <p><em></em>D6. <code>downloadAndHash</code> keeps mismatched bytes for triage<em></em> <em>(in-scope)</em> <span class="pill pill-gemini">Gemini</span></p>
+    <p>When <code>downloadAndHash</code> rejects on upstream-checksum mismatch, the bytes survive in <code>os.tmpdir()/rddepman-mismatch-${basename}</code> rather than disappearing. Vastly accelerates root-cause analysis when a CDN returns HTML or a release contains the wrong artifact. (See S2 for the basename-collision wrinkle that limits the convenience.)</p>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No new unit tests accompany Round 7. The Round 6 Resolution table marked seven testing scenarios as Skipped with the same reason — &quot;no existing test infrastructure for the build-script directory; setup is multi-PR scope&quot; — so the testing footprint is unchanged from prior rounds. The end-to-end functional test continues to be &quot;rddepman runs and produces a working bump PR,&quot; demonstrated by <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9d35ac4cc"><code>9d35ac4cc</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/53aa0796a"><code>53aa0796a</code></a> (lima 1.2.1.rd2 → 1.2.1.rd3) generated by this branch.</p>
+    <p>The most impactful untested scenarios remain: <code>fetchUpstreamChecksums</code> parser cases (covers S2&#39;s collision corner), <code>parseSha256Checksum</code> case-normalisation contract (covers the Round 6 S12 Doc-only fix), <code>readDependencyManifest</code> shape validation (covers S1 above), and the codesign cache-target behaviour (covers S4 above). Each is a pure-function or filesystem-only test against a fixture; cost is small once the test scaffolding lands.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The Round 7 documentation work clears the prior round&#39;s gap. The <code>MANIFEST_HEADER</code> (replicated in the live <code>dependencies.yaml</code>) now describes the compound shape, names <code>yarn rddepman &lt;name&gt;</code> as the bump command, and warns that hand-edits must recompute the affected sha256 entries. The <code>Sha256Checksum</code> JSDoc and <code>parseSha256Checksum</code> JSDoc document the lowercase normalisation. The <code>7z e -y</code> comment names the partial-failure-retry hang it prevents. The five new <code>getChecksums</code> &quot;upstream does not publish a checksum file&quot; comments make the verify-skip explicit at every site.</p>
+    <p>The remaining doc gap is process-oriented (S5 above): the &quot;non-obvious pins live in <code>scripts/dependencies/&lt;name&gt;.ts</code>&quot; rule is only visible inside the regenerated YAML. A mirror in <code>CONTRIBUTING.md</code> would surface it to a reader who hasn&#39;t yet hit the bump.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <p>Per the Round 6 Resolution table, the following Suggestions were considered and Skipped with stated reasons; they remain out of scope for this PR.</p>
+    <ul>
+      <li><em></em>Round 6 S4 — <code>electron-builder.yml</code> recursive exclusions could drop nested archives<em></em> (Skipped): Hypothetical regression; no shipped path produces nested archives, deferred for two rounds.</li>
+      <li><strong>Round 6 S5 — Per-version archive caches accumulate after a bump</strong> (Skipped): Developer-disk-only churn deferred for three rounds; trade-off accepted.</li>
+      <li><em></em>Round 6 S7 — <code>AlpineLimaISO</code> string-rejecting <code>updateManifest</code> runtime guard removed<em></em> (Skipped): TypeScript narrowing prevents string slipping through; defensive guard for hypothetical future caller.</li>
+      <li><em></em>Round 6 S8 — <code>getChecksums</code> matrices omit windows/arm64<em></em> (Skipped): No shipping CI build hits the path; foot-gun for theoretical Windows ARM64 cross-build, deferred for three rounds.</li>
+      <li><em></em>Round 6 S9 — <code>MACOS_RUNNER</code> constant produces an HTTP error rather than a bump-runner diagnostic<em></em> (Skipped): Comment-driven workflow accepted; maintainers update the constant on runner bump, deferred for three rounds.</li>
+      <li><em></em>Round 6 S10 — <code>lookupChecksum</code> returns <code>string</code>, throwing away <code>Sha256Checksum</code><em></em> (Skipped): Type-ergonomics polish; runtime behaviour unchanged, deferred for three rounds.</li>
+      <li><em></em>Round 6 S11 — WiX entry retains a leading <code>v</code> while every other entry stores bare semver<em></em> (Skipped): Pre-existing convention; normalisation churn not worth it, deferred for three rounds.</li>
+      <li><strong>Round 6 testing gaps 1–7</strong> (Skipped): No existing test infrastructure for the build-script directory; setup is multi-PR scope.</li>
+    </ul>
+    <h3 id="existing-limitations-unchanged-from-round-6">Existing limitations (unchanged from Round 6) <a href="#existing-limitations-unchanged-from-round-6" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Re-extraction overwrites locked binaries on Windows / Linux</strong> (<code>scripts/lib/download.ts:215-225, 268-279</code>, Round 5 I1 declined; reaffirmed by the Round 7 inline comments). The <code>downloadTarGZ</code> / <code>downloadZip</code> flows always re-extract on every postinstall; if Rancher Desktop or another shell holds the binary, the run fails with <code>EBUSY</code>/<code>EPERM</code> (Windows) or <code>ETXTBSY</code> (Linux). Author&#39;s accepted trade-off; macOS unaffected.</li>
+      <li><strong>Stamp absence on crash starts over</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/tools.ts#L405-L408"><code>scripts/dependencies/tools.ts:405-408</code></a>): a crash between mkdir and tar leaves the stamp absent, so the next run starts over.</li>
+      <li><strong>Forcing sha256 over upstream algorithms</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/lima.ts#L81"><code>scripts/dependencies/lima.ts:81</code></a> review thread): @mook-as questioned not using upstream sha512; @jandubois explained that uniform sha256 storage simplifies install-time verification by confining multi-algorithm parsing to <code>rddepman</code>. @mook-as accepted.</li>
+      <li><strong>WiX has no upstream checksum file</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/wix.ts#L33-L34"><code>scripts/dependencies/wix.ts:33-34</code></a>).</li>
+      <li><strong>Spin shim has no upstream checksum file</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/tools.ts#L605-L606"><code>scripts/dependencies/tools.ts:605-606</code></a>).</li>
+      <li><strong>Docker buildx omits darwin from upstream verification</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/tools.ts#L208-L210"><code>scripts/dependencies/tools.ts:208-210</code></a>): upstream <code>checksums.txt</code> omits darwin entries (https://github.com/docker/buildx/issues/945).</li>
+      <li><strong>Upstream linux/arm64 not yet published for QEMU</strong> (<code>scripts/dependencies/lima.ts:96-99, 119</code>).</li>
+      <li><strong>MobyOpenAPISpec commit is invisible to upstream security fixes</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/77ca4a907a84ddf16cfe9b274d02986b3928366e/scripts/dependencies/moby-openapi.ts#L131-L136"><code>scripts/dependencies/moby-openapi.ts:131-136</code></a>): adopting a newer commit on the same <code>apiVersion</code> requires a manual <code>dependencies.yaml</code> edit.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em>mook-as on <code>scripts/lib/dependencies.ts</code> (<code>DependencyVersions</code> shape)<em></em> — https://github.com/rancher-sandbox/rancher-desktop/pull/10176#discussion_r3149342472. mook-as asked why <code>DependencyVersions</code> was not folded into the on-disk-shape struct. The current code keeps both: <code>DependencyVersions</code> is a flat <code>name → version</code> projection and <code>DependencyManifest</code> mirrors the YAML. Carry-over from Round 6&#39;s Unresolved Feedback. The split is intentional for the <code>lint-go.ts</code> and <code>docker-cli-monitor.ts</code> call sites; an explicit reply in the thread or a follow-up consolidation would close the loop. See D1 above.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude raised the four most useful Suggestions (manifest validation, mismatch tmpfile naming, <code>7z e -y</code> sibling overwrite, codesign cache target) plus the two header-text Suggestions. Calibration drifted toward Important: of four Important findings raised, two were dropped outright (the <code>MobyOpenAPISpec.getAvailableVersions</code> placeholder is &quot;Fixed&quot; per Round 6&#39;s Resolution table; the base <code>versionToTagName</code> was a structural false positive — <code>MobyOpenAPISpec</code> extends <code>VersionedDependency</code> directly, so the method is not on its inheritance chain at all), one was demoted to Suggestion (codesign cache target, dev-tree-trusted), and the fourth (<code>downloadTarGZ</code> re-extract) is a Round 5/Round 6 carry-over the author already declined via inline comment per the Round 6 retro&#39;s repo-context note. Claude&#39;s instinct to verify each Important against the inheritance chain or against the prior-round Resolution table would have caught all four. The unique catches it kept are real and ship-worthy.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex returned in Round 7 with one Important finding (<code>RancherDashboard.download</code> rm&#39;ing the existing extracted tree before <code>download()</code> succeeds), verified false-positive in conversation: the rm runs only when <code>stamp !== expectedChecksum</code>, so the existing tree by definition holds the wrong bytes — preserving it would just produce a stale directory the next cache check would reject. The reasoning shape was sound (rollback-on-failure is a real concern in many contexts), but the cache-check semantics make the preserved copy unusable. Otherwise no Suggestions, no Design Concerns. Two consecutive zero-finding rounds before this one, then one Important that didn&#39;t survive verification — value floor for this review track remains low.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini found nothing. The review prose is well-calibrated to the PR (correctly identifies the strengths — graceful diagnostics, sha256 unification, <code>mkdtempSync</code> cache hygiene — and lists the right untested edge cases) and includes a proper Coverage Summary with all 18 files accounted for. No <code>git blame</code> (daily quota), so regression-vs-gap distinctions would have been &quot;gap&quot; by default if any finding had landed. For a Round 7 polish pass on an already-clean PR, &quot;nothing actionable&quot; is a defensible outcome.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>38m 40s</td><td>5m 30s</td><td>8m 47s</td></tr>
+        <tr><td>Findings</td><td>6S</td><td>none</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>36 (Read 19, Bash 17)</td><td>42 (shell 42)</td><td>30 (run<em>shell</em>command 17, grep<em>search 11, read</em>file 2)</td></tr>
+        <tr><td>Design observations</td><td>6</td><td>2</td><td>4</td></tr>
+        <tr><td>False positives</td><td>1</td><td>1</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>6</td><td>0</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>18</td><td>18</td><td>18</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>6S</strong></td><td><strong>none</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>1 (I→S)</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>3</td><td>1</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation:</strong></p>
+    <ul>
+      <li>Claude P1 codesign cache target: important → suggestion S4 (developer-trusted-tree concern; theoretical likelihood; net improvement over pre-PR).</li>
+      <li>Claude P1 <code>MobyOpenAPISpec.getAvailableVersions</code> placeholder: important → dropped (Round 6 Resolution table marks the corresponding suggestion &quot;Fixed&quot;; the author shipped the internal <code>Candidate</code> type and chose to keep the public signature).</li>
+      <li>Claude P1 base <code>versionToTagName</code> returning <code>v[object Object]</code>: important → dropped (false positive; <code>MobyOpenAPISpec</code> extends <code>VersionedDependency</code> directly, not <code>GitHubDependency</code>, so the method is not on its inheritance chain).</li>
+      <li>Claude P1 <code>downloadTarGZ</code>/<code>downloadZip</code> always re-extract: important → moved to Acknowledged Limitations (Round 5 I1, declined by author via inline comment in Round 6; per the Round 6 retro&#39;s repo-context note, treat as accepted).</li>
+      <li>Claude P1 stale archive caches accumulate: suggestion → dropped (Round 6 S5 Resolution: Skipped — &quot;Developer-disk-only churn deferred for three rounds; trade-off accepted&quot;).</li>
+      <li>Codex P1 <code>RancherDashboard.download</code> rm-before-download: important → dropped (false positive; the rm only fires when the existing tree&#39;s stamp does not match <code>expectedChecksum</code>, which means the tree is by definition wrong content the cache check would refuse anyway).</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>[repo] Verify a flagged class actually inherits the method before flagging &quot;missing override&quot;.</strong> When a finding claims that a subclass should override a base method, walk the inheritance chain and confirm the method is on it. In this codebase, <code>VersionedDependency</code> is the abstract base; <code>GitHubDependency extends VersionedDependency</code> and adds <code>versionToTagName</code>; concrete classes pick one to extend. A class that extends <code>VersionedDependency</code> directly does not see methods that live only on <code>GitHubDependency</code>. Reason: a Round-7 Important finding claimed a class should override <code>versionToTagName</code> to handle its object-valued version, but the class extends the base and never inherits the method at all — the entire premise was structurally false. How to apply: before flagging &quot;missing override,&quot; grep the class declaration line for <code>extends</code>, then confirm the named method is defined on (or above) that class in the hierarchy.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
