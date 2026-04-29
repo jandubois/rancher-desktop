@@ -212,14 +212,14 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
     <table class="summary-table">
       <thead><tr><th>Ecosystem</th><th>Items</th><th>Pinned</th><th>Open issues</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td>Go modules</td><td>12 modules</td><td>9 with <code>go.sum</code>; workspace <code>go.work.sum</code> present</td><td>0</td><td>Dependabot ✓ — gomod</td></tr>
-        <tr><td>Node (Yarn-berry)</td><td>1 root + 1 nested package.json</td><td><code>yarn.lock</code> (1607/1694 descriptors carry checksums)</td><td>1 advisory</td><td>Dependabot ✓ — npm; nested manifest covered by parent</td></tr>
+        <tr><td><a href="#go-modules">Go modules</a></td><td>12 modules</td><td>9 with <code>go.sum</code>; workspace <code>go.work.sum</code> present</td><td>0</td><td>Dependabot ✓ — gomod</td></tr>
+        <tr><td><a href="#node-yarn-berry">Node (Yarn-berry)</a></td><td>1 root + 1 nested package.json</td><td><code>yarn.lock</code> (1607/1694 descriptors carry checksums)</td><td>1 advisory</td><td>Dependabot ✓ — npm; nested manifest covered by parent</td></tr>
         <tr><td>Python (pip)</td><td>1 <code>requirements.txt</code></td><td>0 hashed</td><td>1 (test fixture)</td><td>No bot</td></tr>
-        <tr><td>GitHub Actions</td><td>109 <code>uses:</code> references</td><td>84 SHA-pinned, 25 local/docker</td><td>0</td><td>Dependabot ✓ — github-actions</td></tr>
+        <tr><td><a href="#github-actions">GitHub Actions</a></td><td>109 <code>uses:</code> references</td><td>84 SHA-pinned, 25 local/docker</td><td>0</td><td>Dependabot ✓ — github-actions</td></tr>
         <tr><td>Workflow tokens</td><td>25 <code>permissions:</code> declarations</td><td>—</td><td>8 missing block + several broad scopes</td><td>—</td></tr>
         <tr><td>Container images</td><td>1 Dockerfile (4 FROMs) + 1 k8s manifest</td><td>0 digest-pinned</td><td>4 (test fixtures)</td><td>—</td></tr>
-        <tr><td>Submodules</td><td>4 (bats-core/*)</td><td>All gitlink-pinned by git</td><td>0</td><td>—</td></tr>
-        <tr><td>Custom manifest</td><td><code>pkg/rancher-desktop/assets/dependencies.yaml</code> (25 entries)</td><td>22 with sha256 + lookupChecksum at every call site</td><td>2 (delegate paths)</td><td>Bumped daily by <code>rddepman.yaml</code></td></tr>
+        <tr><td><a href="#submodules">Submodules</a></td><td>4 (bats-core/*)</td><td>All gitlink-pinned by git</td><td>0</td><td>—</td></tr>
+        <tr><td><a href="#custom-manifest-dependencies-yaml">Custom manifest</a></td><td><code>pkg/rancher-desktop/assets/dependencies.yaml</code> (25 entries)</td><td>22 with sha256 + lookupChecksum at every call site</td><td>2 (delegate paths)</td><td>Bumped daily by <code>rddepman.yaml</code></td></tr>
         <tr><td>Inline downloads</td><td>6 candidate URLs</td><td>0 verified</td><td>6</td><td>—</td></tr>
         <tr><td>Run-from-network</td><td>4 commands</td><td>2 pinned (Go module proxy)</td><td>2 floating</td><td>—</td></tr>
         <tr><td><code>git clone</code> in scripts</td><td>1</td><td>0 SHA-pinned</td><td>1 (tag-pinned)</td><td>—</td></tr>
