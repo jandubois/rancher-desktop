@@ -164,7 +164,7 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
       <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10176" class="gh-ref" data-title="rddepman: record and verify artifact digests in dependencies.yaml" data-state="open" data-type="pr">#10176</a> — rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
       <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e707246d7"><code>e707246d7</code></a> rddepman: record and verify artifact digests in dependencies.yaml</td></tr>
       <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
-      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; Round 4&#39;s RancherDashboard cache-hit (I1), the double-sha256 in <code>downloadAndHash</code> (S1), the module-level cache (S5), the codesign exit-status check (S6), the leaking mismatch artifact (S7), and the gnuLine width (S10) all landed cleanly. The Round 4 I2 regression — <code>downloadTarGZ</code>/<code>downloadZip</code> re-extracting on every postinstall and overwriting locked binaries on Windows — remains. Everything else is suggestion-grade polish.</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; every Round 4 fix landed cleanly (I1, S4, S5, S6, S7, S10, plus the Round 4 S1 double-sha256 cleanup). Round 4&#39;s Resolution table marked one Important and seven Suggestions as <strong>Skipped</strong>; those carry forward as Acknowledged Limitations rather than being re-raised. The eight new Suggestions this round are polish — tighter validation, clearer diagnostics, one cache hit.</td></tr>
       <tr><td>Wall-clock time</td><td><code>29 min 31 s</code></td></tr>
     </table>
 
@@ -174,10 +174,10 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
     <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
-    <p>Most of the Round 4 backlog landed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e707246d7"><code>e707246d7</code></a>: <code>RancherDashboard.download()</code> now uses a <code>.source-sha256</code> stamp (Round 4 I1); <code>downloadAndHash</code> reuses the sha256 it already computes when the upstream verify algorithm is sha256 (Round 4 S1); <code>GlobalDependency.updateManifest</code> re-reads from disk and invalidates the module cache after writing (Round 4 S5); <code>codesign</code> exit status is checked and the unsigned cache is dropped on failure (Round 4 S6); the mismatch artifact uses a constant filename so subsequent failures overwrite (Round 4 S7); the gnuLine regex now anchors to sha256/sha512 widths exactly (Round 4 S10); and <code>MobyOpenAPISpec.download()</code> rejects empty <code>apiVersion</code> or <code>commit</code> (Round 4 S4).</p>
-    <p>One Important regression survives: <code>downloadTarGZ</code>/<code>downloadZip</code> re-extract on every postinstall (Round 4 I2). On Windows, <code>fs.copyFile</code> then fails with <code>EBUSY</code>/<code>EPERM</code> overwriting a locked <code>helm.exe</code>/<code>docker.exe</code> while Rancher Desktop or another shell holds the binary; on Linux a running binary trips <code>ETXTBSY</code>. The pattern that <code>RancherDashboard.download()</code> adopted in this round (<code>.source-sha256</code> stamp + short-circuit) extends naturally to the archive helpers and is the recommended fix.</p>
-    <p>The remaining surface is suggestion-grade. The Round 4 S4 fix accepts any non-empty <code>commit</code> string, so <code>master</code> or a typo silently builds a mutable upstream URL and trips an &quot;Upstream checksum mismatch&quot; only at install — a 40-char hex regex would catch the misedit at the source. <code>fetchUpstreamChecksums</code> parses BSD <code>SHA256 (foo) = …</code> lines without checking the algorithm name, so a <code>.sha512sum</code> URL pointed at a sha256 sidecar parses successfully and produces a confusing diagnostic at verify time. <code>Moproxy.download()</code> deletes its archive immediately after extraction, so the <code>download()</code> cache check never fires and <code>xz</code> is re-fetched every postinstall. <code>AlpineLimaISO</code>&#39;s old <code>updateManifest</code> runtime guard against string versions is gone now that the common implementation lives in <code>GlobalDependency</code>. Seven Round 4 suggestions remain unaddressed and carry forward.</p>
-    <p>Verdict: merge with the one Important fix folded in. Everything else is non-blocking polish that has accumulated across rounds.</p>
+    <p>Round 4&#39;s backlog landed cleanly in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e707246d7"><code>e707246d7</code></a>. <code>RancherDashboard.download()</code> now gates on a <code>.source-sha256</code> stamp (Round 4 I1); <code>downloadAndHash</code> reuses its sha256 result when the upstream verify algorithm is sha256 (Round 4 S1); <code>GlobalDependency.updateManifest</code> re-reads from disk and invalidates the module cache after writing (Round 4 S5); <code>codesign</code> exit status is checked and the unsigned cache drops on failure (Round 4 S6); the mismatch artifact uses a constant filename so subsequent failures overwrite (Round 4 S7); the <code>gnuLine</code> regex anchors to sha256/sha512 widths exactly (Round 4 S10); and <code>MobyOpenAPISpec.download()</code> rejects empty <code>apiVersion</code> or <code>commit</code> (Round 4 S4).</p>
+    <p>Round 4&#39;s <code>## Resolution</code> table marks one Important and seven Suggestions as <strong>Skipped</strong> by the author. Those decisions carry forward into this round&#39;s Acknowledged Limitations rather than re-surfacing as findings: the <code>downloadTarGZ</code>/<code>downloadZip</code> re-extract behaviour (Round 4 I2), the windows/arm64 matrix omissions (Round 4 S2), persistent archive accumulation (Round 4 S3), <code>codesign</code> propagation through archive helpers (Round 4 S9), the <code>MACOS_RUNNER</code> constant (Round 4 S11), <code>lookupChecksum</code>&#39;s return type (Round 4 S12), the WiX leading-<code>v</code> asymmetry (Round 4 S13), and the <code>electron-builder.yml</code> exclusion scope (Round 4 S14).</p>
+    <p>Eight genuinely new Suggestions surface this round. The Round 4 S4 fix accepts any non-empty <code>commit</code>, so <code>master</code> or a typo still builds a mutable upstream URL and trips &quot;Upstream checksum mismatch&quot; only at install — a 40-char hex regex would catch the misedit at the source. <code>fetchUpstreamChecksums</code> parses BSD <code>SHA256 (foo) = …</code> lines without checking the algorithm name. <code>Moproxy.download()</code> deletes its archive immediately after extraction, so the <code>download()</code> cache never hits and <code>xz</code> re-fetches every postinstall. <code>AlpineLimaISO</code>&#39;s old <code>updateManifest</code> runtime guard against string versions is gone now that the common implementation lives in <code>GlobalDependency</code>. The rest are diagnostic and documentation polish.</p>
+    <p>Verdict: merge as-is.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -189,94 +189,7 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
     <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-important">
-      <div class="finding-title" id="I1">
-        <span class="finding-num">I1.</span> <code>downloadTarGZ</code>/<code>downloadZip</code> always re-extract, overwriting locked destinations <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#I1" class="pilcrow">&#182;</a>
-      </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/lib/download.ts#L210-L247">scripts/lib/download.ts</a></div>
-      <pre data-start="210" data-line="215-242"><code class="language-ts">  await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
-
-  // Persist the verified archive next to destPath; download() handles
-  // the cache-hit checksum check against the manifest.
-  await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
-
-  // Re-extract on every postinstall so destPath always reflects the
-  // current archive, even after a version bump that re-downloaded
-  // tgzPath above.
-  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), `rd-${ path.basename(destPath, &#39;.exe&#39;) }-`));
-  const args = [&#39;tar&#39;, &#39;-zxf&#39;, tgzPath, &#39;--directory&#39;, workDir, fileToExtract];
-
-  try {
-    if (os.platform().startsWith(&#39;win&#39;)) {
-      // On Windows, force use the bundled bsdtar.
-      // We may find GNU tar on the path, which looks at the Windows-style path
-      // and considers C:\Temp to be a reference to a remote host named `C`.
-      const systemRoot = process.env.SystemRoot;
-
-      if (!systemRoot) {
-        throw new Error(&#39;Could not find system root&#39;);
-      }
-      args[0] = path.join(systemRoot, &#39;system32&#39;, &#39;tar.exe&#39;);
-    }
-    await simpleSpawn(args[0], args.slice(1));
-    await fs.promises.copyFile(path.join(workDir, fileToExtract), destPath);
-    await fs.promises.chmod(destPath, mode);
-  } finally {
-    fs.rmSync(workDir, { recursive: true, maxRetries: 10 });
-  }
-
-  return destPath;
-}
-
-/**
- * Download a zip file to a temp dir, expand,
- * and move the expected binary to the final dir
- *</code></pre>
-    <p>The pre-PR helpers short-circuited when <code>destPath</code> already existed; Round 4 removed that guard so the verified archive&#39;s contents always reach <code>destPath</code>, but the unconditional <code>copyFile</code> clobbers any existing <code>destPath</code> even when nothing changed. A developer running <code>yarn postinstall</code> on Windows while Rancher Desktop is running fails with <code>EBUSY</code>/<code>EPERM</code> when <code>copyFile</code> tries to overwrite a locked <code>resources/win32/bin/helm.exe</code>, <code>docker.exe</code>, <code>kubectl.exe</code>, or any other Round-4-affected binary; on Linux the same scenario trips <code>ETXTBSY</code> for a running executable. macOS allows in-place overwrite of mapped binaries, so it is benign there.</p>
-    <p>The <code>download()</code> helper at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/lib/download.ts#L74-L89"><code>scripts/lib/download.ts:74-89</code></a> and the new <code>RancherDashboard.download()</code> (<code>scripts/dependencies/tools.ts:407-416, 449</code>) both implement the same checksum-stamp short-circuit; the archive helpers can adopt it directly:</p>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/lib/download.ts#L69-L94">scripts/lib/download.ts</a></div>
-      <pre data-start="69" data-line="74-89"><code class="language-typescript">  const hashTarget = options.codesign ? `${ destPath }.unsigned` : destPath;
-
-  if (!overwrite) {
-    try {
-      await fs.promises.access(destPath, access);
-      if (expectedChecksum) {
-        try {
-          const actualChecksum = await hashFile(hashTarget, &#39;sha256&#39;);
-
-          if (actualChecksum === expectedChecksum) {
-            console.log(`${ destPath } already exists with expected checksum, not re-downloading.`);
-
-            return;
-          }
-          console.log(`${ destPath } exists but sha256 of ${ hashTarget } differs ([${ actualChecksum }] vs expected [${ expectedChecksum }]); re-downloading.`);
-        } catch (ex: any) {
-          if (ex.code !== &#39;ENOENT&#39;) {
-            throw ex;
-          }
-          console.log(`${ destPath } exists but ${ hashTarget } is missing; re-downloading.`);
-        }
-      } else {
-        console.log(`${ destPath } already exists, not re-downloading.`);
-
-        return;
-      }</code></pre>
-      <pre><code class="language-diff">   await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
-+
-+  const stampPath = `${ destPath }.source-sha256`;
-+  const stamp = await fs.promises.readFile(stampPath, &#39;utf-8&#39;).catch(() =&gt; &#39;&#39;);
-+  if (options.expectedChecksum &amp;&amp; stamp === options.expectedChecksum) {
-+    try {
-+      await fs.promises.access(destPath, access);
-+      return destPath;
-+    } catch { /* fall through to extract */ }
-+  }
-   …
-   await fs.promises.copyFile(path.join(workDir, fileToExtract), destPath);
-   await fs.promises.chmod(destPath, mode);
-+  if (options.expectedChecksum) {
-+    await fs.promises.writeFile(stampPath, options.expectedChecksum, &#39;utf-8&#39;);
-+  }</code></pre>
-    <p>The new <code>electron-builder.yml</code> exclusions extend naturally to <code>*.source-sha256</code>. (important, regression)</p>
+    <p>None.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -547,143 +460,6 @@ import path from &#39;path&#39;;</code></pre>
     <p><code>EACCES</code> from <code>fs.promises.access</code> can also originate from the parent directory lacking search permission, not just the file mode. The fall-through behaviour is correct (the next <code>mkdir</code>/<code>rename</code> surfaces the real error), but the comment misleads anyone tracing a permission failure.</p>
     <p>Fix: rewrite the comment to cover both cases — &quot;EACCES from the parent directory or the destination itself; either way fall through and let <code>mkdir</code>/<code>rename</code> surface a clearer error.&quot;</p>
     </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S9">
-        <span class="finding-num">S9.</span> Several <code>getChecksums</code> matrices omit windows/arm64 <span class="pill pill-gemini">Gemini</span><a href="#S9" class="pilcrow">&#182;</a>
-      </div>
-    <p><code>KuberlrAndKubectl</code>, <code>Helm</code>, <code>DockerCLI</code>, <code>DockerBuildx</code>, <code>ECRCredHelper</code>, <code>Steve</code>, and <code>SpinCLI</code> enumerate a five-entry matrix (linux × {amd64,arm64}, darwin × {amd64,arm64}, windows × amd64); peers <code>DockerCompose</code> and <code>DockerProvidedCredHelpers</code> enumerate a six-entry matrix that includes windows/arm64. Each <code>download()</code> requests the windows arm64 artifact when <code>M1=1</code>, so a Windows ARM64 cross-build trips &quot;No checksum recorded&quot;. The package workflow only sets <code>M1=1</code> on darwin/arm64, so no shipping CI build hits this path; the asymmetry remains a foot-gun for any developer cross-building on Windows ARM64.</p>
-    <p>Fix: drop <code>isM1</code> from the windows-only <code>download()</code> paths (so windows-arm64 fails up-front) or extend each <code>getChecksums</code> matrix with the missing entry.</p>
-    </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S10">
-        <span class="finding-num">S10.</span> Per-version archive caches accumulate after a bump <span class="pill pill-claude">Claude</span><a href="#S10" class="pilcrow">&#182;</a>
-      </div>
-    <p><code>Wix</code>, <code>Lima</code>, and <code>Qemu</code> embed the version in the cache filename (<code>wix314rtm.zip</code>, <code>lima.macos-15.amd64.v1.2.1.rd3.tgz</code>, <code>qemu.v9.2.1.tgz</code>), so each bump leaves the prior archive on disk forever. The <code>.unsigned</code> sidecars introduced for codesigned binaries compound this. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/packaging/electron-builder.yml#L20-L22"><code>electron-builder.yml:20-22</code></a> excludes them from the package, so this is a developer-disk-only concern.</p>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/packaging/electron-builder.yml#L15-L27">packaging/electron-builder.yml</a></div>
-      <pre data-start="15" data-line="20-22"><code class="language-yaml">- &#39;!resources/linux/qemu*.tgz&#39;
-- &#39;!resources/linux/staging/&#39;
-- &#39;!resources/win32/staging/&#39;
-- &#39;!resources/host/&#39;
-- &#39;!resources/**/*.js.map&#39;
-- &#39;!resources/**/*.unsigned&#39;
-- &#39;!resources/**/*.tar.gz&#39;
-- &#39;!resources/**/*.zip&#39;
-files:
-- dist/app/**/*
-- &#39;!**/node_modules/*/prebuilds/!(${platform}*)/*.node&#39;
-mac:
-  darkModeSupport: true</code></pre>
-    <p>Fix: drop the version from the cache filename, or sweep stale archives at postinstall start (keeping only the one whose basename matches the current <code>dependencies.yaml</code> version).</p>
-    </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S11">
-        <span class="finding-num">S11.</span> <code>downloadTarGZ</code>/<code>downloadZip</code> propagate <code>codesign</code> to the inner <code>download()</code> if a future caller passes it <span class="pill pill-claude">Claude</span><a href="#S11" class="pilcrow">&#182;</a>
-      </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/lib/download.ts#L209-L219">scripts/lib/download.ts</a></div>
-      <pre data-start="209" data-line="214"><code class="language-ts">
-  await fs.promises.mkdir(path.dirname(destPath), { recursive: true });
-
-  // Persist the verified archive next to destPath; download() handles
-  // the cache-hit checksum check against the manifest.
-  await download(url, tgzPath, { ...options, access: fs.constants.W_OK });
-
-  // Re-extract on every postinstall so destPath always reflects the
-  // current archive, even after a version bump that re-downloaded
-  // tgzPath above.
-  const workDir = fs.mkdtempSync(path.join(os.tmpdir(), `rd-${ path.basename(destPath, &#39;.exe&#39;) }-`));</code></pre>
-    <p>The helper spreads its caller&#39;s options into the inner call without filtering. No caller passes <code>codesign: true</code> to an archive helper today, but the option is in scope through the <code>ArchiveDownloadOptions extends DownloadOptions</code> shape; a future caller would silently ad-hoc-sign a <code>.tar.gz</code>.</p>
-    <p>Fix: drop <code>codesign</code> (and any future non-archive option) before forwarding.</p>
-    </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S12">
-        <span class="finding-num">S12.</span> <code>MACOS_RUNNER</code> constant produces an HTTP error rather than a bump-runner diagnostic <span class="pill pill-claude">Claude</span><a href="#S12" class="pilcrow">&#182;</a>
-      </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/lima.ts#L19-L33">scripts/dependencies/lima.ts</a></div>
-      <pre data-start="19" data-line="24-28"><code class="language-ts">  lookupChecksum,
-  Sha256Checksum,
-} from &#39;@/scripts/lib/dependencies&#39;;
-import { simpleSpawn } from &#39;@/scripts/simple_process&#39;;
-
-// Names the macOS runner that builds the rancher-desktop-lima darwin
-// archive.  Both `download()` and `getChecksums()` embed this token in
-// artifact filenames, so update it here when upstream bumps the runner
-// (e.g. `macos-16`).
-const MACOS_RUNNER = &#39;macos-15&#39;;
-
-export class Lima extends GlobalDependency(GitHubDependency) {
-  readonly name = &#39;lima&#39;;
-  readonly githubOwner = &#39;rancher-sandbox&#39;;
-  readonly githubRepo = &#39;rancher-desktop-lima&#39;;</code></pre>
-    <p>When upstream rolls to <code>macos-16</code>, <code>getChecksums()</code> 404s on the next bump. The behaviour matches the comment&#39;s &quot;update this constant&quot; workflow, but the failure shape is an HTTP error, not a readable bump-runner message.</p>
-    <p>Fix (follow-up): list the release assets at bump time and match the prefix <code>lima.macos-*.{amd64,arm64}.tar.gz</code>, falling back to the constant only at install time.</p>
-    </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S13">
-        <span class="finding-num">S13.</span> <code>lookupChecksum</code> returns <code>string</code>, throwing away <code>Sha256Checksum</code> <span class="pill pill-claude">Claude</span><a href="#S13" class="pilcrow">&#182;</a>
-      </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/lib/dependencies.ts#L187-L219">scripts/lib/dependencies.ts</a></div>
-      <pre data-start="187" data-line="192-214"><code class="language-ts">/**
- * Returns the stored sha256 for the given artifact as raw hex, with the
- * `sha256:` prefix stripped so it slots straight into `download()`.  Throws
- * if the artifact has no recorded checksum.
- */
-export function lookupChecksum(
-  context: DownloadContext,
-  name: keyof DependencyVersions,
-  artifactName: string,
-): string {
-  const entry = context.dependencies[name];
-
-  if (!entry) {
-    throw new Error(`Dependency &quot;${ name }&quot; is not present in ${ DEP_VERSIONS_PATH }.`);
-  }
-  const prefixed = entry.checksums?.[artifactName];
-
-  if (!prefixed) {
-    const available = Object.keys(entry.checksums ?? {}).sort().join(&#39;, &#39;) || &#39;(none)&#39;;
-
-    throw new Error(
-      `No checksum recorded for ${ name } artifact &quot;${ artifactName }&quot; in ${ DEP_VERSIONS_PATH }. ` +
-      `Available: ${ available }`,
-    );
-  }
-
-  return prefixed.slice(&#39;sha256:&#39;.length);
-}
-
-/**
- * Downloads `url` to a temporary file, hashes it with sha256, and returns the
- * prefixed checksum.  When `options.verify` is provided, also hashes the file
- * with the given algorithm and confirms it matches the expected value;</code></pre>
-    <p>The cast strips the <code>sha256:</code> prefix to fit <code>download()</code>&#39;s <code>expectedChecksum: string</code> shape, discarding the type information <code>Sha256Checksum</code> exists to preserve. Either keep the prefixed value and let <code>download()</code> strip, or change <code>download()</code> to accept <code>Sha256Checksum</code>.</p>
-    </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S14">
-        <span class="finding-num">S14.</span> WiX entry retains a leading <code>v</code> while every other entry stores bare semver <span class="pill pill-claude">Claude</span><a href="#S14" class="pilcrow">&#182;</a>
-      </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/pkg/rancher-desktop/assets/dependencies.yaml#L103-L115">pkg/rancher-desktop/assets/dependencies.yaml</a></div>
-      <pre data-start="103" data-line="108-110"><code class="language-yaml">    docker-credential-osxkeychain-v0.9.6.darwin-amd64: sha256:384097c8de1f99a4aa8b95604021bba143ff0fd07dc0fb209ad828c80baee4c4
-    docker-credential-osxkeychain-v0.9.6.darwin-arm64: sha256:b9be03f4b6f4ea57e5c4190c8c0e9cb8bb4f7923c2b6200d1583b8dc6d97b65a
-    docker-credential-wincred-v0.9.6.windows-amd64.exe: sha256:edc35bf65af2974b9287c067005929376eb56476f4c01277c54476d9f5bd9728
-    docker-credential-wincred-v0.9.6.windows-arm64.exe: sha256:4fb87b578809f718c28744da134729dc45a25668b0991281557605a4a2a317c8
-ECRCredentialHelper:
-  version: 0.12.0
-  checksums:
-    linux-amd64/docker-credential-ecr-login: sha256:a22ab6d59dbac777b8fb31984709461da00a4c778b6ae14c8d3729e8d5ded1a6
-    linux-arm64/docker-credential-ecr-login: sha256:5bdd30fb6c7a92462f5b454cce1aa906ca7926a6c2e39efad9613a7bf7661fac
-    darwin-amd64/docker-credential-ecr-login: sha256:c168e51ecfcc3a9e3704537da88bf65aa228d4223e80d363f9f346cde18af443
-    darwin-arm64/docker-credential-ecr-login: sha256:aa9e902a4dd80aa34ac0f753f6ab4723050b9d9846b07237ea56c5f814b9f457
-    windows-amd64/docker-credential-ecr-login.exe: sha256:1545d0c797ad7d539f0b85ef6c8702193a93764d537b01f93b55cefae994c9e1
-mobyOpenAPISpec:</code></pre>
-    <p>Pre-existing asymmetry; the migration to compound entries was a natural moment to normalise the value and drop <code>WiX.versionToTagName</code>&#39;s special parsing. Skip if the churn is not worth it.</p>
-    </div>
-    <div class="card card-suggestion">
-      <div class="finding-title" id="S15">
-        <span class="finding-num">S15.</span> <code>electron-builder.yml</code> exclusion <code>&#39;!resources/**/*.tar.gz&#39;</code> is broader than needed <span class="pill pill-claude">Claude</span><a href="#S15" class="pilcrow">&#182;</a>
-      </div>
-    <p>The blanket patterns exclude every <code>.tar.gz</code>, <code>.zip</code>, and <code>.unsigned</code> under <code>resources/</code>. None ship today; a future feature that legitimately ships a tar.gz extension bundle would need to relax the pattern. Optional.</p>
-    <p>Fix: pin the exclusions to the directories that actually accumulate cached archives (<code>resources/*/bin/</code>, <code>resources/*/internal/</code>, <code>resources/*/staging/</code>).</p>
-    </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
 
@@ -733,6 +509,19 @@ mobyOpenAPISpec:</code></pre>
     <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
+    <h3 id="declined-in-round-4">Declined in Round 4 <a href="#declined-in-round-4" class="pilcrow">&#182;</a></h3>
+    <p>The Round 4 <code>## Resolution</code> table marks the following as <strong>Skipped</strong> by the author. Each carries forward as a known and accepted limitation; the agents this round re-raised most of them, and the consolidator moved them here on the basis of that resolution rather than re-surfacing them as findings.</p>
+    <ul>
+      <li><em></em><code>downloadTarGZ</code>/<code>downloadZip</code> overwrite locked binaries on every postinstall<em></em> — <code>scripts/lib/download.ts:215-242, 263-281</code> (Round 4 Important #2 — Skipped). On Windows with Rancher Desktop running, <code>fs.copyFile</code> fails with <code>EBUSY</code>/<code>EPERM</code> over a locked <code>helm.exe</code>/<code>docker.exe</code>; on Linux a running executable trips <code>ETXTBSY</code>. macOS allows the in-place overwrite. The pattern that <code>RancherDashboard.download()</code> adopted (<code>.source-sha256</code> stamp + short-circuit) is a drop-in fix if the trade-off is ever revisited.</li>
+      <li><em></em>Several <code>getChecksums</code> matrices omit windows/arm64<em></em> — <code>scripts/dependencies/tools.ts:58-62, 126-130, 169-174, 212-216, 555-559, 696-700, 371-375</code> (Round 4 Suggestion #2 — Skipped). No shipping CI build cross-compiles on Windows ARM64; only a developer with <code>M1=1</code> on Windows would trip &quot;No checksum recorded&quot;.</li>
+      <li><strong>Per-version archive caches accumulate after a bump</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/wix.ts#L45"><code>scripts/dependencies/wix.ts:45</code></a>, <code>scripts/dependencies/lima.ts:49,107</code> (Round 4 Suggestion #3 — Skipped). Developer-disk-only; <code>electron-builder.yml</code> excludes <code>.tar.gz</code>/<code>.zip</code>/<code>.unsigned</code> from the package.</li>
+      <li><em></em><code>downloadTarGZ</code>/<code>downloadZip</code> propagate <code>codesign</code> to the inner <code>download()</code><em></em> — <code>scripts/lib/download.ts:214, 264</code> (Round 4 Suggestion #9 — Skipped). No caller passes <code>codesign: true</code> to an archive helper today.</li>
+      <li><em></em><code>MACOS_RUNNER</code> constant requires manual update on a runner roll<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/lima.ts#L24-L28"><code>scripts/dependencies/lima.ts:24-28</code></a> (Round 4 Suggestion <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11" class="gh-ref" data-title="Add eslint checking via CI" data-state="closed" data-type="issue">#11</a> — Skipped). The leading comment documents the workflow; the HTTP 404 on <code>getChecksums</code> is the prompt to update.</li>
+      <li><em></em><code>lookupChecksum</code> returns raw <code>string</code> instead of <code>Sha256Checksum</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/lib/dependencies.ts#L192-L214"><code>scripts/lib/dependencies.ts:192-214</code></a> (Round 4 Suggestion <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/12" class="gh-ref" data-title="Support setup on linux" data-state="closed" data-type="pr">#12</a> — Skipped). The branded type would not catch any current bug.</li>
+      <li><em></em>WiX entry retains a leading <code>v</code> while every other entry stores bare semver<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/pkg/rancher-desktop/assets/dependencies.yaml#L108-L110"><code>pkg/rancher-desktop/assets/dependencies.yaml:108-110</code></a> (Round 4 Suggestion <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/13" class="gh-ref" data-title="Typo fix: s/was no change/&amp;d/" data-state="merged" data-type="pr">#13</a> — Skipped). Pre-existing asymmetry; <code>WiX.versionToTagName</code>&#39;s special parsing absorbs the difference.</li>
+      <li><em></em><code>electron-builder.yml</code> exclusion <code>&#39;!resources/**/*.tar.gz&#39;</code> is broader than needed<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/packaging/electron-builder.yml#L21-L22"><code>packaging/electron-builder.yml:21-22</code></a> (Round 4 Suggestion <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/14" class="gh-ref" data-title="Add commonly used editor cruft to .gitignore" data-state="merged" data-type="pr">#14</a> — Skipped). The blanket pattern is more durable as new dependency types arrive.</li>
+    </ul>
+    <h3 id="documented-in-code">Documented in code <a href="#documented-in-code" class="pilcrow">&#182;</a></h3>
     <ul>
       <li><strong>Forcing sha256 over upstream algorithms</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/lima.ts#L81"><code>scripts/dependencies/lima.ts:81</code></a> review thread): @mook-as questioned not using upstream sha512; @jandubois explained that uniform sha256 storage simplifies install-time verification by confining multi-algorithm parsing to <code>rddepman</code> at bump time. @mook-as accepted (&quot;It&#39;s fine to use whatever is easier for you&quot;). The implementation matches.</li>
       <li><strong>WiX has no upstream checksum file</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/wix.ts#L33-L34"><code>scripts/dependencies/wix.ts:33-34</code></a>): &quot;WiX doesn&#39;t publish upstream checksum files; we rely on the digest recorded in dependencies.yaml at bump time.&quot;</li>
@@ -753,34 +542,41 @@ mobyOpenAPISpec:</code></pre>
 
     <div class="card card-neutral">
     <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
-    <p>Claude did the heavy lifting for this round: it raised the surviving Important regression (the <code>downloadTarGZ</code>/<code>downloadZip</code> re-extract concern that Gemini also caught), eight new suggestions, four design observations, and the trust-on-bump comment gap on <code>MobyOpenAPISpec.getChecksums</code>. The non-SHA-<code>commit</code> finding (S1) is a natural tightening of the Round 4 S4 fix that landed; the BSD-algorithm-name finding (S2) is the kind of diagnostic gap that matters when <code>rddepman</code> runs unattended in CI. One miss: Claude rejected its own Round 4 S7 fix in this round&#39;s I3 (Date.now suffix), proposing to re-introduce the leak it just helped close. Dropped as a false positive.</p>
+    <p>Claude raised eight new suggestions and four design observations, plus an Important on <code>downloadTarGZ</code>/<code>downloadZip</code> re-extract that the consolidator moved to Acknowledged Limitations on the basis of the Round 4 Skip. The non-SHA-<code>commit</code> finding (S1) is a natural tightening of the Round 4 S4 fix; the BSD-algorithm-name finding (S2) is the kind of diagnostic gap that matters when <code>rddepman</code> runs unattended in CI. One miss: Claude rejected its own Round 4 S7 fix in this round&#39;s I3 (Date.now suffix), proposing to re-introduce the leak it just helped close. Dropped as a false positive.</p>
     <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
-    <p>Codex produced no severity-grade findings and only one substantive design observation (D4, the runtime Spin setup outside the digest model). Its testing assessment listed the right scenarios but did not catch the <code>downloadTarGZ</code>/<code>downloadZip</code> regression that the other two agents flagged in <code>download.ts</code>. For a Round 5 review of incremental fixes this is defensible — the easy bugs are gone — but the file <code>scripts/lib/download.ts</code> was marked &quot;Reviewed, no issues&quot; while a regression on Windows lived inside it.</p>
+    <p>Codex produced no severity-grade findings and one substantive design observation (D4, the runtime Spin setup outside the digest model). Its testing assessment listed the right scenarios. Codex&#39;s &quot;Reviewed, no issues&quot; on every file was the most calibrated stance of the three for a round whose only real surface was polish.</p>
     <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
-    <p>Gemini caught two findings the other two agents did not: the <code>downloadTarGZ</code>/<code>downloadZip</code> re-extract regression (matching Claude) and the <code>Moproxy</code> archive deletion that defeats <code>download()</code>&#39;s cache (genuinely unique). Gemini also raised one false positive: I2 claimed <code>Qemu.download</code> does not skip Linux ARM64, contradicted by <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/lima.ts#L96-L99"><code>scripts/dependencies/lima.ts:96-99</code></a> which has carried that skip since <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b93718171f"><code>b93718171f</code></a> (well before this PR). Gemini did not run <code>git blame</code>, so it could not verify the regression label — the prompt mentions this is expected behaviour for Gemini.</p>
+    <p>Gemini caught the <code>Moproxy</code> archive deletion (S3, genuinely unique) and the <code>downloadTarGZ</code>/<code>downloadZip</code> re-extract concern that Claude also raised. The re-extract finding moved to Acknowledged Limitations on the basis of the Round 4 Skip. Gemini also raised one false positive: I2 claimed <code>Qemu.download</code> does not skip Linux ARM64, contradicted by <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/lima.ts#L96-L99"><code>scripts/dependencies/lima.ts:96-99</code></a> which has carried that skip since <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b93718171f"><code>b93718171f</code></a> (well before this PR). Gemini did not run <code>git blame</code>, so it could not verify the regression label.</p>
     <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
     <table class="retro-table">
       <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
       <tbody>
         <tr><td>Duration</td><td>19m 16s</td><td>4m 34s</td><td>8m 03s</td></tr>
-        <tr><td>Findings</td><td>1I 13S</td><td>none</td><td>1I 2S</td></tr>
+        <tr><td>Findings</td><td>8S</td><td>none</td><td>1S</td></tr>
         <tr><td>Tool calls</td><td>34 (Read 15, Bash 10, Grep 8)</td><td>41 (shell 41)</td><td>8 (read<em>file 4, grep</em>search 2, run<em>shell</em>command 2)</td></tr>
         <tr><td>Design observations</td><td>6</td><td>4</td><td>2</td></tr>
         <tr><td>False positives</td><td>1</td><td>0</td><td>1</td></tr>
         <tr><td>Unique insights</td><td>7</td><td>0</td><td>1</td></tr>
         <tr><td>Files reviewed</td><td>18</td><td>18</td><td>18</td></tr>
-        <tr><td>Coverage misses</td><td>0</td><td>1</td><td>0</td></tr>
-        <tr><td><strong>Totals</strong></td><td><strong>1I 13S</strong></td><td><strong>none</strong></td><td><strong>1I 2S</strong></td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>8S</strong></td><td><strong>none</strong></td><td><strong>1S</strong></td></tr>
         <tr><td>Downgraded</td><td>4 (I→S)</td><td>0</td><td>0</td></tr>
         <tr><td>Dropped</td><td>4</td><td>0</td><td>1</td></tr>
+        <tr><td>Moved to limitations</td><td>7 (1 I, 6 S — Round 4 Skipped)</td><td>0</td><td>2 (1 I, 1 S — Round 4 Skipped)</td></tr>
       </tbody>
     </table>
-    <p>The round&#39;s value came primarily from Claude&#39;s tightening pass on Round 4&#39;s fixes plus Gemini&#39;s <code>Moproxy</code> catch. Codex contributed validation that the easy issues are gone but did not surface anything actionable.</p>
+    <h3 id="reconciliation">Reconciliation <a href="#reconciliation" class="pilcrow">&#182;</a></h3>
+    <p>Round 4&#39;s <code>## Resolution</code> table marks the following as <strong>Skipped</strong>, so the consolidator moved them from this round&#39;s findings into Acknowledged Limitations rather than re-raising them: Claude&#39;s Round 5 I5 (downloadTarGZ/Zip re-extract; shared with Gemini&#39;s I1, attributed to both), and Round 4 carry-forward suggestions S2 (windows/arm64 matrices, Gemini), S3, S9, S11, S12, S13, S14 (all Claude). The total of 7+2 attributions reflects the dual-agent attribution on the re-extract finding.</p>
+    <p>The round&#39;s value came primarily from Claude&#39;s tightening pass on Round 4&#39;s fixes plus Gemini&#39;s <code>Moproxy</code> catch. Codex contributed the most calibrated read on a round whose surface was polish.</p>
     </div>
     <hr>
     <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Read the prior round&#39;s <code>## Resolution</code> table and honour Skipped/Commented decisions.<em></em> When a target has a prior <code>.reviews/{ID}.md</code> with a Resolution table, the lead helper should parse each row and pass declined items as Acknowledged Limitations into the prompt, rather than letting the prior-round-suggestions gate re-raise them as fresh findings. The consolidator should then route any agent finding that matches a declined entry (by file+line proximity and title similarity) into this round&#39;s Acknowledged Limitations, attributed back to the original round. Re-raise only when the surrounding code materially changed since the decline. Capturing the author&#39;s reasoning for each Skip (defaulted from any reason proposed in the <code>/address-review</code> Q&amp;A) carries the rationale forward; future-round agents see why a finding was declined and stop reaching for the same shape under a different framing.</li>
+    </ul>
     <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
     <ul>
       <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b93718171f"><code>b93718171f</code></a> predates this PR&#39;s changes to <code>scripts/dependencies/lima.ts</code>.<em></em> When an agent claims a missing platform-skip for <code>Qemu</code>/<code>Lima</code> on Linux ARM64, verify against <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/e707246d7da1c4a71a19f249948b590d9ec1e671/scripts/dependencies/lima.ts#L96-L99"><code>scripts/dependencies/lima.ts:96-99</code></a> first; the skip has carried forward unchanged through the PR. Gemini&#39;s I2 in this round was a false positive that this verification would have caught upfront.</li>
