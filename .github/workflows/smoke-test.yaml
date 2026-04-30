@@ -47,6 +47,43 @@ jobs:
       shell: bash
       run: echo "RD_LOGS_DIR=$PWD/logs" >> "$GITHUB_ENV"
 
+    - name: Install Lima override.yaml with diagnostic provision script
+      shell: bash
+      run: |
+        config_dir="$HOME/Library/Application Support/rancher-desktop/lima/_config"
+        mkdir -p "$config_dir"
+        cat >"$config_dir/override.yaml" <<'EOF'
+        # Captures the post-cloud-init state of the guest, so we can tell
+        # whether 04-persistent-data-volume.sh actually mounted /mnt/data
+        # and bind-mounted /var/lib, etc. The home directory is mounted
+        # writable by Rancher Desktop, so the host sees these files even
+        # after the VM shuts down.
+        provision:
+        - mode: system
+          script: |
+            #!/bin/sh
+            set -u
+            dest=/Users/runner/lima-diagnostics
+            mkdir -p "$dest"
+            {
+              echo "===== date ====="; date
+              echo "===== uname -a ====="; uname -a
+              echo "===== mount ====="; mount
+              echo "===== df -h ====="; df -h
+              echo "===== blkid ====="; blkid
+              echo "===== lsblk -f ====="; lsblk -f
+              echo "===== ls -la /mnt ====="; ls -la /mnt
+              echo "===== ls -la /mnt/data ====="; ls -la /mnt/data 2>&1
+              echo "===== ls -la /var/lib ====="; ls -la /var/lib 2>&1
+              echo "===== ls -la /var/lib/rancher 2>&1 ====="; ls -la /var/lib/rancher 2>&1
+              echo "===== /proc/mounts ====="; cat /proc/mounts
+            } >"$dest/state.txt" 2>&1
+            cp /var/log/cloud-init-output.log "$dest/" 2>/dev/null || true
+            cp /var/log/lima-init.log "$dest/" 2>/dev/null || true
+            cp /var/log/messages "$dest/" 2>/dev/null || true
+            sync
+        EOF
+
     - name: Download artifacts
       uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
       with:
@@ -58,19 +95,24 @@ jobs:
       shell: bash
       run: |
         instance_dir="$HOME/Library/Application Support/rancher-desktop/lima/0"
-        if [[ ! -d "$instance_dir" ]]; then
+        if [[ -d "$instance_dir" ]]; then
+          dest="$RD_LOGS_DIR/lima"
+          mkdir -p "$dest"
+          # Keep the artifact small: skip basedisk/diffdisk and *.sock/pid.
+          shopt -s nullglob
+          for src in "$instance_dir"/*.log "$instance_dir"/*.log.* \
+                     "$instance_dir/lima.yaml" "$instance_dir/cidata.iso"; do
+            cp "$src" "$dest/"
+          done
+          ls -la "$instance_dir" > "$dest/listing.txt" 2>&1
+        else
           echo "No Lima instance directory at $instance_dir"
-          exit 0
         fi
-        dest="$RD_LOGS_DIR/lima"
-        mkdir -p "$dest"
-        # Keep the artifact small: skip basedisk/diffdisk and *.sock/pid.
-        shopt -s nullglob
-        for src in "$instance_dir"/*.log "$instance_dir"/*.log.* \
-                   "$instance_dir/lima.yaml" "$instance_dir/cidata.iso"; do
-          cp "$src" "$dest/"
-        done
-        ls -la "$instance_dir" > "$dest/listing.txt" 2>&1
+        if [[ -d "$HOME/lima-diagnostics" ]]; then
+          cp -R "$HOME/lima-diagnostics" "$RD_LOGS_DIR/"
+        else
+          echo "No guest diagnostics at $HOME/lima-diagnostics (provision script never ran)"
+        fi
     - name: Upload logs
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: always()
