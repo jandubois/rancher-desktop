@@ -1,11 +1,12 @@
-# Reproduces the Lima boot-stall on the v1.22.1 macOS Intel build.
+# Verifies the data-volume mount fix on the macOS Intel build from
+# rancher-sandbox/rancher-desktop PR #10201.
 name: Release smoke test
 permissions: {}
 on:
   workflow_dispatch:
 
 env:
-  RELEASE_TAG: v1.22.1
+  PR_RUN_ID: 25195627432
 
 jobs:
   download-artifacts:
@@ -14,12 +15,18 @@ jobs:
     permissions:
       contents: read
     steps:
-    - name: Download macOS x86_64 artifacts
+    - name: Download macOS x86_64 artifact from PR build
       run: |
-        gh release download "$RELEASE_TAG" \
+        gh run download "$PR_RUN_ID" \
           --repo rancher-sandbox/rancher-desktop \
-          --pattern '*.x86_64.dmg' \
-          --pattern '*.x86_64.dmg.sha512sum'
+          --name 'Rancher Desktop.x86_64.dmg' \
+          --dir .
+        # gh run download extracts the zip; the dmg lands at the top level.
+        # Rename to match smoke-test.sh's *.x86_64.dmg pattern, then
+        # synthesize the sha512sum file the script expects.
+        mv 'Rancher Desktop.x86_64.dmg' rancher-desktop.x86_64.dmg
+        sha512sum rancher-desktop.x86_64.dmg > rancher-desktop.x86_64.dmg.sha512sum
+        ls -la *.x86_64.dmg*
       env:
         GH_TOKEN: ${{ github.token }}
     - name: Upload macOS x86_64 artifacts
