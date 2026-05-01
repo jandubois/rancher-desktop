@@ -21,10 +21,12 @@ jobs:
           --repo rancher-sandbox/rancher-desktop \
           --name 'Rancher Desktop.x86_64.dmg' \
           --dir .
-        # gh run download extracts the zip; the dmg lands at the top level.
-        # Rename to match smoke-test.sh's *.x86_64.dmg pattern, then
-        # synthesize the sha512sum file the script expects.
-        mv 'Rancher Desktop.x86_64.dmg' rancher-desktop.x86_64.dmg
+        # The artifact is a single dmg; locate it and rename to match
+        # smoke-test.sh's *.x86_64.dmg pattern, then synthesize the
+        # sha512sum file the script expects.
+        find . -name '*.dmg' -print0 | xargs -0 ls -la
+        dmg=$(find . -name '*.dmg' -print -quit)
+        mv "$dmg" rancher-desktop.x86_64.dmg
         sha512sum rancher-desktop.x86_64.dmg > rancher-desktop.x86_64.dmg.sha512sum
         ls -la *.x86_64.dmg*
       env:
