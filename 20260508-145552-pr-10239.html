@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260508-145552-pr-10239</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260508-145552-pr-10239</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-08 14:55</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10239" class="gh-ref" data-title="host-switch: validate handshake by waiting for data connection" data-state="merged" data-type="pr">#10239</a> — host-switch: validate handshake by waiting for data connection</td></tr>
+      <tr><td>Branch</td><td><code>fix-host-switch-phantom-handshake</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/50719704f"><code>50719704f</code></a> host-switch: redo handshake when data connection is lost<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> host-switch: address review feedback on handshake retry</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one important regression on shutdown unblocking; the rest are nits and test gaps.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>53 min 28 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR fixes a real deadlock: after engine-switch tears down the WSL distro, residual Hyper-V vsock state can let <code>vsockHandshake</code> &quot;succeed&quot; before any new peer is up, leaving host-switch waiting on a data connection that never arrives. The fix wraps the handshake in a retry loop that waits for the peer&#39;s data connection on the same listener and treats a missing connection as a phantom; the first real connection is replayed via a <code>firstConnListener</code> shim so the rest of host-switch is unaffected. Both prior-round comments from Nino-K were addressed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a>.</p>
+    <p>The structure is sound and the unit tests cover <code>firstConnListener</code> and <code>acceptWithTimeout</code> well. One regression matters: <code>runHandshakeLoop</code> is now an errgroup task whose <code>serveAccepts</code> blocks in <code>vn.AcceptStdio</code>, and that call&#39;s read loop checks <code>ctx.Done()</code> only between reads — so context cancellation alone does not unblock an idle data connection, and shutdown can hang. The other findings are minor: a test-only nil-deref, a missing test for the <code>ctx.Err()</code> precedence rule that motivated the fix-up commit, and several style/placement nits.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Context cancellation does not unblock the active data connection <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L173-L183">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="173" data-line="178"><code class="language-go">		return
+	}
+	// AcceptStdio blocks for the lifetime of the connection, returning when
+	// the peer goes away.  Returning here lets runHandshakeLoop redo the
+	// handshake.
+	err = vn.AcceptStdio(ctx, conn)
+	if err != nil {
+		logrus.Errorf(&quot;data connection error: %v&quot;, err)
+	} else {
+		logrus.Info(&quot;data connection closed by peer&quot;)
+	}</code></pre>
+    <p><code>runHandshakeLoop</code> is now an errgroup task (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L111"><code>switch_windows.go:111</code></a>), and <code>groupErrs.Wait()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L126"><code>switch_windows.go:126</code></a>) waits for it to return. On SIGTERM the signal handler cancels the context (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L119"><code>switch_windows.go:119</code></a>), but <code>serveAccepts</code> blocks synchronously in <code>vn.AcceptStdio</code> → <code>Switch.Accept</code> → <code>rxStream</code>, whose select on <code>ctx.Done()</code> runs only between reads:</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L106-L131">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="106" data-line="111-126"><code class="language-go">			return debugLogLoop(ctx, vn, debugLogInterval)
+		})
+	}
+
+	groupErrs.Go(func() error {
+		return runHandshakeLoop(ctx, vn)
+	})
+
+	// Wait for something to happen
+	groupErrs.Go(func() error {
+		select {
+		// Catch signals so exits are graceful and defers can run
+		case s := &lt;-sigChan:
+			cancel()
+			return fmt.Errorf(&quot;signal caught: %v&quot;, s)
+		case &lt;-ctx.Done():
+			return nil
+		}
+	})
+	// Wait for all of the go funcs to finish up
+	if err := groupErrs.Wait(); err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
+}
+</code></pre>
+      <pre><code class="language-go">// gvisor-tap-vsock@v0.8.7 pkg/tap/switch.go:233
+func (e *Switch) rxStream(ctx context.Context, id int, conn net.Conn, sProtocol streamProtocol) error {
+    reader := bufio.NewReader(conn)
+    ...
+    for {
+        select {
+        case &lt;-ctx.Done():
+            break loop
+        default:
+        }
+        _, err := io.ReadFull(reader, sizeBuf)  // blocks until bytes arrive</code></pre>
+    <p><code>io.ReadFull</code> blocks until the peer sends data or the connection is closed. Cancelling <code>ctx</code> alone does nothing. Pre-PR, the accept loop ran in a fire-and-forget <code>go func()</code> that <code>Wait()</code> never tracked, so the leaked goroutine died with the process. Post-PR the loop is in the errgroup, so <code>Wait()</code> blocks on it — host-switch can stay alive after intentional shutdown if the data connection is idle and still open. This is a regression from the merge-base behavior.</p>
+    <p>Fix: close the accepted connection when the context is cancelled, so the blocked read returns:</p>
+      <pre><code class="language-diff"> // serveAccepts handles a single connection from ln through vn, returning when
+ // the connection ends — because the context is cancelled or because the peer
+ // has gone away.  Either way, the caller should redo the handshake.
+ func serveAccepts(ctx context.Context, vn *virtualnetwork.VirtualNetwork, ln net.Listener) {
+     conn, err := ln.Accept()
+     if err != nil {
+         logrus.Errorf(&quot;failed to accept: %v&quot;, err)
+         return
+     }
++    stopClose := context.AfterFunc(ctx, func() { _ = conn.Close() })
++    defer stopClose()
+     // AcceptStdio blocks for the lifetime of the connection, returning when
+     // the peer goes away.  Returning here lets runHandshakeLoop redo the
+     // handshake.
+     err = vn.AcceptStdio(ctx, conn)</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Nil-deref risk in test dial helper <span class="pill pill-claude">Claude</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows_test.go#L47-L60">src/go/networking/cmd/host/switch_windows_test.go</a></div>
+      <pre data-start="47" data-line="52-55"><code class="language-go">	got, err := wrapped.Accept()
+	require.NoError(t, err)
+	assert.Same(t, accepted, got, &quot;first Accept should replay the pre-accepted connection&quot;)
+
+	// Subsequent Accept should delegate to the real listener.
+	go func() {
+		c, _ := (&amp;net.Dialer{}).DialContext(t.Context(), &quot;tcp&quot;, ln.Addr().String())
+		_ = c.Close()
+	}()
+	conn2, err := wrapped.Accept()
+	if assert.NoError(t, err) {
+		_ = conn2.Close()
+	}
+}</code></pre>
+    <p>If <code>DialContext</code> returns <code>(nil, err)</code>, <code>c.Close()</code> panics on a nil-interface deref and crashes the test goroutine. Two other dial sites in the same file already guard against this — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows_test.go#L92-L96"><code>switch_windows_test.go:92-96</code></a> checks <code>if c != nil</code>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows_test.go#L159-L161"><code>switch_windows_test.go:159-161</code></a> checks <code>if err == nil</code>. The pattern at line 53 is the inconsistent one.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows_test.go#L87-L101">src/go/networking/cmd/host/switch_windows_test.go</a></div>
+      <pre data-start="87" data-line="92-96"><code class="language-go">		}()
+	}
+	// Feed (concurrent - 1) real dials so the non-replay goroutines unblock.
+	for i := 0; i &lt; concurrent-1; i++ {
+		go func() {
+			c, _ := (&amp;net.Dialer{}).DialContext(t.Context(), &quot;tcp&quot;, ln.Addr().String())
+			if c != nil {
+				_ = c.Close()
+			}
+		}()
+	}
+
+	replayCount := 0
+	deadline := time.After(5 * time.Second)
+	for i := 0; i &lt; concurrent; i++ {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows_test.go#L154-L158">src/go/networking/cmd/host/switch_windows_test.go</a></div>
+      <pre data-start="154" data-line="159-161"><code class="language-go">
+	conn, err := acceptWithTimeout(ctx, ln, time.Hour)
+	assert.Nil(t, conn)
+	assert.True(t, errors.Is(err, context.Canceled), &quot;expected context.Canceled, got %v&quot;, err)
+}</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff"> go func() {
+-    c, _ := (&amp;net.Dialer{}).DialContext(t.Context(), &quot;tcp&quot;, ln.Addr().String())
+-    _ = c.Close()
++    c, err := (&amp;net.Dialer{}).DialContext(t.Context(), &quot;tcp&quot;, ln.Addr().String())
++    if err == nil {
++        _ = c.Close()
++    }
+ }()</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> No test covers <code>handshakeWithRetry</code>&#39;s <code>ctx.Err()</code> precedence <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p>The follow-up commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> exists to fix one specific bug: <code>acceptWithTimeout</code>&#39;s timer can win the select race even when the context is already cancelled, so <code>handshakeWithRetry</code> must re-check <code>ctx.Err()</code> and prefer it over the timeout error:</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L283-L303">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="283" data-line="288-298"><code class="language-go">		_ = ln.Close()
+		if ctx.Err() != nil {
+			return nil, err
+		}
+		lastErr = err
+		logrus.Warnf(&quot;handshake attempt %d unvalidated (%v); retrying&quot;, attempt, err)
+	}
+	return nil, fmt.Errorf(&quot;handshake never produced a data connection after %d attempts: %w&quot;, handshakeMaxAttempts, lastErr)
+}
+
+// acceptWithTimeout calls ln.Accept in a goroutine and returns the result, or
+// errAcceptTimeout if no connection arrives in time.  On timeout (or context
+// cancellation) it closes ln, which unblocks the goroutine so it does not
+// leak.
+func acceptWithTimeout(ctx context.Context, ln net.Listener, timeout time.Duration) (net.Conn, error) {
+	type result struct {
+		conn net.Conn
+		err  error
+	}
+	ch := make(chan result, 1)
+	go func() {</code></pre>
+    <p>That precedence rule is the entire point of the fix-up commit, but no test exercises it. The existing tests cover only <code>acceptWithTimeout</code> directly, where the behavior differs (it has its own <code>ctx.Done()</code> case). A small seam — inject <code>vsockHandshake</code> via a function variable, or extract the validation step into a testable helper — would let a test feed a never-arriving listener with an already-cancelled context and assert the wrapped error is <code>context.Canceled</code>, not <code>errAcceptTimeout</code>. Without one, a regression to the bug Nino flagged would not be caught.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> New constants placed away from existing <code>const</code> block <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L232-L242">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="232" data-line="237"><code class="language-go">}
+
+// handshakeValidationTimeout is how long to wait for a real data connection
+// from the peer after vsockHandshake reports success.  If no connection
+// arrives, the handshake is treated as a phantom and retried.
+const handshakeValidationTimeout = 10 * time.Second
+
+// handshakeMaxAttempts caps the retries when the peer never produces a data
+// connection.  This guards against an infinite loop if the peer is
+// unreachable; the underlying vsockHandshake already has its own
+// timeoutSeconds budget per attempt for finding the VMGUID.</code></pre>
+    <p>The file already groups package-level tunables in a single <code>const ( ... )</code> block at lines 45-50, and this PR added <code>debugLogInterval</code> to that block. The two new tunables sit alone next to the function that uses them. Co-locating them improves discoverability for future tuning.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L40-L55">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="40" data-line="45-50"><code class="language-go">	debug             bool
+	virtualSubnet     string
+	staticPortForward arrayFlags
+)
+
+const (
+	vsockListenPort    = 6656
+	vsockHandshakePort = 6669
+	timeoutSeconds     = 5 * 60
+	debugLogInterval   = 5 * time.Second
+)
+
+func main() {
+	flag.BoolVar(&amp;debug, &quot;debug&quot;, false, &quot;enable additional debugging&quot;)
+	flag.StringVar(&amp;virtualSubnet, &quot;subnet&quot;, config.DefaultSubnet,
+		fmt.Sprintf(&quot;Subnet range with CIDR suffix for virtual network, e,g: %s&quot;, config.DefaultSubnet))</code></pre>
+      <pre><code class="language-diff"> const (
+     vsockListenPort    = 6656
+     vsockHandshakePort = 6669
+     timeoutSeconds     = 5 * 60
+     debugLogInterval   = 5 * time.Second
++    // handshakeValidationTimeout is how long to wait for a real data
++    // connection from the peer after vsockHandshake reports success.
++    handshakeValidationTimeout = 10 * time.Second
++    // handshakeMaxAttempts caps the retries when the peer never produces
++    // a data connection.
++    handshakeMaxAttempts = 5
+ )</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>errAcceptTimeout</code> declaration trails its only consumer <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L335-L344">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="335" data-line="340"><code class="language-go">		return err
+	}
+	defer conn.Close()
+	_, err = conn.Write([]byte(vsock.ReadySignal))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}</code></pre>
+    <p>The variable is referenced inside <code>acceptWithTimeout</code> (line 330) but declared after the function. Idiomatic Go places sentinel errors at the top of the file or directly above the function that returns them. Move it next to the related constants.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L325-L335">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="325" data-line="330"><code class="language-go">		}
+		return nil, ctx.Err()
+	}
+}
+
+var errAcceptTimeout = errors.New(&quot;timed out waiting for peer data connection&quot;)
+
+func signalVsockListenerReady(vmGUID hvsock.GUID, peerPort uint32) error {
+	conn, err := vsock.GetVsockConnection(vmGUID, peerPort)
+	if err != nil {
+		return err</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Redundant <code>ln.Close()</code> after <code>acceptWithTimeout</code> returns on timeout/cancellation <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L283-L298">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="283" data-line="288-293"><code class="language-go">		_ = ln.Close()
+		if ctx.Err() != nil {
+			return nil, err
+		}
+		lastErr = err
+		logrus.Warnf(&quot;handshake attempt %d unvalidated (%v); retrying&quot;, attempt, err)
+	}
+	return nil, fmt.Errorf(&quot;handshake never produced a data connection after %d attempts: %w&quot;, handshakeMaxAttempts, lastErr)
+}
+
+// acceptWithTimeout calls ln.Accept in a goroutine and returns the result, or
+// errAcceptTimeout if no connection arrives in time.  On timeout (or context
+// cancellation) it closes ln, which unblocks the goroutine so it does not
+// leak.
+func acceptWithTimeout(ctx context.Context, ln net.Listener, timeout time.Duration) (net.Conn, error) {
+	type result struct {</code></pre>
+    <p><code>acceptWithTimeout</code> already closes <code>ln</code> on its <code>case &lt;-timer.C</code> and <code>case &lt;-ctx.Done()</code> branches (<code>switch_windows.go:326,332</code>). The double-close is idempotent on hvsock listeners and harmless, but the responsibility split is muddy: callers should not assume <code>ln</code> is half-owned by <code>acceptWithTimeout</code> on the error path. Either drop the outer <code>Close</code> and document that <code>acceptWithTimeout</code> owns <code>ln</code> when it returns an error, or move the close out of <code>acceptWithTimeout</code> and centralize it in <code>handshakeWithRetry</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L321-L331">src/go/networking/cmd/host/switch_windows.go</a></div>
+      <pre data-start="321" data-line="326"><code class="language-go">	case &lt;-ctx.Done():
+		_ = ln.Close()
+		if r := &lt;-ch; r.conn != nil {
+			_ = r.conn.Close()
+		}
+		return nil, ctx.Err()
+	}
+}
+
+var errAcceptTimeout = errors.New(&quot;timed out waiting for peer data connection&quot;)
+</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> Tests use TCP, not hvsock — <code>Close</code>-during-<code>Accept</code> semantics differ <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>acceptWithTimeout</code>&#39;s correctness depends on <code>ln.Close()</code> unblocking a pending <code>Accept</code> so the goroutine drains. TCP listeners on Linux/Darwin honor this contract. <code>hvsock.Listener</code> (the production listener) wraps Windows native vsock sockets, where the same guarantee is not part of the package&#39;s documented API.</p>
+    <p>The TCP-based tests therefore validate the helpers&#39; logic but not the production assumption. Add a short comment near <code>localTCPListener</code> calling out that production uses hvsock and relies on the same close-unblocks-accept contract, so a future refactor cannot silently invalidate it. Gemini proposed an alternative — drain the channel asynchronously so <code>acceptWithTimeout</code> returns on timeout regardless — but that converts a potential leak (if hvsock failed to unblock) into a guaranteed one, so the conservative fix is the comment.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> Use <code>time.Ticker</code> instead of <code>time.After</code> in <code>debugLogLoop</code> <span class="pill pill-gemini">Gemini</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>debugLogLoop</code> was extracted from the inline goroutine in this PR; the extraction preserved the original <code>time.After</code> pattern. <code>time.After</code> allocates a fresh timer and channel on every iteration; a single <code>time.Ticker</code> is the idiomatic choice for a periodic log loop. The interval is 5 seconds, so the cost is small, but the change costs nothing either:</p>
+      <pre><code class="language-diff"> func debugLogLoop(ctx context.Context, vn *virtualnetwork.VirtualNetwork, interval time.Duration) error {
++    ticker := time.NewTicker(interval)
++    defer ticker.Stop()
+     for {
+         select {
+-        case &lt;-time.After(interval):
++        case &lt;-ticker.C:
+             logrus.Debugf(&quot;%v sent to the VM, %v received from the VM&quot;, humanize.Bytes(vn.BytesSent()), humanize.Bytes(vn.BytesReceived()))
+         case &lt;-ctx.Done():
+             return nil
+         }
+     }
+ }</code></pre>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <p><strong>Long shutdown latency on context cancellation during a re-handshake</strong> <code>(future)</code> <span class="pill pill-claude">Claude</span></p>
+    <p><code>runHandshakeLoop</code> now calls <code>vsockHandshake</code> repeatedly across host-switch&#39;s lifetime. <code>vsockHandshake</code> calls <code>vsock.GetVMGUID</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/pkg/vsock/handshake_windows.go#L33"><code>pkg/vsock/handshake_windows.go:33</code></a>), which uses a 5-minute <code>bailout</code> timer (<code>timeoutSeconds = 5 * 60</code>); inside, <code>tryFindGUID</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/pkg/vsock/handshake_windows.go#L126-L136"><code>pkg/vsock/handshake_windows.go:126-136</code></a>) selects only on <code>found</code> and <code>timeout</code> — never on <code>ctx.Done()</code>. If the user shuts down Rancher Desktop while host-switch is mid-re-handshake and no peer is reachable, shutdown can stall up to 5 minutes per attempt before <code>runHandshakeLoop</code> propagates the error.</p>
+    <p>This is pre-existing in <code>vsock.GetVMGUID</code>, not introduced by this PR — but the PR turns a one-shot call into a retry loop, so the same latency applies on every engine-switch teardown, not just at startup. With <code>handshakeMaxAttempts = 5</code>, the worst case stacks up to 5×5min if WSL is up but the peer is unreachable. Worth tracking as a follow-up to add a <code>ctx.Done()</code> case in <code>tryFindGUID</code>.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Decoupled lifecycle</strong> <code>(in-scope)</code> <span class="pill pill-gemini">Gemini</span> — Hoisting <code>virtualnetwork.New</code> out of the connection loop into <code>main</code> keeps the host-side HTTP server (and its API endpoints) bound and serving across engine switches, so local clients querying port forwards do not see transient errors.</li>
+      <li><em></em><code>firstConnListener</code> shim<em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span> — The shim is the right abstraction: it lets <code>handshakeWithRetry</code> validate the data connection without changing the contract the rest of host-switch consumes. The explicit <code>Close</code> added in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> cleanly addresses the leak case Nino raised.</li>
+      <li><em></em><code>acceptWithTimeout</code> close-then-drain sequencing<em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude</span> — <code>Close</code> → drain → conditional <code>Close</code> of any captured connection is the right pattern for &quot;close-to-unblock&quot; plus leak-free shutdown, and the inline comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L319-L321"><code>switch_windows.go:319-321</code></a> explains why the drain matters.</li>
+      <li><em></em>Forward-looking comment on <code>runHandshakeLoop</code><em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude</span> — The comment explaining why a host-only retry was chosen over a nonce-exchange protocol change is exactly the kind of note that helps future maintainers; calling out that the cleaner fix would require coordinating a WSLDistro version bump is especially valuable.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Unit tests cover the new helpers reasonably well: <code>firstConnListener</code> has tests for replay, concurrent-replay-once, and close-before-accept; <code>acceptWithTimeout</code> has tests for happy-path, timeout, and ctx-cancellation. Untested scenarios, by risk:</p>
+    <ol>
+      <li><code>handshakeWithRetry</code>&#39;s <code>ctx.Err() != nil</code> precedence over <code>errAcceptTimeout</code> — the entire reason for the <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> fix-up commit. See <strong>S2</strong>.</li>
+      <li><code>handshakeWithRetry</code>&#39;s 5-attempt cap and the wrapped final error message.</li>
+      <li><code>runHandshakeLoop</code>&#39;s redo-on-disconnect loop — closest to integration territory; would need a fake <code>virtualnetwork</code>/listener pair.</li>
+      <li><strong>I1</strong>: there is no test that cancels <code>runHandshakeLoop</code> or <code>serveAccepts</code> while the accepted data connection is idle and still open.</li>
+    </ol>
+    <p>Items (1) and (2) are easy with a small interface seam. Items (3) and (4) are integration-style and reasonably skipped given complexity, though (4) becomes attractive once the I1 fix lands.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Comments on the new functions are thorough and explain design rationale, not just mechanics — the <code>runHandshakeLoop</code> doc and the <code>acceptWithTimeout</code> close-then-drain comment are particularly clear. The networking docs (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/README.md#L46-L47"><code>src/go/networking/README.md:46-47</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/docs/networking/windows/rancher-desktop-networking.md#L48"><code>docs/networking/windows/rancher-desktop-networking.md:48</code></a>) still describe the old protocol shape, where host-switch completes the handshake and then listens for traffic; an update mentioning that the READY signal is now provisional until the first data connection is validated would keep the docs in sync. Otherwise no user-facing docs need changes — this is internal Windows-only behavior, invisible to users beyond a faster post-engine-switch recovery.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Two commits, both well-scoped:</p>
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/50719704f"><code>50719704f</code></a> — implements the loop and the retry validator.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> — addresses Nino&#39;s two review comments: prefer <code>ctx.Err()</code> over <code>errAcceptTimeout</code> in <code>handshakeWithRetry</code>, and add <code>Close()</code> to <code>firstConnListener</code>.</li>
+    </ul>
+    <p>Keeping the review-feedback fix-up as a separate commit makes the review-response visible and the PR re-reviewable across rebases.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><code>acceptWithTimeout</code> race comment<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L319-L321"><code>src/go/networking/cmd/host/switch_windows.go:319-321</code></a>):</li>
+    </ul>
+    <p>  &gt; // On timeout or cancellation, close ln to unblock the goroutine, then drain   &gt; // ch.  If Accept won the race, close the returned connection; otherwise   &gt; // the peer&#39;s data connection leaks and the retry hits the same deadlock.</p>
+    <p>  The author acknowledges that a successful <code>Accept</code> can race with a fired timer/cancellation and have its connection closed. The drain loop is the chosen mitigation. The PR&#39;s behavior matches this rationale.</p>
+    <ul>
+      <li><strong>Nonce exchange as the cleaner fix</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L142"><code>src/go/networking/cmd/host/switch_windows.go:142</code></a>) <span class="pill pill-codex">Codex</span> — The comment notes that adding a nonce exchange to the data-connection protocol would be more direct, but requires a coordinated change in the WSL distro tarball and a <code>WSLDistro</code> version bump. The host-only workaround makes phantom-handshake deadlocks much less likely without ruling out a phantom that also produces a transient data connection.</li>
+      <li><em></em>Nino&#39;s &quot;return <code>ctx.Err()</code>&quot; comment<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10239#discussion_r3210817758">discussion_r3210817758</a>) — addressed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L294-L296"><code>switch_windows.go:294-296</code></a>. Verified.</li>
+      <li><em></em>Nino&#39;s &quot;<code>l.first</code> may leak on <code>Close</code> before <code>Accept</code>&quot; comment<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10239#discussion_r3210890935">discussion_r3210890935</a>) — addressed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d43b3b725"><code>d43b3b725</code></a> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/50719704fb8d2a2b417f89774d0a1d54fb35bc70/src/go/networking/cmd/host/switch_windows.go#L266-L271"><code>switch_windows.go:266-271</code></a>, exactly as Nino sketched. Verified.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude was the most thorough on style and test gaps: it caught the test-only nil-deref (S1), the missing test for the precedence rule that motivated the fix-up commit (S2), and four placement/structure nits (S3-S5, plus the conservative framing for S6). The &quot;long shutdown latency&quot; design observation correctly traced into <code>vsock.GetVMGUID</code> and noted that the PR amplifies a pre-existing 5-minute hang by repeating the call. It missed I1.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex&#39;s single finding is the only finding that matters in this review: I1 traced the post-PR errgroup wiring through <code>vn.AcceptStdio</code> → <code>Switch.rxStream</code> and identified that <code>io.ReadFull</code> does not honor <code>ctx.Done()</code>, making clean shutdown depend on connection closure. The fix it proposed (<code>context.AfterFunc(ctx, conn.Close)</code>) is exactly the right shape. Codex skipped the style nits, which is reasonable but trades coverage breadth for one high-value insight.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini contributed two observations: a useful style nit about <code>time.Ticker</code> vs <code>time.After</code> in the new <code>debugLogLoop</code> (S7), and a duplicate of Claude&#39;s hvsock-semantics concern (S6). Its proposed defensive fix for S6 — drain the channel in a background goroutine — would convert a potential leak into a guaranteed one if <code>hvsock.Listener.Close</code> failed to unblock <code>Accept</code>, so the underlying observation was kept and Gemini&#39;s specific fix was dropped.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>30m 59s</td><td>5m 42s</td><td>—</td></tr>
+        <tr><td>Findings</td><td>6S</td><td>1I</td><td>1S</td></tr>
+        <tr><td>Tool calls</td><td>20 (Bash 12, Read 8)</td><td>53 (shell 52, stdin 1)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>2</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>5</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>6S</strong></td><td><strong>1I</strong></td><td><strong>1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p>Codex provided the most value this round: one important regression that Claude and Gemini both missed, with a precise fix. Claude provided the most breadth on lower-priority items. Gemini&#39;s contribution was modest but not zero — the <code>time.Ticker</code> nit is a real touched-line issue, and its hvsock-semantics observation reinforced Claude&#39;s S6.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Errgroup task lifecycle.</strong> When reviewing a Go change that moves a long-blocking call (network read, <code>Accept</code>, <code>io.ReadFull</code>) into an <code>errgroup.Group.Go</code> task, check whether the call honors context cancellation natively. Standard <code>net.Conn.Read</code> and most <code>io.ReadFull(conn, ...)</code> calls do <strong>not</strong> — they only unblock when the connection is closed. If the call cannot honor the context, the task either needs a <code>context.AfterFunc</code> that closes the underlying resource on cancellation, or the change converts a previously fire-and-forget goroutine into one that hangs <code>errgroup.Wait()</code> on shutdown. Flag this any time a fire-and-forget goroutine becomes an errgroup task.</li>
+      <li><em></em>gvisor-tap-vsock <code>AcceptStdio</code> does not unblock on context cancellation.<em></em> <code>virtualnetwork.AcceptStdio</code> calls into <code>Switch.Accept</code> → <code>rxStream</code>, whose select on <code>ctx.Done()</code> runs only between reads. The blocking <code>io.ReadFull</code> only returns when the connection is closed. Any caller in this repo that ties shutdown latency to <code>AcceptStdio</code> returning needs a <code>context.AfterFunc(ctx, conn.Close)</code> (or equivalent connection-close-on-cancel) to make shutdown deterministic.</li>
+      <li><em></em><code>vsock.GetVMGUID</code> ignores its <code>ctx</code> parameter.<em></em> <code>pkg/vsock/handshake_windows.go</code>&#39;s <code>tryFindGUID</code> selects only on the <code>found</code> channel and a 5-minute <code>timeout</code> channel. Passing a context does nothing for shutdown latency. Any caller in the host-side networking code that loops over <code>GetVMGUID</code> (the new <code>handshakeWithRetry</code> is one) inherits this stall. Reviews of code that calls <code>GetVMGUID</code> should ask whether the caller can tolerate up to 5 minutes per call, or whether the call should be guarded by a separate timeout.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
