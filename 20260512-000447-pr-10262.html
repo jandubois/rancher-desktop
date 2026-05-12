@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260512-000447-pr-10262</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260512-000447-pr-10262</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-12 00:04</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10262" class="gh-ref" data-title="procnet: don&#39;t shadow CNI portmap with PREROUTING DNAT" data-state="open" data-type="pr">#10262</a> — procnet: don&#39;t shadow CNI portmap with PREROUTING DNAT</td></tr>
+      <tr><td>Branch</td><td><code>fix-procnet-cni-shadow</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1fa723ece"><code>1fa723ece</code></a> procnet: skip PREROUTING DNAT when an engine chain already manages the port<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/15973c79b"><code>15973c79b</code></a> procnet: defer port exposure until observed in two consecutive scans<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fc77f4483"><code>fc77f4483</code></a> procnet: treat tracker.Add &quot;proxy already running&quot; as successful delegation</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one Important regression on the engine-chain probe (protocol blindness); the previously-flagged &quot;iptables errors → absent state&quot; concern is narrowed by the stability gate to a Suggestion. PR description still attributes the transient listener to the wrong subsystem; worth correcting before merge.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>15 min 37 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The three commits address a real production hang: the <code>/proc/net</code> scanner appends <code>PREROUTING -j DNAT --to-destination 127.0.0.1:&lt;port&gt;</code> for bridge-network ports whose <code>CNI-HOSTPORT-DNAT</code> chain already manages traffic, shadowing the engine&#39;s rule on <code>iptables-nft</code> kernels and breaking <code>docker run -p 127.0.0.1:N:N</code> end-to-end. The transient listener procnet catches turns out to be nerdctl&#39;s own OCI <code>createRuntime</code> hook — not the CNI portmap plugin the PR description names — holding <code>127.0.0.1:&lt;hostPort&gt;</code> while it wires up host port forwarding, before CNI installs its own iptables rules. The fix stacks three mechanisms in order of effectiveness: a two-tick stability gate (<code>seenLastScan</code> / <code>added</code>) as the <strong>primary</strong> filter — the hook never lives long enough to be seen twice on a normal-load system, so it never reaches <code>tracker.Add</code>; an engine-chain precheck (<code>engineChainManagesPort</code> + <code>dnatChainContainsPort</code>) as <strong>defence-in-depth</strong> for the rare case where the hook lingers across two scans on a loaded box and CNI has by then written its rule; and a <code>&quot;proxy already running&quot;</code> delegation path that suppresses the resulting <code>tracker.Add</code> retry storm without touching correctness (the rogue iptables Append was already skipped because the failing <code>tracker.Add</code> short-circuited the helper).</p>
+    <p>Structure: the diff is well-scoped to one package, the commits map onto the actual debugging arc, and the new code carries unusually thorough block comments. One Important finding remains: <code>engineChainManagesPort</code> receives only the port string, so a UDP engine rule on port N suppresses a TCP host-network DNAT for port N (and vice versa) — the same shadow-DNAT failure mode the PR fixes, flipped to the engine side. Both new iptables probes (<code>engineChainManagesPort</code> and <code>preroutingHasLoopbackRule</code>) also collapse every command failure to &quot;not present&quot; — Codex&#39;s original Important — but the stability gate narrows the failure window enough that this is now a Suggestion rather than a regression; on the append side the joint case (hook lingers, probe transiently loses the <code>nat</code> lock) is rare though correlated under load, and on the delete side a probe miss leaks a single PREROUTING rule rather than reintroducing the shadow class.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Engine-chain check ignores protocol — UDP rule can suppress TCP DNAT and vice versa <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L217-L227">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="217" data-line="222"><code class="language-go">	return false
+}
+
+// dnatChainContainsPort reports whether `iptables --list &lt;chain&gt; --numeric`
+// output references `port` as a DNAT destination. It matches both the
+// single-port form (`tcp dpt:&lt;port&gt;`) and the multiport form
+// (`multiport dports &lt;port&gt;`, comma-separated). Word boundaries prevent
+// matching `80` against `8080` or against IP-address octets in `to:`
+// clauses.
+func dnatChainContainsPort(iptablesListOutput, port string) bool {
+	re := regexp.MustCompile(`(?:dpt:|dports? )(?:[0-9]+,)*` + regexp.QuoteMeta(port) + `\b`)</code></pre>
+      <pre><code class="language-go">func engineChainManagesPort(ctx context.Context, port string) bool {
+    for _, chain := range []string{&quot;CNI-HOSTPORT-DNAT&quot;, &quot;DOCKER&quot;} {
+        cmd := exec.CommandContext(ctx,
+            &quot;iptables&quot;, &quot;--table&quot;, &quot;nat&quot;, &quot;--list&quot;, chain, &quot;--numeric&quot;)
+        out, err := cmd.Output()
+        if err != nil { continue }
+        if dnatChainContainsPort(string(out), port) { return true }
+    }
+    return false
+}</code></pre>
+    <p><code>execLoopbackIPtablesRule</code> already knows the protocol (<code>portProto.Proto()</code>), but only the port string is passed to <code>engineChainManagesPort</code>, and <code>dnatChainContainsPort</code>&#39;s regex anchors on <code>dpt:</code> / <code>dports </code> without anchoring on the <code>prot</code> column. <code>iptables -L --numeric</code> prints both <code>tcp dpt:N</code> and <code>udp dpt:N</code> in the same chain. The existing engine writers preserve protocol explicitly (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/containerd/events_linux.go#L333-L335"><code>pkg/containerd/events_linux.go:333-335</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/docker/events.go#L247-L252"><code>pkg/docker/events.go:247-252</code></a>), so the new detection has lost a distinction the rest of the code respects.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/containerd/events_linux.go#L328-L340">src/go/guestagent/pkg/containerd/events_linux.go</a></div>
+      <pre data-start="328" data-line="333-335"><code class="language-go">					ctx,
+					containerNetworks,
+					containerID,
+					namespace,
+					pid,
+					portProto.Port(),
+					portProto.Proto(),
+					portBinding.HostPort)
+				if err != nil {
+					errs = append(errs, err)
+				}
+			}
+		}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/docker/events.go#L242-L257">src/go/guestagent/pkg/docker/events.go</a></div>
+      <pre data-start="242" data-line="247-252"><code class="language-go">			}
+			//nolint:gosec // no security concern with the potentially tainted command arguments
+			iptableCmd := exec.CommandContext(ctx,
+				&quot;iptables&quot;,
+				&quot;--table&quot;, &quot;nat&quot;,
+				&quot;--append&quot;, &quot;DOCKER&quot;,
+				&quot;--protocol&quot;, portProto.Proto(),
+				&quot;--destination&quot;, &quot;0.0.0.0/0&quot;,
+				&quot;--jump&quot;, &quot;DNAT&quot;,
+				&quot;--dport&quot;, portBinding.HostPort,
+				&quot;--to-destination&quot;, fmt.Sprintf(&quot;%s:%s&quot;, containerIP, portProto.Port()))
+			var stderr bytes.Buffer
+			iptableCmd.Stderr = &amp;stderr
+			if err := iptableCmd.Run(); err != nil {
+				errs = append(errs, fmt.Errorf(&quot;creating loopback rule in DOCKER chain failed: %w [%s]&quot;, err, stderr.String()))
+				log.Debugf(&quot;running the following iptables rule [%s] with the error(s):[%v]&quot;, iptableCmd.String(), errs)</code></pre>
+    <p>Concrete failure: a user runs a bridge container that publishes UDP 53 (a DNS-style workload) and, separately, a <code>--network=host</code> container that listens on TCP <code>127.0.0.1:53</code>. The host TCP listener now stops being reachable from the Windows host: <code>engineChainManagesPort(&quot;53&quot;)</code> matches the UDP rule, procnet skips the TCP <code>PREROUTING</code> DNAT, and the host listener has no path back. This is the exact shadow-DNAT failure mode the PR exists to fix, flipped to the opposite side.</p>
+    <p>Fix: thread the protocol through and anchor the regex on it. The existing fixtures all use <code>tcp</code>; add a <code>udp dpt:N</code> fixture to lock the new behavior in.</p>
+      <pre><code class="language-diff">-if action == Append &amp;&amp; engineChainManagesPort(p.context, binding.HostPort) {
++if action == Append &amp;&amp; engineChainManagesPort(p.context, portProto.Proto(), binding.HostPort) {</code></pre>
+      <pre><code class="language-diff">-func engineChainManagesPort(ctx context.Context, port string) bool {
++func engineChainManagesPort(ctx context.Context, protocol, port string) bool {
+     for _, chain := range []string{&quot;CNI-HOSTPORT-DNAT&quot;, &quot;DOCKER&quot;} {
+         ...
+-        if dnatChainContainsPort(string(out), port) {
++        if dnatChainContainsPort(string(out), protocol, port) {</code></pre>
+      <pre><code class="language-diff">-func dnatChainContainsPort(iptablesListOutput, port string) bool {
+-    re := regexp.MustCompile(`(?:dpt:|dports? )(?:[0-9]+,)*` + regexp.QuoteMeta(port) + `\b`)
++func dnatChainContainsPort(iptablesListOutput, protocol, port string) bool {
++    // Anchor on the protocol token so udp doesn&#39;t match a tcp probe (and vice versa).
++    re := regexp.MustCompile(
++        `\b` + regexp.QuoteMeta(protocol) + `\b[^\n]*?(?:dpt:|dports? )(?:[0-9]+,)*` +
++            regexp.QuoteMeta(port) + `\b`)
+     return re.MatchString(iptablesListOutput)
+ }</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> iptables probe errors silently treated as absent state <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L262-L282">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="262" data-line="267-277"><code class="language-go">func addEntryToPortMap(entry procnettcp.Entry, portMap nat.PortMap) error {
+	port := strconv.Itoa(int(entry.Port))
+	portMapKey, err := nat.NewPort(strings.ToLower(entry.Kind), port)
+	if err != nil {
+		return fmt.Errorf(&quot;generating portMapKey protocol: %s, port: %d failed: %w&quot;,
+			entry.Kind,
+			entry.Port,
+			err)
+	}
+
+	// It&#39;s important not to use entry.IP directly here, as any IP
+	// other than 127.0.0.1 (localhost) or 0.0.0.0 may not be accessible
+	// from the host. To ensure consistent behavior, we always set the
+	// HostIP to INADDR_ANY (0.0.0.0) unless the IP is localhost or 0.0.0.0.
+	// The API tracker will then adjust the address as necessary:
+	// - If admin privileges are enabled, the address will remain 0.0.0.0.
+	// - Otherwise, it will be changed to 127.0.0.1 to ensure proper local binding.
+	var hostIP net.IP
+	inAddrAny := net.IPv4(0, 0, 0, 0)
+	if entry.IP.IsLoopback() || entry.IP.Equal(inAddrAny) {
+		hostIP = entry.IP</code></pre>
+      <pre><code class="language-go">func preroutingHasLoopbackRule(ctx context.Context, protocol, port string) bool {
+    cmd := exec.CommandContext(ctx, &quot;iptables&quot;, &quot;--table&quot;, &quot;nat&quot;, &quot;--check&quot;, &quot;PREROUTING&quot;, ...)
+    return cmd.Run() == nil
+}</code></pre>
+    <p>Both probes collapse every <code>iptables</code> failure to &quot;absent&quot;. With the stability gate as the primary defense, the append-side failure window narrows to a joint case: the hook listener must survive two scans <em>and</em> the engine-chain probe must transiently lose the <code>nat</code> table lock on the same tick. The two conditions are correlated under engine startup load (the same shape that makes the hook lingering more likely also makes lock contention more likely), so the window is not as small as independent rates suggest, but it is much narrower than &quot;every probe failure&quot;. The codebase already treats <code>exit status 4</code> as a transient resource condition at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/iptables/iptables.go#L76-L83"><code>pkg/iptables/iptables.go:76-83</code></a> (&quot;something else is running iptables&quot;); the new helpers should follow that precedent for consistency.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/iptables/iptables.go#L71-L88">src/go/guestagent/pkg/iptables/iptables.go</a></div>
+      <pre data-start="71" data-line="76-83"><code class="language-go">		case &lt;-ticker.C:
+		}
+		// Detect ports for forward
+		newPorts, err := i.scanner.GetPorts()
+		if err != nil {
+			// iptables exiting with an exit status of 4 means there
+			// is a resource problem. For example, something else is
+			// running iptables. In that case, we can skip trying it for
+			// this loop. You can find the exit code in the iptables
+			// source at https://git.netfilter.org/iptables/tree/include/xtables.h
+			if strings.Contains(err.Error(), &quot;exit status 4&quot;) {
+				log.Debug(&quot;iptables exited with status 4 (resource error). Retrying...&quot;)
+				continue // Retry in the next iteration
+			}
+			return err
+		}
+
+		// Diff from existing forwarded ports</code></pre>
+    <p>The delete side has a different shape: <code>preroutingHasLoopbackRule</code> returns <code>false</code> on any error, <code>execLoopbackIPtablesRule</code> skips the Delete, and <code>ForwardPorts</code> then <code>delete(added, port)</code>s the entry — so a real PREROUTING rule we wrote leaks when the precheck transiently fails. Not a correctness regression (the leak self-cleans on RD restart), but it is a long-lived artifact.</p>
+    <p>Fix: distinguish &quot;rule/chain does not exist&quot; from &quot;iptables errored&quot;. Treat absent as the only &quot;false&quot; path; return other errors so the caller can skip this scan without dropping <code>added</code> state.</p>
+      <pre><code class="language-diff">-func preroutingHasLoopbackRule(ctx context.Context, protocol, port string) bool {
++func preroutingHasLoopbackRule(ctx context.Context, protocol, port string) (bool, error) {
+     cmd := exec.CommandContext(ctx, &quot;iptables&quot;, &quot;--table&quot;, &quot;nat&quot;, &quot;--check&quot;, &quot;PREROUTING&quot;, ...)
+-    return cmd.Run() == nil
++    err := cmd.Run()
++    if err == nil { return true, nil }
++    if isIptablesRuleAbsent(err) { return false, nil }
++    return false, err
+ }</code></pre>
+    <p>An <code>isIptablesRuleAbsent</code> helper inspecting the error string (<code>&quot;No chain/target/match by that name&quot;</code> for the rule-absent case) plus a special case for <code>exit status 4</code> lines the new probes up with <code>pkg/iptables/iptables.go</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Regex accepts <code>dport </code> (singular) which iptables never emits <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L281-L291">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="281" data-line="286"><code class="language-go">	if entry.IP.IsLoopback() || entry.IP.Equal(inAddrAny) {
+		hostIP = entry.IP
+	} else {
+		hostIP = inAddrAny
+	}
+	portBinding := nat.PortBinding{
+		HostIP:   hostIP.String(),
+		HostPort: port,
+	}
+	portMap[portMapKey] = append(portMap[portMapKey], portBinding)
+	return nil</code></pre>
+    <p><code>iptables -L --numeric</code> emits <code>tcp dpt:N</code> for single ports and <code>multiport dports N[,N…]</code> for the multiport match — never <code>dport </code> (singular with space). The <code>dports?</code> optional <code>s</code> only opens the door to false positives from chain comments or rule annotations that happen to contain the literal text <code>dport N</code>. The docstring at lines 279-284 already documents only <code>dpt:</code> and <code>dports</code>, so the optional <code>s</code> is also inconsistent with the stated contract.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L274-L289">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="274" data-line="279-284"><code class="language-go">	// from the host. To ensure consistent behavior, we always set the
+	// HostIP to INADDR_ANY (0.0.0.0) unless the IP is localhost or 0.0.0.0.
+	// The API tracker will then adjust the address as necessary:
+	// - If admin privileges are enabled, the address will remain 0.0.0.0.
+	// - Otherwise, it will be changed to 127.0.0.1 to ensure proper local binding.
+	var hostIP net.IP
+	inAddrAny := net.IPv4(0, 0, 0, 0)
+	if entry.IP.IsLoopback() || entry.IP.Equal(inAddrAny) {
+		hostIP = entry.IP
+	} else {
+		hostIP = inAddrAny
+	}
+	portBinding := nat.PortBinding{
+		HostIP:   hostIP.String(),
+		HostPort: port,
+	}</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-re := regexp.MustCompile(`(?:dpt:|dports? )(?:[0-9]+,)*` + regexp.QuoteMeta(port) + `\b`)
++re := regexp.MustCompile(`(?:dpt:|dports )(?:[0-9]+,)*` + regexp.QuoteMeta(port) + `\b`)</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Port-range form <code>dpts:M:N</code> is not detected <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>iptables -L --numeric</code> prints a port range as <code>tcp dpts:8000:9000</code> (plural <code>dpts:</code> with <code>:</code>-separated bounds). The current regex matches only <code>dpt:</code> (singular) and <code>dports </code> (multiport list). A Docker container started with <code>-p 8000-9000:8000-9000</code> produces a <code>dpts:</code> rule the regex will not see, so a <code>--network=host</code> listener on any port in that range would still get a shadowing PREROUTING DNAT.</p>
+    <p>Not the typical bug path (most ports are published individually), but worth either a regex extension that also handles the range form (with <code>lo &lt;= port &lt;= hi</code> parsed out separately) or an explicit <code>// limitation:</code> comment on the helper documenting the gap.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Delegated-port cleanup is safe-by-accident, not safe-by-design <span class="pill pill-gemini">Gemini</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L138-L157">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="138" data-line="143-152"><code class="language-go">// to 127.0.0.1, it constructs and executes the corresponding iptables command to either add or delete the
+// appropriate DNAT rule.
+//
+// The iptables rule ensures that incoming traffic from outside the network namespace (i.e., from the
+// host machine) on the specified port and protocol is redirected to the same port on localhost, where the
+// container&#39;s service can be accessed.
+//
+// Example iptables rule when &#39;action&#39; is &quot;append&quot;:
+//
+//	iptables -t nat -A PREROUTING -p tcp --dport 8009 -j DNAT --to-destination 127.0.0.1:8009
+//
+// Example iptables rule when &#39;action&#39; is &quot;delete&quot;:
+//
+//	iptables -t nat -D PREROUTING -p tcp --dport 8009 -j DNAT --to-destination 127.0.0.1:8009
+func (p *ProcNetScanner) execLoopbackIPtablesRule(bindings []nat.PortBinding, portProto nat.Port, action action) error {
+	for _, binding := range bindings {
+		if binding.HostIP != &quot;127.0.0.1&quot; {
+			continue
+		}
+		// The PREROUTING DNAT below targets --network=host containers. If</code></pre>
+    <p>When a port is delegated (the engine&#39;s events handler already exposed it), procnet writes the binding into <code>added</code> to suppress retries but performs no iptables append. Later, when the engine&#39;s reservation socket disappears from <code>/proc/net/tcp</code>, the Remove loop runs <code>tracker.Remove</code> and <code>execLoopbackIPtablesRule(Delete)</code> for that port without distinguishing delegated from owned ports.</p>
+    <p>In the current code this is harmless because two unrelated invariants line up: (1) procnet&#39;s <code>Remove</code> key is <code>utils.GenerateID(&quot;tcp/N&quot;)</code> while the events handler stored the port under the real container ID, so <code>APITracker.Remove</code> ends up walking an empty <code>portStorage</code> entry and calls neither <code>apiForwarder.Unexpose</code> nor <code>wslProxyForwarder.Send</code>; (2) <code>preroutingHasLoopbackRule</code> returns false because procnet never wrote a rule, so the iptables Delete is also a no-op. The misleading <code>Infof(&quot;removed port ...&quot;)</code> log line is the only visible artifact.</p>
+    <p>The risk is that both invariants are implicit and easy to break: any future refactor that makes <code>Tracker.Remove</code> do a best-effort search across port mappings, or that drops the <code>preroutingHasLoopbackRule</code> precheck, would silently turn this into the bug Gemini originally described. Make the state explicit so the cleanup encodes its own correctness:</p>
+      <pre><code class="language-diff">-added := make(nat.PortMap)
++type portState struct {
++    bindings  []nat.PortBinding
++    delegated bool
++}
++added := make(map[nat.Port]portState)</code></pre>
+    <p>…and <code>if state.delegated { delete(added, port); continue }</code> at the top of the Remove loop.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Engine-chain list is hardcoded to two chains <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L256-L266">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="256" data-line="261"><code class="language-go">			return addEntryToPortMap(entry, portMap)
+		}
+	}
+	return nil
+}
+
+func addEntryToPortMap(entry procnettcp.Entry, portMap nat.PortMap) error {
+	port := strconv.Itoa(int(entry.Port))
+	portMapKey, err := nat.NewPort(strings.ToLower(entry.Kind), port)
+	if err != nil {
+		return fmt.Errorf(&quot;generating portMapKey protocol: %s, port: %d failed: %w&quot;,</code></pre>
+    <p>Fine for what Rancher Desktop ships today (<code>nerdctl+CNI portmap</code> and <code>docker</code>), but a user-installed component, a <code>DOCKER-USER</code>-style wrapper, or a podman/netavark setup could publish through a different chain that the check silently misses, letting the original shadow-DNAT bug reappear. A one-line comment on <code>engineChainManagesPort</code> documenting &quot;limited to the two engines RD ships; revisit when adding a third&quot; would let the next maintainer reason about the closed list.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> Compile <code>dnatChainContainsPort</code> regex once at package level <span class="pill pill-gemini">Gemini</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L280-L293">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="280" data-line="285-288"><code class="language-go">	inAddrAny := net.IPv4(0, 0, 0, 0)
+	if entry.IP.IsLoopback() || entry.IP.Equal(inAddrAny) {
+		hostIP = entry.IP
+	} else {
+		hostIP = inAddrAny
+	}
+	portBinding := nat.PortBinding{
+		HostIP:   hostIP.String(),
+		HostPort: port,
+	}
+	portMap[portMapKey] = append(portMap[portMapKey], portBinding)
+	return nil
+}
+</code></pre>
+    <p><code>regexp.MustCompile</code> runs on every call. Not a hot loop (it fires only when a port passes the two-tick gate), so the performance cost is negligible, but it is the Go idiom to declare regex variables once at package scope. A natural refactor is to compile a port-list extractor once and check membership against the captured group:</p>
+      <pre><code class="language-go">var dnatPortMatcher = regexp.MustCompile(`(?:dpt:|dports )([0-9,]+)\b`)
+
+func dnatChainContainsPort(out, port string) bool {
+    for _, m := range dnatPortMatcher.FindAllStringSubmatch(out, -1) {
+        for _, p := range strings.Split(m[1], &quot;,&quot;) {
+            if p == port { return true }
+        }
+    }
+    return false
+}</code></pre>
+    <p>This pairs naturally with the protocol fix in I1 (anchor the package-level regex on <code>prot</code> too).</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> Unrelated entries deleted from <code>expect.txt</code> <span class="pill pill-claude">Claude</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <pre><code class="language-diff">-eend
+...
+-GOWORK
+...
+-TOCTOU
+-toolsets</code></pre>
+    <p><code>eend</code>, <code>GOWORK</code>, <code>TOCTOU</code>, <code>toolsets</code> are not introduced or removed by this PR&#39;s code. Bundling unrelated spelling-list cleanup into a bug-fix muddies the bisect surface. Either drop these lines from this PR or call them out in the commit message. The added entries (<code>dnat</code>, <code>nft</code>, <code>prot</code>) and the <code>DNAT → dnat</code> case change are appropriate.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> <code>seenLastScan = newPortMap</code> retains alias semantics <span class="pill pill-claude">Claude</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L177-L187">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="177" data-line="182"><code class="language-go">		}
+		// iptables -t nat -&lt;A|D&gt; PREROUTING -p tcp --dport 8009 -j DNAT --to-destination 127.0.0.1:8009
+		//nolint:gosec // None of the arguments are user-supplied.
+		iptablesCmd := exec.CommandContext(p.context,
+			&quot;iptables&quot;,
+			&quot;--table&quot;, &quot;nat&quot;,
+			fmt.Sprintf(&quot;--%s&quot;, action), &quot;PREROUTING&quot;,
+			&quot;--protocol&quot;, portProto.Proto(),
+			&quot;--dport&quot;, binding.HostPort,
+			&quot;--jump&quot;, &quot;DNAT&quot;,
+			&quot;--to-destination&quot;, fmt.Sprintf(&quot;%s:%s&quot;, binding.HostIP, binding.HostPort),</code></pre>
+    <p><code>seenLastScan</code> ends up pointing at the same map <code>newPortMap</code> we just iterated. The next tick rebuilds <code>newPortMap := make(nat.PortMap)</code> fresh, so there is no shared-map mutation hazard today. A future refactor that reuses <code>newPortMap</code> would silently corrupt the gate. Worth a one-line comment (&quot;next iteration allocates a fresh map&quot;) or an explicit copy, if anyone is expected to touch this loop again.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> PR description names the wrong subsystem for the transient listener<a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+    <p>The PR description states &quot;CNI&#39;s portmap plugin briefly opens a port-reservation socket on <code>127.0.0.1:&lt;port&gt;</code> during container start.&quot; In production the listener is opened by nerdctl&#39;s own OCI <code>createRuntime</code> hook — confirmed by walking <code>/proc/&lt;pid&gt;/fd/</code> to the socket inode and reading <code>/proc/&lt;pid&gt;/comm</code> and <code>cmdline</code> (<code>/usr/local/libexec/nerdctl/nerdctl ... internal oci-hook createRuntime</code>). The in-tree code comment was force-pushed to fix exactly this attribution and now names nerdctl correctly; the PR description was not updated to match.</p>
+    <p>The distinction matters for future archeology — anyone bisecting a recurrence will reach for CNI portmap code first if the PR description points them there. Update the PR description to match the code comment before merge.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em>(in-scope)</em> The decision to key the Delete path off <code>added</code> rather than <code>seenLastScan</code> — and to write delegated ports into <code>added</code> — is what prevents a retry-storm of <code>&quot;proxy already running&quot;</code> log spam every tick. The inline comment at lines 104-108 captures the <em>why</em> well. <span class="pill pill-claude">Claude</span></li>
+      <li><em>(in-scope)</em> Splitting <code>dnatChainContainsPort</code> out as a pure function with a table-driven test is exactly the right shape; the fixtures pull in the realistic iptables variants (single, multiport, IP-octet collision) instead of stubbing the regex against synthetic input. <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></li>
+      <li><em>(in-scope)</em> The &quot;alternative considered&quot; block at lines 94-102 documenting the rejected pid/cgroup/inode classification path is unusual and valuable. It records the analysis behind the chosen approach so a future &quot;we should classify by pid&quot; suggestion can land on the prior reasoning rather than restart it. <span class="pill pill-claude">Claude</span></li>
+      <li><em>(in-scope)</em> The two-scan stability gate is a narrow, stateless fix for the OCI-hook reservation-socket race — no <code>/proc/&lt;pid&gt;/comm</code>-scraping, no cgroup inspection, no inode-to-pid resolution. The cost (one tick of latency for <code>--network=host</code> listeners) is explicitly documented. <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></li>
+    </ul>
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em>(in-scope)</em> <code>ForwardPorts</code> now coordinates three maps (<code>seenLastScan</code>, <code>added</code>, <code>newPortMap</code>) and two transition rules (the gate; the delegation marker), and the loop has no unit-test coverage — only the regex helper is tested. The state-machine invariants the S1 fix relies on (Delete-side preserves <code>added</code> on error, Append-side preserves <code>added</code> when the probe fails) are exactly the shape that benefits from a <code>portStateTracker</code> extraction with a fake <code>tracker.Tracker</code> and an injectable port-map source. Not a merge blocker, but the next bug here will be easier to land if the loop is decomposed. <span class="pill pill-claude">Claude</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The new <code>TestDnatChainContainsPort</code> table is solid for the regex it covers: single-port, multiport, suffix/prefix-of-port, IP-octet-collision pitfalls. Gaps, ranked by risk:</p>
+    <ol>
+      <li><strong>Protocol-mismatch matrix</strong> (covers I1) — no fixture exercises <code>udp dpt:N</code> alongside a TCP probe (and vice versa). One representative row: <code>{output: &quot;...udp dpt:8080...&quot;, protocol: &quot;tcp&quot;, port: &quot;8080&quot;, want: false}</code> directly anchors the I1 fix.</li>
+      <li><strong>iptables-probe error handling</strong> (covers S1) — neither <code>engineChainManagesPort</code> nor <code>preroutingHasLoopbackRule</code> is unit-testable today because they shell out directly. Either inject a <code>func(ctx, args...) ([]byte, error)</code> or a small <code>iptablesRunner</code> interface. Once that lands, add a fixture for &quot;chain absent (expected)&quot; and one for &quot;exit status 4 (transient)&quot; to lock the distinction in.</li>
+      <li><em></em>State machine in <code>ForwardPorts</code><em></em> — no unit tests exercise the two-scan gate, the delegation path, or the divergence between <code>added</code> and <code>seenLastScan</code>. A fake tracker plus an injectable port-source would make this testable and would protect the S4 invariant against future refactors.</li>
+      <li><strong>Port-range fixture</strong> (covers S3) — <code>tcp dpts:8000:9000</code> is not in test fixtures. Either lock the current behavior (<code>want: false</code>) and document the gap, or extend the matcher to handle ranges.</li>
+      <li><strong>Cross-platform verification</strong> — the investigation that motivated this PR was Windows-only (WSL2 kernel <code>6.6.87.2</code>, iptables-nft 1.8.11). The same <code>published-ports.bats</code> scenario on macOS and Linux against current alpine-lima kernels has not been verified to either reproduce the original hang or accept the fix. If it passes there today the fix is still right (the rogue rule should not exist for bridge-network ports on any platform), but a one-shot manual check rules out a separate kernel-version interaction.</li>
+    </ol>
+    <p>The PR&#39;s manual test plan correctly identifies the BATS scenario (<code>bats/tests/containers/published-ports.bats</code>) and the two manual smoke tests (bridge-network published port from Windows; <code>--network=host</code> loopback). Those were not run from this review.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Docstrings on <code>engineChainManagesPort</code>, <code>dnatChainContainsPort</code>, and <code>preroutingHasLoopbackRule</code> are clear and accurate, with one nit captured in S2 (the contract documents <code>dpt:</code> and <code>dports</code> but the regex also accepts <code>dport </code> singular). The block comment in <code>ForwardPorts</code> (lines 79-108) is unusually long but justified — it covers the failure mode, the latency trade-off, the rejected alternative, and the role of the <code>added</code> map. The PR description itself (S9) still attributes the transient listener to CNI portmap rather than nerdctl&#39;s OCI hook.</p>
+    <p>One project-level documentation gap: nothing in <code>docs/networking/</code> explains that the bridge-network port path assumes <code>DNAT</code> in PREROUTING is chain-continuing on the kernels Rancher Desktop supports, and that this assumption is what made the original procnet rule racy by design rather than only racy in practice. Adding a short note where the iptables generation lives would protect the next person who touches PREROUTING from re-introducing the same shape of bug.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>History is clean and tells a coherent debugging story:</p>
+    <ol>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1fa723ece"><code>1fa723ece</code></a> introduces the engine-chain check (the core fix).</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/15973c79b"><code>15973c79b</code></a> discovers the OCI-hook race that defeats the check on its own and adds the two-tick gate.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fc77f4483"><code>fc77f4483</code></a> discovers the resulting <code>&quot;proxy already running&quot;</code> log spam and treats it as delegation.</li>
+    </ol>
+    <p>Each commit is self-contained, the messages explain <em>why</em> and not just <em>what</em>, and the progression maps to the actual debugging arc. No squash needed.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em>3-second startup delay for <code>--network=host</code> listeners<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/procnet/scanner_linux.go#L88-L92"><code>scanner_linux.go:88-92</code></a>. The author explicitly weighed time-gating against pid/cgroup classification and noted &quot;Revisit if the 3 s startup delay becomes a real complaint.&quot; This is the documented trade-off, not a missing fix.</li>
+      <li><em></em>Closed engine-chain list (<code>CNI-HOSTPORT-DNAT</code>, <code>DOCKER</code>)<em></em> — surfaced as S5 above; understood from context. Trivial to extend when adding a third engine.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Most complete coverage of the three: caught the protocol regression jointly with Codex, found all five minor surface issues no one else surfaced (regex <code>dport </code> singular, <code>dpts:</code> range gap, hardcoded chain list, unrelated <code>expect.txt</code> removals, the <code>seenLastScan = newPortMap</code> alias), and produced the most thorough Testing Assessment with a specific extracted-state-machine recommendation. The &quot;I1&quot; framing of the protocol bug came with diffs that landed in the consolidated finding nearly unchanged.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Highest signal-to-noise — two findings, both raised as Important, both real. Codex was the only agent to spot that the two new iptables probes collapse every error to &quot;absent state&quot; and to anchor the concern in the codebase&#39;s existing <code>exit status 4</code> handling at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1fa723eceb6e006beea9bd23de3098c1cbe4b560/src/go/guestagent/pkg/iptables/iptables.go#L76-L83"><code>pkg/iptables/iptables.go:76-83</code></a>. Wrote no Suggestions and identified the protocol-blindness issue independently of Claude with a tighter citation set (the existing engine writers preserve protocol explicitly). On consolidation the iptables-error finding downgraded to a Suggestion after author-supplied investigation context established the stability gate as the primary mechanism — the conclusion is unchanged but the failure window is much narrower than the original framing.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Mixed pass. The C1 critical was confidently argued and well-illustrated (a full diff for a state-tracking refactor) but unsound: the analysis stopped at &quot;procnet calls <code>tracker.Remove</code> for a delegated port&quot; without verifying what <code>Remove</code> actually does with procnet&#39;s synthetic ID — which is a no-op against <code>portStorage</code> because the events handler used the real container ID. The underlying brittleness concern survived as S4 but the &quot;tears down the engine exposure&quot; framing was wrong. The regex-compile-once suggestion (now S6) is a legitimate style point. Coverage was complete; the headline finding shifted from Critical to Suggestion on verification.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>7m 51s</td><td>7m 07s</td><td>—</td></tr>
+        <tr><td>Findings</td><td>1I 5S</td><td>1I 1S</td><td>2S</td></tr>
+        <tr><td>Tool calls</td><td>22 (Read 10, Bash 9, Grep 3)</td><td>34 (shell 34)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>1</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>5</td><td>1</td><td>2</td></tr>
+        <tr><td>Files reviewed</td><td>3</td><td>3</td><td>3</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 5S</strong></td><td><strong>1I 1S</strong></td><td><strong>2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>1 (I→S)</td><td>1 (C→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Two severity changes:</p>
+    <ul>
+      <li>Gemini P1 &quot;procnet actively unpublishes engine-managed ports&quot;: critical → suggestion S4. The cleanup path described is brittle, but the immediate consequence Gemini claimed (<code>tracker.Remove</code> tears down the engine&#39;s exposure) does not occur in the current code because procnet&#39;s <code>utils.GenerateID(&quot;tcp/N&quot;)</code> synthetic ID does not match the container ID the events handler used as the <code>portStorage</code> key; the resulting <code>Remove</code> walks a nil portMap and skips both <code>apiForwarder.Unexpose</code> and <code>wslProxyForwarder.Send</code>. The iptables Delete is also a no-op thanks to the <code>preroutingHasLoopbackRule</code> precheck. The downgraded finding preserves the architectural concern (the cleanup is safe-by-accident) without claiming a bug that does not manifest.</li>
+      <li>Codex I2 &quot;iptables probe errors silently treated as absent state&quot;: important → suggestion S1. Re-evaluated after author-supplied investigation established the two-tick stability gate as the <strong>primary</strong> mechanism (the engine-chain check landed first as <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/54032e738"><code>54032e738</code></a> and was confirmed in CI to be insufficient on its own — the nerdctl OCI hook holds the host port <em>before</em> CNI writes its iptables rules, so the engine-chain check correctly returns false and the rogue rule goes in anyway; the gate is what actually stops this). With the gate filtering most transient listeners on its own, the append-side failure window narrows to the joint case where the hook survives both ticks AND the probe transiently loses the <code>nat</code> lock. Correlated under load, so not as small as independent rates would imply, but much smaller than &quot;every probe failure&quot;. Delete-side leak is unchanged. Finding kept with sharper scope.</li>
+    </ul>
+    <p>For value, <strong>Codex</strong> delivered the highest leverage per finding — the protocol-blindness fix went into the consolidated finding verbatim, and the iptables-error concern surfaced a real precedent in the codebase even though the gate context narrowed it on consolidation. <strong>Claude</strong> delivered the most surface — joint Important plus six Suggestions that round out the review. <strong>Gemini</strong> added one valid Suggestion and one downgraded headline; the brittleness concern it surfaced is worth keeping even though the framing missed.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>When an agent flags a bug centered on a call to a stored interface (a tracker, registry, cache, port map), verify the keying assumption before trusting the severity.</strong> Re-check the agent&#39;s argument by tracing the actual lookup key the caller passes against the keys the storage was populated with — different ID schemes (synthetic vs. natural) can quietly neutralize a &quot;this destructively modifies shared state&quot; claim. Asymmetric IDs are a common pattern when two writers share a tracker, and the resulting &quot;safe by accident&quot; code reads exactly like a bug at a quick scan. Apply this every time a finding&#39;s blast radius depends on a <code>Remove</code>/<code>Delete</code>/<code>Drop</code> call against a tracker, store, or cache.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>[repo]</strong> Document that <code>APITracker.Remove(key)</code> is a no-op when <code>key</code> is not present in <code>portStorage</code>: the lookup returns nil, the for-loop over the nil map is empty, and the <code>len(portMap) != 0</code> guard skips the <code>wslProxyForwarder.Send</code>. This invariant matters because callers in the same package use two different ID schemes — engines call <code>Add(container.ID, ...)</code> and procnet calls <code>Add(utils.GenerateID(&quot;proto/port&quot;), ...)</code> — and reviewers verifying delegation-cleanup paths or any cross-writer cleanup need to know that mismatched-key removes are benign by design.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
