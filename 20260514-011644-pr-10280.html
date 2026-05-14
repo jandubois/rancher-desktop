@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260514-011644-pr-10280</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260514-011644-pr-10280</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-14 01:16</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>3 (of pr-10280)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10280" class="gh-ref" data-title="procnet: don&#39;t shadow CNI portmap with PREROUTING DNAT" data-state="open" data-type="pr">#10280</a> — procnet: don&#39;t shadow CNI portmap with PREROUTING DNAT</td></tr>
+      <tr><td>Branch</td><td><code>procnet-portstatetracker</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/773d0baf9"><code>773d0baf9</code></a> procnet: don&#39;t shadow CNI portmap with PREROUTING DNAT</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; three small Suggestions; no Critical or Important issues. Third consecutive round; the state-machine structure is validated.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>31 min 26 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>This is Round 3. The commit under review (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/773d0baf9"><code>773d0baf9</code></a>) is the Round 2 resolution: it fixed all four Round 2 Suggestions (the <code>loopbackIP</code> const now reaches the iptables helpers, the <code>portAlreadyExposedSubstring</code> and <code>TestPortAlreadyExposedSubstringIsReachable</code> comments are corrected, and the new <code>wrapExitError</code> helper surfaces iptables <code>stderr</code>), and addressed Round 2&#39;s I1 by correcting the <code>retryAppend</code> comment and documenting the orphan window in the <code>portState</code> doc comment rather than changing the engine-takeover logic. All four Round 2 Suggestion fixes verify against the current code.</p>
+    <p>No agent found a Critical or a surviving Important issue this round. All three landed on a single small finding each, with no overlap:</p>
+    <ul>
+      <li><strong>S1</strong> (Codex, originally Important): a <code>tracker.Remove</code> failure in the wsl-proxy-only shape — host-switch <code>Unexpose</code> succeeded, <code>wslProxyForwarder.Send</code> failed — leaves an orphaned procnet PREROUTING DNAT that can shadow a later bridge publish of the same host port. This is a real gap, but Round 1&#39;s I1 fix rationale explicitly named this exact &quot;wsl-proxy-only <code>Remove</code> failure&quot; case and the keep-the-rule behavior was the deliberate choice; the proper fix is the typed-<code>Remove</code>-result change Round 1 deferred as &quot;the larger fix.&quot; Downgraded to Suggestion — the in-scope actionable item is correcting the inaccurate inline comment.</li>
+      <li><strong>S2</strong> (Claude): <code>isIptablesRuleAbsent</code> substring-matches English iptables diagnostics; a localized iptables build would misclassify a genuinely-absent chain as transient and defer a <code>--network=host</code> port forever. Latent (RD&#39;s Alpine guest runs in the C locale), cheap to harden with <code>LC_ALL=C</code>.</li>
+      <li><strong>S3</strong> (Gemini): the <code>addErrorLogged</code> log-suppression marker is shared between the engine-chain probe and <code>tracker.Add</code>, so a probe failure followed by an <code>Add</code> failure logs the first <code>Add</code> error at <code>Debug</code> instead of <code>Error</code>. Diagnosability only.</li>
+    </ul>
+    <p>Structure of findings: 0 Critical, 0 Important, 3 Suggestions.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> A wsl-proxy-only <code>tracker.Remove</code> failure orphans a procnet PREROUTING DNAT that can shadow a later bridge publish <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L308-L326">src/go/guestagent/pkg/procnet/port_state_tracker_linux.go</a></div>
+      <pre data-start="308" data-line="313-321"><code class="language-go">		// the unexpose API or wsl-proxy.Send succeeded, so a retry on
+		// the next tick is a silent no-op. Keeping the marker around
+		// also deadlocks the Add path if the listener reappears (the
+		// `alreadyAdded` fast path would short-circuit it).
+		delete(pst.added, port)
+		if removeErr != nil {
+			// A failed Remove can leave the host-switch proxy bound
+			// (the unexpose call did not land). Keep the loopback
+			// rule so traffic still reaches the proxy; deleting it
+			// would strand the port. A leaked rule self-cleans on
+			// RD restart.
+			log.Errorf(&quot;/proc/net scanner failed to remove port: %s&quot;, removeErr)
+			continue
+		}
+		if err := pst.applyLoopbackRules(state.bindings, port, Delete); err != nil {
+			log.Errorf(&quot;/proc/net scanner deleting loopback iptable rules for portbinding: %v failed: %s&quot;, state.bindings, err)
+		}
+	}
+}</code></pre>
+    <p><code>retireDisappeared</code> keeps the loopback PREROUTING DNAT whenever <code>tracker.Remove</code> returns any error, on the premise stated in the comment: the unexpose call may not have landed, so the proxy may still be bound. But <code>APITracker.Remove</code> runs <code>apiForwarder.Unexpose</code> first and <code>wslProxyForwarder.Send</code> after it, and a <code>Send</code> failure returns early without wrapping the unexpose result.</p>
+    <p>In <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/tracker/apitracker.go#L167-L201"><code>src/go/guestagent/pkg/tracker/apitracker.go:167-201</code></a>, the <code>Unexpose</code> loop collects failures into <code>errs</code>; then <code>wslProxyForwarder.Send</code> runs, and on failure <code>Remove</code> returns <code>&quot;sending port mappings to wsl proxy error: %w&quot;</code> — which does <strong>not</strong> wrap <code>forwarder.ErrUnexposeAPI</code>. So the wsl-proxy-only shape (every <code>Unexpose</code> succeeded, <code>Send</code> failed) yields a non-nil <code>removeErr</code> while the host-switch proxy is already gone. <code>retireDisappeared</code> keeps the rule anyway. The rule now points at a dead proxy.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/tracker/apitracker.go#L162-L206">src/go/guestagent/pkg/tracker/apitracker.go</a></div>
+      <pre data-start="162" data-line="167-201"><code class="language-go">				continue
+			}
+
+			log.Debugf(&quot;unexposing the following port binding: %+v&quot;, portBinding)
+
+			err = a.apiForwarder.Unexpose(
+				&amp;types.UnexposeRequest{
+					Local:    ipPortBuilder(a.determineHostIP(portBinding.HostIP), portBinding.HostPort),
+					Protocol: types.TransportProtocol(strings.ToLower(portProto.Proto())),
+				})
+			if err != nil {
+				errs = append(errs,
+					fmt.Errorf(&quot;unexposing %+v failed: %w&quot;, portBinding, err))
+
+				continue
+			}
+		}
+	}
+
+	if len(portMap) != 0 {
+		portMapping := guestagentTypes.PortMapping{
+			Remove: true,
+			Ports:  portMap,
+		}
+		log.Debugf(&quot;forwarding to wsl-proxy to remove port mapping: %+v&quot;, portMapping)
+		err := a.wslProxyForwarder.Send(portMapping)
+		if err != nil {
+			return fmt.Errorf(&quot;sending port mappings to wsl proxy error: %w&quot;, err)
+		}
+	}
+
+	if len(errs) != 0 {
+		return fmt.Errorf(&quot;%w: %+v&quot;, forwarder.ErrUnexposeAPI, errs)
+	}
+
+	return nil
+}
+
+// RemoveAll calls the /services/forwarder/unexpose
+// and removes all the port bindings from the tracker.
+func (a *APITracker) RemoveAll() error {
+	var apiErrs, wslProxyErrs []error
+
+	for _, portMapping := range a.portStorage.getAll() {
+		for _, portBindings := range portMapping {</code></pre>
+    <p>If a bridge-network container later publishes that same host port, procnet&#39;s scanner can catch the OCI reservation socket, <code>anyEngineBinding</code> finds the engine&#39;s <code>CNI-HOSTPORT-DNAT</code>/<code>DOCKER</code> rule, and <code>exposeNew</code> takes the delegate branch (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L184-L189"><code>port_state_tracker_linux.go:184-189</code></a>) — which touches no iptables. The stale procnet PREROUTING DNAT survives and shadows the engine chain: the exact bug this PR exists to fix.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L179-L194">src/go/guestagent/pkg/procnet/port_state_tracker_linux.go</a></div>
+      <pre data-start="179" data-line="184-189"><code class="language-go">			log.Errorf(&quot;/proc/net scanner engine-chain probe failed for %s; deferring: %s&quot;, port, err)
+			pst.addErrorLogged[port] = true
+		}
+		return
+	}
+	if managed {
+		log.Debugf(&quot;/proc/net scanner delegating port %s to engine-managed chain&quot;, port)
+		pst.added[port] = portState{bindings: bindings, delegated: true}
+		delete(pst.addErrorLogged, port)
+		return
+	}
+	syntheticID := syntheticIDFor(port)
+	if err := pst.tracker.Add(syntheticID, nat.PortMap{port: bindings}); err != nil {
+		if strings.Contains(err.Error(), portAlreadyExposedSubstring) {
+			pst.handleAlreadyExposed(port, bindings, syntheticID)
+			return</code></pre>
+    <p>The reachability is narrow: it needs a <code>--network=host</code> loopback listener whose <code>Remove</code> fails in the wsl-proxy-only shape, then the same host port reused by a bridge container, then that container&#39;s reservation socket surviving the two-scan gate under heavy load. The host-network reuse case is already covered — <code>applyLoopbackIPtablesRule</code>&#39;s idempotency probe skips a duplicate Append — so only the bridge-reuse-via-delegation path is exposed.</p>
+    <p>Reconciliation: the raising agent rated this Important; downgraded to Suggestion. Round 1&#39;s I1 fix rationale already named &quot;retaining the rule after a wsl-proxy-only <code>Remove</code> failure&quot; as the known downside of the keep-the-rule behavior, and named the fix Codex proposes here — a typed <code>Remove</code> result distinguishing &quot;host-switch unexpose succeeded&quot; from &quot;may still be running&quot; — as &quot;the larger fix.&quot; Keep-the-rule was the deliberate Round 1 decision; the code change is a <code>tracker</code>-package API change deferred by design. What is genuinely new and in-scope is the inline comment.</p>
+    <p>Fix: the immediately-actionable item is the comment at lines 313-318 — <code>&quot;the unexpose call did not land&quot;</code> is inaccurate for the wsl-proxy-only shape, where unexpose <em>did</em> land and the proxy <em>is</em> gone. Reword it to cover both shapes and to note that the retained rule can shadow a later same-port bridge publish (the consequence the <code>portState</code> doc comment and <code>retireDisappeared</code> comment both currently understate). The typed-<code>Remove</code>-result code fix remains the deferred larger change.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>isIptablesRuleAbsent</code> substring-matches English iptables diagnostics <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L312-L333">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="312" data-line="317-328"><code class="language-go">// Every other failure mode (exit status 4 from xtables lock
+// contention, fork/exec failure, invalid-argument errors, etc.)
+// returns false so the caller bubbles the error and defers the scan.
+// &quot;Absent&quot; here means a steady-state &quot;no&quot; the caller can act on now;
+// anything else might succeed on the next tick.
+func isIptablesRuleAbsent(err error) bool {
+	if err == nil {
+		return false
+	}
+	var exitErr *exec.ExitError
+	if !errors.As(err, &amp;exitErr) {
+		return false
+	}
+	stderr := string(exitErr.Stderr)
+	return strings.Contains(stderr, &quot;No chain/target/match by that name&quot;) ||
+		strings.Contains(stderr, &quot;does a matching rule exist in that chain&quot;)
+}
+
+// wrapExitError annotates err with the stderr that exec.Cmd.Output
+// captured into *exec.ExitError. iptables exits non-zero with a one-line
+// diagnostic on stderr (xtables lock contention, invalid argument), but a
+// bare *exec.ExitError stringifies only as &quot;exit status N&quot;, so the</code></pre>
+    <p><code>isIptablesRuleAbsent</code> classifies an iptables failure as &quot;rule/chain absent&quot; by substring-matching English diagnostic text. This stderr inspection is new in this PR — the merge-base <code>execLoopbackIPtablesRule</code> did <code>iptablesCmd.Run()</code> then <code>return err</code> with no stderr parsing, and <code>engineChainManagesPort</code> / <code>dnatChainContainsPort</code> / <code>isIptablesRuleAbsent</code> did not exist.</p>
+    <p>If the guest&#39;s iptables ever emits localized messages, a genuinely-absent chain is misclassified as a transient error: <code>engineChainManagesPort</code> returns <code>(false, err)</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L228"><code>scanner_linux.go:228</code></a>), <code>anyEngineBinding</code> propagates it (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L350"><code>port_state_tracker_linux.go:350</code></a>), and <code>exposeNew</code> defers the port every tick (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L175-L183"><code>port_state_tracker_linux.go:175-183</code></a>) — a <code>--network=host</code> loopback port becomes permanently unreachable from the Windows host, the symptom procnet exists to prevent. Practical likelihood is near zero (RD&#39;s Alpine guest runs in the C locale, and most iptables builds ship no message catalogs), so this is a latent fragility, not a live bug — but pinning the locale is cheap insurance and standard practice when parsing tool output.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L223-L233">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="223" data-line="228"><code class="language-go">		out, err := cmd.Output()
+		if err != nil {
+			if isIptablesRuleAbsent(err) {
+				continue
+			}
+			return false, fmt.Errorf(&quot;iptables --list %s: %w&quot;, chain, wrapExitError(err))
+		}
+		if dnatChainContainsPort(string(out), protocol, port) {
+			return true, nil
+		}
+	}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L170-L188">src/go/guestagent/pkg/procnet/port_state_tracker_linux.go</a></div>
+      <pre data-start="170" data-line="175-183"><code class="language-go">	// ownership entirely: skip tracker.Add and the iptables Append, mark
+	// the local state delegated, and let the engine&#39;s events handler own
+	// the proxy. A transient probe error defers the port without
+	// orphaning state.
+	managed, err := pst.anyEngineBinding(port, bindings)
+	if err != nil {
+		if pst.addErrorLogged[port] {
+			log.Debugf(&quot;/proc/net scanner engine-chain probe still failing for %s: %s&quot;, port, err)
+		} else {
+			log.Errorf(&quot;/proc/net scanner engine-chain probe failed for %s; deferring: %s&quot;, port, err)
+			pst.addErrorLogged[port] = true
+		}
+		return
+	}
+	if managed {
+		log.Debugf(&quot;/proc/net scanner delegating port %s to engine-managed chain&quot;, port)
+		pst.added[port] = portState{bindings: bindings, delegated: true}
+		delete(pst.addErrorLogged, port)
+		return</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L345-L355">src/go/guestagent/pkg/procnet/port_state_tracker_linux.go</a></div>
+      <pre data-start="345" data-line="350"><code class="language-go">		if binding.HostIP != loopbackIP {
+			continue
+		}
+		managed, err := pst.iptables.EngineManagesPort(port.Proto(), binding.HostPort)
+		if err != nil {
+			return false, fmt.Errorf(&quot;%s/%s: %w&quot;, port.Proto(), binding.HostPort, err)
+		}
+		if managed {
+			log.Debugf(&quot;skipping PREROUTING DNAT for %s/%s: port already managed by container engine chain&quot;,
+				port.Proto(), binding.HostPort)
+			return true, nil</code></pre>
+    <p>Fix: pin <code>LC_ALL=C</code> on every iptables invocation. A small helper removes the duplication across the three call sites (<code>engineChainManagesPort</code>, <code>preroutingHasLoopbackRule</code>, <code>applyLoopbackIPtablesRule</code>):</p>
+      <pre><code class="language-go">// iptablesCommand builds an iptables exec.Cmd with the locale pinned to C,
+// so isIptablesRuleAbsent&#39;s stderr matching is not defeated by a localized
+// iptables build.
+func iptablesCommand(ctx context.Context, args ...string) *exec.Cmd {
+	cmd := exec.CommandContext(ctx, &quot;iptables&quot;, args...)
+	cmd.Env = append(os.Environ(), &quot;LC_ALL=C&quot;)
+	return cmd
+}</code></pre>
+    <p>(<code>os</code> is already imported in <code>scanner_linux.go</code>.)</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>addErrorLogged</code> is shared between the engine-chain probe and <code>tracker.Add</code>, so the first <code>Add</code> error after a probe failure logs at <code>Debug</code> <span class="pill pill-gemini">Gemini</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L169-L209">src/go/guestagent/pkg/procnet/port_state_tracker_linux.go</a></div>
+      <pre data-start="169" data-line="174-204"><code class="language-go">	// manages the port (its CNI/DOCKER chain rule is in place), delegate
+	// ownership entirely: skip tracker.Add and the iptables Append, mark
+	// the local state delegated, and let the engine&#39;s events handler own
+	// the proxy. A transient probe error defers the port without
+	// orphaning state.
+	managed, err := pst.anyEngineBinding(port, bindings)
+	if err != nil {
+		if pst.addErrorLogged[port] {
+			log.Debugf(&quot;/proc/net scanner engine-chain probe still failing for %s: %s&quot;, port, err)
+		} else {
+			log.Errorf(&quot;/proc/net scanner engine-chain probe failed for %s; deferring: %s&quot;, port, err)
+			pst.addErrorLogged[port] = true
+		}
+		return
+	}
+	if managed {
+		log.Debugf(&quot;/proc/net scanner delegating port %s to engine-managed chain&quot;, port)
+		pst.added[port] = portState{bindings: bindings, delegated: true}
+		delete(pst.addErrorLogged, port)
+		return
+	}
+	syntheticID := syntheticIDFor(port)
+	if err := pst.tracker.Add(syntheticID, nat.PortMap{port: bindings}); err != nil {
+		if strings.Contains(err.Error(), portAlreadyExposedSubstring) {
+			pst.handleAlreadyExposed(port, bindings, syntheticID)
+			return
+		}
+		if pst.addErrorLogged[port] {
+			log.Debugf(&quot;/proc/net scanner still failing to add port %s: %s&quot;, port, err)
+		} else {
+			log.Errorf(&quot;/proc/net scanner failed to add port: %s&quot;, err)
+			pst.addErrorLogged[port] = true
+		}
+		return
+	}
+	delete(pst.addErrorLogged, port)
+	log.Infof(&quot;/proc/net scanner added port: %s -&gt; %+v&quot;, port, bindings)
+	appendErr := pst.applyLoopbackRules(bindings, port, Append)
+	if appendErr != nil {
+		// Retain the entry with appendFailed=true; the next tick runs
+		// retryAppend. Symmetric with the Delete-side behavior in</code></pre>
+    <p>A transient engine-chain probe failure sets <code>addErrorLogged[port]</code> at line 180. If the probe succeeds on the next tick but <code>tracker.Add</code> then fails, the check at line 196 finds the marker already set, so the <em>first</em> <code>tracker.Add</code> failure — a distinct failure mode — is logged at <code>Debug</code> (line 197) instead of <code>Error</code>. The log-spam suppression still works; the loud first-occurrence notification for the <code>Add</code> failure is lost. No correctness impact.</p>
+    <p>Fix: either use an error-phase-specific marker (<code>probeErrorLogged</code> separate from <code>addErrorLogged</code>), or <code>delete(pst.addErrorLogged, port)</code> once the probe succeeds and before reaching <code>tracker.Add</code>, so the add-failure path gets its own fresh first-error cycle.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em>(future)</em> <em></em><code>dnatChainContainsPort</code> parses human-readable <code>iptables --list</code> output<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L255-L272"><code>scanner_linux.go:255-272</code></a> <span class="pill pill-claude">Claude</span>. The regex matches the columnar <code>iptables -L --numeric</code> rendering, which is presentation output, not a stable interface — column spacing, the <code>multiport dports</code> rendering, and the protocol display can drift between iptables versions and the legacy/nft backends. A regression there produces a <em>false negative</em>: procnet decides the engine does not manage the port, adds its own DNAT, and silently reinstates the original shadow-DNAT bug. The <code>engineChainManagesPort</code> docstring acknowledges only <code>published-ports.bats</code> covers this end to end, and that is a single happy-path fixture. <code>iptables -S &lt;chain&gt;</code> emits the rule-spec form (<code>-A CHAIN -p tcp -m tcp --dport 8080 ...</code>), which is designed to be machine-parsed; worth recording as the fallback if a future iptables bump breaks the regex. Not worth changing now given the bats safety net.</li>
+      <li><em>(future)</em> <em></em><code>exposeNew</code> does not re-probe the engine chain after a healthy <code>tracker.Add</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L167-L218"><code>port_state_tracker_linux.go:167-218</code></a> <span class="pill pill-claude">Claude</span>. <code>retryAppend</code> deliberately re-probes the engine chain before re-appending because a full tick elapsed since the original probe; <code>exposeNew</code> probes once, then <code>Add</code>, then <code>Append</code> with no re-probe. The residual gap is the opposite ordering: a port <code>exposeNew</code> recorded as healthy-owned, after which an engine chain appears for the same port — <code>addObserved</code> no-ops healthy <code>added</code> ports, so the procnet rule persists and shadows. This is the same netns-blind / stability-gate-bypass limitation the <code>portState</code> doc comment (lines 71-73) and Round 2&#39;s &quot;residual netns-blind heuristic race&quot; already call out, restated from the exposeNew/retryAppend asymmetry angle; it self-heals when the transient listener disappears. No action needed.</li>
+      <li><em>(future, pre-existing)</em> <em></em><code>%w</code> verb in a <code>log.Errorf</code> call<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L120"><code>scanner_linux.go:120</code></a> [orchestrator]. <code>log.Errorf(&quot;failed to create portMapping for entry: %w&quot;, err)</code> — <code>%w</code> is meaningful only in <code>fmt.Errorf</code> and renders as <code>%!w(...)</code>. Present in the merge-base, so pre-existing, not a regression; flagged in Rounds 1 and 2 as well. The line sits in a file this PR rewrites heavily, so the one-character fix (<code>%w</code> → <code>%s</code>) is low-cost to fold in, but it remains out of scope for the procnet change.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em>(in-scope)</em> <em></em>The <code>iptablesRunner</code> interface is a genuine test seam<em></em> — the fake models the installed PREROUTING rule set (<code>fakeIptables.rules</code>), so tests assert what iptables state resulted, not merely that a call happened; combined with the <code>addBehavior</code> queue on <code>fakeTracker</code>, every documented transition — including the partial-failure and commit-but-errored shapes — is exercised deterministically. <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></li>
+      <li><em>(in-scope)</em> <strong>The append-retry path re-probes engine ownership before writing PREROUTING</strong> — re-checking <code>CNI-HOSTPORT-DNAT</code>/<code>DOCKER</code> before a retry Append is the correct ownership check to avoid the original shadowing failure. <span class="pill pill-codex">Codex</span></li>
+      <li><em>(in-scope)</em> <em></em><code>tracker.Get</code>-based disambiguation of &quot;proxy already running&quot;<em></em> — splitting the generic substring into engine-delegation vs. procnet&#39;s own partial-failure retry is a clean workaround for an API surface that returns the same error for both. <span class="pill pill-gemini">Gemini</span></li>
+      <li><em>(in-scope)</em> <em></em>The <code>portState</code> doc comment is a complete state-machine specification<em></em> — and each helper&#39;s docstring explains <em>why</em> (the <code>retireDisappeared</code> rationale for dropping the marker unconditionally, the <code>retryAppend</code> orphan-window note). Documentation that survives the next refactor. <span class="pill pill-claude">Claude</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Coverage is thorough and unchanged in quality from Round 2: roughly 20 test functions in <code>port_state_tracker_linux_test.go</code> walk every transition in the <code>portState</code> doc comment with fakes that model the real <code>APITracker</code> semantics, the three <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10262" class="gh-ref" data-title="procnet: don&#39;t shadow CNI portmap with PREROUTING DNAT" data-state="open" data-type="pr">#10262</a> regression tests are present, and <code>TestMultiplePortsDivergingStatesStayIndependent</code> (the Round 2 testing-gap resolution) drives three ports with diverging states through one <code>Tick</code>. <code>TestWrapExitError</code> uses a real failing command to produce a genuine <code>*exec.ExitError</code>, and <code>TestPortAlreadyExposedSubstringIsReachable</code> pins the substring contract against the real forwarder/tracker wrap chain.</p>
+    <p>Untested corners, ranked by risk:</p>
+    <ol>
+      <li><em></em><code>iptables --list</code> output-format drift<em></em> — the real <code>engineChainManagesPort</code> / <code>dnatChainContainsPort</code> against actual iptables output is reachable only through <code>published-ports.bats</code>, which reproduces the original bug, not the chain-absent classification or the <code>multiport</code>-vs-<code>dpt:</code> rendering variants. See Design Observations.</li>
+      <li><em></em><code>dnatChainContainsPort</code> with non-<code>tcp</code>/<code>udp</code> protocol rendering<em></em> — every fixture shows the <code>prot</code> column as <code>tcp</code>/<code>udp</code>; the <code>\b(tcp|udp)\b</code> anchor fails closed (false negative → shadow rule) if any backend renders it numerically. Worth a fixture if that rendering is reachable.</li>
+      <li><em></em>S1&#39;s wsl-proxy-only <code>Remove</code> failure<em></em> — no test covers a <code>tracker.Remove</code> failure where host-switch unexpose succeeded; <code>fakeTracker.removeErr</code> is a single opaque error, so the two <code>Remove</code> failure shapes are indistinguishable in the fake. This is the same shape as Round 2&#39;s skipped testing gap and would only pin the documented limitation.</li>
+    </ol>
+    <p>The <code>_linux</code>-tagged tests do not run on the darwin dev host; agents confirmed <code>GOOS=linux</code> compilation and vet are clean, and <code>yarn test</code> runs them on <code>ubuntu-latest</code> via the new <code>test:unit:guestagent</code> target.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Documentation remains a strength — the <code>portState</code> and <code>applyLoopbackIPtablesRule</code> comments explain <em>why</em>, and the four Round 2 comment-accuracy fixes verify against the current code. Two gaps, both in Suggestions: the inline comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L313-L318"><code>port_state_tracker_linux.go:313-318</code></a> overstates that a <code>Remove</code> failure means &quot;the unexpose call did not land&quot; (S1), and the <code>iptablesCommand</code> locale pin would be worth a comment if added (S2). One minor note: <code>newPortStateTracker</code> initializes <code>added</code> and <code>addErrorLogged</code> but not <code>seenLastScan</code> — correct, since <code>Tick</code> always wholesale-replaces that field and a nil-map read is intended, but a one-line comment would save the next reader the double-take.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><code>retryAppend</code> engine-takeover removes the only host-switch proxy<em></em> — declined Round 2 (Commented): a real code fix is an unbounded design decision because procnet is netns-blind; the window is narrow (needs the heavy-load stability-gate bypass) and an orphaned port self-heals on RD restart. The <code>retryAppend</code> comment and the <code>portState</code> doc comment were corrected to document the orphan window. No Round 3 agent re-raised it; the engine-takeover logic is unchanged in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/773d0baf9"><code>773d0baf9</code></a>.</li>
+      <li><em></em><code>retryAppend</code> engine-takeover interleaving untested<em></em> — declined Round 2 (Skipped): with the engine-takeover behavior resolved as a documented limitation, a test would only pin a known gap.</li>
+      <li><em></em><code>applyLoopbackIPtablesRule</code> idempotency gate unit-untested<em></em> — declined Round 2 (Commented): closing it properly needs an injectable rule-presence prober; the gate shells out to real iptables and is covered end to end by <code>published-ports.bats</code>.</li>
+    </ul>
+    <h3 id="carried-in-the-code">Carried in the code <a href="#carried-in-the-code" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>wsl-proxy re-notify not retried on the resume-ownership path</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L54-L59"><code>port_state_tracker_linux.go:54-59</code></a>: <code>apiForwarder.Expose</code> succeeded but <code>wsl-proxy.Send</code> failed; <code>Tracker</code> exposes no idempotent re-notify hook. A resumed port is reachable from the Windows host but not from other WSL distros until RD restart.</li>
+      <li><strong>Engine-takeover orphan window</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L62-L73"><code>port_state_tracker_linux.go:62-73</code></a>: documented in the <code>portState</code> doc comment; rides along with the heavy-load stability-gate-bypass limitation.</li>
+      <li><strong>Delete-side iptables leak on transient probe failure</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L280-L283"><code>scanner_linux.go:280-283</code></a>: <code>retireDisappeared</code> has no Delete-side retry, so a transient <code>preroutingHasLoopbackRule</code> failure leaks the rule until RD restart.</li>
+      <li><strong>Port-range iptables forms intentionally not matched</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L244-L254"><code>scanner_linux.go:244-254</code></a>: <code>dpts:LO:HI</code> and multiport-embedded ranges are unmatched, with locked-in test fixtures; theoretical for the engines RD ships.</li>
+      <li><strong>Engine chain list closed to two engines</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/scanner_linux.go#L201-L205"><code>scanner_linux.go:201-205</code></a>: documented, with an explicit &quot;revisit when adding a third engine&quot; note.</li>
+      <li><em></em><code>Tick</code> aliases <code>newPortMap</code> into <code>seenLastScan</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/773d0baf9a7d51a1c4ca7961ffe73854b894c814/src/go/guestagent/pkg/procnet/port_state_tracker_linux.go#L145-L148"><code>port_state_tracker_linux.go:145-148</code></a>: documented invariant that the caller must pass a freshly-built map and not mutate it; <code>ForwardPorts</code> honors it.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Single commit; the message accurately describes intent. The PR bundles the procnet fix, the <code>test:unit:guestagent</code> CI target, and the <code>expect.txt</code> spelling entries — all three serve landing and CI-gating this change, so the scope is coherent.</p>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No unresolved inline PR review comments. The Round 2 Resolution table&#39;s seven items all verify against <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/773d0baf9"><code>773d0baf9</code></a>: the four Suggestion fixes are in the code, and the I1 / two testing-gap decisions are reflected (corrected comments, the new multi-port independence test).</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> — Found S2, the only finding that required reaching outside the diff to the merge-base to establish that the iptables stderr parsing is net-new code (not a carried-through pattern). Both its design observations are useful: the <code>iptables --list</code> format-drift concern names <code>iptables -S</code> as the machine-parseable fallback, and the <code>exposeNew</code>/<code>retryAppend</code> re-probe asymmetry, though it restates a Round 2 design observation, frames it from a fresh angle. It marked <code>port_state_tracker_linux.go</code> clean where Codex found S1 — the miss is the cross-component <code>APITracker.Remove</code> ordering trace. Zero false positives.</p>
+    <p><strong>[Codex]</strong> — Carried the round with S1, reached by tracing <code>APITracker.Remove</code>&#39;s <code>Unexpose</code>-then-<code>Send</code> ordering across to <code>apitracker.go</code> — the cross-component work the other two did not do. It rated the finding Important; it was downgraded to Suggestion because Round 1&#39;s I1 fix rationale already named this exact wsl-proxy-only <code>Remove</code> failure case and the keep-the-rule behavior was the deliberate choice. Its proposed diff references a <code>tracker.ErrWSLProxy</code> sentinel that does not exist, so the fix is illustrative rather than directly applicable. It ran the Linux cross-compile and reported the darwin test-exclusion honestly, and raised no Suggestions or design concerns of its own.</p>
+    <p><strong>[Gemini]</strong> — One finding, S3, unique to it: the shared <code>addErrorLogged</code> marker between the probe and <code>Add</code> failure paths. The cited line numbers are off — Gemini skips <code>git blame</code> under its daily quota and worked from stale offsets — but the interleaving it describes is real and verified against the code. It rated the finding a Suggestion, calibrated correctly this round, where in Round 2 it overstated a comparable diagnosability nit as Important. Lowest yield, but zero false positives and a genuine catch.</p>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>17m 18s</td><td>7m 46s</td><td>—</td></tr>
+        <tr><td>Findings</td><td>1S</td><td>1S</td><td>1S</td></tr>
+        <tr><td>Tool calls</td><td>17 (Bash 11, Read 6)</td><td>58 (shell 58)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>2</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>6</td><td>6</td><td>6</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1S</strong></td><td><strong>1S</strong></td><td><strong>1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>1 (I→S)</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Reconciliation: Codex rated S1 Important; downgraded to Suggestion. Round 1&#39;s I1 fix rationale already named the wsl-proxy-only <code>Remove</code> failure case and the typed-<code>Remove</code>-result fix, and the keep-the-rule behavior was the deliberate Round 1 decision — so the in-scope actionable item is a comment correction, not a code change. No other severities were changed.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <p>Codex delivered the most actionable finding: S1 is the only one of the three that traces a path to recreating the exact bug this PR fixes, and it required cross-component tracing into the tracker package. Claude was a close second — S2 plus both design observations, and it did the deepest in-file tracing and the only merge-base comparison. Gemini&#39;s S3 is a real unique catch but diagnosability-only. Running all three was justified by zero overlap across three findings, but the round&#39;s dominant signal is that the structure holds: no Critical, no Important, and all three findings are small. Three consecutive rounds have now converged on the same conclusion — the state-machine extraction is sound.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When code classifies a subprocess failure by substring-matching its stderr or stdout — deciding &quot;file not found&quot; vs &quot;permission denied&quot;, &quot;rule absent&quot; vs &quot;transient lock contention&quot;, and the like — check whether the process locale is pinned to <code>C</code>/<code>POSIX</code>. Unpinned locale-sensitive matching silently misclassifies under a localized build of the tool, and the misclassification often routes a steady-state &quot;no&quot; into a &quot;retry forever&quot; path. Flag substring matching of tool output where the invocation does not pin <code>LC_ALL=C</code> (or equivalent).</li>
+      <li>When a code path keeps or releases a resource (an iptables rule, a lock file, a temp directory) based on whether a multi-step operation returned an error, check whether that error value distinguishes which step failed. A single opaque <code>error</code> frequently conflates &quot;step A failed, later steps skipped&quot; with &quot;step A succeeded, step B failed&quot; — and the correct cleanup differs between them. Flag keep/release decisions that branch only on <code>err != nil</code> when the operation has multiple side-effecting steps with distinct post-conditions; the fix is usually a typed or sentinel-wrapped error, not a change to the cleanup logic.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] <code>APITracker.Remove</code> (<code>src/go/guestagent/pkg/tracker/apitracker.go</code>) runs host-switch <code>apiForwarder.Unexpose</code> for every binding first, then <code>wslProxyForwarder.Send</code>. A <code>Send</code> failure returns early with <code>&quot;sending port mappings to wsl proxy error: %w&quot;</code>, which does NOT wrap <code>forwarder.ErrUnexposeAPI</code>. So a non-nil error from <code>tracker.Remove</code> does not imply the host-switch proxy is still bound — it can mean every <code>Unexpose</code> succeeded and only the wsl-proxy notification failed. <code>APITracker.Add</code> has the same <code>Expose</code>-then-<code>Send</code> ordering but seeds <code>portStorage</code> before <code>Send</code>. Code that keeps, deletes, or transfers iptables rules or tracker entries based on an <code>Add</code>/<code>Remove</code> error must account for both partial-failure shapes.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
