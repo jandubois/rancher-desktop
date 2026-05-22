@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260521-165716-pr-10284</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260521-165716-pr-10284</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-21 16:57</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/officialasishkumar">@officialasishkumar</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10284" class="gh-ref" data-title="RDX: show installed extension metadata" data-state="open" data-type="pr">#10284</a> — RDX: show installed extension metadata</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; default sort regression, i18n parity, and URL fallback gaps need attention before merge</td></tr>
+      <tr><td>Wall-clock time</td><td><code>16 min 30 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>PR adds Vendor, Description, and More information columns to the Installed Extensions table, sourced from existing OCI labels. The default sort falls back to the hidden image ID rather than the displayed title, three new column labels skip the codebase&#39;s i18n convention, and the URL regex misclassifies explicitly qualified Docker Hub IDs (<code>docker.io/...</code>) and registry-with-port IDs (<code>localhost:5000/...</code>). The same URL-fallback logic already lives in <code>MarketplaceCard.vue</code>; the PR copies it instead of extracting a shared helper.</p>
+    <p>Reviewer @mook-as also asked whether <code>MarketplaceCard.vue</code> could be adapted for reuse here; the author moved helpers from a separate <code>metadata.ts</code> onto <code>installed.vue</code> but kept the broader question open. All three reviewers raised the duplication as a design concern.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Default sort falls back to hidden image id, not the displayed title <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L41-L55">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="41" data-line="46-50"><code class="language-ts">    };
+  },
+  computed: {
+    emptyStateIcon(): string {
+      return this.t(&#39;extensions.installed.emptyState.icon&#39;);
+    },
+    emptyStateHeading(): string {
+      return this.t(&#39;extensions.installed.emptyState.heading&#39;);
+    },
+    emptyStateBody(): string {
+      return this.t(&#39;extensions.installed.emptyState.body&#39;, { }, true);
+    },
+    ...mapGetters(&#39;extensions&#39;, [&#39;installedExtensions&#39;]) as {
+      installedExtensions: () =&gt; ExtensionState[],
+    },</code></pre>
+    <p>The new header at line 47 renames the displayed &quot;Name&quot; column from <code>id</code> to <code>title</code> but does not mark it as the default sort. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/SortableTable/sorting.js#L66-L86"><code>SortableTable/sorting.js:66-86</code></a> picks the default by looking for a <code>defaultSort: true</code> header (none), then a header named <code>name</code> (none), then the first non-state header — <code>icon</code> here. The <code>icon</code> column declares no <code>sort</code> field, so the table falls back to the mandatory sort at line 9 (<code>[&#39;nameSort&#39;, &#39;id&#39;]</code>), which resolves to <code>id</code>. Pre-PR the displayed and sort columns matched (<code>name: &#39;id&#39;</code>); now users read titles but see rows ordered by the underlying image id.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/SortableTable/sorting.js#L61-L91">pkg/rancher-desktop/components/SortableTable/sorting.js</a></div>
+      <pre data-start="61" data-line="66-86"><code class="language-javascript">  data() {
+    let sortBy = null;
+
+    this._defaultSortBy = this.defaultSortBy;
+
+    // Try to find a reasonable default sort
+    if ( !this._defaultSortBy ) {
+      const markedColumn = this.headers.find((x) =&gt; !!x.defaultSort);
+      const nameColumn = this.headers.find( (x) =&gt; x.name === &#39;name&#39;);
+
+      if ( markedColumn ) {
+        this._defaultSortBy = markedColumn.name;
+      } else if ( nameColumn ) {
+        // Use the name column if there is one
+        this._defaultSortBy = nameColumn.name;
+      } else {
+        // The first column that isn&#39;t state
+        const first = this.headers.filter( (x) =&gt; x.name !== &#39;state&#39; )[0];
+
+        if ( first ) {
+          this._defaultSortBy = first.name;
+        } else {
+          // I give up
+          this._defaultSortBy = &#39;id&#39;;
+        }
+      }
+    }
+
+    // If the sort column doesn&#39;t exist or isn&#39;t specified, use default
+    if ( !sortBy || !this.headers.find((x) =&gt; x.name === sortBy ) ) {
+      sortBy = this._defaultSortBy;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L4-L14">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="4" data-line="9"><code class="language-markup">
+import EmptyState from &#39;@pkg/components/EmptyState.vue&#39;;
+import LoadingIndicator from &#39;@pkg/components/LoadingIndicator.vue&#39;;
+import NavIconExtension from &#39;@pkg/components/NavIconExtension.vue&#39;;
+import SortableTable from &#39;@pkg/components/SortableTable/index.vue&#39;;
+import useCredentials from &#39;@pkg/hocs/withCredentials&#39;;
+import type { ExtensionState } from &#39;@pkg/store/extensions&#39;;
+import { ipcRenderer } from &#39;@pkg/utils/ipcRenderer&#39;;
+
+export default defineComponent({
+  name:       &#39;extensions-installed&#39;,</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">         {
+           name:  &#39;title&#39;,
+           label: &#39;Name&#39;,
++          defaultSort: true,
+           sort:  [&#39;title&#39;, &#39;id&#39;],
+         },</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> Three new column labels skip the codebase&#39;s i18n convention <span class="pill pill-claude">Claude</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L43-L53">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="43" data-line="48"><code class="language-ts">  computed: {
+    emptyStateIcon(): string {
+      return this.t(&#39;extensions.installed.emptyState.icon&#39;);
+    },
+    emptyStateHeading(): string {
+      return this.t(&#39;extensions.installed.emptyState.heading&#39;);
+    },
+    emptyStateBody(): string {
+      return this.t(&#39;extensions.installed.emptyState.body&#39;, { }, true);
+    },
+    ...mapGetters(&#39;extensions&#39;, [&#39;installedExtensions&#39;]) as {</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/Containers.vue#L191-L210"><code>pages/Containers.vue:191-210</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/Volumes.vue#L115-L130"><code>pages/Volumes.vue:115-130</code></a> route every header through <code>this.t(&#39;...&#39;)</code>. The same file already uses <code>t(&#39;marketplace.moreInfo&#39;)</code> for the More information link text at line 232. The pre-existing <code>&#39;Name&#39;</code> label is an outlier; the PR extends that outlier by three. Adding the keys now keeps the table reachable from <code>assets/translations/en-us.yaml</code> for future locales.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/Containers.vue#L186-L215">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="186" data-line="191-210"><code class="language-markup">       */
+      subscribeTimer:       undefined,
+      headers:              [
+        {
+          name:  &#39;containerState&#39;,
+          label: this.t(&#39;containers.manage.table.header.state&#39;),
+        },
+        {
+          name:  &#39;containerName&#39;,
+          label: this.t(&#39;containers.manage.table.header.containerName&#39;),
+          sort:  [&#39;containerName&#39;, &#39;image&#39;, &#39;imageName&#39;],
+        },
+        {
+          name:  &#39;imageName&#39;,
+          label: this.t(&#39;containers.manage.table.header.image&#39;),
+          sort:  [&#39;imageName&#39;, &#39;containerName&#39;, &#39;imageName&#39;],
+        },
+        {
+          name:  &#39;ports&#39;,
+          label: this.t(&#39;containers.manage.table.header.ports&#39;),
+          sort:  [&#39;ports&#39;, &#39;containerName&#39;, &#39;imageName&#39;],
+        },
+        {
+          name:  &#39;uptime&#39;,
+          label: this.t(&#39;containers.manage.table.header.started&#39;),
+          sort:  [&#39;si&#39;, &#39;containerName&#39;, &#39;imageName&#39;],
+          width: 120,
+        },
+      ],
+    };</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/Volumes.vue#L110-L135">pkg/rancher-desktop/pages/Volumes.vue</a></div>
+      <pre data-start="110" data-line="115-130"><code class="language-markup">      subscribeTimer: undefined as ReturnType&lt;typeof setTimeout&gt; | undefined,
+      execError:      null as string | null,
+      headers:        [
+        {
+          name:  &#39;Name&#39;,
+          label: this.t(&#39;volumes.manage.table.header.volumeName&#39;),
+          sort:  [&#39;Name&#39;],
+        },
+        {
+          name:  &#39;Driver&#39;,
+          label: this.t(&#39;volumes.manage.table.header.driver&#39;),
+          sort:  [&#39;Driver&#39;, &#39;Name&#39;],
+        },
+        {
+          name:  &#39;Mountpoint&#39;,
+          label: this.t(&#39;volumes.manage.table.header.mountpoint&#39;),
+          sort:  [&#39;Mountpoint&#39;, &#39;Name&#39;],
+        },
+        {
+          name:  &#39;Created&#39;,
+          label: this.t(&#39;volumes.manage.table.header.created&#39;),
+          sort:  [&#39;Created&#39;, &#39;Name&#39;],
+          width: 120,
+        },
+      ],
+    };</code></pre>
+    <p>Fix: add <code>extensions.installed.list.headers.{name,vendor,description,moreInfo}</code> to <code>en-us.yaml</code> and replace each label:</p>
+      <pre><code class="language-diff">-{ name: &#39;vendor&#39;, label: &#39;Vendor&#39;, sort: [&#39;vendor&#39;, &#39;title&#39;, &#39;id&#39;], width: 160 },
++{ name: &#39;vendor&#39;, label: this.t(&#39;extensions.installed.list.headers.vendor&#39;),
++  sort: [&#39;vendor&#39;, &#39;title&#39;, &#39;id&#39;], width: 160 },</code></pre>
+    <p>Fix the pre-existing <code>&#39;Name&#39;</code> label in the same pass.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> URL regex misclassifies explicit Docker Hub and registry-with-port IDs <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L122-L136">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="122" data-line="127-131"><code class="language-ts">                @click=&quot;browseExtensions&quot;
+              &gt;
+                {{ t(&#39;extensions.installed.emptyState.button.text&#39;) }}
+              &lt;/button&gt;
+            &lt;/template&gt;
+          &lt;/empty-state&gt;
+        &lt;/td&gt;
+      &lt;/template&gt;
+      &lt;template #col:icon=&quot;{ row }&quot;&gt;
+        &lt;td&gt;
+          &lt;nav-icon-extension :extension-id=&quot;row.id&quot; /&gt;
+        &lt;/td&gt;
+      &lt;/template&gt;
+      &lt;template #col:id=&quot;{ row }&quot;&gt;
+        &lt;td&gt;</code></pre>
+    <p>The regex treats any first segment containing a dot as a host and any first segment without one as a Docker Hub publisher. Two real cases break:</p>
+    <ol>
+      <li><strong>Explicit Docker Hub prefixes.</strong> <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/background.ts#L1580"><code>background.ts:1580</code></a> passes the raw image to <code>getExtension()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/main/extensions/manager.ts#L346-L358"><code>pkg/rancher-desktop/main/extensions/manager.ts:346-358</code></a>), so a CLI install of <code>docker.io/docker/logs-explorer-extension</code> keeps the prefix. The regex misses it (dot in <code>docker.io</code>) and the bare-host branch returns <code>https://docker.io/...</code>, which is not Docker Hub&#39;s UI.</li>
+      <li><strong>Registry-with-port.</strong> <code>localhost:5000/myext</code> matches the regex because <code>:</code> is allowed; the row links to <code>https://hub.docker.com/extensions/localhost:5000/...</code> — guaranteed 404.</li>
+    </ol>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/background.ts#L1575-L1585">background.ts</a></div>
+      <pre data-start="1575" data-line="1580"><code class="language-typescript">    const em = await getExtensionManager();
+
+    if (!em) {
+      return { status: 503, data: &#39;Extension manager is not ready yet.&#39; };
+    }
+    const extension = await em.getExtension(image, { preferInstalled: state === &#39;uninstall&#39; });
+
+    if (state === &#39;install&#39;) {
+      console.debug(`Installing extension ${ image }...`);
+      try {
+        const { enabled, list } = cfg.application.extensions.allowed;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/main/extensions/manager.ts#L341-L363">pkg/rancher-desktop/main/extensions/manager.ts</a></div>
+      <pre data-start="341" data-line="346-358"><code class="language-typescript">    return this.#supportedExtensions[ref] ?? true;
+  }
+
+  #supportedExtensions: Record&lt;string, boolean&gt; | undefined;
+
+  async getExtension(image: string, options: { preferInstalled?: boolean } = {}): Promise&lt;Extension&gt; {
+    let [, imageName, tag] = /^(.*):(.*?)$/.exec(image) ?? [&#39;&#39;, image, undefined];
+
+    // The build process uses an older TypeScript that can&#39;t infer imageName correctly.
+    imageName ??= image;
+
+    this.extensions[imageName] ??= {};
+    const extGroup = this.extensions[imageName];
+    const preferInstalled = options?.preferInstalled ?? true;
+
+    if (tag) {
+      // Requested a specific tag; create it if we don&#39;t have it.
+      extGroup[tag] ||= new ExtensionImpl(imageName, tag, this.client);
+
+      return extGroup[tag];
+    }
+
+    // No tag specified; grab the installed version, if available</code></pre>
+    <p>The same logic lives pre-existing in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/MarketplaceCard.vue#L130-L134"><code>MarketplaceCard.vue:130-134</code></a>; fix once in the shared helper proposed in D1.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/MarketplaceCard.vue#L125-L139">pkg/rancher-desktop/components/MarketplaceCard.vue</a></div>
+      <pre data-start="125" data-line="130-134"><code class="language-markup">
+      if (preferredURL) {
+        return preferredURL;
+      }
+
+      if (!/^[^./]+\//.test(this.extension.slug)) {
+        return `https://${ this.extension.slug }`;
+      }
+
+      return `https://hub.docker.com/extensions/${ this.extension.slug }`;
+    },
+    loadingLabel() {
+      return this.t(`marketplace.loading.${ this.currentAction }`);
+    },
+  },</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-      if (!/^[^./]+\//.test(ext.id)) {
++      const dockerHubID = ext.id.replace(/^(?:docker\.io|index\.docker\.io)\//, &#39;&#39;);
++      if (dockerHubID === ext.id &amp;&amp; !/^[^./:]+\//.test(ext.id)) {
+         return `https://${ ext.id }`;
+       }
+-      return `https://hub.docker.com/extensions/${ ext.id }`;
++      return `https://hub.docker.com/extensions/${ dockerHubID }`;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Extension-supplied <code>more-info</code> URL bound to <code>:href</code> without scheme allow-list <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L115-L130">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="115" data-line="120-125"><code class="language-ts">            :icon=&quot;emptyStateIcon&quot;
+            :heading=&quot;emptyStateHeading&quot;
+            :body=&quot;emptyStateBody&quot;
+          &gt;
+            &lt;template #primary-action&gt;
+              &lt;button
+                class=&quot;btn role-primary&quot;
+                @click=&quot;browseExtensions&quot;
+              &gt;
+                {{ t(&#39;extensions.installed.emptyState.button.text&#39;) }}
+              &lt;/button&gt;
+            &lt;/template&gt;
+          &lt;/empty-state&gt;
+        &lt;/td&gt;
+      &lt;/template&gt;
+      &lt;template #col:icon=&quot;{ row }&quot;&gt;</code></pre>
+    <p><code>row.moreInfo</code> comes from the extension image&#39;s <code>io.rancherdesktop.extension.more-info</code> label, fully controlled by whoever publishes the image. Electron&#39;s <code>setWindowOpenHandler</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/window/index.ts#L86-L94"><code>pkg/rancher-desktop/window/index.ts:86-94</code></a>) intercepts <code>target=&quot;_blank&quot;</code> clicks and forwards to <code>shell.openExternal</code>, which drops most <code>javascript:</code> URIs but happily opens <code>data:</code>, <code>file:</code>, <code>vscode:</code>, <code>mailto:</code>, and similar schemes via the OS handler. The pre-existing pattern in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/MarketplaceCard.vue#L22"><code>MarketplaceCard.vue:22</code></a> was tolerable for a curated catalog; the new code applies it to arbitrary installed images.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/window/index.ts#L81-L99">pkg/rancher-desktop/window/index.ts</a></div>
+      <pre data-start="81" data-line="86-94"><code class="language-typescript">      return;
+    }
+    shell.openExternal(input);
+    event.preventDefault();
+  });
+  window.webContents.setWindowOpenHandler((details) =&gt; {
+    if (isInternalURL(details.url)) {
+      window?.webContents.loadURL(details.url);
+    } else {
+      shell.openExternal(details.url);
+    }
+
+    return { action: &#39;deny&#39; };
+  });
+  window.webContents.on(&#39;did-fail-load&#39;, (event, errorCode, errorDescription, url) =&gt; {
+    console.log(`Failed to load ${ url }: ${ errorCode } (${ errorDescription })`, event);
+  });
+  console.debug(&#39;createWindow() name:&#39;, name, &#39; url:&#39;, url);
+  window.loadURL(url);</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/MarketplaceCard.vue#L17-L27">pkg/rancher-desktop/components/MarketplaceCard.vue</a></div>
+      <pre data-start="17" data-line="22"><code class="language-markup">      &lt;div class=&quot;extensions-card-content&quot;&gt;
+        &lt;span&gt;{{ extension.short_description }}&lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;a
+        :href=&quot;extensionLink&quot;
+        :title=&quot;extensionLink&quot;
+        target=&quot;_blank&quot;
+      &gt;
+        {{ t(&#39;marketplace.moreInfo&#39;) }}
+        &lt;i class=&quot;icon icon-external-link &quot; /&gt;</code></pre>
+    <p>Fix: validate the scheme before returning:</p>
+      <pre><code class="language-ts">try {
+  const url = new URL(preferredURL);
+  if (url.protocol === &#39;http:&#39; || url.protocol === &#39;https:&#39;) {
+    return preferredURL;
+  }
+} catch { /* fall through */ }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Test exercises the <code>methods</code> bag directly, not via a Vue instance <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <pre><code class="language-ts">const { default: InstalledExtensions } = await import(&#39;@pkg/pages/extensions/installed.vue&#39;);
+const methods = (InstalledExtensions as any).methods;</code></pre>
+    <p>Calling helpers off the options object means <code>this</code> is the methods bag. The current helpers work only because they call sibling methods. The next time someone wires in <code>this.t(...)</code>, <code>this.$store</code>, or <code>this.installedExtensions</code>, the test crashes or silently passes against an undefined <code>this</code>. Mount the component with <code>@vue/test-utils</code> and assert against <code>vm.installedExtensionRows</code> or the rendered cell text — that surface is what users see and the current spec does not cover it.</p>
+    <p>Fix: replace the methods-bag access with <code>shallowMount(InstalledExtensions, { ... })</code> and assert on <code>vm.installedExtensionRows</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Helper signatures alternate between <code>ExtensionMetadataSource</code> and an anonymous <code>{ labels? }</code> <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L15-L28">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="15" data-line="20-23"><code class="language-ts">  components: {
+    LoadingIndicator, NavIconExtension, SortableTable, EmptyState,
+  },
+  setup() {
+    useCredentials();
+  },
+  data() {
+    return {
+      headers: [
+        {
+          name:  &#39;icon&#39;,
+          label: &#39; &#39;,
+          width: 35,
+        },</code></pre>
+    <p>Two helpers take the named interface, three take an anonymous structural type. Future readers must inspect each signature to know which helpers actually consult <code>id</code>.</p>
+    <p>Fix: use one type. A <code>Pick&lt;ExtensionMetadataSource, &#39;labels&#39;&gt;</code> keeps the label-only helpers narrow:</p>
+      <pre><code class="language-diff">-    extensionLabel(ext: { labels?: Record&lt;string, string&gt; }, label: string, fallback = &#39;&#39;): string {
++    extensionLabel(ext: Pick&lt;ExtensionMetadataSource, &#39;labels&#39;&gt;, label: string, fallback = &#39;&#39;): string {</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Empty-cell placeholder uses a literal hyphen <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/pages/extensions/installed.vue#L1-L20">pkg/rancher-desktop/pages/extensions/installed.vue</a></div>
+      <pre data-start="1" data-line="208-211"><code class="language-html">&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent } from &#39;vue&#39;;
+import { mapGetters } from &#39;vuex&#39;;
+
+import EmptyState from &#39;@pkg/components/EmptyState.vue&#39;;
+import LoadingIndicator from &#39;@pkg/components/LoadingIndicator.vue&#39;;
+import NavIconExtension from &#39;@pkg/components/NavIconExtension.vue&#39;;
+import SortableTable from &#39;@pkg/components/SortableTable/index.vue&#39;;
+import useCredentials from &#39;@pkg/hocs/withCredentials&#39;;
+import type { ExtensionState } from &#39;@pkg/store/extensions&#39;;
+import { ipcRenderer } from &#39;@pkg/utils/ipcRenderer&#39;;
+
+export default defineComponent({
+  name:       &#39;extensions-installed&#39;,
+  components: {
+    LoadingIndicator, NavIconExtension, SortableTable, EmptyState,
+  },
+  setup() {
+    useCredentials();
+  },</code></pre>
+    <p>Screen readers read the ASCII hyphen-minus inconsistently — some announce &quot;dash,&quot; others skip it. Use a typographic em-dash and an <code>aria-label</code> so the placeholder reads as &quot;(none)&quot; instead of going silent.</p>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-          &gt;&lt;span
+-            v-else
+-            class=&quot;empty-cell&quot;
+-          &gt;-&lt;/span&gt;
++          &gt;&lt;span
++            v-else
++            class=&quot;empty-cell&quot;
++            aria-label=&quot;(none)&quot;
++          &gt;&amp;mdash;&lt;/span&gt;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> <code>mockModules</code> block alignment off by one <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <pre><code class="language-ts">&#39;@pkg/components/SortableTable/index.vue&#39;:    componentStub,
+&#39;@pkg/hocs/withCredentials&#39;:                  { default: jest.fn() },
+&#39;@pkg/utils/ipcRenderer&#39;:                    {</code></pre>
+    <p>The <code>ipcRenderer</code> entry uses one fewer space than its siblings, putting <code>{</code> one column left of <code>componentStub</code>. Cosmetic. <code>yarn lint:fix</code> should resolve.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <p><em></em>D1. Extract a shared <code>extensionMetadata</code> helper for catalog and installed views (in-scope)<em></em> — <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></p>
+    <p><code>MarketplaceCard.vue</code> (catalog) and <code>installed.vue</code> (installed) now both consume the same OCI label bag and apply the same fallback rules: title with <code>id</code>/<code>slug</code> fallback, &quot;more info&quot; URL with Docker Hub fallback, label-trim semantics. Today both files reimplement the URL logic, <code>MarketplaceCard.vue</code> reads <code>extension.labels[...]</code> directly without the safe-trim wrapper, and only <code>installed.vue</code> extracts vendor and description. A small <code>pkg/rancher-desktop/utils/extensionMetadata.ts</code> exporting <code>extensionTitle</code>, <code>extensionVendor</code>, <code>extensionDescription</code>, <code>extensionMoreInfoURL</code> would: (a) collapse the duplication to a one-line import on each side; (b) make S3&#39;s mount-style test redundant — the helpers become pure functions, directly testable; (c) leave a single place to enforce S1&#39;s regex and S2&#39;s scheme allow-list. This matches @mook-as&#39;s review suggestion to make <code>MarketplaceCard.vue</code> reusable, while leaving each view in charge of its own rendering.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Sort key arrays (<code>[&#39;vendor&#39;, &#39;title&#39;, &#39;id&#39;]</code>, etc.) fall through to the next key when the primary is empty, giving stable ordering even when many extensions lack metadata.</li>
+      <li><code>?.trim() || fallback</code> treats whitespace-only labels as missing — more forgiving than the pre-existing <code>?? fallback</code> (which fell back only on <code>undefined</code>).</li>
+      <li><code>installedExtensionRows</code> is a computed property, so derived fields update reactively when <code>installedExtensions</code> changes.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Untested scenarios, ranked by risk:</p>
+    <ol>
+      <li><strong>No template-level assertion that the rendered table contains the expected cell text.</strong> A regression that drops <code>description</code> from the row object or breaks the slot mapping would not fail any current assertion.</li>
+      <li><em></em><code>installedExtensionRows</code> computed property is not exercised.<em></em> The spec touches the helpers but not the data shape consumed by <code>SortableTable</code>.</li>
+      <li><strong>Default sort behavior (I1).</strong> The spec would not have caught the displayed-name / sort-by-id mismatch.</li>
+      <li><em></em>URL fallback for <code>docker.io/...</code> and <code>localhost:5000/...</code> (S1).<em></em> No coverage of either.</li>
+      <li><strong>Whitespace-only labels.</strong> <code>?.trim() || fallback</code> is exercised only with the all-empty case, not with <code>&#39;   &#39;</code> strings that prove trim is doing work.</li>
+      <li><strong>Mixed label sets.</strong> An extension that has <code>vendor</code> but no <code>description</code> is not covered; only &quot;all labels&quot; and &quot;no labels&quot; cases exist.</li>
+      <li><strong>Sort key fall-through.</strong> Two extensions with empty <code>vendor</code> ordering by <code>title</code> is not asserted; this is the kind of behavior that subtly breaks when refactoring the sort spec.</li>
+      <li><em></em>Method dispatch via Vue (<code>this</code> = component instance, S3).<em></em> The helpers happen to be <code>this</code>-light today; a future refactor that pulls a value off <code>this.$store</code> will break in production but pass the test.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li>No JSDoc on the new helpers (<code>extensionLabel</code>, <code>extensionTitle</code>, <code>extensionVendor</code>, <code>extensionDescription</code>, <code>extensionLink</code>). Names are largely self-describing; a one-line comment on <code>extensionLink</code> explaining the preferred-label → bare-host → Docker Hub fallback chain would save the next reader a trip through the regex.</li>
+      <li>No CHANGELOG / release-notes entry visible in the diff. Project convention here is unclear from this PR alone — may be deferred to the release branch.</li>
+      <li>The hardcoded English headers (I2) silently bypass the i18n flow.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Single commit <code>4b2bb1099 RDX: show installed extension metadata</code>. Subject is accurate; the diff is coherent (one feature plus its test). After @mook-as&#39;s review the author folded <code>metadata.ts</code> into <code>installed.vue</code> by amending this commit rather than stacking a fixup — appropriate.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>PR comment — moving helpers onto the component</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10284#discussion_r3243696549">discussion_r3243696549</a> → response <a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10284#discussion_r3246406358">r3246406358</a>): @mook-as asked for the <code>metadata.ts</code> helpers to live on <code>installed.vue</code>; @officialasishkumar applied this in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4b2bb1099"><code>4b2bb1099</code></a>. The current diff is consistent with that rationale (no more <code>metadata.ts</code>, helpers are component methods).</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Review by @mook-as (CHANGES_REQUESTED)</strong> — &quot;I wonder if it makes sense to adapt <code>MarketplaceCard.vue</code> to make it usable here instead?&quot; (https://github.com/rancher-sandbox/rancher-desktop/pull/10284). The author addressed only the narrower inline comment about <code>metadata.ts</code>; the broader question about consolidating with <code>MarketplaceCard.vue</code> remains open and motivates D1. Still actionable — extracting <code>utils/extensionMetadata.ts</code> satisfies the request without subordinating either component.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude found the widest range of issues — the i18n parity gap (I2), the type-signature inconsistency (S4), the empty-cell accessibility concern (S5), and the alignment off-by-one (S6) were all unique to it. It also raised the duplicate-helper concern early and tied it directly to @mook-as&#39;s review comment. Severity calibration leaned high: it called the duplication an Important regression where the cleaner home was a Design Observation. Tracing was solid — it inspected <code>MarketplaceCard.vue</code> and the Electron window handler to back up the URL claims.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex caught the highest-impact finding: the default sort regression (I1). The trace into <code>SortableTable/sorting.js</code> is the kind of cross-component reasoning that decides whether a PR ships. It also pinned the <code>docker.io/...</code> case down to <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/main/extensions/manager.ts#L346-L358"><code>manager.ts:346-358</code></a> precisely. Calibration was slightly high on the <code>docker.io</code> finding — Codex called it Important, but the same logic pre-exists in <code>MarketplaceCard.vue</code>, so the consolidation downgraded it to Suggestion S1.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini contributed the colon-port case (now folded into S1), framed the <code>:href</code>-without-scheme-validation concern (now S2) as XSS, and flagged the brittle-test pattern (now S3). Two of its three Important findings consolidated to Suggestion because Electron&#39;s window handler and the pre-existing pattern in <code>MarketplaceCard.vue</code> blunt the practical risk. Gemini did not run <code>git blame</code> (consistent with the documented daily-quota gap) but Claude and Codex covered regression-versus-pre-existing labelling. No unique findings beyond what Claude or Codex also raised.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>5m 21s</td><td>6m 54s</td><td>3m 40s</td></tr>
+        <tr><td>Findings</td><td>1I 5S</td><td>1I 1S</td><td>3S</td></tr>
+        <tr><td>Tool calls</td><td>36 (Bash 25, Read 11)</td><td>64 (shell 64)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>4</td><td>1</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 5S</strong></td><td><strong>1I 1S</strong></td><td><strong>3S</strong></td></tr>
+        <tr><td>Downgraded</td><td>1 (I→S)</td><td>1 (I→S)</td><td>2 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation:</strong></p>
+    <ul>
+      <li>Claude I1 (duplicate <code>extensionLink</code> logic): important → Design Observation D1. The duplication is a maintainability concern, not a runtime bug; it belongs in design observations where the proposed shared helper sits alongside its callers.</li>
+      <li>Codex I1 (<code>docker.io/...</code> fall-through): important → suggestion S1. The same logic pre-exists in <code>MarketplaceCard.vue</code>, and the user-visible impact (broken link) is bounded to CLI installers who keep an explicit <code>docker.io/</code> prefix.</li>
+      <li>Gemini I1 (<code>javascript:</code> XSS): important → suggestion S2. Electron&#39;s <code>setWindowOpenHandler</code> deflects most <code>javascript:</code> URIs via <code>shell.openExternal</code>. The scheme allow-list is still worth adding for <code>data:</code>, <code>file:</code>, etc., but the practical impact is below Important.</li>
+      <li>Gemini I2 (brittle test): important → suggestion S3. The risk is latent (future refactors), not present. Suggestion-level fits the contract.</li>
+    </ul>
+    <p>All three agents had complete coverage of the two changed files. No findings were dropped as false positives.</p>
+    <p>Codex and Gemini did not meet the continuation threshold for a second pass (one important finding each, neither produced more than two suggestions of unique value). Claude qualifies (1 important + 5 suggestions, 4 unique) but standard mode stops at pass 1.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements:</strong></p>
+    <ul>
+      <li>[ ] When a Vue/React table component renders a column whose <code>name</code> field differs from the column it&#39;s sorted by, flag the mismatch as a UX regression. Sort columns are easy to miss in review because the rendered HTML looks correct; the bug only surfaces when a user notices that rows ordered by id no longer line up with their displayed names. Why: this round, only the agent that traced the table component&#39;s default-sort logic caught the issue. The principle is general — any framework with table abstractions has the same trap when display and sort fields diverge.</li>
+    </ul>
+    <p><strong>Repo context updates:</strong></p>
+    <ul>
+      <li>[repo] <strong>SortableTable default-sort fallback (UPDATE)</strong>. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fd4fcaa5f76f1199693ee192139acf09be297e2e/pkg/rancher-desktop/components/SortableTable/sorting.js#L66-L86"><code>pkg/rancher-desktop/components/SortableTable/sorting.js:66-86</code></a> picks the default sort column in this order: explicit <code>defaultSort: true</code>, then a header named <code>name</code>, then the first non-state header, then <code>id</code>. When reviewing a change that renames or reorders headers, verify the default-sort target still matches the displayed primary column — otherwise users see rows ordered by a hidden field. Why: tables with metadata columns that don&#39;t match the underlying record key (e.g., <code>title</code> vs <code>id</code>) are vulnerable; the bug is invisible until someone sorts the data and notices the mismatch.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
