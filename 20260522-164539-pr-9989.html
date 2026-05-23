@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260522-164539-pr-9989</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260522-164539-pr-9989</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-22 16:45</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/endemics">@endemics</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/9989" class="gh-ref" data-title="Inspect tab" data-state="open" data-type="pr">#9989</a> — Inspect tab</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9aa475a08"><code>9aa475a08</code></a> fix lint issue<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/68a83c244"><code>68a83c244</code></a> Fix cosmetic alignment issues in ContainerInspect<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/51929c87f"><code>51929c87f</code></a> Address PR review feedback on inspect tab<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4f2cc89ec"><code>4f2cc89ec</code></a> fix(containers): fix TS errors in fetchContainerInspect store action<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/39441e432"><code>39441e432</code></a> fix(containers): address review feedback on Info tab<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fa00ee9b2"><code>fa00ee9b2</code></a> feat(containers): add container Info tab with docker inspect details</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; feature is solid but the Info tab has several UX regressions (cached data hidden by spinner, errors swallowed, no retry when client becomes ready) and a store-level race in the inspect-cleanup path.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>17 min 9 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR adds a default &quot;Info&quot; tab backed by a <code>fetchContainerInspect</code> store action that caches <code>docker inspect</code> output. The architecture is sound, but the new code has lifecycle gaps: a stale-cleanup race in <code>fetchContainers</code>, no retry when the client becomes ready on direct reload, an unconditional spinner that hides cached data on tab return, stale data shown silently on refresh failures, and CLI errors swallowed by an <code>err.message</code> read.</p>
+    <p>All three reviewers participated in pass 1. Race-condition and lifecycle findings came mostly from Claude and Codex; Gemini flagged the most user-visible UX symptom and the error-shape mismatch. Overlap landed on the CLI error finding and the misleading SCSS comment.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> <code>fetchContainers</code> cleanup races with <code>fetchContainerInspect</code> writes <span class="pill pill-claude">Claude</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L384-L401">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="384" data-line="389-396"><code class="language-ts">      for (const id of Object.keys(containers)) {
+        if (!ids.has(id)) {
+          delete containers[id];
+        }
+      }
+      // Remove stale inspect data for containers that no longer exist
+      const inspectData = { ...state.inspectData };
+      for (const id of Object.keys(inspectData)) {
+        if (!ids.has(id)) {
+          delete inspectData[id];
+        }
+      }
+      commit(&#39;SET_INSPECT_DATA&#39;, inspectData);
+      commit(&#39;SET_CONTAINERS&#39;, containers);
+      if (state.error?.source === &#39;containers&#39;) {
+        commit(&#39;SET_ERROR&#39;, null);
+      }
+    } catch (error: any) {</code></pre>
+    <p><code>fetchContainers</code> reads <code>state.inspectData</code> only after the <code>await client?.docker.listContainers(...)</code> resolves (line 344). If a <code>fetchContainerInspect</code> commits while the list call is in flight, the snapshot taken at line 390 already contains the new entry but <code>ids</code> (built from the older list response) does not — the cleanup loop then deletes the freshly-fetched inspect. The reverse interleaving (inspect commits after the snapshot) is also bad: <code>SET_INSPECT_DATA</code> overwrites the post-inspect state with the snapshot, losing the entry that way instead. Either case forces the user-facing tab to refetch or shows the spinner forever until the next event triggers a new fetch.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L339-L349">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="339" data-line="344"><code class="language-typescript">  async fetchContainers({ commit, getters, state }) {
+    try {
+      const { client, namespace } = state;
+      const containers = state.containers ?? {};
+      const options = { all: true, namespace: getters.supportsNamespaces ? namespace : undefined };
+      const apiContainers = await client?.docker.listContainers(options) ?? [];
+      const ids = new Set&lt;string&gt;();
+
+      // Update containers in-place to maintain any UI state
+      for (const container of apiContainers as (NerdctlContainer | MobyContainer)[]) {
+        const k8sPodName = container.Labels?.[&#39;io.kubernetes.pod.name&#39;];</code></pre>
+    <p>Fix: replace the copy-modify-replace pattern with a targeted delete mutation so concurrent writers cannot lose entries.</p>
+      <pre><code class="language-ts">const stale = Object.keys(state.inspectData).filter(id =&gt; !ids.has(id));
+if (stale.length) {
+  commit(&#39;DELETE_INSPECT_DATA&#39;, stale);
+}</code></pre>
+    <p>Add a <code>DELETE_INSPECT_DATA</code> mutation that iterates the supplied ids and <code>delete</code>s each from <code>state.inspectData</code> in place.</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> Inspect fetch never retries when client or namespace becomes ready <span class="pill pill-codex">Codex</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L275-L296">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="275" data-line="280-291"><code class="language-ts">  }
+  loading.value = true;
+  error.value = null;
+
+  try {
+    await store.dispatch(&#39;container-engine/fetchContainerInspect&#39;, {
+      containerId: props.containerId,
+      namespace:   props.namespace,
+    });
+  } catch (err: any) {
+    error.value = err?.message ?? &#39;Failed to load container details.&#39;;
+  } finally {
+    loading.value = false;
+  }
+};
+
+watch(() =&gt; props.containerId, fetchInspect, { immediate: true });
+
+// Computed helpers
+const displayName = computed(() =&gt; (data.value?.Name ?? &#39;&#39;).replace(/^\//, &#39;&#39;));
+const shortId = computed(() =&gt; (data.value?.Id ?? &#39;&#39;).substring(0, 12));
+const envVars = computed(() =&gt; data.value?.Config.Env ?? []);</code></pre>
+    <p><code>fetchContainerInspect</code> throws if <code>state.client</code> is null (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L408-L410"><code>container-engine.ts:408-410</code></a>). On a direct reload of <code>/containers/info/:id</code>, the store starts with <code>client: null</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L236"><code>container-engine.ts:236</code></a>); <code>subscribe()</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L277"><code>ContainerInfo.vue:277</code></a> only assigns the client after <code>settings-read</code> returns. The watcher only observes <code>containerId</code>, so when the client finally becomes available nothing re-triggers the fetch — the Info tab shows the error state permanently. The same one-shot behavior bites containerd when <code>namespace</code> flips from <code>undefined</code> to a real value after settings load (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L153"><code>ContainerInfo.vue:153</code></a>).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L231-L241">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="231" data-line="236"><code class="language-typescript">}
+
+export const state: () =&gt; ContainersState = () =&gt; ({
+  backend:     ContainerEngine.NONE,
+  type:        &#39;containers&#39;,
+  client:      null,
+  namespaces:  null,
+  namespace:   undefined,
+  subscriber:  null,
+  containers:  null,
+  volumes:     null,</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L403-L415">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="403" data-line="408-410"><code class="language-typescript">    }
+  },
+  async fetchContainerInspect({ commit, state }, { containerId, namespace }: { containerId: string, namespace?: string }) {
+    const { client } = state;
+
+    if (!client) {
+      throw new Error(&#39;Container client is not available&#39;);
+    }
+    const args = [
+      ...(namespace ? [`--namespace=${ namespace }`] : []),
+      containerId,
+    ];
+    const result = await client.docker.cli.exec(&#39;inspect&#39;, args);</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L148-L158">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="148" data-line="153"><code class="language-markup">
+// Vuex integration
+const isK8sReady = computed(() =&gt; store.getters[&#39;k8sManager/isReady&#39;]);
+const containers = computed(() =&gt; store.state[&#39;container-engine&#39;].containers);
+const supportsNamespaces = computed(() =&gt; store.getters[&#39;container-engine/supportsNamespaces&#39;]);
+const namespace = computed(() =&gt; supportsNamespaces.value ? settings.value?.containers?.namespace : undefined);
+
+// Computed properties
+const containerId = computed(() =&gt; route.params.id as string || &#39;&#39;);
+
+const currentContainer = computed((): Container | null =&gt; {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L272-L282">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="272" data-line="277"><code class="language-markup">  ipcRenderer.send(&#39;settings-read&#39;);
+
+  ipcRenderer.on(&#39;settings-update&#39;, handleSettingsUpdate);
+  ipcRenderer.on(&#39;settings-read&#39;, handleSettingsRead);
+
+  subscribe().catch(console.error);
+
+  window.addEventListener(&#39;keydown&#39;, handleGlobalKeydown);
+});
+
+onBeforeUnmount(() =&gt; {</code></pre>
+    <p>Fix: watch the readiness inputs as well as the id.</p>
+      <pre><code class="language-ts">watch(
+  () =&gt; [props.containerId, props.namespace, store.state[&#39;container-engine&#39;].client] as const,
+  ([containerId, _namespace, client]) =&gt; {
+    if (containerId &amp;&amp; client) {
+      fetchInspect();
+    }
+  },
+  { immediate: true },
+);</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> Cached inspect data is hidden by the spinner on every Info-tab remount <span class="pill pill-gemini">Gemini</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L1-L20">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="1" data-line="6-15"><code class="language-vue">&lt;template&gt;
+  &lt;div
+    class=&quot;container-inspect&quot;
+    data-testid=&quot;container-inspect&quot;
+  &gt;
+    &lt;div
+      v-if=&quot;loading&quot;
+      class=&quot;loading-state&quot;
+      data-testid=&quot;info-loading&quot;
+    &gt;
+      &lt;i class=&quot;icon icon-spinner icon-spin&quot; /&gt;
+      Loading container details…
+    &lt;/div&gt;
+
+    &lt;template v-else-if=&quot;data&quot;&gt;
+      &lt;!-- Summary table --&gt;
+      &lt;table
+        class=&quot;summary-table&quot;
+        data-testid=&quot;info-summary-table&quot;
+      &gt;</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L94-L98"><code>ContainerInfo.vue:94-98</code></a> wraps <code>&lt;container-inspect&gt;</code> in <code>v-if=&quot;containerId &amp;&amp; activeTab === &#39;tab-info&#39;&quot;</code>, so the component unmounts and remounts on every tab switch. On mount, <code>loading</code> is initialised to <code>true</code> (line 269) and the eager watcher immediately calls <code>fetchInspect</code>, which sets <code>loading.value = true</code> again before awaiting the CLI. Because <code>data</code> is computed from the cached store entry, the value is available synchronously — but <code>v-if=&quot;loading&quot;</code> wins, so the user sees a spinner each time they return to the tab even when the data is already cached. The 100–500 ms CLI round trip becomes a visible flash on every tab return.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L89-L103">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="89" data-line="94-98"><code class="language-markup">            /&gt;
+          &lt;/button&gt;
+        &lt;/li&gt;
+      &lt;/template&gt;
+      &lt;div class=&quot;tab-content&quot;&gt;
+        &lt;container-inspect
+          v-if=&quot;containerId &amp;&amp; activeTab === &#39;tab-info&#39;&quot;
+          :container-id=&quot;containerId&quot;
+          :namespace=&quot;namespace&quot;
+        /&gt;
+        &lt;container-logs
+          v-if=&quot;containerId &amp;&amp; activeTab === &#39;tab-logs&#39;&quot;
+          ref=&quot;containerLogs&quot;
+          :container-id=&quot;containerId&quot;
+          :is-container-running=&quot;isRunning&quot;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L264-L274">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="264" data-line="269"><code class="language-markup">
+const store = useStore();
+const data = computed&lt;ContainerInspectData | undefined&gt;(
+  () =&gt; store.state[&#39;container-engine&#39;].inspectData[props.containerId],
+);
+const loading = ref(true);
+const error = ref&lt;string | null&gt;(null);
+
+const fetchInspect = async() =&gt; {
+  if (!props.containerId) {
+    return;</code></pre>
+    <p>Fix: gate the spinner on the absence of cached data.</p>
+      <pre><code class="language-vue">&lt;div v-if=&quot;loading &amp;&amp; !data&quot; class=&quot;loading-state&quot; data-testid=&quot;info-loading&quot;&gt;</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I4">
+        <span class="finding-num">I4.</span> Stale inspect data is shown silently when a refresh fails <span class="pill pill-claude">Claude</span><a href="#I4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L238-L255">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="238" data-line="243-250"><code class="language-vue">          None
+        &lt;/div&gt;
+      &lt;/details&gt;
+    &lt;/template&gt;
+
+    &lt;div
+      v-else
+      class=&quot;error-state&quot;
+      data-testid=&quot;info-error&quot;
+    &gt;
+      &lt;i class=&quot;icon icon-warning&quot; /&gt;
+      {{ error || &#39;An unknown error has occurred&#39; }}
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { ref, computed, watch } from &#39;vue&#39;;</code></pre>
+    <p><code>data</code> is a computed read of <code>inspectData[containerId]</code> (line 266). After a successful fetch, <code>data</code> is truthy. If a later <code>fetchInspect</code> throws (network blip, container removed, client disconnected), the catch sets <code>error.value</code> but does not invalidate <code>data</code>, so the <code>v-else-if=&quot;data&quot;</code> branch keeps rendering the previous snapshot and the dedicated <code>.error-state</code> block never shows. The user sees stale state with no indication that the refresh failed — and pairs poorly with I3&#39;s fix (showing cached data + spinner becomes &quot;showing cached data + nothing&quot; on failure).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L261-L271">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="261" data-line="266"><code class="language-markup">  containerId: string;
+  namespace:   string | undefined;
+}&gt;();
+
+const store = useStore();
+const data = computed&lt;ContainerInspectData | undefined&gt;(
+  () =&gt; store.state[&#39;container-engine&#39;].inspectData[props.containerId],
+);
+const loading = ref(true);
+const error = ref&lt;string | null&gt;(null);
+</code></pre>
+    <p>Fix: either render an inline error banner above the cached view when both <code>data</code> and <code>error</code> are set, or clear the cached entry on failure so the dedicated error state fires. The combined model (I3 fix + a small banner overlay) is the cleanest path:</p>
+      <pre><code class="language-vue">&lt;template v-if=&quot;data&quot;&gt;
+  &lt;div v-if=&quot;error&quot; class=&quot;error-banner&quot; data-testid=&quot;info-error-banner&quot;&gt;
+    {{ error }}
+  &lt;/div&gt;
+  &lt;!-- summary + sections --&gt;
+&lt;/template&gt;
+&lt;div v-else-if=&quot;loading&quot;&gt;…spinner…&lt;/div&gt;
+&lt;div v-else class=&quot;error-state&quot; data-testid=&quot;info-error&quot;&gt;…&lt;/div&gt;</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I5">
+        <span class="finding-num">I5.</span> CLI error text never reaches the user — generic fallback shown instead <span class="pill pill-gemini">Gemini</span> <span class="pill pill-claude">Claude</span><a href="#I5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L279-L291">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="279" data-line="284-286"><code class="language-ts">  try {
+    await store.dispatch(&#39;container-engine/fetchContainerInspect&#39;, {
+      containerId: props.containerId,
+      namespace:   props.namespace,
+    });
+  } catch (err: any) {
+    error.value = err?.message ?? &#39;Failed to load container details.&#39;;
+  } finally {
+    loading.value = false;
+  }
+};
+
+watch(() =&gt; props.containerId, fetchInspect, { immediate: true });</code></pre>
+    <p><code>client.docker.cli.exec</code> throws the raw result object on non-zero exit (see <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/preload/extensions.ts#L285-L287"><code>pkg/rancher-desktop/preload/extensions.ts:285-287</code></a> — <code>if (result.signal || result.code) { throw result; }</code>). That object has <code>signal</code>, <code>code</code>, <code>stdout</code>, <code>stderr</code>, and the <code>parseJsonObject</code>/<code>lines</code> helpers — but no <code>message</code>. So <code>err?.message</code> is always <code>undefined</code> for the most common failure mode (container deleted, engine error), and the user sees the generic fallback instead of, for example, <code>Error: No such object: &lt;id&gt;</code> from nerdctl/dockerd.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/preload/extensions.ts#L280-L292">pkg/rancher-desktop/preload/extensions.ts</a></div>
+      <pre data-start="280" data-line="285-287"><code class="language-typescript">        parseJsonObject() {
+          return JSON.parse(response.stdout);
+        },
+      };
+
+      if (result.signal || result.code) {
+        throw result;
+      }
+
+      return result;
+    })();
+  }
+</code></pre>
+    <p>Fix: prefer <code>stderr</code>, fall back to <code>message</code>, then to the generic string.</p>
+      <pre><code class="language-ts">} catch (err: any) {
+  const detail = (err?.stderr ?? err?.message ?? &#39;&#39;).trim();
+  error.value = detail || &#39;Failed to load container details.&#39;;
+} finally {</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>/</code> shortcut is intercepted on the Info tab and blocks find-as-you-type <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L244-L263">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="244" data-line="249-258"><code class="language-ts">    clearSearch();
+    event.preventDefault();
+  }
+};
+
+const handleGlobalKeydown = (event: KeyboardEvent) =&gt; {
+  if (event.key === &#39;/&#39;) {
+    // Don&#39;t trigger if search input is already focused
+    if (!searchInput.value?.contains(document.activeElement)) {
+      event.preventDefault();
+      searchInput.value?.focus();
+      searchInput.value?.select();
+    }
+  }
+};
+
+// Event handlers
+const handleSettingsUpdate = (_event: any, settingsData: any) =&gt; {
+  settings.value = settingsData;
+};</code></pre>
+    <p>The search widget renders only on the Logs tab (<code>v-if=&quot;activeTab === &#39;tab-logs&#39;&quot;</code> at line 37). With the new default tab being Info, <code>searchInput.value</code> is <code>null</code> on initial load, so <code>searchInput.value?.contains(...)</code> is <code>undefined</code>, the <code>if</code> body runs, <code>preventDefault()</code> fires, and the optional-chained <code>focus()</code> is a no-op. The user gets nothing — and Firefox&#39;s quick-find behavior is suppressed too.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L32-L42">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="32" data-line="37"><code class="language-markup">        :disabled=&quot;!isRunning&quot;
+        @active=&quot;activeTab = &#39;tab-shell&#39;&quot;
+      /&gt;
+      &lt;template #tab-row-extras&gt;
+        &lt;li
+          v-if=&quot;activeTab === &#39;tab-logs&#39;&quot;
+          class=&quot;search-widget&quot;
+          data-testid=&quot;search-widget&quot;
+        &gt;
+          &lt;input
+            ref=&quot;searchInput&quot;</code></pre>
+    <p>Fix: gate the handler on the Logs tab being active.</p>
+      <pre><code class="language-ts">if (activeTab.value !== &#39;tab-logs&#39; || !searchInput.value) {
+  return;
+}</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Logs e2e tests assume the previous test left them on the Logs tab <span class="pill pill-codex">Codex</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/e2e/containers.e2e.spec.ts#L73-L112">e2e/containers.e2e.spec.ts</a></div>
+      <pre data-start="73" data-line="78-107"><code class="language-ts">    await page.waitForURL(`**/containers/info/${ testContainerId }**`, {
+      timeout: 10_000,
+    });
+  });
+
+  test(&#39;should display container logs page&#39;, async() =&gt; {
+    // The info page now defaults to the Info tab; navigate to Logs explicitly.
+    await page.getByTestId(&#39;tab-logs&#39;).click();
+
+    const containerLogsPage = new ContainerLogsPage(page);
+
+    await expect(containerLogsPage.containerInfo).toBeVisible();
+
+    await expect(containerLogsPage.terminal).toBeVisible();
+    await expect(containerLogsPage.loadingIndicator).not.toBeVisible();
+  });
+
+  test(&#39;should show container information&#39;, async() =&gt; {
+    const containerLogsPage = new ContainerLogsPage(page);
+
+    await expect(containerLogsPage.containerInfo).toBeVisible();
+
+    await expect(containerLogsPage.containerName).toContainText(
+      testContainerName,
+    );
+    await expect(containerLogsPage.containerState).not.toBeEmpty();
+  });
+
+  test(&#39;should display logs content&#39;, async() =&gt; {
+    const containerLogsPage = new ContainerLogsPage(page);
+
+    await containerLogsPage.waitForLogsToLoad();
+
+    await expect(containerLogsPage.terminal).toContainText(&#39;L1: msg1&#39;);
+  });
+
+  test(&#39;should support log search&#39;, async() =&gt; {
+    const containerLogsPage = new ContainerLogsPage(page);
+
+    await expect(containerLogsPage.searchInput).toBeVisible();</code></pre>
+    <p>Only the first logs test clicks <code>tab-logs</code>; subsequent tests at lines 90 and 101 still assume the page is on Logs. Inside a <code>test.describe.serial</code> this works on the happy path because state carries over, but a retry that re-runs from the failing test (Playwright&#39;s default behavior) lands on Info and times out looking for terminal text.</p>
+    <p>Fix: move the tab-logs click into a <code>test.beforeEach</code> for the logs tests, or factor it into a helper that every logs assertion calls.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> SCSS comment misstates why <code>content-box</code> is needed <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L376-L389">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="376" data-line="381-384"><code class="language-scss">    vertical-align: top;
+  }
+
+  th {
+    white-space: nowrap;
+    // content-box ensures width: 120px sets the content width, matching .detail-table th
+    // (which gets content-box by default). Without this the global border-box rule makes
+    // the total box 120px instead, so td starts 21px too far left.
+    box-sizing: content-box;
+    width: 120px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+</code></pre>
+    <p><code>.detail-table th</code> does not &quot;get content-box by default&quot; — <code>pkg/rancher-desktop/assets/styles/base/_basic.scss</code> applies <code>box-sizing: inherit</code> to <code>*</code> and <code>html</code> is <code>border-box</code>, so every element including <code>.detail-table th</code> resolves to <code>border-box</code>. Whatever the author observed, the alignment is not produced by the rule the comment claims. Worse, the override now makes summary <code>th</code> wider than detail <code>th</code>, pushing the <code>td</code> columns visibly out of alignment relative to each other — the opposite of what the comment promises.</p>
+    <p>Fix: drop the box-sizing override and align via padding only, or, if the override is truly load-bearing, document the specific layout failure observed (with a screenshot link) rather than a general rule that does not apply. Easiest: remove the override and verify alignment with the same content-box / border-box pair.</p>
+      <pre><code class="language-scss">// (delete)
+box-sizing: content-box;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>fetchContainerInspect</code> skips the per-source error wrapping the other store actions use <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L400-L426">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="400" data-line="405-421"><code class="language-ts">      }
+    } catch (error: any) {
+      commit(&#39;SET_ERROR&#39;, { source: &#39;containers&#39;, error });
+    }
+  },
+  async fetchContainerInspect({ commit, state }, { containerId, namespace }: { containerId: string, namespace?: string }) {
+    const { client } = state;
+
+    if (!client) {
+      throw new Error(&#39;Container client is not available&#39;);
+    }
+    const args = [
+      ...(namespace ? [`--namespace=${ namespace }`] : []),
+      containerId,
+    ];
+    const result = await client.docker.cli.exec(&#39;inspect&#39;, args);
+    const parsed = result.parseJsonObject() as ContainerInspectData[];
+
+    if (parsed[0]) {
+      commit(&#39;SET_INSPECT_DATA&#39;, { ...state.inspectData, [containerId]: parsed[0] });
+    }
+  },
+  async fetchVolumes({ commit, getters, state }) {
+    try {
+      const { client, namespace } = state;
+      const volumes = state.volumes ?? {};
+      const names = new Set&lt;string&gt;();</code></pre>
+    <p>The sibling actions (<code>fetchContainers</code>, <code>fetchVolumes</code>, <code>fetchNamespaces</code>) wrap failures in <code>commit(&#39;SET_ERROR&#39;, { source, error })</code> and reuse the global error surface. <code>fetchContainerInspect</code> propagates raw, requiring every caller to implement its own try/catch (which the Vue component does, but a future caller will not). The deviation is defensible — the inspect view wants to render the error inline rather than in the global error banner — but it is undocumented, and mook-as&#39;s review comment explicitly asked for the <code>containers</code> <code>ErrorSource</code> to remain in use.</p>
+    <p>Fix: pick a model and commit to it — either route errors through <code>SET_ERROR</code>, or add a JSDoc on the action explaining the intentional deviation so the next maintainer does not &quot;fix&quot; it.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Started row only renders for <code>running</code> containers, hiding the last-run time for exited/restarting <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L37-L53">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="37" data-line="42-48"><code class="language-vue">          &lt;/tr&gt;
+          &lt;tr data-testid=&quot;info-row-created&quot;&gt;
+            &lt;th&gt;Created&lt;/th&gt;
+            &lt;td&gt;{{ formatDate(data.Created) }}&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr
+            v-if=&quot;data.State.Status === &#39;running&#39;&quot;
+            data-testid=&quot;info-row-started&quot;
+          &gt;
+            &lt;th&gt;Started&lt;/th&gt;
+            &lt;td&gt;{{ formatDate(data.State.StartedAt) }}&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+
+      &lt;!-- Mounts --&gt;
+      &lt;details</code></pre>
+    <p><code>StartedAt</code> is meaningful for <code>restarting</code>, <code>paused</code>, and <code>exited</code> containers too — Docker keeps the last start time after exit. Hiding the row whenever status is not <code>running</code> loses useful information for the common &quot;container that just crashed&quot; debugging case, and <code>formatDate</code> already handles the zero-value sentinel <code>0001-01-01T...</code>, so it can be the gating condition.</p>
+    <p>Fix:</p>
+      <pre><code class="language-vue">&lt;tr v-if=&quot;data.State.StartedAt &amp;&amp; !data.State.StartedAt.startsWith(&#39;0001-&#39;)&quot; data-testid=&quot;info-row-started&quot;&gt;</code></pre>
+    <p>Or extract <code>hasStartedAt</code> as a computed to keep the template tidy.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> <code>formatDate</code> lets <code>&#39;Invalid Date&#39;</code> through for non-sentinel garbage <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L330-L345">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="330" data-line="335-340"><code class="language-ts">
+    return bindings.map(({ HostIp, HostPort }) =&gt; `${ HostIp }:${ HostPort } → ${ containerPort }`);
+  });
+});
+
+const formatDate = (iso: string): string =&gt; {
+  if (!iso || iso.startsWith(&#39;0001-&#39;)) {
+    return &#39;—&#39;;
+  }
+  return new Date(iso).toLocaleString();
+};
+&lt;/script&gt;
+
+&lt;style lang=&quot;scss&quot; scoped&gt;
+.container-inspect {
+  padding: 1rem 1.5rem;</code></pre>
+    <p>If the backend ever returns a non-empty string that is not the <code>0001-</code> sentinel (truncated value, garbled response from a future engine), <code>new Date(iso).toLocaleString()</code> returns the literal string <code>&#39;Invalid Date&#39;</code>, which then appears in the UI as the Created/Started value.</p>
+    <p>Fix:</p>
+      <pre><code class="language-ts">const d = new Date(iso);
+return Number.isNaN(d.getTime()) ? &#39;—&#39; : d.toLocaleString();</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> Several Info-tab e2e tests do not wait for data before asserting <span class="pill pill-claude">Claude</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/e2e/containers.e2e.spec.ts#L481-L516">e2e/containers.e2e.spec.ts</a></div>
+      <pre data-start="481" data-line="486-511"><code class="language-ts">    const image = await infoPage.getSummaryValue(&#39;info-row-image&#39;);
+
+    expect(image).not.toBe(&#39;&#39;);
+  });
+
+  test(&#39;summary table shows IP address&#39;, async() =&gt; {
+    const infoPage = new ContainerInfoPage(page);
+
+    // IP row is always rendered; value is either an IP or &#39;—&#39;.
+    const ip = await infoPage.getSummaryValue(&#39;info-row-ip&#39;);
+
+    expect(ip).not.toBe(&#39;&#39;);
+  });
+
+  test(&#39;ports section is always visible&#39;, async() =&gt; {
+    const infoPage = new ContainerInfoPage(page);
+
+    // The alpine container has no published ports, but the section must still render.
+    await expect(infoPage.portsSection).toBeVisible();
+    await infoPage.portsSection.locator(&#39;summary&#39;).click();
+    await expect(infoPage.portsSection).toHaveAttribute(&#39;open&#39;);
+    await expect(infoPage.portsSection).toContainText(&#39;None&#39;);
+  });
+
+  test(&#39;mounts section can be expanded&#39;, async() =&gt; {
+    const infoPage = new ContainerInfoPage(page);
+
+    await infoPage.mountsSection.locator(&#39;summary&#39;).click();
+    // After opening the &lt;details&gt;, the section body should appear.
+    await expect(infoPage.mountsSection).toHaveAttribute(&#39;open&#39;);
+  });
+
+  test(&#39;switching to Logs tab and back preserves Info data&#39;, async() =&gt; {
+    const infoPage = new ContainerInfoPage(page);
+
+    await page.getByTestId(&#39;tab-logs&#39;).click();</code></pre>
+    <p>Only the <code>summary table shows key container fields</code> test (line 465) calls <code>infoPage.waitForData()</code>. The IP-address test (486), the ports section test (495), and the mounts test (505) all skip the wait and pass today only because the earlier test already loaded the data. A test re-order or insertion would start flaking these without warning.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/e2e/containers.e2e.spec.ts#L460-L470">e2e/containers.e2e.spec.ts</a></div>
+      <pre data-start="460" data-line="465"><code class="language-typescript">    const infoPage = new ContainerInfoPage(page);
+
+    await expect(infoPage.tab).toHaveClass(/\bactive\b/);
+  });
+
+  test(&#39;summary table shows key container fields&#39;, async() =&gt; {
+    const infoPage = new ContainerInfoPage(page);
+
+    await infoPage.waitForData();
+
+    // ID should be exactly 12 hex chars.</code></pre>
+    <p>Fix: add <code>await infoPage.waitForData();</code> as the first line of every Info-tab test, or move it into a <code>test.beforeEach</code> shared by the describe block.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> Spinner state never clears when <code>containerId</code> is empty at mount <span class="pill pill-claude">Claude</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/components/ContainerInspect.vue#L264-L294">pkg/rancher-desktop/components/ContainerInspect.vue</a></div>
+      <pre data-start="264" data-line="269-289"><code class="language-ts">
+const store = useStore();
+const data = computed&lt;ContainerInspectData | undefined&gt;(
+  () =&gt; store.state[&#39;container-engine&#39;].inspectData[props.containerId],
+);
+const loading = ref(true);
+const error = ref&lt;string | null&gt;(null);
+
+const fetchInspect = async() =&gt; {
+  if (!props.containerId) {
+    return;
+  }
+  loading.value = true;
+  error.value = null;
+
+  try {
+    await store.dispatch(&#39;container-engine/fetchContainerInspect&#39;, {
+      containerId: props.containerId,
+      namespace:   props.namespace,
+    });
+  } catch (err: any) {
+    error.value = err?.message ?? &#39;Failed to load container details.&#39;;
+  } finally {
+    loading.value = false;
+  }
+};
+
+watch(() =&gt; props.containerId, fetchInspect, { immediate: true });
+
+// Computed helpers
+const displayName = computed(() =&gt; (data.value?.Name ?? &#39;&#39;).replace(/^\//, &#39;&#39;));</code></pre>
+    <p><code>loading</code> initialises to <code>true</code>. If the parent ever mounts this component with an empty <code>containerId</code>, the early return at line 274 leaves <code>loading.value</code> at its initial <code>true</code>, and the user sees the spinner indefinitely. The parent currently guards with <code>v-if=&quot;containerId &amp;&amp; activeTab === &#39;tab-info&#39;&quot;</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L95"><code>ContainerInfo.vue:95</code></a>, so this is not reachable today, but a defensive parent guard should not be the only thing keeping the spinner accurate.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L90-L100">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="90" data-line="95"><code class="language-markup">          &lt;/button&gt;
+        &lt;/li&gt;
+      &lt;/template&gt;
+      &lt;div class=&quot;tab-content&quot;&gt;
+        &lt;container-inspect
+          v-if=&quot;containerId &amp;&amp; activeTab === &#39;tab-info&#39;&quot;
+          :container-id=&quot;containerId&quot;
+          :namespace=&quot;namespace&quot;
+        /&gt;
+        &lt;container-logs
+          v-if=&quot;containerId &amp;&amp; activeTab === &#39;tab-logs&#39;&quot;</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-ts">if (!props.containerId) {
+  loading.value = false;
+  return;
+}</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> <code>parsed[0]</code> truthy guard accepts malformed <code>[null]</code> or <code>[{}]</code> <span class="pill pill-claude">Claude</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L413-L425">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="413" data-line="418-420"><code class="language-ts">      containerId,
+    ];
+    const result = await client.docker.cli.exec(&#39;inspect&#39;, args);
+    const parsed = result.parseJsonObject() as ContainerInspectData[];
+
+    if (parsed[0]) {
+      commit(&#39;SET_INSPECT_DATA&#39;, { ...state.inspectData, [containerId]: parsed[0] });
+    }
+  },
+  async fetchVolumes({ commit, getters, state }) {
+    try {
+      const { client, namespace } = state;
+      const volumes = state.volumes ?? {};</code></pre>
+    <p>A future engine that returns <code>[null]</code> would still be filtered out by the truthy check, but <code>[{}]</code> (any non-null object, even without <code>Id</code>/<code>Config</code>) passes the guard and gets committed. The Vue template then crashes on <code>data.Config.Image</code> (line 32) because the access drills into nested mandatory fields without optional chaining.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L27-L37">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="27" data-line="32"><code class="language-typescript">    StartedAt:  string;
+    FinishedAt: string;
+  };
+  Config: {
+    Image:      string;
+    Env:        string[] | null;
+    Cmd:        string[] | null;
+    Entrypoint: string[] | null;
+    Labels:     Record&lt;string, string&gt; | null;
+  };
+  HostConfig: {</code></pre>
+    <p>Fix: tighten the guard to require the fields the consumer reads.</p>
+      <pre><code class="language-ts">if (parsed[0]?.Id &amp;&amp; parsed[0]?.Config) {
+  commit(&#39;SET_INSPECT_DATA&#39;, { ...state.inspectData, [containerId]: parsed[0] });
+}</code></pre>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Inspect data is fetched once per container id and never refreshed while the tab is open</strong> <em>(future)</em> <span class="pill pill-claude">Claude</span>. The component only triggers <code>fetchContainerInspect</code> when <code>containerId</code> changes; the store retains the previously-fetched JSON until either <code>fetchContainers</code> observes the container has disappeared or <code>SET_PARAMS</code> clears state. A long-lived Info tab on a container that gets reconfigured (network attach, runtime exec, rename) silently shows stale data forever. Hooking the existing container event subscriber to invalidate the entry on <code>start</code>/<code>update</code>/<code>rename</code>/<code>network-connect</code> events would close the gap without a poll.</li>
+      <li><em></em><code>ContainerInspectData</code> is a hand-rolled partial of moby&#39;s <code>types.ContainerJSON</code><em></em> <em>(future)</em> <span class="pill pill-claude">Claude</span>. The interface declared in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L21-L48"><code>container-engine.ts:21-48</code></a> will drift from the engine&#39;s actual shape over time; this round already had one such drift (<code>NetworkSettings</code> being marked non-null) caught only at review. Consider importing the upstream TypeScript types if available, or generating from the moby OpenAPI spec, before this surface grows further.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Keeping inspect data in the <code>container-engine</code> store (rather than a per-component ad-hoc fetch) is the right architectural direction, gives a single place to clean up stale entries, and matches the existing store-based subscriber model. <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span></li>
+      <li>The component uses <code>:key=&quot;containerId&quot;</code> on <code>rd-tabbed</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L7"><code>ContainerInfo.vue:7</code></a>) so switching between containers tears down and rebuilds cleanly instead of relying on watchers to scrub leftover state. <span class="pill pill-claude">Claude</span></li>
+      <li>Native <code>&lt;details&gt;</code> sections plus computed display helpers keep the first version small and easy to iterate on. The eager <code>watch(..., { immediate: true })</code> is the idiomatic way to express &quot;fetch on mount and on prop change&quot; and matches mook-as&#39;s review suggestion verbatim. <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Coverage is reasonable but leaves several gaps that map directly to the Important findings:</p>
+    <ol>
+      <li><strong>Stopped-container path is untested.</strong> Every test in the new <code>Container Info Tab</code> describe block uses a running <code>alpine sleep infinity</code> container. The <code>Started</code> row (S5) and the <code>&#39;—&#39;</code> IP fallback never get exercised.</li>
+      <li><strong>Error rendering is untested.</strong> No test exercises <code>data-testid=&quot;info-error&quot;</code> — directly relevant to I3, I4, and I5.</li>
+      <li><em></em><code>fetchContainerInspect</code> has no unit test.<em></em> The action is exercised only transitively via e2e; stubbing <code>client.docker.cli.exec</code> and asserting that <code>--namespace</code> is forwarded and <code>parsed[0]</code> reaches <code>SET_INSPECT_DATA</code> would protect the action from regression.</li>
+      <li><em></em>The <code>fetchContainers</code> inspect-cleanup branch has no test.<em></em> The race in I1 surfaces because a unit test never enumerates the &quot;inspect committed during list&quot; interleaving.</li>
+      <li><strong>Direct-reload lifecycle is untested.</strong> The retry race in I2 reproduces with <code>page.reload()</code> on the info URL, which no existing test does.</li>
+      <li><strong>Containerd backend is not exercised.</strong> All e2e tests pin <code>containerEngine.name: ContainerEngine.MOBY</code>. The namespace-forwarding branch in <code>fetchContainerInspect</code> is therefore untested.</li>
+      <li><strong>Logs-tab test sequencing is fragile.</strong> See S2 and S7.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The only documentation update is the one-character status flip in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/docs/development/features.md#L121"><code>docs/development/features.md:121</code></a>. The Info tab is a user-visible feature; a short paragraph or screenshot in the user-facing docs (the repo lists <code>../docs.rancherdesktop.io/docs/</code> as the source) would help discoverability. <code>ContainerInspectData</code> and <code>fetchContainerInspect</code> are both exported but undocumented — a JSDoc summary on each would set expectations for future contributors.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The branch carries six commits, four of which are fixups against earlier commits on the same branch:</p>
+    <ul>
+      <li><code>4f2cc89ec fix(containers): fix TS errors in fetchContainerInspect store action</code> — patches <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fa00ee9b2"><code>fa00ee9b2</code></a>.</li>
+      <li><code>51929c87f Address PR review feedback on inspect tab</code> — review-driven changes to the originals.</li>
+      <li><code>68a83c244 Fix cosmetic alignment issues in ContainerInspect</code> — patches SCSS introduced in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fa00ee9b2"><code>fa00ee9b2</code></a>.</li>
+      <li><code>9aa475a08 fix lint issue</code> — patches lint introduced earlier on this branch.</li>
+    </ul>
+    <p>Each fixup belongs in the commit that introduced the code it touches. Recommendation: squash the four fixups into the feature commit (or split into two stand-alone commits — one for store changes, one for component + e2e) before merge so each landed commit is independently reviewable.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><code>NetworkSettings</code> made optional after review<em></em> (discussion <code>r3012228455</code> / <code>r3176373896</code>). mook-as questioned the original non-null assertion; the author made it optional. Current type at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L42"><code>container-engine.ts:42</code></a> matches the agreement.</li>
+      <li><em></em>State-removal cleanup deferred to <code>fetchContainers</code><em></em> (discussion <code>r3011830599</code>). mook-as warned about unbounded accumulation; the author added the cleanup loop at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/store/container-engine.ts#L389-L396"><code>container-engine.ts:389-396</code></a>. See I1 for the race that fix introduced.</li>
+      <li><strong>Inspect action lives in the store rather than the Vue component</strong> (discussions <code>r3002714953</code> / <code>r3004334845</code>). The author moved the fetch into the store at mook-as&#39;s nudging; the move is reflected in the current architecture.</li>
+      <li><em></em><code>undefined</code> result when the container disappears between list and inspect<em></em> (discussion <code>r3011830599</code>). mook-as noted &quot;if the container is not found, the result is <code>undefined</code>, which is fine because the view handles it.&quot; The component handles this via the <code>v-else-if=&quot;data&quot;</code> fall-through to the error state. See I4 for the related stale-data case.</li>
+      <li><strong>UI iteration deferred to a follow-up</strong> (PR general comments between @jandubois and @endemics). jandubois accepted the current look (no horizontal separators between rows) with the explicit understanding that further refinement happens post-merge.</li>
+      <li><em></em><code>&lt;code&gt;</code> element not added for Image / Name<em></em> (discussion <code>r3002482656</code>). mook-as asked whether <code>data.Config.Image</code> should be a <code>&lt;code&gt;</code>; the author addressed <code>&lt;code&gt;</code> for IP/entrypoint but did not respond directly for Image/Name. Reasonable to leave given jandubois&#39;s later UI direction was to drop monospaced styling globally.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>None requiring code change; the discussion threads above were either resolved in the implementation or explicitly deferred by maintainer consensus.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude carried the most weight in this review, raising the only race condition (I1), the stale-data-on-error case (I4), and seven of the nine suggestions. Its citations to the moby preload (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/main/extensions/extensions.ts#L285-L287"><code>extensions.ts:285-287</code></a>) and the supporting analysis for the cleanup race were tight and let the consolidation step skip a verification round on those points. The one weak finding was a &quot;use a getter&quot; suggestion against direct <code>store.state</code> access that did not hold up — the codebase already mixes both access patterns, including in <code>ContainerInfo.vue</code> itself — and it was dropped. Claude also marked <code>ContainerInfo.vue</code> as &quot;Reviewed, no issues&quot; while Codex found three issues there (one Important, two suggestions), so its coverage on that file was incomplete despite the strong showing elsewhere.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex was the only reviewer to catch the direct-reload retry race (I2) and the <code>/</code> keydown regression introduced by switching the default tab to Info (S1) — both rely on tracing UI lifecycle interactions that the other two missed. Its three findings were tight and verified clean. Coverage was good: it touched every file with findings and did not mark any file &quot;no issues&quot; that actually had issues. The trade-off is volume: it raised fewer suggestions than Claude, missing the box-sizing comment is wrong (caught), but also missing seven of Claude&#39;s component-level nits.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini ran narrow: two findings, both legitimate and important. It owned the UX flicker observation (I3) — the most user-visible problem in the PR, and one the others missed — and was the only reviewer to flag the <code>err.message</code> shape bug as Important rather than a suggestion. The cost was breadth: it marked three files as &quot;Reviewed, no issues&quot; that all had issues elsewhere in this review (containers.e2e.spec.ts, ContainerInfo.vue, container-engine.ts), so its coverage map under-promised relative to the broader review.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>9m 28s</td><td>7m 29s</td><td>3m 32s</td></tr>
+        <tr><td>Findings</td><td>3I 7S</td><td>1I 3S</td><td>2I</td></tr>
+        <tr><td>Tool calls</td><td>41 (Bash 24, Read 17)</td><td>52 (shell 52)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>2</td><td>0</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>8</td><td>3</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>7</td><td>7</td><td>7</td></tr>
+        <tr><td>Coverage misses</td><td>1</td><td>0</td><td>3</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>3I 7S</strong></td><td><strong>1I 3S</strong></td><td><strong>2I</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>1</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation</strong></p>
+    <ul>
+      <li>Claude S6 (CLI error message shape) → promoted to <strong>I5</strong> because Gemini independently raised the same issue at Important severity and the user-visible impact (no error context shown) warrants it.</li>
+      <li>Claude S9 (use a getter for store access) → <strong>dropped</strong>. The codebase mixes <code>store.state[&#39;container-engine&#39;]</code> and <code>store.getters[&#39;container-engine/...&#39;]</code> patterns in the very same file Claude cited as the convention (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L151-L152"><code>ContainerInfo.vue:151-152</code></a>), so the premise does not hold.</li>
+    </ul>
+    <p>Overall, Claude was the most valuable reviewer this round on raw signal (eight unique findings including the only race) but had the largest coverage gap on <code>ContainerInfo.vue</code>. Codex contributed the most lifecycle-bug value relative to its volume (two of three findings were issues only it caught). Gemini&#39;s two findings were both real and one was Important-class, but its narrow scope meant it added the least overall.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] <strong>Store access pattern is mixed, not getter-only.</strong> The renderer reads container-engine state via <em>both</em> <code>store.state[&#39;container-engine&#39;].&lt;field&gt;</code> (e.g. <code>containers</code>) and <code>store.getters[&#39;container-engine/&lt;name&gt;&#39;]</code> (e.g. <code>supportsNamespaces</code>) — sometimes in the same component (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9aa475a08aeeae0675dca11ca58738380a5266e0/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L151-L152"><code>pages/containers/ContainerInfo.vue:151-152</code></a>). Treat &quot;should use a getter&quot; suggestions as weak unless there is a specific re-shape reason; the codebase has no enforced rule.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
