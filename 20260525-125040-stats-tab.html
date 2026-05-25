@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260525-125040-stats-tab</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260525-125040-stats-tab</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-25 12:50</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of target)</td></tr>
+      <tr><td>Author</td><td>Gildas Le Nadan</td></tr>
+      <tr><td>Branch</td><td><code>stats-tab</code> (reviewed against <code>inspect-tab</code> base)</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/11464b5ed"><code>11464b5ed</code></a> feat(containers): add Stats tab with live charts and process list<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0a31cae7e"><code>0a31cae7e</code></a> test(containers): add e2e tests for Stats tab<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/914890abe"><code>914890abe</code></a> fix(containers): lint<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a0c30ba81"><code>a0c30ba81</code></a> fix(containers): test</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; sound structure; fix renderer lifecycle and the containerd path before merge</td></tr>
+      <tr><td>Wall-clock time</td><td><code>26 min 39 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The branch adds a Stats tab with live CPU/memory/network/I/O charts and a <code>docker top</code> process table, plumbed through a main-process polling handler modeled on <code>ContainerExecHandler</code>. The structure is sound. Two issues block merge: the polling timer outlives a destroyed renderer, and <code>updateClient</code> clears every session without telling the renderer, freezing the charts on the last sample. A third gap — the containerd path routes through <code>nerdctl</code> but assumes the Docker JSON field names — ships untested.</p>
+    <p>All three reviewers flagged the <code>runWithTimeout</code> subprocess/interval concern; Claude raised the widest set of additional issues.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Polling timeout leaks the child process and lets polls stack <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L45-L71">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="45" data-line="50-66"><code class="language-ts">
+  /**
+   * Run a container CLI command with a timeout.  Returns stdout on success or
+   * null on error / timeout.
+   */
+  private async runWithTimeout(args: string[], namespace: string | undefined): Promise&lt;string | null&gt; {
+    const timeout = new Promise&lt;null&gt;((resolve) =&gt; {
+      setTimeout(() =&gt; resolve(null), FETCH_TIMEOUT_MS);
+    });
+
+    const run = (async() =&gt; {
+      try {
+        const result = await this.client.runClient(args, &#39;pipe&#39;, { namespace });
+
+        return result.stdout;
+      } catch {
+        return null;
+      }
+    })();
+
+    return Promise.race([run, timeout]);
+  }
+
+  protected initHandlers() {
+    ipcMainProxy.on(&#39;container-stats/start&#39;, (event, containerId, intervalSeconds, namespace) =&gt; {
+      // Stop any existing session for this container.
+      const existing = this.sessions.get(containerId);</code></pre>
+    <p><code>Promise.race</code> settles the wrapper after 8 s, but the child process <code>runClient</code> spawned (line 57) keeps running until it exits on its own. <code>runClient</code> forwards <code>SpawnOptions.signal</code> to <code>spawnFile</code>, yet the call site passes none. <code>setInterval</code> (line 103) fires every <code>intervalSeconds</code> without awaiting the previous <code>poll()</code>, so a wedged engine accumulates concurrent <code>stats</code> and <code>top</code> processes per tick. The won-race <code>setTimeout</code> stays armed for the full 8 s, pinning its closure.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L98-L108">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="98" data-line="103"><code class="language-typescript">          sendToFrame(&#39;container-stats/processes&#39;, containerId, topRaw.trim());
+        }
+      };
+
+      const session: StatsSession = {
+        timer: setInterval(() =&gt; { poll().catch(console.error) }, intervalSeconds * 1_000),
+        sender: event.sender,
+        namespace,
+      };
+
+      this.sessions.set(containerId, session);</code></pre>
+    <p>Fix: thread an <code>AbortController</code> through <code>runWithTimeout</code>, abort on timeout, and gate <code>poll()</code> behind an <code>inFlight</code> boolean (or schedule via recursive <code>setTimeout</code>).</p>
+    <p>Gemini classified this Critical; downgraded to Important since <code>docker stats --no-stream</code> returns in well under a second against a healthy engine.</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> Stats sessions leak when the renderer is destroyed without sending <code>stop</code> <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L63-L117">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="63" data-line="68-112"><code class="language-ts">    })();
+
+    return Promise.race([run, timeout]);
+  }
+
+  protected initHandlers() {
+    ipcMainProxy.on(&#39;container-stats/start&#39;, (event, containerId, intervalSeconds, namespace) =&gt; {
+      // Stop any existing session for this container.
+      const existing = this.sessions.get(containerId);
+
+      if (existing) {
+        clearInterval(existing.timer);
+      }
+
+      const sendToFrame = &lt;ch extends keyof IpcRendererEvents&gt;(channel: ch, ...args: Parameters&lt;IpcRendererEvents[ch]&gt;) =&gt; {
+        try {
+          event.sender.send(channel, ...args);
+        } catch (ex) {
+          console.debug(`Failed to send ${ channel } to frame:`, ex);
+        }
+      };
+
+      const poll = async() =&gt; {
+        const [statsRaw, topRaw] = await Promise.all([
+          this.runWithTimeout(
+            [&#39;stats&#39;, &#39;--no-stream&#39;, &#39;--format&#39;, &#39;{{json .}}&#39;, containerId],
+            namespace,
+          ),
+          this.runWithTimeout([&#39;top&#39;, containerId], namespace),
+        ]);
+
+        if (statsRaw?.trim()) {
+          sendToFrame(&#39;container-stats/data&#39;, containerId, statsRaw.trim());
+        }
+        if (topRaw?.trim()) {
+          sendToFrame(&#39;container-stats/processes&#39;, containerId, topRaw.trim());
+        }
+      };
+
+      const session: StatsSession = {
+        timer: setInterval(() =&gt; { poll().catch(console.error) }, intervalSeconds * 1_000),
+        sender: event.sender,
+        namespace,
+      };
+
+      this.sessions.set(containerId, session);
+
+      // Fetch immediately so the first data point appears without waiting for the interval.
+      poll().catch(console.error);
+    });
+
+    ipcMainProxy.on(&#39;container-stats/stop&#39;, (_, containerId) =&gt; {
+      const session = this.sessions.get(containerId);
+
+      if (session) {</code></pre>
+    <p>Only a renderer-sent <code>&#39;container-stats/stop&#39;</code> (line 114) ends the session. A hard reload, a renderer crash, or <code>webContents.close()</code> skips Vue&#39;s <code>onBeforeUnmount</code>, so the <code>setInterval</code> runs forever, shelling out to <code>docker stats</code> and <code>docker top</code> each tick; <code>sendToFrame</code>&#39;s try/catch then swallows the send errors. <code>ContainerExecHandler</code> avoids this by ending its session on <code>proc.on(&#39;exit&#39;, ...)</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerExec.ts#L153"><code>containerExec.ts:153</code></a>).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerExec.ts#L148-L158">pkg/rancher-desktop/main/containerExec.ts</a></div>
+      <pre data-start="148" data-line="153"><code class="language-typescript">          if (newSession.outputBuf.length &gt; MAX_OUTPUT_BUF) {
+            newSession.outputBuf = newSession.outputBuf.slice(-MAX_OUTPUT_BUF);
+          }
+        });
+
+        proc.on(&#39;exit&#39;, (code: number | null) =&gt; {
+          sendToSession(&#39;container-exec/exit&#39;, containerId, code ?? -1);
+          this.sessions.delete(containerId);
+        });
+
+        proc.on(&#39;error&#39;, (err: Error) =&gt; {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L109-L119">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="109" data-line="114"><code class="language-typescript">
+      // Fetch immediately so the first data point appears without waiting for the interval.
+      poll().catch(console.error);
+    });
+
+    ipcMainProxy.on(&#39;container-stats/stop&#39;, (_, containerId) =&gt; {
+      const session = this.sessions.get(containerId);
+
+      if (session) {
+        clearInterval(session.timer);
+        this.sessions.delete(containerId);</code></pre>
+    <p>Fix: bind session lifetime to the sender — <code>event.sender.once(&#39;destroyed&#39;, () =&gt; …)</code> clears the interval. The <code>sendToFrame</code> catch can also delete the session when <code>event.sender.isDestroyed()</code> returns true.</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> <code>updateClient</code> drops every active session without notifying the renderer <span class="pill pill-claude">Claude</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L29-L42">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="29" data-line="34-37"><code class="language-ts">
+  constructor(protected client: ContainerEngineClient) {
+    this.initHandlers();
+  }
+
+  updateClient(client: ContainerEngineClient) {
+    this.client = client;
+    this.stopAll();
+  }
+
+  stopAll() {
+    for (const session of this.sessions.values()) {
+      clearInterval(session.timer);
+    }</code></pre>
+    <p><code>startK8sManager</code> calls <code>updateClient</code> whenever the container engine changes (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/background.ts#L605"><code>background.ts:605</code></a>). <code>stopAll</code> clears every session map entry but tells the renderer nothing, so the Stats tab keeps its handlers registered and freezes on its last sample. <code>ContainerExecHandler.updateClient</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerExec.ts#L42-L51"><code>containerExec.ts:42-51</code></a>) handles this correctly: <code>killAll()</code> kills each child process, which fires <code>proc.on(&#39;exit&#39;)</code> and emits <code>&#39;container-exec/exit&#39;</code> to the renderer.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/background.ts#L600-L610">background.ts</a></div>
+      <pre data-start="600" data-line="605"><code class="language-typescript">  }
+
+  if (!containerStatsHandler) {
+    containerStatsHandler = new ContainerStatsHandler(k8smanager.containerEngineClient);
+  } else {
+    containerStatsHandler.updateClient(k8smanager.containerEngineClient);
+  }
+}
+
+/**
+ * We need to deactivate the current imageProcessor, if there is one,</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerExec.ts#L37-L56">pkg/rancher-desktop/main/containerExec.ts</a></div>
+      <pre data-start="37" data-line="42-51"><code class="language-typescript">  updateClient(client: ContainerEngineClient) {
+    this.client = client;
+    this.killAll();
+  }
+
+  killAll() {
+    for (const [containerId, session] of this.sessions) {
+      try {
+        session.process.kill(&#39;SIGTERM&#39;);
+      } catch (ex) {
+        console.debug(`Error killing exec session ${ containerId }:`, ex);
+      }
+    }
+    this.sessions.clear();
+  }
+
+  protected async checkScriptAvailable(containerId: string, namespace: string | undefined): Promise&lt;boolean&gt; {
+    try {
+      // Use &#39;ignore&#39; stdio so all streams go to /dev/null — no pipes to block
+      // on, no stdin that keeps the Docker multiplexed connection open.</code></pre>
+    <p>Fix: emit a terminal IPC event (e.g. <code>&#39;container-stats/stopped&#39;</code>) before clearing the map, or hook <code>WebContents.destroyed</code> per I2 so the renderer&#39;s own remount triggers a fresh <code>start</code>.</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I4">
+        <span class="finding-num">I4.</span> Stats buffers and process table survive container stop/start <span class="pill pill-codex">Codex</span><a href="#I4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L485-L501">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="485" data-line="490-496"><code class="language-ts">  stopPolling();
+  resetBuffers();
+  startPolling();
+});
+
+watch(() =&gt; props.isContainerRunning, (running) =&gt; {
+  if (running) {
+    restartPolling();
+  } else {
+    stopPolling();
+  }
+});
+&lt;/script&gt;
+
+&lt;style lang=&quot;scss&quot; scoped&gt;
+.container-stats-component {
+  display: flex;</code></pre>
+    <p>When <code>isContainerRunning</code> toggles false → true while the Stats tab stays mounted, this watcher restarts polling but leaves <code>labels</code>, <code>cpuData</code>, <code>memData</code>, the <code>prev*</code> cumulative counters, and <code>processes</code> untouched. The user sees prior-run samples mixed into the new container life, and the first delta after restart is computed against a stale <code>prevNetRx</code>/<code>prevBlockR</code> from minutes earlier. <code>resetBuffers</code> (line 434) fires only on <code>containerId</code> change (line 484).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L429-L439">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="429" data-line="434"><code class="language-markup">  processes.value = rows;
+}
+
+// ── Lifecycle ──────────────────────────────────────────────────────────────
+
+function resetBuffers() {
+  labels.value = [];
+  cpuData.value = [];
+  memData.value = [];
+  netRxData.value = [];
+  netTxData.value = [];</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L479-L489">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="479" data-line="484"><code class="language-markup">  stopPolling();
+  ipcRenderer.removeListener(&#39;container-stats/data&#39;, handleStatsData);
+  ipcRenderer.removeListener(&#39;container-stats/processes&#39;, handleProcesses);
+});
+
+watch(() =&gt; props.containerId, () =&gt; {
+  stopPolling();
+  resetBuffers();
+  startPolling();
+});
+</code></pre>
+    <p>Fix: call <code>resetBuffers</code> on every transition before starting/stopping.</p>
+      <pre><code class="language-diff"> watch(() =&gt; props.isContainerRunning, (running) =&gt; {
+-  if (running) restartPolling(); else stopPolling();
++  stopPolling();
++  resetBuffers();
++  if (running) startPolling();
+ });</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I5">
+        <span class="finding-num">I5.</span> Containerd path is untested and likely emits a different JSON shape <span class="pill pill-claude">Claude</span><a href="#I5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L80-L97">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="80" data-line="85-92"><code class="language-ts">        } catch (ex) {
+          console.debug(`Failed to send ${ channel } to frame:`, ex);
+        }
+      };
+
+      const poll = async() =&gt; {
+        const [statsRaw, topRaw] = await Promise.all([
+          this.runWithTimeout(
+            [&#39;stats&#39;, &#39;--no-stream&#39;, &#39;--format&#39;, &#39;{{json .}}&#39;, containerId],
+            namespace,
+          ),
+          this.runWithTimeout([&#39;top&#39;, containerId], namespace),
+        ]);
+
+        if (statsRaw?.trim()) {
+          sendToFrame(&#39;container-stats/data&#39;, containerId, statsRaw.trim());
+        }
+        if (topRaw?.trim()) {</code></pre>
+    <p><code>client.runClient</code> dispatches to <code>nerdctl</code> when the engine is <code>containerd</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/backend/containerClient/nerdctlClient.ts#L36"><code>nerdctlClient.ts:36</code></a>). The renderer&#39;s <code>handleStatsData</code> (line 372) reads <code>s.CPUPerc</code>, <code>s.MemUsage</code>, <code>s.NetIO</code>, <code>s.BlockIO</code> directly off the docker JSON formatter; nerdctl&#39;s <code>--format &#39;{{json .}}&#39;</code> output does not necessarily share those field names, and rootless containerd omits network counters entirely. Charts then sit silently at zero under containerd. The e2e tests pin <code>ContainerEngine.MOBY</code> (<code>containers.e2e.spec.ts:536</code>), so this path stays uncovered.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/backend/containerClient/nerdctlClient.ts#L31-L41">pkg/rancher-desktop/backend/containerClient/nerdctlClient.ts</a></div>
+      <pre data-start="31" data-line="36"><code class="language-typescript">    this.vm = vm;
+  }
+
+  /** The VM backing Rancher Desktop */
+  readonly vm: VMExecutor;
+  readonly executable = executable(&#39;nerdctl&#39;);
+
+  /**
+   * Run nerdctl with the given arguments, returning the standard output.
+   */
+  protected async nerdctl(...args: string[]): Promise&lt;string&gt;;</code></pre>
+    <p>Fix: gate the Stats tab on <code>currentContainerEngine === MOBY</code> until an engine-specific parser lands, or push normalization into <code>ContainerEngineClient</code> with <code>moby</code>/<code>nerdctl</code> implementations. Add a containerd e2e variant before re-enabling.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Network and Block I/O charts plot per-tick delta, not a rate <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L388-L402">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="388" data-line="393-397"><code class="language-ts">
+    const [rx, tx] = parsePair(s.NetIO ?? &#39;0B / 0B&#39;);
+    const [blockR, blockW] = parsePair(s.BlockIO ?? &#39;0B / 0B&#39;);
+
+    // Push deltas; skip the very first sample (no previous value to diff against).
+    if (prevNetRx &gt;= 0) {
+      push(netRxData.value, Math.max(0, rx - prevNetRx));
+      push(netTxData.value, Math.max(0, tx - prevNetTx));
+      push(blockRData.value, Math.max(0, blockR - prevBlockR));
+      push(blockWData.value, Math.max(0, blockW - prevBlockW));
+    }
+    prevNetRx = rx;
+    prevNetTx = tx;
+    prevBlockR = blockR;
+    prevBlockW = blockW;</code></pre>
+    <p>Chart values scale with the refresh interval — a steady 1 MB/s transfer reads as 1 MB at 1 s refresh and 60 MB at 1 min refresh. The y-axis label says &quot;Network I/O&quot; but the units are bytes-per-tick, not B/s.</p>
+    <p>Fix: divide each delta by <code>refreshSeconds.value</code> (or by a real timestamp diff) before pushing, so the y-axis becomes B/s regardless of refresh choice.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Charts e2e test passes before any stats data arrives <span class="pill pill-codex">Codex</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/e2e/pages/container-stats-page.ts#L27-L38">e2e/pages/container-stats-page.ts</a></div>
+      <pre data-start="27" data-line="32-36"><code class="language-ts">
+  async clickTab() {
+    await this.tab.click();
+  }
+
+  async waitForCharts(timeout = 20_000) {
+    await expect(this.cpuChart).toBeVisible({ timeout });
+    await expect(this.memoryChart).toBeVisible({ timeout });
+    await expect(this.networkChart).toBeVisible({ timeout });
+    await expect(this.ioChart).toBeVisible({ timeout });
+  }
+}</code></pre>
+    <p><code>ContainerStats.vue</code> mounts every chart card unconditionally once <code>isContainerRunning</code> is true, so <code>toBeVisible</code> passes the moment the component renders — before any <code>&#39;container-stats/data&#39;</code> IPC arrives. A handler that crashes or a parser that swallows every sample still satisfies the assertion.</p>
+    <p>Fix: assert that the rendered Chart.js dataset length is non-zero (read it via <code>page.evaluate</code> against the canvas component), or expose a small test-only &quot;samples-received&quot; counter the test can poll.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Process-row tokeniser breaks when a header column contains spaces <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L412-L431">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="412" data-line="417-426"><code class="language-ts">
+  if (lines.length &lt; 1) return;
+
+  // First line is the header row; split on 2+ spaces so multi-word column
+  // names (e.g. &quot;START TIME&quot;) stay together.
+  const headers = lines[0].trim().split(/\s{2,}/);
+  const rows = lines.slice(1).map((line) =&gt; {
+    const parts = line.trim().split(/\s+/);
+    const fixed = parts.slice(0, headers.length - 1);
+
+    // Rejoin trailing tokens into the last column (CMD / COMMAND).
+    fixed.push(parts.slice(headers.length - 1).join(&#39; &#39;));
+
+    return fixed;
+  });
+
+  processHeaders.value = headers;
+  processes.value = rows;
+}
+</code></pre>
+    <p>Headers split on 2+ spaces (column-aware); rows split on any whitespace (column-unaware). When a header field contains a space (e.g. <code>START TIME</code>), the row&#39;s tokens overshoot <code>headers.length</code> and every value past the multi-space column shifts left. Default <code>docker top</code> output uses single-word columns, so this rarely fires; a custom <code>ps</code> format would corrupt the table.</p>
+    <p>Fix: slice rows by header start-column offsets recorded from the header line, rather than re-tokenising.</p>
+    <p>Claude originally raised this as Important; downgraded since default <code>docker top</code> output never hits the case.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>parsePair</code> silently drops the second value when no separator is present <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L219-L233">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="219" data-line="224-228"><code class="language-ts">  const unit = (m[2] ?? &#39;b&#39;).toLowerCase();
+
+  return val * (BYTE_UNITS[unit] ?? 1);
+}
+
+function parsePair(s: string): [number, number] {
+  const [a, b] = s.split(&#39;/&#39;).map(p =&gt; parseBytes(p.trim()));
+
+  return [a ?? 0, b ?? 0];
+}
+
+// ── Chart colour helpers ───────────────────────────────────────────────────
+
+function dataset(label: string, data: number[], color: string) {
+  return {</code></pre>
+    <p>If the engine emits a single-value string such as <code>&quot;648B&quot;</code> (see I5 for the nerdctl angle), <code>b</code> is <code>undefined</code> and the <code>?? 0</code> at return papers over it. The loss is silent: a NetIO/BlockIO reading with no slash counts TX/Write as 0 forever. When the format then flips mid-stream (engine restart, rootless toggle), the first delta against <code>prev*=0</code> is spuriously large.</p>
+    <p>Fix: log a debug message when <code>split(&#39;/&#39;)</code> returns a single element, and treat that sample as a &quot;missing&quot; delta so the chart skips it instead of inventing a zero.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Refresh-rate change emits a spurious spike for the first new sample <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L456-L469">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="456" data-line="461-464"><code class="language-ts">  if (props.containerId) {
+    ipcRenderer.send(&#39;container-stats/stop&#39;, props.containerId);
+  }
+}
+
+function restartPolling() {
+  stopPolling();
+  startPolling();
+}
+
+const darkMQ = window.matchMedia(&#39;(prefers-color-scheme: dark)&#39;);
+
+onMounted(() =&gt; {
+  readColors();</code></pre>
+    <p><code>restartPolling</code> fires from the <code>&lt;select @change&gt;</code> handler (line 21). The main-process side replaces the timer cleanly, but the renderer keeps <code>prevNetRx</code>/<code>prevBlockR</code> from the old cadence. Switching 1 s → 30 s emits one delta spanning the ~30 s gap, then the chart shows a one-tick spike before resuming.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L16-L26">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="16" data-line="21"><code class="language-markup">          Refresh
+          &lt;select
+            v-model=&quot;refreshSeconds&quot;
+            class=&quot;refresh-select&quot;
+            data-testid=&quot;stats-refresh-select&quot;
+            @change=&quot;restartPolling&quot;
+          &gt;
+            &lt;option :value=&quot;1&quot;&gt;1 s&lt;/option&gt;
+            &lt;option :value=&quot;5&quot;&gt;5 s&lt;/option&gt;
+            &lt;option :value=&quot;10&quot;&gt;10 s&lt;/option&gt;
+            &lt;option :value=&quot;20&quot;&gt;20 s&lt;/option&gt;</code></pre>
+    <p>Fix: in <code>restartPolling</code>, reset the four <code>prev*</code> counters (or drop the next delta sample) so the chart resumes cleanly at the new cadence.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> JSON-line guard absorbs every non-<code>{</code>-prefixed error <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L371-L386">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="371" data-line="376-381"><code class="language-ts">
+function handleStatsData(_event: any, id: string, statsJson: string) {
+  if (id !== props.containerId) return;
+
+  try {
+    // docker stats may return multiple JSON objects if the container name
+    // appears more than once; take the first valid line.
+    const line = statsJson.split(&#39;\n&#39;).find(l =&gt; l.trim().startsWith(&#39;{&#39;));
+
+    if (!line) return;
+    const s = JSON.parse(line);
+
+    const now = new Date().toLocaleTimeString();
+
+    push(labels.value, now);
+    push(cpuData.value, parsePercent(s.CPUPerc ?? &#39;0%&#39;));</code></pre>
+    <p>The comment explains this as defence against multi-line output when a container name appears more than once. The handler always passes the container ID, not a name (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L88"><code>containerStats.ts:88</code></a>), so the multi-line case never reaches here. Meanwhile a CLI banner or warning line silently disappears.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L83-L93">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="83" data-line="88"><code class="language-typescript">      };
+
+      const poll = async() =&gt; {
+        const [statsRaw, topRaw] = await Promise.all([
+          this.runWithTimeout(
+            [&#39;stats&#39;, &#39;--no-stream&#39;, &#39;--format&#39;, &#39;{{json .}}&#39;, containerId],
+            namespace,
+          ),
+          this.runWithTimeout([&#39;top&#39;, containerId], namespace),
+        ]);
+</code></pre>
+    <p>Fix: drop the <code>find()</code> loop and <code>JSON.parse(statsJson)</code> directly; if a real engine ever needs multi-line handling, that path can land with its own <code>console.debug</code> for the skipped lines.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> Memory chart shows used bytes without the limit <span class="pill pill-claude">Claude</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L382-L392">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="382" data-line="387"><code class="language-ts">
+    const now = new Date().toLocaleTimeString();
+
+    push(labels.value, now);
+    push(cpuData.value, parsePercent(s.CPUPerc ?? &#39;0%&#39;));
+    push(memData.value, parseBytes((s.MemUsage ?? &#39;0B / 0B&#39;).split(&#39;/&#39;)[0].trim()));
+
+    const [rx, tx] = parsePair(s.NetIO ?? &#39;0B / 0B&#39;);
+    const [blockR, blockW] = parsePair(s.BlockIO ?? &#39;0B / 0B&#39;);
+
+    // Push deltas; skip the very first sample (no previous value to diff against).</code></pre>
+    <p><code>docker stats</code> reports <code>MemUsage</code> as <code>used / limit</code> (e.g. <code>12.5 MiB / 7.6 GiB</code>). The chart keeps only <code>used</code> and plots it on an open-ended y-axis labelled &quot;Memory&quot;. A 12 MiB usage in an 8 GiB-limit container looks identical to 12 MiB in a 16 MiB-limit container.</p>
+    <p>Fix: either rename the card &quot;Memory used&quot; to set expectations, or capture both sides of the pair and plot memory percentage (the panel users coming from <code>docker stats</code> and Docker Desktop expect).</p>
+    <p>Claude originally raised this as Important; downgraded since the chart shows real used-byte information, just without the limit context.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> New dependencies use caret pinning against the file&#39;s exact-pin convention <span class="pill pill-claude">Claude</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/package.json#L61-L71">package.json</a></div>
+      <pre data-start="61" data-line="66"><code class="language-json">    &quot;@xterm/addon-fit&quot;: &quot;0.11.0&quot;,
+    &quot;@xterm/addon-search&quot;: &quot;0.16.0&quot;,
+    &quot;@xterm/addon-web-links&quot;: &quot;0.12.0&quot;,
+    &quot;@xterm/xterm&quot;: &quot;6.0.0&quot;,
+    &quot;async-mutex&quot;: &quot;^0.5.0&quot;,
+    &quot;chart.js&quot;: &quot;^4.4.9&quot;,
+    &quot;cookie-universal&quot;: &quot;2.2.2&quot;,
+    &quot;cross-spawn&quot;: &quot;7.0.6&quot;,
+    &quot;dayjs&quot;: &quot;1.11.20&quot;,
+    &quot;dompurify&quot;: &quot;3.4.2&quot;,
+    &quot;electron-updater&quot;: &quot;6.8.3&quot;,</code></pre>
+    <p>Most production dependencies in <code>package.json</code> are exact-pinned (<code>vue: 3.5.33</code>, <code>@xterm/xterm: 6.0.0</code>). A handful (<code>async-mutex</code>, <code>@napi-rs/xattr</code>) carry carets, so the rule is not absolute, but pinning chart libraries gives reproducible builds and keeps a chart.js point release from drifting into a Rancher Desktop release between dependabot bumps.</p>
+    <p>Fix: drop the carets — <code>&quot;chart.js&quot;: &quot;4.4.9&quot;</code>, <code>&quot;vue-chartjs&quot;: &quot;5.3.2&quot;</code>. Dependabot already handles the upgrade cadence.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> <code>Electron</code> import is type-only at the value position <span class="pill pill-claude">Claude</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L3-L13">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="3" data-line="8"><code class="language-ts"> * It runs `docker stats --no-stream` and `docker top` in the main process
+ * (as child processes) and pushes results to the renderer via IPC events,
+ * keeping the renderer event loop completely unblocked.
+ */
+
+import Electron from &#39;electron&#39;;
+
+import type { ContainerEngineClient } from &#39;@pkg/backend/containerClient&#39;;
+import { getIpcMainProxy } from &#39;@pkg/main/ipcMain&#39;;
+import type { IpcRendererEvents } from &#39;@pkg/typings/electron-ipc&#39;;
+import Logging from &#39;@pkg/utils/logging&#39;;</code></pre>
+    <p><code>Electron.WebContents</code> is referenced only as a type, so <code>import type Electron from &#39;electron&#39;</code> would keep the electron value side out of this module&#39;s graph. <code>containerExec.ts</code> has the same pattern, so this is project-wide drift; the new file can follow <code>main/dashboardServer/index.ts</code>&#39;s <code>import type</code> style.</p>
+    <p>Fix: <code>import type Electron from &#39;electron&#39;;</code></p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> Hard-coded chart palette ignores theme tokens <span class="pill pill-claude">Claude</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+    <p>The code resolves <code>--body-text</code> and <code>--border</code> from CSS custom properties for ticks and legend (line 287), then hard-codes the line colours (<code>#4e9af1</code>, <code>#f1a14e</code>, <code>#4ef185</code>, <code>#f14e4e</code>, <code>#9b4ef1</code>, <code>#f1e84e</code>). Two effects: the palette never picks up the project&#39;s chart-colour tokens if any exist, and <code>#f1e84e</code> on a light-mode body background falls below WCAG 1.4.11 contrast against adjacent UI components.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L282-L292">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="282" data-line="287"><code class="language-markup">  const probe = document.createElement(&#39;div&#39;);
+
+  probe.style.display = &#39;none&#39;;
+  probe.style.color = &#39;var(--body-text)&#39;;
+  probe.style.backgroundColor = &#39;var(--border)&#39;;
+  document.body.appendChild(probe);
+  const computed = getComputedStyle(probe);
+
+  textColor.value = computed.color;
+  gridColor.value = computed.backgroundColor;
+  document.body.removeChild(probe);</code></pre>
+    <p>Fix: prefer the project&#39;s chart-colour CSS variables, or reuse <code>var(--primary)</code> for the headline series and shift the rest onto the same accessible-contrast set the rest of the UI uses.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S11">
+        <span class="finding-num">S11.</span> Two e2e tests assume the previous test&#39;s navigation state <span class="pill pill-claude">Claude</span><a href="#S11" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/e2e/containers.e2e.spec.ts#L1-L20">e2e/containers.e2e.spec.ts</a></div>
+      <pre data-start="1" data-line="607-617"><code class="language-ts">import { expect, test, ElectronApplication, Page } from &#39;@playwright/test&#39;;
+
+import { ContainerInfoPage } from &#39;./pages/container-info-page&#39;;
+import { ContainerLogsPage } from &#39;./pages/container-logs-page&#39;;
+import { ContainerShellPage } from &#39;./pages/container-shell-page&#39;;
+import { ContainersPage } from &#39;./pages/containers-page&#39;;
+import { NavPage } from &#39;./pages/nav-page&#39;;
+import { startSlowerDesktop, teardown, tool } from &#39;./utils/TestUtils&#39;;
+
+import { ContainerEngine } from &#39;@pkg/config/settings&#39;;
+
+let page: Page;
+
+test.describe.serial(&#39;Containers Tests&#39;, () =&gt; {
+  let electronApp: ElectronApplication;
+  let testContainerId: string;
+  let testContainerName: string;
+
+  test.beforeAll(async({ colorScheme }, testInfo) =&gt; {
+    [electronApp, page] = await startSlowerDesktop(testInfo, {</code></pre>
+    <p>Neither test calls <code>navigateToStatsTab(...)</code>; they rely on <code>&#39;charts render on a running container&#39;</code> leaving the page on the stats tab. <code>test.describe.serial</code> keeps the order, so the chain works today; a failure in <code>charts render</code> then propagates as a misleading process-table failure.</p>
+    <p>Fix: call <code>await navigateToStatsTab(runningContainerId)</code> at the start of each test, or move the navigation into a shared <code>test.beforeEach</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S12">
+        <span class="finding-num">S12.</span> <code>sendToFrame</code> is duplicated verbatim from <code>containerExec.ts</code> <span class="pill pill-claude">Claude</span><a href="#S12" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L72-L88">pkg/rancher-desktop/main/containerStats.ts</a></div>
+      <pre data-start="72" data-line="77-83"><code class="language-ts">
+      if (existing) {
+        clearInterval(existing.timer);
+      }
+
+      const sendToFrame = &lt;ch extends keyof IpcRendererEvents&gt;(channel: ch, ...args: Parameters&lt;IpcRendererEvents[ch]&gt;) =&gt; {
+        try {
+          event.sender.send(channel, ...args);
+        } catch (ex) {
+          console.debug(`Failed to send ${ channel } to frame:`, ex);
+        }
+      };
+
+      const poll = async() =&gt; {
+        const [statsRaw, topRaw] = await Promise.all([
+          this.runWithTimeout(
+            [&#39;stats&#39;, &#39;--no-stream&#39;, &#39;--format&#39;, &#39;{{json .}}&#39;, containerId],</code></pre>
+    <p>The helper is identical to <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerExec.ts#L72-L78"><code>containerExec.ts:72-78</code></a> and will likely re-appear in the next handler. Extracting it once (e.g. <code>makeFrameSender(sender, logger)</code> in <code>main/ipcMain.ts</code>) lets future handlers pick up the destroyed-WebContents handling for I2 in one place, not per file.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerExec.ts#L67-L83">pkg/rancher-desktop/main/containerExec.ts</a></div>
+      <pre data-start="67" data-line="72-78"><code class="language-typescript">    }
+  }
+
+  protected initHandlers() {
+    ipcMainProxy.on(&#39;container-exec/start&#39;, async(event, containerId, namespace) =&gt; {
+      const sendToFrame = &lt;ch extends keyof IpcRendererEvents&gt;(channel: ch, ...args: Parameters&lt;IpcRendererEvents[ch]&gt;) =&gt; {
+        try {
+          event.sender.send(channel, ...args);
+        } catch (ex) {
+          console.debug(`Failed to send ${ channel } to frame:`, ex);
+        }
+      };
+
+      // Reconnect path: an existing session for this container is alive.
+      const session = this.sessions.get(containerId);
+
+      if (session) {</code></pre>
+    <p>Fix: hoist <code>sendToFrame</code> into <code>main/ipcMain.ts</code> and re-import in both <code>containerExec.ts</code> and <code>containerStats.ts</code>.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Engine-agnostic CLI parsing in the renderer</strong> (in-scope) <span class="pill pill-claude">Claude</span>. The renderer reads <code>s.CPUPerc</code>, <code>s.MemUsage</code>, <code>s.NetIO</code>, <code>s.BlockIO</code> directly off the <code>docker stats</code> formatter shape (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L386-L390"><code>ContainerStats.vue:386-390</code></a>). The main process owns the engine selection (<code>mobyClient.ts</code>/<code>nerdctlClient.ts</code>); it should own the normalisation too. A <code>runStats(containerId, namespace): Promise&lt;NormalizedStats&gt;</code> method on <code>ContainerEngineClient</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/backend/containerClient/types.ts#L165-L169"><code>containerClient/types.ts:165-169</code></a>) keeps the renderer engine-agnostic and turns I5 into a single per-engine implementation.</li>
+      <li><strong>Polling architecture vs streaming</strong> (future) <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span>. <code>docker stats</code> without <code>--no-stream</code> is itself a streaming API. The current architecture spawns two engine processes per refresh tick per open Stats tab; on macOS that dominates the CPU cost of &quot;watching an idle container.&quot; A long-lived <code>docker stats &lt;id&gt;</code> stream via the existing <code>runClient(..., &#39;stream&#39;, ...)</code> surface (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/backend/containerClient/mobyClient.ts#L490"><code>mobyClient.ts:490</code></a>) would cut process churn ~60x at the 1 s default and let the refresh-rate selector down-sample on the renderer side instead of restarting the engine.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>The handler mirrors <code>ContainerExecHandler</code>&#39;s session-keyed map and IPC patterns, so anyone who has read the exec implementation can follow this one <span class="pill pill-claude">Claude</span>.</li>
+      <li>IPC channel namespacing (<code>container-stats/start</code>, <code>container-stats/data</code>, etc.) follows the established <code>container-exec/*</code> convention <span class="pill pill-claude">Claude</span>.</li>
+      <li>Skipping the first delta sample (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L393"><code>ContainerStats.vue:393</code></a>) avoids the classic counter-graph artefact of an enormous initial spike <span class="pill pill-claude">Claude</span>.</li>
+      <li>Unmounting the stats tab fully suspends polling instead of pushing it to the background <span class="pill pill-gemini">Gemini</span>.</li>
+      <li><code>readColors()</code> bridges CSS custom properties into Chart.js cleanly, without hard-coding hex values for tick/grid theme tokens <span class="pill pill-gemini">Gemini</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>E2E coverage is reasonable for a UI feature: it verifies tab placement, chart render on a running container, process-table population, refresh-rate options, and the stopped-container banner. Risk-ranked gaps:</p>
+    <ol>
+      <li><strong>No containerd / nerdctl path coverage</strong> (links to I5). The feature is currently exercised only against <code>ContainerEngine.MOBY</code>, so silent-failure on containerd is uncaught.</li>
+      <li><strong>No assertion that chart data actually arrives over time</strong> (links to S2). <code>waitForCharts</code> only checks <code>toBeVisible</code>; a chart that mounts and never receives a <code>data</code> event passes.</li>
+      <li><strong>No unit tests for the pure helpers</strong> (links to S3, S4). <code>parseBytes</code>, <code>parsePair</code>, and the process-row parser are pure functions; trivial to unit-test and exactly where regressions will hide.</li>
+      <li><strong>No test for the engine-change path</strong> (links to I3). A Jest test against <code>ContainerStatsHandler</code> with a stub <code>IpcMain</code> and a stub <code>WebContents</code> would catch the freeze.</li>
+      <li><strong>No test for the renderer-destroyed leak</strong> (links to I2). Hard to write as e2e, but the same Jest harness as #4 catches it via <code>event.sender.destroyed</code> simulation.</li>
+      <li><strong>No stop/start coverage for the same container</strong> (links to I4). A short test that stops the running container, waits, restarts it, and asserts the chart buffer reset would prevent regression.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/docs/development/features.md#L123"><code>docs/development/features.md:123</code></a> adds the feature line cleanly; it does not mention the containerd limitation (see I5). Add a footnote until I5 is resolved.</li>
+      <li><code>ContainerStats.vue</code> lacks a file-level comment describing the IPC contract and the parsing assumptions on the <code>docker stats</code> JSON shape. <code>containerStats.ts</code> has a brief module doc but stops short of documenting the renderer-visible payload schema. The schema is described only on <code>electron-ipc.d.ts:230</code> as &quot;Raw JSON line from <code>docker stats --no-stream --format &#39;{{json .}}&#39;</code>&quot; — that comment understates the renderer&#39;s reliance on docker-specific field names.</li>
+      <li>No release-notes / CHANGELOG entry is part of the diff. User-facing release notes should mention that stats are available only for running containers (and the containerd caveat per I5).</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><code>914890abe fix(containers): lint</code> touches only files first introduced in <code>11464b5ed feat(containers): add Stats tab…</code> (lint touches <code>ContainerStats.vue</code> formatting). Fold it back into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/11464b5ed"><code>11464b5ed</code></a> before merge.</li>
+      <li><code>a0c30ba81 fix(containers): test</code> fixes a <code>toEqual</code> expectation list inside the e2e file added by <code>0a31cae7e test(containers): add e2e tests for Stats tab</code>. Fold it back into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0a31cae7e"><code>0a31cae7e</code></a>.</li>
+      <li>The feature/test split between <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/11464b5ed"><code>11464b5ed</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0a31cae7e"><code>0a31cae7e</code></a> is appropriate; leave that boundary intact.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L376-L377"><code>ContainerStats.vue:376-377</code></a> — code comment: &quot;docker stats may return multiple JSON objects if the container name appears more than once; take the first valid line.&quot; The handler passes the container ID, not a name (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/main/containerStats.ts#L88"><code>containerStats.ts:88</code></a>), so the documented risk does not materialise for this caller. The guard is defensive but raises S6 because it absorbs unrelated error lines.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/components/ContainerStats.vue#L404"><code>ContainerStats.vue:404</code></a> — code comment: <code>// ignore parse errors for individual samples</code>. Intentional silent-drop on parse failures. The change does not make this worse; an unparseable sample loses one data point. Worth a <code>console.debug</code> so the failures stay observable, but not a finding.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Most thorough of the three by a wide margin — fifteen findings before consolidation, against three each from Codex and Gemini. Caught the renderer-destroyed leak (I2), the <code>updateClient</code> freeze (I3), the containerd-path gap (I5), and a long tail of suggestions covering style, testing, and dependency pinning. Two findings downgraded during consolidation: the process-row parser (raised Important, demoted to S3 because default <code>docker top</code> output uses single-word columns) and the memory-chart usage display (raised Important, demoted to S7 because the chart still surfaces real used-byte data). One finding dropped: a <code>darkMQ</code> binding-placement note that Claude itself flagged as &quot;no behavior bug.&quot;</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Caught the stale-buffers gap (I4) cleanly and was alone in flagging the charts-test-passes-without-data observation (S2). Also raised the commit-structure call to fold the two fixup commits before merge. Coverage was narrower than Claude&#39;s, but every finding landed without revision.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Three findings, all real. Flagged the subprocess leak (consolidated into I1 — downgraded from Critical since <code>docker stats --no-stream</code> settles sub-second against a healthy engine and process accumulation only triggers when the engine itself hangs), the renderer-destroyed leak (overlapping Claude&#39;s I2), and the per-tick-vs-rate chart issue (S1). Did not run <code>git blame</code> — known behaviour from daily quota limits, noted as expected.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>9m 49s</td><td>6m 16s</td><td>6m 03s</td></tr>
+        <tr><td>Findings</td><td>4I 10S</td><td>2I 1S</td><td>2I 1S</td></tr>
+        <tr><td>Tool calls</td><td>54 (Bash 37, Read 17)</td><td>41 (shell 41)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>3</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>12</td><td>2</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>10</td><td>10</td><td>10</td></tr>
+        <tr><td>Coverage misses</td><td>1</td><td>1</td><td>2</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>4I 10S</strong></td><td><strong>2I 1S</strong></td><td><strong>2I 1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>2 (I→S)</td><td>0</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>1</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation</strong></p>
+    <ul>
+      <li>Gemini P1: subprocess leak raised Critical → consolidated as Important I1. Practical likelihood requires the container engine to hang, not the steady state.</li>
+      <li>Claude P1: process-row parser raised Important → demoted to S3. Default <code>docker top</code> columns are single-word, so the multi-space header case never triggers.</li>
+      <li>Claude P1: memory chart raised Important I5 → demoted to S7. The chart still shows real used-byte values; the limit context is a UX enhancement, not a correctness gap.</li>
+      <li>Claude P1: <code>darkMQ</code> binding placement (Claude&#39;s S10) → dropped. Claude noted &quot;no behavior bug&quot; in the same finding; it does not earn space in the consolidated report.</li>
+    </ul>
+    <p>Claude provided the most reviewer value on this PR: it identified the two highest-impact regressions outside the I1 cluster (I2, I3) and the only environment-coverage gap (I5). Codex and Gemini&#39;s contributions were narrower but kept the retro honest — both independently flagged the subprocess concern Claude treated as a Suggestion-level resource issue.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <p>For UI features that render async data through IPC or RPC, presence-only assertions (<code>toBeVisible</code>, <code>isPresent</code>, &quot;the card exists&quot;) pass the moment the component mounts, before any data arrives. Flag tests of data-driven UI that stop at presence and never check the rendered dataset — series length, row count, content match. A parser that swallows every sample or a handler that crashes silently still leaves the empty container element visible, so the test passes against the very failure it should catch.</p>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <p>[repo] Rancher Desktop ships two container-engine backends behind <code>ContainerEngineClient</code> (<code>mobyClient.ts</code>, <code>nerdctlClient.ts</code>). When a feature invokes <code>client.runClient(...)</code> with engine-specific argument shape (<code>--format</code> payloads, subcommand structure, output field names), verify that both engines emit the shape the caller assumes and that tests cover both paths. The e2e suites pin one engine per file (<code>ContainerEngine.MOBY</code> in <code>containers.e2e.spec.ts</code>); engine-specific divergences slip through unless the diff explicitly adds coverage for the other engine.</p>
+    <p>[repo] <code>client.runClient</code> accepts <code>SpawnOptions</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/11464b5eda82b7bd2608d0eaecdf153ae8aaf89b/pkg/rancher-desktop/backend/containerClient/types.ts#L80"><code>containerClient/types.ts:80</code></a>), including <code>signal: AbortSignal</code>. Any wrapper that imposes a <code>Promise.race</code> timeout on <code>runClient</code> should thread <code>signal</code> through and call <code>abortController.abort()</code> when the timeout fires; otherwise the child process outlives the timeout and a polling caller can stack overlapping invocations under engine pressure.</p>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
