@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260526-154742-pr-10357</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260526-154742-pr-10357</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-26 15:47</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>3 (of PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10357" class="gh-ref" data-title="procnet: replace iptables PREROUTING DNAT with userspace forwarder" data-state="open" data-type="pr">#10357</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10357" class="gh-ref" data-title="procnet: replace iptables PREROUTING DNAT with userspace forwarder" data-state="open" data-type="pr">#10357</a> — procnet: replace iptables PREROUTING DNAT with userspace forwarder</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> procnet: reconcile binding shape, throttle publish-failure logs<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2725f96b0"><code>2725f96b0</code></a> procnet: harden scanner reconciliation and userspace forwarder<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/30df1cd21"><code>30df1cd21</code></a> spelling: add noctx<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/077c1f071"><code>077c1f071</code></a> procnet: address noctx and unparam findings in tests<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e296d4976"><code>e296d4976</code></a> spelling: update expect.txt for procnet userspace forwarder<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/62a988690"><code>62a988690</code></a> procnet: multiplex concurrent UDP flows in the loopback forwarder<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6d03d97cf"><code>6d03d97cf</code></a> guestagent: add test:unit:guestagent target with procnet test coverage<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e39bbb44c"><code>e39bbb44c</code></a> procnet: replace iptables PREROUTING DNAT with userspace forwarder</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the EADDRINUSE rollback flap (I1) and the IPv6 docstring inaccuracy (I2) need a fix before merge; the underlying design holds.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>23 min 40 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 3 of the userspace-forwarder rewrite. Commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> resolved round 2&#39;s three Important findings. This round surfaces a latent reachability flap the round-2 resolution left unresolved: when a host-network container holds both <code>127.0.0.1:N</code> and <code>0.0.0.0:N</code>, <code>forwarder.Add</code> fails with EADDRINUSE, <code>publish</code> rolls back <code>tracker.Add</code>, and host-switch unexposes the port — contradicting the docstring added in the resolution commit. The IPv6 docstring also overstates dual-stack coverage.</p>
+    <p>Two reviewers (Claude, Codex) converged on the EADDRINUSE issue from different angles — Codex on the rollback, Claude on the contradicted docstring. Claude alone caught the IPv6 docstring inaccuracy. Gemini raised a shape-change-before-publish gate gap that survives as a Suggestion. Codex repeated round 2&#39;s UDP-rediscovery false positive (connected UDP dial sockets sit in state <code>0x1</code>, not <code>UDPEstablished=0x7</code>) despite the repo-context entry round 2 added — suggesting the entry needs to live in <code>deep-review-context.md</code>, not only in <code>suggestions.md</code>.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> EADDRINUSE rollback unexposes the port from host-switch and contradicts the docstring <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L181-L222">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="181" data-line="186-217"><code class="language-go">// publish reports a new listener to the API tracker and opens a
+// userspace forwarder for each loopback binding. It returns an error
+// if either step fails after rolling back the tracker entry, so the
+// caller can leave the port in pending for next-tick retry instead
+// of recording it as published.
+func (p *ProcNetScanner) publish(port nat.Port, bindings []nat.PortBinding) error {
+	id := utils.GenerateID(fmt.Sprintf(&quot;%s/%s&quot;, port.Proto(), port.Port()))
+	if err := p.tracker.Add(id, nat.PortMap{port: bindings}); err != nil {
+		p.logAddFailure(port, fmt.Sprintf(&quot;failed to add: %s&quot;, err))
+		if removeErr := p.tracker.Remove(id); removeErr != nil {
+			p.logAddFailure(port, fmt.Sprintf(&quot;rollback after tracker.Add failure: %s&quot;, removeErr))
+		}
+		return err
+	}
+
+	for _, b := range bindings {
+		if b.HostIP != loopbackIP {
+			continue
+		}
+		portNum, err := strconv.ParseUint(b.HostPort, 10, 16)
+		if err != nil {
+			// b.HostPort is strconv.Itoa of a uint16 (see
+			// addEntryToPortMap), so ParseUint always succeeds. If that
+			// stops being true, the caller leaks a tracker entry without
+			// a matching forwarder; mirror the forwarder.Add rollback
+			// above.
+			log.Errorf(&quot;/proc/net scanner: bad port %q: %s&quot;, b.HostPort, err)
+			continue
+		}
+		if err := p.forwarder.Add(p.ctx, port.Proto(), uint16(portNum)); err != nil {
+			p.logAddFailure(port, fmt.Sprintf(&quot;loopback forwarder %s/%s: %s&quot;, port.Proto(), b.HostPort, err))
+			if removeErr := p.tracker.Remove(id); removeErr != nil {
+				p.logAddFailure(port, fmt.Sprintf(&quot;rollback after forwarder.Add failure: %s&quot;, removeErr))
+			}
+			return err
+		}
+	}
+
+	// Only mark success — and only log the success Info line — once
+	// the whole publish has run. Clearing addErrorLogged or logging
+	// &quot;added port&quot; between tracker.Add and forwarder.Add lets a
+	// persistent forwarder failure re-Error every tick because the</code></pre>
+    <p>On a <code>--network=host</code> container holding both <code>127.0.0.1:N</code> and <code>0.0.0.0:N</code>, <code>scanned</code> carries one port key with both bindings. <code>tracker.Add</code> (line 188) succeeds and host-switch routes Windows traffic to <code>tapIP:N</code>; the loopback iteration then calls <code>forwarder.Add</code>, which fails because the engine-namespace <code>0.0.0.0</code> listener already covers <code>tapIP:N</code>. <code>publish</code> rolls back via <code>tracker.Remove</code> (line 212), removing the host-switch exposure the wildcard listener relied on. Every tick repeats the cycle, flapping host-switch state every ~3 s.</p>
+    <p>The docstring at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L73"><code>loopback_forwarder_linux.go:73</code></a> claims &quot;such ports stay reachable from Windows through the wildcard listener via eth0&quot; — true only while the tracker entry stays installed. Round 2&#39;s S2 declined the noise concern; the throttle fixes noise, not reachability, and the new docstring claim in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> is unmet.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L68-L78">src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go</a></div>
+      <pre data-start="68" data-line="73"><code class="language-go">// EADDRINUSE on the bind step propagates as a plain listen error. The
+// scanner&#39;s publish path rolls back the tracker entry and retries
+// each tick; the per-port log-once flag bounds the noise on a
+// persistent collision. The realistic trigger is a host-network
+// container that holds both 127.0.0.1:port and 0.0.0.0:port; the
+// wildcard claim blocks the bindIP bind. Such ports stay reachable
+// from Windows through the wildcard listener via eth0.
+func (f *loopbackForwarder) Add(ctx context.Context, proto string, port uint16) error {
+	k := key(proto, port)
+	f.mu.Lock()
+	defer f.mu.Unlock()</code></pre>
+    <p>Fix: skip <code>forwarder.Add</code> for the loopback entry when <code>bindings</code> includes <code>0.0.0.0</code> for the same port; update the docstring.</p>
+      <pre><code class="language-diff"> for _, b := range bindings {
+-    if b.HostIP != loopbackIP {
++    if b.HostIP != loopbackIP || hasWildcardBinding(bindings) {
+         continue
+     }</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> IPv6 docstring overstates dual-stack coverage <span class="pill pill-claude">Claude</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L20-L35">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="20" data-line="25-30"><code class="language-go">from host-switch reaches the in-namespace 127.0.0.1 listener. A
+two-scan stability gate filters out the transient reservation socket
+nerdctl&#39;s OCI createRuntime hook opens before CNI installs its
+iptables rules.
+
+IPv6 limitation: the scanner reads /proc/net/{tcp,udp} only, not the
+tcp6/udp6 variants. A --network=host container that listens
+exclusively on [::1]:port is invisible to the scanner and is not
+reachable from Windows. Containers that listen on both 127.0.0.1
+and [::1] (the common dual-stack pattern) remain reachable through
+the IPv4 listener.
+*/
+package procnet
+
+import (
+	&quot;context&quot;</code></pre>
+    <p>The &quot;common dual-stack pattern&quot; on Linux is <code>bind([::]:port)</code> with <code>IPV6_V6ONLY=0</code> (Go&#39;s <code>net.Listen(&quot;tcp&quot;, &quot;:port&quot;)</code>, Python&#39;s <code>socket.AF_INET6</code> defaults, most container apps). That socket appears in <code>/proc/net/tcp6</code> only, never <code>/proc/net/tcp</code>; the <code>case procnettcp.TCP:</code> switch at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L303-L310"><code>scanner_linux.go:303-310</code></a> filters it out. A <code>--network=host</code> Go HTTP server using <code>:8080</code> is invisible to the scanner — exactly the failure mode the comment claims is covered.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L298-L315">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="298" data-line="303-310"><code class="language-go">	}
+	return out
+}
+
+func addValidProtoEntryToPortMap(entry procnettcp.Entry, portMap nat.PortMap) error {
+	switch entry.Kind {
+	case procnettcp.TCP:
+		if entry.State == procnettcp.TCPListen {
+			return addEntryToPortMap(entry, portMap)
+		}
+	case procnettcp.UDP:
+		if entry.State == procnettcp.UDPEstablished {
+			return addEntryToPortMap(entry, portMap)
+		}
+	}
+	return nil
+}
+</code></pre>
+    <p><code>git blame</code> confirms the misleading docstring landed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> (the round-2 resolution commit); the underlying tcp6/udp6 gap is pre-existing.</p>
+    <p>Fix: rewrite the second sentence so the docstring matches the code.</p>
+      <pre><code class="language-diff">-Containers that listen on both 127.0.0.1
+-and [::1] (the common dual-stack pattern) remain reachable through
+-the IPv4 listener.
++Containers that bind dual-stack (e.g. [::]:port with
++IPV6_V6ONLY=0, the Go and Python default) are also invisible
++because the socket appears only in /proc/net/tcp6. Only listeners
++that bind 127.0.0.1, 0.0.0.0, or both v4 and v6 separately are
++reachable from Windows.</code></pre>
+    <p>Closing the underlying gap (extending <code>addValidProtoEntryToPortMap</code> to handle <code>procnettcp.TCP6</code>/<code>UDP6</code>) is out of scope for this PR.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>pending</code> stores bindings the code never reads <span class="pill pill-claude">Claude</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L142-L169">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="142" data-line="147-164"><code class="language-go">		// preserves the two-scan gate semantics for the new shape.
+		p.unpublish(port, bindings)
+		delete(p.published, port)
+	}
+
+	for port := range p.pending {
+		bindings, ok := scanned[port]
+		if !ok {
+			continue
+		}
+		if err := p.publish(port, bindings); err != nil {
+			continue
+		}
+		p.published[port] = bindings
+	}
+
+	p.pending = make(nat.PortMap)
+	for port, bindings := range scanned {
+		if _, ok := p.published[port]; ok {
+			continue
+		}
+		p.pending[port] = bindings
+	}
+
+	// Drop log-throttle state for ports that have left both maps.
+	// Without this sweep, a transient port that fails to publish and
+	// then vanishes leaves a dangling entry, so the map grows
+	// without bound under listener churn.</code></pre>
+    <p>The publish loop at line 147 reads <code>scanned[port]</code> for the bindings, not <code>p.pending[port]</code> — intentional, per the <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> commit message. The rebuild above copies bindings from <code>scanned</code> into <code>pending</code>, and no later code reads them. The throttle sweep (lines 170-178) checks key membership only.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L165-L183">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="165" data-line="170-178"><code class="language-go">
+	// Drop log-throttle state for ports that have left both maps.
+	// Without this sweep, a transient port that fails to publish and
+	// then vanishes leaves a dangling entry, so the map grows
+	// without bound under listener churn.
+	for port := range p.addErrorLogged {
+		if _, ok := p.pending[port]; ok {
+			continue
+		}
+		if _, ok := p.published[port]; ok {
+			continue
+		}
+		delete(p.addErrorLogged, port)
+	}
+}
+
+// publish reports a new listener to the API tracker and opens a
+// userspace forwarder for each loopback binding. It returns an error
+// if either step fails after rolling back the tracker entry, so the</code></pre>
+    <p>Fix: switch <code>pending</code> to <code>map[nat.Port]struct{}</code>. The rebuild becomes <code>p.pending[port] = struct{}{}</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Shape change before publish bypasses the two-scan stability gate <span class="pill pill-gemini">Gemini</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L142-L161">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="142" data-line="147-156"><code class="language-go">		// preserves the two-scan gate semantics for the new shape.
+		p.unpublish(port, bindings)
+		delete(p.published, port)
+	}
+
+	for port := range p.pending {
+		bindings, ok := scanned[port]
+		if !ok {
+			continue
+		}
+		if err := p.publish(port, bindings); err != nil {
+			continue
+		}
+		p.published[port] = bindings
+	}
+
+	p.pending = make(nat.PortMap)
+	for port, bindings := range scanned {
+		if _, ok := p.published[port]; ok {
+			continue</code></pre>
+    <p><code>Tick</code> matches <code>pending</code> against <code>scanned</code> by port key alone. A port observed once with <code>[127.0.0.1]</code> and once with <code>[0.0.0.0]</code> clears the gate on its second sighting and publishes the second tick&#39;s shape. The gate&#39;s stated purpose — filter the OCI-hook reservation socket — is preserved (the OCI hook vanishes by the next tick). The remaining trigger is narrow: same port reused across consecutive ticks with different bind shapes. Worst case: a transient is published, then unpublished on the next tick. Self-healing.</p>
+    <p>Downgraded from Gemini&#39;s Important because the harm is bounded (briefly publish-then-unpublish, vs DNAT-era persistent shadowing) and the trigger is narrow.</p>
+    <p>Fix: compare <code>scanned[port]</code> against <code>pending[port]</code> before publishing. If they differ, leave the port in pending so the new shape gets its own two-tick gate.</p>
+      <pre><code class="language-diff"> for port := range p.pending {
+-    bindings, ok := scanned[port]
+-    if !ok {
++    bindings, ok := scanned[port]
++    if !ok || !bindingsEqual(p.pending[port], bindings) {
+         continue
+     }</code></pre>
+    <p>This conflicts with S1 (which proposes dropping bindings from <code>pending</code>); pick one approach.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>acceptTCP</code> Error-logs every transient Accept failure after backing off <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L165-L201">src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go</a></div>
+      <pre data-start="165" data-line="170-196"><code class="language-go">	acceptRetryInitialBackoff = 100 * time.Millisecond
+	acceptRetryMaxBackoff     = 5 * time.Second
+	halfCloseDrainTimeout     = 30 * time.Second
+)
+
+func (f *loopbackForwarder) acceptTCP(ctx context.Context, lis net.Listener, port uint16) {
+	backoff := acceptRetryInitialBackoff
+	for {
+		conn, err := lis.Accept()
+		if err != nil {
+			if errors.Is(err, net.ErrClosed) {
+				return
+			}
+			// Retry with exponential backoff on transient errors (EMFILE
+			// under FD pressure, ENOBUFS). The listener stays registered
+			// in f.tcp; once the pressure clears, Accept succeeds.
+			log.Errorf(&quot;loopback forwarder accept tcp/%d: %s (retry in %s)&quot;, port, err, backoff)
+			select {
+			case &lt;-ctx.Done():
+				return
+			case &lt;-time.After(backoff):
+			}
+			backoff *= 2
+			if backoff &gt; acceptRetryMaxBackoff {
+				backoff = acceptRetryMaxBackoff
+			}
+			continue
+		}
+		backoff = acceptRetryInitialBackoff
+		go f.pipeTCP(ctx, conn, port)
+	}
+}
+
+func (f *loopbackForwarder) pipeTCP(ctx context.Context, in net.Conn, port uint16) {
+	defer in.Close()
+	addr := net.JoinHostPort(&quot;127.0.0.1&quot;, strconv.Itoa(int(port)))
+	out, err := f.dialer.DialContext(ctx, &quot;tcp&quot;, addr)</code></pre>
+    <p>Under sustained FD pressure (EMFILE) the loop saturates at the 5 s cap and emits one Error every 5 s indefinitely. The publish path uses <code>logAddFailure</code> (scanner_linux.go:229-240) to bound this exact pattern; apply the same template to <code>acceptTCP</code>.</p>
+    <p>Fix: log the first Error at full level, then degrade to Debug until Accept next succeeds.</p>
+      <pre><code class="language-diff">-log.Errorf(&quot;loopback forwarder accept tcp/%d: %s (retry in %s)&quot;, port, err, backoff)
++if !loggedAcceptError {
++    log.Errorf(&quot;loopback forwarder accept tcp/%d: %s (retry in %s)&quot;, port, err, backoff)
++    loggedAcceptError = true
++} else {
++    log.Debugf(&quot;loopback forwarder accept tcp/%d: %s (retry in %s)&quot;, port, err, backoff)
++}</code></pre>
+    <p>Reset <code>loggedAcceptError</code> to <code>false</code> after the next successful Accept.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> PR description says &quot;30-second idle timeout&quot; but the UDP path uses 90 s <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+    <p>The PR body&#39;s &quot;What&#39;s added&quot; section says UDP &quot;multiplexes concurrent flows by source address with a per-flow outbound socket and a 30-second idle timeout.&quot; Round 1 swapped the hand-rolled demuxer for <code>forwarder.UDPProxy</code>, whose flow timeout is <code>UDPConnTrackTimeout = 90 * time.Second</code>. The 30 s constant in this PR (<code>halfCloseDrainTimeout</code>) bounds only the TCP half-close drain. The code comment at line 100 is accurate; the PR description is stale.</p>
+    <p>Fix: update the PR body&#39;s &quot;What&#39;s added&quot; bullet to reflect 90 s before merge — commit-message archaeology surfaces this later.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Scanner does not unwind tracker state on agent shutdown</strong> <em>(future)</em> <span class="pill pill-claude">Claude</span></li>
+    </ul>
+    <p>  <code>ForwardPorts</code> exits on <code>ctx.Done()</code> and <code>defer p.forwarder.Close()</code> releases sockets, but <code>published</code> is not unwound through <code>tracker.RemoveAll()</code>. host-switch keeps its proxy table populated from the dead agent; on restart the new instance re-issues <code>Expose</code> for the same ports and meets &quot;proxy already running&quot; until something else clears the stale entry. Pre-existing — not introduced by this PR — but the new code structure is cleaner, so a <code>RemoveAll</code> shutdown hook fits naturally. One extra line and an API audit.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><code>Tick(scanned)</code> extraction makes every state transition unit-testable<em></em> without sockets. The tests exercise gate promotion, gate restart, shape change before and after publish, throttle hysteresis, rollback symmetry, and end-to-end forwarding through the scanner-to-forwarder seam.</li>
+      <li><em></em>Delegating UDP to <code>forwarder.UDPProxy</code><em></em> (round 1&#39;s S1 fix) eliminates a class of hand-rolled conntrack bugs and matches Lima&#39;s own implementation choice.</li>
+      <li><em></em><code>entriesToPortMap</code> bindIP self-filter<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L289-L300"><code>scanner_linux.go:289-300</code></a>) handles forwarder-owned sockets without coupling the scanner to the forwarder&#39;s internal state, and the trade-off is documented inline.</li>
+      <li><em></em><code>addErrorLogged</code> throttle sweep<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L170-L178"><code>scanner_linux.go:170-178</code></a>) closes the unbounded-growth seam under listener churn — every port that leaves both pending and published also leaves the throttle map.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Ranked by risk:</p>
+    <ol>
+      <li><strong>No test for the EADDRINUSE rollback flap on mixed bindings</strong> (I1). The <code>addErr</code> path in <code>fakeForwarder</code> exists but exercises only single-loopback bindings; <code>mergeScans</code> overwrites by key, blocking the mixed-binding shape. A direct <code>nat.PortMap{tcp/N: [{127.0.0.1, N}, {0.0.0.0, N}]}</code> plus <code>addErr</code> would pin the gap.</li>
+      <li><strong>No test for IPv6/dual-stack listeners</strong> (I2). A <code>procnettcp.Entry{Kind: procnettcp.TCP6, IP: net.ParseIP(&quot;::&quot;)}</code> fed to <code>entriesToPortMap</code> would pin the silent drop and force the docstring fix.</li>
+      <li><em></em>No test for <code>acceptTCP</code> Accept-error backoff<em></em> (S3). Hard to drive without a flaky listener; a stub yielding a transient error then <code>net.ErrClosed</code> would close the seam.</li>
+      <li><em></em>No test for <code>pipeTCP</code> half-close drain deadline<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L223-L232"><code>loopback_forwarder_linux.go:223-232</code></a>). A wedged-peer scenario (client opens, writes nothing, never reads) confirms the 30 s deadline bounds the goroutine. Skippable if Jan considers it overkill.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li>The IPv6 paragraph at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L25-L30"><code>scanner_linux.go:25-30</code></a> materially overstates dual-stack coverage — see I2.</li>
+      <li>The EADDRINUSE rationale at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L64-L74"><code>loopback_forwarder_linux.go:64-74</code></a> describes a reachability path the code does not preserve — see I1.</li>
+      <li>The <code>NewProcNetScanner</code> docstring at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L83-L88"><code>scanner_linux.go:83-88</code></a> says the scanner &quot;publishes loopback listeners,&quot; but it publishes both loopback and wildcard listeners (only loopback drives the forwarder). Trivial wording fix.</li>
+      <li>Other docstrings (<code>Tick</code>, <code>publish</code>, <code>unpublish</code>, <code>entriesToPortMap</code>, <code>bindingsEqual</code>, <code>loopbackForwarder.Add/Close</code>, the package doc&#39;s design rationale) are accurate.</li>
+      <li>Commit messages on <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e39bbb44c"><code>e39bbb44c</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2725f96b0"><code>2725f96b0</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> describe the intent and motivation cleanly.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Eight commits split four logical concepts: replace-iptables (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e39bbb44c"><code>e39bbb44c</code></a>) + CI hookup (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6d03d97cf"><code>6d03d97cf</code></a>) + hardening (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2725f96b0"><code>2725f96b0</code></a>) + binding-shape reconciliation (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a>). The remaining four are lint and spelling fixups for code earlier on the same branch:</p>
+    <ul>
+      <li><code>30df1cd21 spelling: add noctx</code> and <code>077c1f071 procnet: address noctx and unparam findings in tests</code> patch lint issues in tests <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2725f96b0"><code>2725f96b0</code></a> itself added — fold into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2725f96b0"><code>2725f96b0</code></a>.</li>
+      <li><code>e296d4976 spelling: update expect.txt for procnet userspace forwarder</code> reconciles the spelling allow-list with <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e39bbb44c"><code>e39bbb44c</code></a>&#39;s deletions and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/62a988690"><code>62a988690</code></a>&#39;s identifier renames — split into chunks and fold into each.</li>
+      <li><code>62a988690 procnet: multiplex concurrent UDP flows in the loopback forwarder</code> replaces a hand-rolled demuxer the introducing commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e39bbb44c"><code>e39bbb44c</code></a> shipped — fold into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e39bbb44c"><code>e39bbb44c</code></a>.</li>
+    </ul>
+    <p>Round 2 already recommended this fold; the same recommendation applies. After folding, the branch is four self-contained commits.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>bindIP filter trade-off</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L281-L288"><code>scanner_linux.go:281-288</code></a>): &quot;A container that binds explicitly to bindIP ... is filtered out alongside the forwarder&#39;s own listeners and never reaches publish. No container engine we ship does this ... so the gap is acceptable.&quot; The PR makes this restriction newly relevant (no self-filter in the old DNAT path), but the rationale holds.</li>
+      <li><em></em><code>pipeTCP</code> shutdown does not wait for in-flight goroutines<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L140-L144"><code>loopback_forwarder_linux.go:140-144</code></a>): &quot;In-flight pipeTCP goroutines for accepted connections continue until the peer disconnects or their half-close drain deadline (30s) fires; Close does not wait for them. This is intentional for process-exit shutdown — the goroutines die with the process.&quot; Consistent with the agent&#39;s lifecycle.</li>
+      <li><strong>UDP dial closure captures the scanner-lifetime ctx, not a request ctx</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L100-L105"><code>loopback_forwarder_linux.go:100-105</code></a>): author documents the contract; tests pin it (<code>TestEndToEndUDPAndRemovalThroughTick</code>).</li>
+      <li><em></em><code>publish</code> ParseUint dead branch<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/scanner_linux.go#L200-L208"><code>scanner_linux.go:200-208</code></a>): &quot;b.HostPort is strconv.Itoa of a uint16 ... ParseUint always succeeds. If that stops being true, the caller leaks a tracker entry without a matching forwarder.&quot; Deliberately preserved as a future-regression catch.</li>
+    </ul>
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Round 2 S2: <code>forwarder.Add</code> retries every tick on EADDRINUSE — declined Round 2 (&quot;noise is bounded by the per-port log-once fix; narrow trigger&quot;). Re-raised this round as <strong>I1</strong> because the resolution commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> also added a docstring (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b76cd5c7a59d11f5a7a5c7a8b854ca5716d6024b/src/go/guestagent/pkg/procnet/loopback_forwarder_linux.go#L64-L74"><code>loopback_forwarder_linux.go:64-74</code></a>) claiming the port stays reachable through the wildcard listener; the rollback path makes that claim false. Material change since the decline.</li>
+      <li>Round 2 S5: tcp6/udp6 listeners silently ignored — declined Round 2 (&quot;Pre-existing IPv6 limitation; documented in the package doc&quot;). The underlying gap is not re-raised, but <strong>I2</strong> flags that the docstring added in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> understates the gap. Material change in the docstring.</li>
+      <li>Round 2 S1 (tap-IP filter), Round 2 S6 (UDP forwarder dial ctx), Round 2 Testing Gap 5 (Tick timing under jitter) — declined; no current-round finding overlaps.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude raised both Important findings of this round (I1 alone in framing; Codex independently surfaced the rollback half), the four Suggestions, and the future-tense Design Observation. The Documentation Assessment about the <code>NewProcNetScanner</code> docstring is a clean catch the others missed. Notably, Claude verified the IPv6 docstring against <code>git blame</code> and surfaced that <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b76cd5c7a"><code>b76cd5c7a</code></a> introduced the misleading line — a regression call the docstring-without-blame approach would have miscategorised as a pre-existing gap. The S2 PR-description discrepancy (30 s vs 90 s) is the only finding from Claude that touches material outside the diff.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex&#39;s I2 reaches the same conclusion as Claude&#39;s I1 from a different starting point — the test-helper limitation (<code>mergeScans</code> overwriting same-port keys) rather than the contradicted docstring. The two framings reinforce each other and made consolidation easier. Codex&#39;s I1, however, is the <strong>same UDP-rediscovery false positive</strong> as round 2: connected UDP dial sockets sit in state <code>0x1</code>, not <code>UDPEstablished=0x7</code>, so they cannot reach the scanner&#39;s snapshot. Round 2 added a repo-context entry covering this; the entry lives in <code>suggestions.md</code> and never reached <code>deep-review-context.md</code>, so Codex was not primed with it. The review process owes Codex a real repo-context entry, not Codex a calibration note. See Review Process Notes.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini delivered one Important finding (shape change before publish) — real but narrow, downgraded to S2 here. The Design Observations strength point and the Commit Structure recommendation both consolidated cleanly. Gemini&#39;s review stayed focused; no false positives, no padding. As usual, Gemini skipped <code>git blame</code> (daily quota); Claude and Codex covered regression-vs-gap classification.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>14m 39s</td><td>7m 36s</td><td>5m 46s</td></tr>
+        <tr><td>Findings</td><td>2I 4S</td><td>1I</td><td>1S</td></tr>
+        <tr><td>Tool calls</td><td>52 (Bash 35, Read 17)</td><td>58 (shell 53, stdin 5)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>2</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>5</td><td>0</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>10</td><td>10</td><td>10</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2I 4S</strong></td><td><strong>1I</strong></td><td><strong>1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>1</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Claude provided the most value this round: it carried I2 alone, framed I1 against the contradicted docstring (the angle that makes the fix easy to land), and surfaced the four Suggestions plus the future Design Observation. Codex&#39;s value was the independent corroboration of I1 from a different angle, weighed against repeating round 2&#39;s false positive. Gemini&#39;s signal-to-noise ratio was again best — one finding, kept (at lower severity).</p>
+    <p><strong>Reconciliation</strong></p>
+    <ul>
+      <li>Claude I1 ↔ Codex I2: same underlying issue (EADDRINUSE rollback unexposes the port). Consolidated as I1; both agents credited. Title reframed against the docstring claim Claude surfaced.</li>
+      <li>Codex I1 (UDP outbound dial sockets republished): rejected as false positive — connected UDP dial sockets are state <code>0x1</code>, not <code>UDPEstablished=0x7</code>. Same false positive Codex raised in round 2.</li>
+      <li>Gemini I1 (shape change before publish): important → suggestion S2. Self-healing on next tick; narrow trigger.</li>
+      <li>Claude S4 (PR description &quot;30-second idle timeout&quot;): kept as Suggestion. Targets PR body, not code, but the inaccuracy survives in commit-message archaeology after merge.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <p>None this round. The review skill behaved as designed; the false positive that repeated is a repo-context gap, not a skill gap (see below).</p>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] When reviewing scanner code that processes <code>/proc/net/{tcp,udp}</code> snapshots via lima&#39;s <code>procnettcp</code> package, note the state constants: <code>TCPListen = 0xA</code> matches TCP listeners; <code>UDPEstablished = 0x7</code> matches the Linux <code>TCP_CLOSE</code> kernel constant, which is the state for <strong>unconnected/bound UDP sockets</strong> (listeners). Connected UDP sockets — those returned by <code>net.Dial(&quot;udp&quot;, ...)</code> — sit in state <code>0x1</code> and never reach a scanner that filters by <code>procnettcp.UDPEstablished</code>. Before raising a cascade finding where outbound UDP dial sockets become &quot;discovered listeners,&quot; verify the connected-socket state against the filter — it does not match.</li>
+    </ul>
+    <p>  *Promotion rationale: round 2&#39;s review process notes recorded this same entry, but it lived only in <code>suggestions.md</code> and was never promoted to <code>deep-review-context.md</code>. The same false positive recurred this round.*</p>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
