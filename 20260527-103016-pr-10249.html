@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260527-103016-pr-10249</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260527-103016-pr-10249</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-27 10:30</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>2</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/mook-as">@mook-as</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10249" class="gh-ref" data-title="Dashboard: Embed into steve" data-state="open" data-type="pr">#10249</a> — Dashboard: Embed into steve</td></tr>
+      <tr><td>Branch</td><td><code>deskboard/steve-embedded</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4cb6286ff"><code>4cb6286ff</code></a> Address (AI) review comments<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/17ba82686"><code>17ba82686</code></a> Bump steve to 0.1.0-beta9.2<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/63ccedf48"><code>63ccedf48</code></a> E2E: Add basic dashboard tests<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d5027e86e"><code>d5027e86e</code></a> package.json: Remove http-proxy-middleware<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/be9ea8479"><code>be9ea8479</code></a> Use steve with embedded dashboard<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/bf3a9ed91"><code>bf3a9ed91</code></a> rddepman: Allow forcing local changes</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; Round 1&#39;s lifecycle/timeout findings landed cleanly. One new important bug remains (stale dashboard window on Steve restart) plus a leak-on-readiness-failure path; the rest are easy follow-ups.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>19 min 6 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 2 folds in the Round 1 lifecycle fixes cleanly. One new important regression: clicking the dashboard button after a Kubernetes stop/start cycle restores the old window with its stale port URL (I1). A related regression: when <code>waitForReady</code> throws after the port latch resolves, the steve child leaks and the dashboard button stays disabled (I2). <code>getChecksums</code> lost its required-platform check (I3). Three Round 1 polish suggestions remain unaddressed.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Existing dashboard window keeps the old Steve port after restart <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/window/dashboard.ts#L4-L19">pkg/rancher-desktop/window/dashboard.ts</a></div>
+      <pre data-start="4" data-line="9-14"><code class="language-ts">
+import { Steve } from &#39;@pkg/backend/steve&#39;;
+
+const getDashboardWindow = () =&gt; (&#39;dashboard&#39; in windowMapping) ? BrowserWindow.fromId(windowMapping[&#39;dashboard&#39;]) : null;
+
+export function openDashboard() {
+  let window = getDashboardWindow();
+
+  if (restoreWindow(window)) {
+    return window;
+  }
+
+  const { port } = Steve.getInstance();
+
+  if (!port) {
+    return;</code></pre>
+    <p><code>openDashboard()</code> restores an existing dashboard window at line 12 before reading the current Steve port at line 16 or building the new URL at line 29. On <code>K8s.State.STOPPING</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/background.ts#L1285"><code>background.ts:1285</code></a> calls <code>Steve.getInstance().stop()</code>, which kills the child and clears <code>#port</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L240-L246"><code>steve.ts:240-246</code></a>). When Kubernetes restarts, Steve picks a fresh port; clicking the dashboard button returns the old window still pointed at the dead port — the dashboard webapp is a separate <code>BrowserWindow</code> and does not observe the renderer&#39;s <code>steve-port</code> IPC. The Round 1 fix gates the button on <code>port &gt; 0</code>, but the restore path bypasses that check.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/background.ts#L1280-L1290">background.ts</a></div>
+      <pre data-start="1280" data-line="1285"><code class="language-typescript">      // button is only enabled when Steve can accept connections.
+      mainEvents.emit(&#39;k8s-check-state&#39;, mgr);
+      window.send(&#39;k8s-check-state&#39;, state);
+
+      if (state === K8s.State.STOPPING) {
+        Steve.getInstance().stop();
+      }
+      if (pendingRestartContext !== undefined &amp;&amp; !backendIsBusy()) {
+        // If we restart immediately the QEMU process in the VM doesn&#39;t always respond to a shutdown messages
+        setTimeout(doFullRestart, 2_000, pendingRestartContext);
+        pendingRestartContext = undefined;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L235-L247">pkg/rancher-desktop/backend/steve.ts</a></div>
+      <pre data-start="235" data-line="240-246"><code class="language-typescript">  }
+
+  /**
+   * Stops the Steve API.
+   */
+  public stop() {
+    this.#port = 0;
+    send(&#39;steve-port&#39;, 0);
+    if (this.isRunning) {
+      this.process?.kill(&#39;SIGINT&#39;);
+    }
+  }
+}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/window/dashboard.ts#L11-L34">pkg/rancher-desktop/window/dashboard.ts</a></div>
+      <pre data-start="11" data-line="16-29"><code class="language-typescript">
+  if (restoreWindow(window)) {
+    return window;
+  }
+
+  const { port } = Steve.getInstance();
+
+  if (!port) {
+    return;
+  }
+
+  window = new BrowserWindow({
+    title:  &#39;Rancher Dashboard&#39;,
+    width:  800,
+    height: 600,
+    show:   false,
+  });
+
+  window.loadURL(`http://127.0.0.1:${ port }/c/local/explorer`);
+
+  windowMapping[&#39;dashboard&#39;] = window.id;
+
+  window.once(&#39;ready-to-show&#39;, () =&gt; {
+    window?.show();</code></pre>
+    <p>Fix: read the current port first; reload stale dashboard windows on restore.</p>
+      <pre><code class="language-diff">+  const { port } = Steve.getInstance();
++  if (!port) return;
++  const url = `http://127.0.0.1:${ port }/c/local/explorer`;
++  const window = getDashboardWindow();
++  if (window &amp;&amp; window.webContents.getURL() !== url) {
++    window.loadURL(url);
++  }
+   if (restoreWindow(window)) return window;</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> <code>waitForReady</code> failure leaks the steve child and the dashboard button stays disabled <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L160-L184">pkg/rancher-desktop/backend/steve.ts</a></div>
+      <pre data-start="160" data-line="165-179"><code class="language-ts">        clearTimeout(timeout);
+        reject(new Error(`Failed to spawn Steve: ${ err.message }`, { cause: err }));
+      });
+    });
+    // Set a timeout in case Steve fails to listen to a port.
+    const portTimeout = setTimeout(() =&gt; {
+      portLatch.reject(new Error(&#39;Timed out waiting for Steve port&#39;));
+    }, 30_000);
+    try {
+      const port = await portLatch;
+      console.debug(`Steve is listening on port: ${ port }`);
+
+      await this.waitForReady(port);
+      this.#port = port;
+      send(&#39;steve-port&#39;, port);
+
+      return port;
+    } finally {
+      clearTimeout(portTimeout);
+    }
+  }
+
+  private get isRunning() {
+    const { pid, exitCode, signalCode } = this.process || { };
+</code></pre>
+    <p>If <code>waitForReady(port)</code> throws at line 172 (process unresponsive for 30 s, or <code>isRunning</code> false), <code>start()</code> rejects before line 173 stores the port and before line 174 broadcasts <code>steve-port</code>. The <code>portLatch.catch</code> handler at line 124 only fires on latch rejection — by line 172 the latch is already resolved, so the child is not killed. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/background.ts#L1273-L1275"><code>background.ts:1273-1275</code></a> catches and logs but still emits <code>k8s-check-state</code> STARTED; because no future <code>steve-port</code> event is sent, <code>DashboardOpen.vue</code>&#39;s <code>dashboardReady</code> stays false and the button never re-enables. Meanwhile a hidden steve process keeps running until the next k8s STOPPING transition (which calls <code>stop()</code> and only then kills it).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/background.ts#L1268-L1280">background.ts</a></div>
+      <pre data-start="1268" data-line="1273-1275"><code class="language-typescript">        currentImageProcessor?.relayNamespaces();
+
+        if (enabledK8s) {
+          try {
+            await Steve.getInstance().start();
+          } catch (ex) {
+            console.error(&#39;Failed to start Steve:&#39;, ex);
+          }
+        }
+      }
+
+      // Notify the tray and renderer after Steve is ready, so the dashboard
+      // button is only enabled when Steve can accept connections.</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L119-L129">pkg/rancher-desktop/backend/steve.ts</a></div>
+      <pre data-start="119" data-line="124"><code class="language-typescript">      }
+    });
+
+    // Set up a handler for the port latch erroring in case we never get to the
+    // point of waiting for it.
+    portLatch.catch((err) =&gt; {
+      console.error(err);
+      try {
+        // Kill the child process if it&#39;s still alive.
+        childProcess.kill();
+      } catch { /* ignore */ }</code></pre>
+    <p>Fix: kill the child on <code>waitForReady</code> failure so the exit handler clears state, and let <code>start()</code> reject normally. The exit handler at line 136 already zeroes <code>#port</code> and broadcasts <code>steve-port: 0</code>.</p>
+      <pre><code class="language-diff">   return port;
++} catch (err) {
++  try { childProcess.kill(); } catch { /* ignore */ }
++  throw err;
+ } finally {</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> <code>getChecksums</code> silently drops platforms missing from the upstream sidecar <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/dependencies/tools.ts#L334-L361">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="334" data-line="339-356"><code class="language-ts">    const expectedChecksum = lookupChecksum(context, this.name, archiveName);
+
+    await downloadTarGZ(steveURL, stevePath, { expectedChecksum });
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {
+    const steveURLBase = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const upstream = await fetchUpstreamChecksums(`${ steveURLBase }/steve.sha512sum`, &#39;sha512&#39;);
+    const archiveMatch = /^steve-(linux|darwin|windows)-(amd64|arm64)\.tar\.gz$/;
+
+    return Object.fromEntries((await Promise.all(Object.keys(upstream).map(async(archiveName) =&gt; {
+      if (!archiveMatch.test(archiveName)) {
+        return;
+      }
+
+      const url = `${ steveURLBase }/${ archiveName }`;
+      const checksum = await downloadAndHash(url, {
+        verify: { algorithm: &#39;sha512&#39;, expected: upstream[archiveName] },
+      });
+
+      return [archiveName, checksum] as const;
+    }))).filter(defined));
+  }
+}
+
+export class DockerProvidedCredHelpers extends GlobalDependency(GitHubDependency) {
+  readonly name = &#39;dockerProvidedCredentialHelpers&#39;;
+  readonly githubOwner = &#39;docker&#39;;</code></pre>
+    <p>The Round 1 fix replaced the previous explicit five-platform matrix with a regex that <em>filters</em> the upstream sidecar&#39;s keys but never <em>verifies</em> that every platform we ship for is present. If a future steve release omits <code>steve-windows-amd64.tar.gz</code>, <code>getChecksums</code> returns four entries and <code>rddepman</code> writes an incomplete manifest with no error. The break only surfaces later when <code>lookupChecksum</code> returns undefined during a platform build (line 334) — well after the bump PR is merged.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/dependencies/tools.ts#L329-L339">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="329" data-line="334"><code class="language-typescript">    const steveURLBase = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ context.dependencies.steve.version }`;
+    const arch = context.isM1 ? &#39;arm64&#39; : &#39;amd64&#39;;
+    const archiveName = `steve-${ context.goPlatform }-${ arch }.tar.gz`;
+    const steveURL = `${ steveURLBase }/${ archiveName }`;
+    const stevePath = path.join(context.internalDir, exeName(context, &#39;steve&#39;));
+    const expectedChecksum = lookupChecksum(context, this.name, archiveName);
+
+    await downloadTarGZ(steveURL, stevePath, { expectedChecksum });
+  }
+
+  async getChecksums(version: string): Promise&lt;Record&lt;string, Sha256Checksum&gt;&gt; {</code></pre>
+    <p>Fix: keep the regex filter as a sanity gate, but cross-check against an explicit required list.</p>
+      <pre><code class="language-diff">+ const required = [
++   &#39;steve-darwin-amd64.tar.gz&#39;, &#39;steve-darwin-arm64.tar.gz&#39;,
++   &#39;steve-linux-amd64.tar.gz&#39;,  &#39;steve-linux-arm64.tar.gz&#39;,
++   &#39;steve-windows-amd64.tar.gz&#39;,
++ ];
++ const missing = required.filter(name =&gt; !(name in upstream));
++ if (missing.length) {
++   throw new Error(`upstream sidecar missing required archives: ${ missing.join(&#39;, &#39;) }`);
++ }</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I4">
+        <span class="finding-num">I4.</span> Dead imports left behind after dashboard-server removal <span class="pill pill-claude">Claude</span><a href="#I4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/background.ts#L42-L52">background.ts</a></div>
+      <pre data-start="42" data-line="47"><code class="language-ts">import { spawnFile } from &#39;@pkg/utils/childProcess&#39;;
+import getCommandLineArgs from &#39;@pkg/utils/commandLine&#39;;
+import dockerDirManager from &#39;@pkg/utils/dockerDirManager&#39;;
+import { isDevEnv } from &#39;@pkg/utils/environment&#39;;
+import Logging, { clearLoggingDirectory, setLogLevel } from &#39;@pkg/utils/logging&#39;;
+import { getAvailablePorts } from &#39;@pkg/utils/networks&#39;;
+import { fetchMacOsVersion, getMacOsVersion } from &#39;@pkg/utils/osVersion&#39;;
+import paths from &#39;@pkg/utils/paths&#39;;
+import { protocolsRegistered, setupProtocolHandlers } from &#39;@pkg/utils/protocols&#39;;
+import { executable } from &#39;@pkg/utils/resources&#39;;
+import { jsonStringifyWithWhiteSpace } from &#39;@pkg/utils/stringify&#39;;</code></pre>
+    <p>The Round 1 cleanup removed every call to <code>getAvailablePorts</code> (background.ts no longer pre-allocates a steve port) and every reference to <code>windowMapping</code> in the certificate-error handler (the steve URLs were dropped from <code>dashboardUrls</code>), but their imports remain. Each module has exactly one occurrence of the imported symbol. ESLint flags <code>no-unused-vars</code> as warn, not error, so CI does not reject the PR. Mostly cosmetic, but <code>@pkg/window</code> has side-effecting initialization and the imports obscure grep results.</p>
+    <p>Fix: drop both imports.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>server.listen</code> Promise wrappers swallow <code>&#39;error&#39;</code> events <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/e2e/extensions.e2e.spec.ts#L290-L300">e2e/extensions.e2e.spec.ts</a></div>
+      <pre data-start="290" data-line="295"><code class="language-ts">            &#39;Content-Type&#39;:                &#39;text/plain&#39;,
+          });
+          res.end(&#39;Hello&#39;);
+        });
+        try {
+          await new Promise&lt;void&gt;(resolve =&gt; server.listen(0, &#39;127.0.0.1&#39;, resolve));
+          const address = server.address();
+          if (typeof address === &#39;string&#39; || !address) {
+            throw new Error(`Unexpected address type: ${ JSON.stringify(address) }`);
+          }
+          const url = `http://${ address.address }:${ address.port }/`;</code></pre>
+    <p><code>server.listen()</code> emits <code>&#39;error&#39;</code> asynchronously on failure (e.g., <code>EADDRINUSE</code> in the very rare case <code>0</code> cannot bind, or a permission error) and never invokes the listening callback in that path. The Promise then hangs until the test&#39;s outer timeout. Vanishingly unlikely with port <code>0</code>, but the fix is one line and the same pattern appears in both new test bodies.</p>
+    <p>Fix:</p>
+      <pre><code class="language-diff">- await new Promise&lt;void&gt;(resolve =&gt; server.listen(0, &#39;127.0.0.1&#39;, resolve));
++ await new Promise&lt;void&gt;((resolve, reject) =&gt; {
++   server.once(&#39;error&#39;, reject);
++   server.listen(0, &#39;127.0.0.1&#39;, resolve);
++ });</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>(server.address() as any).port</code> is inconsistent with the sibling test <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p>The <code>bypass CORS</code> test added in the same diff (lines 296-300) handles <code>server.address()</code> with an explicit type guard for the <code>null | string | AddressInfo</code> return type. <code>can fetch from external sources</code> uses <code>as any</code> to skip the guard. Mirror the sibling test for consistency.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/e2e/extensions.e2e.spec.ts#L291-L305">e2e/extensions.e2e.spec.ts</a></div>
+      <pre data-start="291" data-line="296-300"><code class="language-typescript">          });
+          res.end(&#39;Hello&#39;);
+        });
+        try {
+          await new Promise&lt;void&gt;(resolve =&gt; server.listen(0, &#39;127.0.0.1&#39;, resolve));
+          const address = server.address();
+          if (typeof address === &#39;string&#39; || !address) {
+            throw new Error(`Unexpected address type: ${ JSON.stringify(address) }`);
+          }
+          const url = `http://${ address.address }:${ address.port }/`;
+
+          const script = `
+            (async () =&gt; {
+              const result = await fetch(&#39;${ url }&#39;);
+              return Object.fromEntries(result.headers.entries());</code></pre>
+      <pre><code class="language-diff">- const port = (server.address() as any).port;
+- const url = `http://127.0.0.1:${ port }/`;
++ const address = server.address();
++ if (typeof address === &#39;string&#39; || !address) {
++   throw new Error(`Unexpected address type: ${ JSON.stringify(address) }`);
++ }
++ const url = `http://${ address.address }:${ address.port }/`;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Test servers omit <code>Connection: close</code>, leaving keep-alive sockets to slow <code>server.close()</code> <span class="pill pill-gemini">Gemini</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p>Node&#39;s <code>server.close()</code> waits for idle keep-alive sockets to drain. Electron&#39;s <code>fetch</code> keeps connections alive by default, so each test&#39;s <code>finally</code> may pay the socket idle timeout (a few seconds, up to the default ~5 s) before the suite advances. Not observed yet, but a per-server <code>Connection: close</code> header avoids the wait deterministically.</p>
+      <pre><code class="language-diff">  res.writeHead(200, {
+    &#39;Access-Control-Allow-Origin&#39;: &#39;http://something.invalid/&#39;,
+    &#39;Content-Type&#39;:                &#39;text/plain&#39;,
++   &#39;Connection&#39;:                  &#39;close&#39;,
+  });</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Inconsistent path alias for <code>defined</code> <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/dependencies/tools.ts#L1-L10">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="1" data-line="5"><code class="language-ts">import fs from &#39;fs&#39;;
+import os from &#39;os&#39;;
+import path from &#39;path&#39;;
+
+import { defined } from &#39;@/pkg/rancher-desktop/utils/typeUtils&#39;;
+import {
+  DownloadContext,
+  downloadAndHash,
+  fetchUpstreamChecksums,
+  getPublishedReleaseTagNames,</code></pre>
+    <p>Every other script in the repo imports the same helper as <code>@pkg/utils/typeUtils</code> (e.g., <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/populate-update-server.ts#L34"><code>scripts/populate-update-server.ts:34</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/check-api-schema.ts#L29"><code>scripts/check-api-schema.ts:29</code></a>). Both forms resolve identically through <code>tsconfig.json</code>, but mixing aliases obscures grep results.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/populate-update-server.ts#L29-L39">scripts/populate-update-server.ts</a></div>
+      <pre data-start="29" data-line="34"><code class="language-typescript">import { Octokit } from &#39;octokit&#39;;
+import yaml from &#39;yaml&#39;;
+
+import { simpleSpawn } from &#39;./simple_process&#39;;
+
+import { defined } from &#39;@pkg/utils/typeUtils&#39;;
+
+/** Read input from the environment; throws an error if unset. */
+function getInput(name: string) {
+  const result = process.env[name];
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/check-api-schema.ts#L24-L34">scripts/check-api-schema.ts</a></div>
+      <pre data-start="24" data-line="29"><code class="language-typescript">import fs from &#39;fs&#39;;
+
+import yaml from &#39;yaml&#39;;
+
+import { defaultSettings } from &#39;@pkg/config/settings&#39;;
+import { RecursiveReadonly } from &#39;@pkg/utils/typeUtils&#39;;
+
+const schemaPath = &#39;pkg/rancher-desktop/assets/specs/command-api.yaml&#39;;
+
+interface schemaObject {
+  type:                  &#39;object&#39;;</code></pre>
+      <pre><code class="language-diff">- import { defined } from &#39;@/pkg/rancher-desktop/utils/typeUtils&#39;;
++ import { defined } from &#39;@pkg/utils/typeUtils&#39;;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> <code>portTimeout</code> fires a no-op <code>portLatch.reject</code> if <code>waitForReady</code> outlives it <span class="pill pill-gemini">Gemini</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+    <p>The 30 s <code>portTimeout</code> is meant to bound the wait for the port-on-stdout latch. It is cleared in the <code>finally</code> at line 178, but only after <code>waitForReady</code> returns. If <code>waitForReady</code> takes &gt;30 s (it can, with up to 30 s of its own polling), <code>portTimeout</code> fires while the latch is already resolved — <code>portLatch.reject()</code> is a no-op on a settled latch, so no harm, but the dead timer is misleading and an empty error reaches <code>console.error</code> via the latch&#39;s <code>.catch</code> handler.</p>
+      <pre><code class="language-diff"> try {
+   const port = await portLatch;
++  clearTimeout(portTimeout);
+   console.debug(`Steve is listening on port: ${ port }`);</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> Constructor-time <code>send(&#39;steve-port&#39;, 0)</code> is dead code <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L26-L36">pkg/rancher-desktop/backend/steve.ts</a></div>
+      <pre data-start="26" data-line="31"><code class="language-ts">  private pendingStart: Promise&lt;number&gt; | undefined;
+
+  #port = 0;
+
+  private constructor() {
+    send(&#39;steve-port&#39;, 0);
+    ipcMainProxy.on(&#39;steve-port&#39;, () =&gt; {
+      send(&#39;steve-port&#39;, this.port);
+    });
+  }
+</code></pre>
+    <p><code>window.send</code> iterates <code>windowMapping</code>; the Steve singleton is constructed inside the k8s state-changed handler, before any dashboard window is registered. The renderer&#39;s initial Vuex state already defaults <code>port</code> to <code>0</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/store/steve.ts#L13-L17"><code>store/steve.ts:13-17</code></a>), so the broadcast is informationally redundant even if a renderer were listening. Drop the line or add a comment naming the scenario it protects.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/store/steve.ts#L8-L22">pkg/rancher-desktop/store/steve.ts</a></div>
+      <pre data-start="8" data-line="13-17"><code class="language-typescript">interface SteveState {
+  port: number;
+}
+
+export const state: () =&gt; SteveState = () =&gt; (
+  {
+    port: 0,
+  }
+);
+
+export const mutations = {
+  SET_PORT(state, port) {
+    state.port = port;
+  },
+} satisfies MutationsType&lt;SteveState&gt;;</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> <code>isPortReady</code> doc comment misdescribes the implementation <span class="pill pill-claude">Claude</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+    <p>The comment says we probe an endpoint &quot;that returns 404 until the schema controller has registered it.&quot; The implementation calls <code>Electron.net.fetch</code> and asserts <code>resp.ok</code> — any non-2xx response (404, 5xx, transport error) is treated identically as &quot;not ready.&quot; That matches the underlying intent, but the wording implies a 404-specific check that the code does not perform.</p>
+      <pre><code class="language-diff">- * we probe a core resource endpoint that returns 404 until the
+- * schema controller has registered it.
++ * we probe a core resource endpoint that returns 200 once the
++ * schema controller has registered it (any other status, including
++ * the 404 it returns earlier, is treated as not-yet-ready).</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> <code>Steve.process</code> is never reset to <code>undefined</code> after exit or <code>stop()</code> <span class="pill pill-claude">Claude</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>stop()</code> and the exit handler both zero <code>#port</code> but leave <code>this.process</code> pointing at the dead child. The <code>isRunning</code> getter masks this for callers because it checks <code>exitCode</code>/<code>signalCode</code>, but reading other fields of the stale <code>ChildProcess</code> (e.g., for diagnostics) returns yesterday&#39;s values. Clearing <code>this.process = undefined</code> at the same site as <code>this.#port = 0</code> keeps the two state slots in lockstep.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> <code>rddepman</code> still logs &quot;skipping creation of N pull requests&quot; after writing the manifest locally <span class="pill pill-claude">Claude</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/scripts/rddepman.ts#L250-L262">scripts/rddepman.ts</a></div>
+      <pre data-start="250" data-line="255-257"><code class="language-ts">
+    if (SKIP_PULL_REQUESTS) {
+      console.log(&#39;Forcing local changes without pull requests&#39;);
+      for (const { dependency, latestVersion } of updatesAvailable) {
+        const newChecksums = await dependency.getChecksums(latestVersion);
+        await dependency.updateManifest(latestVersion, newChecksums);
+      }
+    }
+    if (updatesAvailable.length) {
+      console.log(`Not running in CI, skipping creation of ${ updatesAvailable.length } pull requests.`);
+    }
+
+    return;</code></pre>
+    <p>When <code>RD_DEPMAN_LOCAL_CHANGES</code> is set, the manifest <em>is</em> updated; the second log line then claims the changes were skipped. The contradictory pair is the only output a contributor sees.</p>
+      <pre><code class="language-diff">-if (updatesAvailable.length) {
++if (updatesAvailable.length &amp;&amp; !SKIP_PULL_REQUESTS) {
+   console.log(`Not running in CI, skipping creation of ${ updatesAvailable.length } pull requests.`);
+ }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> <code>Steve</code> exit log prints <code>signal null</code> for clean exits <span class="pill pill-claude">Claude</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L134-L144">pkg/rancher-desktop/backend/steve.ts</a></div>
+      <pre data-start="134" data-line="139"><code class="language-ts">    });
+
+    childProcess.on(&#39;exit&#39;, (code, signal) =&gt; {
+      if (childProcess !== this.process) {
+        // A stale process has exited; ignore.
+        console.debug(`Stale steve process exited with code ${ code } and signal ${ signal }`);
+        return;
+      }
+      console.log(`Steve process exited with code ${ code } and signal ${ signal }`);
+      this.#port = 0;
+      send(&#39;steve-port&#39;, 0);</code></pre>
+    <p>A normal exit logs <code>... and signal null</code>. Suppress the null branch on the user-facing line (the stale-process and error-path log lines also share this shape):</p>
+      <pre><code class="language-diff">- console.log(`Steve process exited with code ${ code } and signal ${ signal }`);
++ console.log(`Steve process exited with code ${ code }${ signal ? ` (signal ${ signal })` : &#39;&#39; }`);</code></pre>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <p><strong>Concerns</strong></p>
+    <ul>
+      <li><strong>Single-channel request/response over IPC for the steve port (future)</strong> <span class="pill pill-claude">Claude</span>. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/store/steve.ts#L24-L32"><code>pkg/rancher-desktop/store/steve.ts:24-32</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L30-L35"><code>pkg/rancher-desktop/backend/steve.ts:30-35</code></a> use one <code>&#39;steve-port&#39;</code> channel for both directions: the renderer &quot;asks&quot; by sending it with no args, the main process broadcasts the current port back on the same channel. The contract — &quot;send-with-no-args means request; reply arrives via the broadcast&quot; — is implicit and uncommented. Two channels (<code>steve-port-get</code> for the request, <code>steve-port</code> for the broadcast) would make the direction explicit and match the existing <code>IpcMainEvents</code> / <code>IpcRendererEvents</code> type split.</li>
+      <li><strong>Dashboard window lifecycle is independent of Steve lifecycle (in-scope)</strong> <span class="pill pill-codex">Codex</span>. I1 is the symptom of a missing rule: nothing closes or reloads the dashboard <code>BrowserWindow</code> when Steve stops. A <code>Steve.on(&#39;stop&#39;)</code>-style hook that closes (or marks-stale) the dashboard window would close the class of bugs that the per-call URL-check fix only patches one site of.</li>
+    </ul>
+    <p><strong>Strengths</strong></p>
+    <ul>
+      <li>Retiring the in-process Express server and the bespoke <code>proxyUtils.ts</code> removes a known-difficult <code>onProxyReqWs</code> path and a non-trivial chunk of IPC surface <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>.</li>
+      <li>The Round 1 fix package — <code>pendingStart</code> guard, port-not-stored-until-ready, dashboard button gated on <code>port &gt; 0</code>, e2e <code>waitForEvent</code> registered before click — addresses every Round 1 important finding with a clean, narrowly-scoped change <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span>.</li>
+      <li><code>Latch&lt;number&gt;</code> + port-on-stdout + Vuex broadcast is a clean, debuggable replacement for the prior fixed-port <code>/api/steve-port</code> HTTP route <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ol>
+      <li><strong>Steve restart mid-session (I1).</strong> Stop Kubernetes with the dashboard window open, restart, click the dashboard button: verify the existing window reloads at the new port (or is replaced). The PR&#39;s dashboard e2e covers only the cold-open path.</li>
+      <li><em></em><code>waitForReady</code> failure (I2).<em></em> A unit test that stubs <code>Electron.net.fetch</code> to never return 200 and asserts that <code>start()</code> rejects, the child is killed, and <code>steve-port: 0</code> is broadcast. Today the only release path is the next k8s STOPPING event.</li>
+      <li><em></em><code>getChecksums</code> against an incomplete sidecar (I3).<em></em> A fixture sidecar missing one platform should cause <code>getChecksums</code> to throw, not silently return four entries.</li>
+      <li><em></em>Concurrent <code>start()</code> invocations.<em></em> The <code>pendingStart</code> guard at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L55-L64"><code>steve.ts:55-64</code></a> exercised only incidentally; a parallel-call unit test would lock in the contract.</li>
+      <li><strong>Steve crash mid-use.</strong> Kill the steve child while the dashboard window is open and assert the button disables within a bounded time.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L107-L108"><code>pkg/rancher-desktop/backend/steve.ts:107-108</code></a> documents the upstream protocol contract (&quot;port to stdout then close&quot;). Promote this to the class docstring so future contributors do not need to find it in the middle of <code>startInternal</code>.</li>
+      <li>The <code>isPortReady</code> JSDoc is stale relative to the implementation (see S7).</li>
+      <li><code>RD_DEPMAN_LOCAL_CHANGES</code> is documented inline above the <code>SKIP_PULL_REQUESTS</code> constant (Round 1 S5 — addressed). No further changes needed.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><code>4cb6286ff Address (AI) review comments</code> is a fixup commit that touches the same files as <code>be9ea84794 Use steve with embedded dashboard</code> (most of <code>backend/steve.ts</code>, <code>window/dashboard.ts</code>, <code>entry/store.ts</code>, <code>extensions.e2e.spec.ts</code>, <code>dashboard.e2e.spec.ts</code>, <code>tools.ts</code>, <code>rddepman.ts</code>). Each bullet in the commit body maps cleanly back into one of the feature commits. Keeping it separate during this review round is fine; recommend squashing before merge so the history reads as one logical change.</p>
+    <p><code>17ba82686 Bump steve to 0.1.0-beta9.2</code> was originally separated to keep the bisect window narrow when the steve fork landed. That window is closed now (the fork has shipped), so this commit could fold into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/be9ea84794"><code>be9ea84794</code></a>. Defensible either way.</p>
+    <p><code>bf3a9ed91 rddepman: Allow forcing local changes</code> is independent and could ship in its own PR; the PR description acknowledges this explicitly, so it is a deliberate scope choice rather than oversight.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4cb6286ffa9a33a9be489e563b18e6379769f75f/pkg/rancher-desktop/backend/steve.ts#L77-L80"><code>pkg/rancher-desktop/backend/steve.ts:77-80</code></a> documents the &quot;process running, port unset&quot; state as an intentional corruption-recovery path with <code>console.warn</code> + <code>stop()</code> + restart. The handling is deliberate.</li>
+      <li>The PR description originally noted the change was draft-blocked on a steve release; the author has explicitly resolved this in the description.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>None. The only PR comment is the round-1 AI review URL posted by @jandubois, addressed by commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4cb6286ff"><code>4cb6286ff</code></a>.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude produced the broadest cross-file coverage and uniquely caught the two dead-import regressions (I4, both confirmed) and the path-alias inconsistency (S4). Its prose framing of the <code>pendingStart</code> finally race (raised as an Important) was the weakest finding of the set — analysis showed the behavior is equivalent to the proposed single-<code>.finally</code> form (success path: short-circuit returns existing port; failure path: restart-stuck-Steve is the desired behavior), so it was dropped during consolidation. Of the three reviewers it was the only one to revisit Round 1 polish suggestions and surface S9/S10 (rddepman log line, signal-null log) as still-unaddressed; that diligence is the differentiator on round-N reviews.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex was the most disciplined again — 2 important, 1 suggestion, and both important findings survived consolidation as the report&#39;s I1 and contribution to I2. I1 (stale dashboard window) is the highest-value finding of the round: a real user-visible regression that the Round 1 fixes did not address. Its I2 framing (port not published → button stuck) complemented Gemini&#39;s I1 (process leaked); the underlying root cause is the same and the consolidation merges them. Coverage list was complete with no skipped files.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini caught the <code>waitForReady</code> failure leak (I1, consolidated into report I2) where Codex caught the visible symptom; the combination produced a clean root-cause finding. It also uniquely flagged the <code>server.listen</code> Promise wrapper (S1) and the keep-alive teardown risk (S3 — downgraded from its I2 to a suggestion since the symptom has not been observed). Gemini did not run <code>git blame</code> (daily quota); regression labels were correct in this PR but should be sanity-checked against the merge-base on larger diffs.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>10m 37s</td><td>7m 26s</td><td>3m 12s</td></tr>
+        <tr><td>Findings</td><td>2I 5S</td><td>2I 1S</td><td>1I 3S</td></tr>
+        <tr><td>Tool calls</td><td>62 (Bash 36, Read 26)</td><td>74 (shell 74)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>1</td><td>2</td></tr>
+        <tr><td>Files reviewed</td><td>25</td><td>25</td><td>25</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2I 5S</strong></td><td><strong>2I 1S</strong></td><td><strong>1I 3S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>2</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation:</strong></p>
+    <ul>
+      <li>Claude I2 (<code>pendingStart</code> finally race) → dropped during consolidation (behavior is equivalent to the proposed fix; success-path is short-circuited, failure-path triggers desired restart).</li>
+      <li>Claude S6 (dashboard window port race) → dropped as subsumed by Codex I1 (the concrete restart-induced regression covers the same surface with a real reproducer).</li>
+      <li>Gemini I2 (HTTP keep-alive teardown hang) → downgraded to suggestion S3 (not observed; default Node keep-alive timeout caps the wait at a few seconds, and the fix is one header).</li>
+    </ul>
+    <p>Codex provided the highest-value finding (the I1 stale-window regression); Gemini provided the most concrete root-cause framing for I2; Claude provided the broadest coverage and the only diligence on prior-round polish.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>When a previous round&#39;s fix replaces an explicit enumeration with a filter (regex, predicate, allow-list expressed declaratively), check whether the filter still enforces the <em>completeness</em> the enumeration did. A filter accepts what matches; an enumeration asserts what must be present. Add to the Correctness dimension&#39;s &quot;Enumeration symmetry&quot; pattern: a regression that converts &quot;iterate required items, check each exists&quot; into &quot;iterate available items, keep matches&quot; silently weakens the required-set guarantee even when every individual filter is correct.</li>
+      <li>When a PR introduces a long-lived window or surface that depends on a backend resource (port, socket, certificate) whose value can change across a stop/start cycle, enumerate every read of that resource across the window&#39;s lifecycle — including the restore/reuse path. The bug shape is reliable: the cold-open path picks up the new value, the restore path replays the cached one. Add to the Correctness dimension: &quot;When a singleton&#39;s lifecycle is dynamic (start/stop cycle resets a value), trace every read across reuse paths — focus, restore, re-show — not just the create path.&quot;</li>
+    </ul>
+    <p><strong>Repo context updates</strong></p>
+    <ul>
+      <li>Add to <code>deep-review-context.md</code>: &quot;When reviewing changes that affect the dashboard <code>BrowserWindow</code> or <code>Steve</code> lifecycle, verify that the dashboard window is reloaded or closed on every Steve stop/restart. The dashboard webapp runs in its own <code>BrowserWindow</code> that does NOT observe the renderer&#39;s Vuex <code>steve-port</code> IPC — the cold-open path reads the current port, but the <code>restoreWindow</code> path in <code>pkg/rancher-desktop/window/dashboard.ts</code> reuses the cached URL. Treat the dashboard window as a sink for stop-cycle invalidation, not a passive observer of Steve state.&quot;</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
