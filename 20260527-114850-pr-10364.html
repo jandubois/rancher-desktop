@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260527-114850-pr-10364</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260527-114850-pr-10364</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-05-27 11:48</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/Nino-K">@Nino-K</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10364" class="gh-ref" data-title="Skip stopped WSL distros during integration sync" data-state="open" data-type="pr">#10364</a> — Skip stopped WSL distros during integration sync</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66e252bfb"><code>66e252bfb</code></a> Skip stopped WSL distros during integration sync</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.7 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; gate stopped-but-enabled distros on <code>dockerSocketProxyReason</code> (I1), extend the running-distro guard to <code>verifyAllDistrosKubeConfig</code> (I2), and memoize <code>runningDistros</code> per call (I3).</td></tr>
+      <tr><td>Wall-clock time</td><td><code>14 min 59 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR introduces a <code>runningDistros</code> getter (<code>wsl --list --running --quiet</code>) and uses it to filter <code>sync()</code> and <code>getStateForIntegration()</code> so stopped distros are not started just to query them. The fix is well-scoped, but it leaves three gaps: enabled-but-stopped distros are still started during initial sync when the keepalive proxy cannot run yet (I1), the <code>verifyAllDistrosKubeConfig</code> diagnostic still execs into stopped distros (I2), and <code>listIntegrations</code> runs <code>wsl --list --running</code> once per distro instead of once per call (I3).</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Enabled stopped distros can still be started without a keepalive proxy <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L197-L213">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="197" data-line="202-208"><code class="language-ts">        console.error(`Could not determine kubeconfig: ${ error } - Kubernetes configuration will not be updated.`);
+        this.diagnostic({ key: &#39;kubeconfig&#39;, error });
+        kubeconfigPath = undefined;
+      }
+
+      const runningDistros = await this.runningDistros;
+      await Promise.all([
+        this.syncHostSocketProxy(),
+        this.syncHostDockerPluginConfig(),
+        ...(await this.supportedDistros)
+          .filter(distro =&gt; runningDistros.has(distro.name) || this.settings.WSL?.integrations?.[distro.name] === true)
+          .map(distro =&gt; this.syncDistro(distro.name, kubeconfigPath)),
+      ]);
+    } catch (ex) {
+      console.error(`Integration sync: Error: ${ ex }`);
+    } finally {
+      mainEvents.emit(&#39;integration-update&#39;, await this.listIntegrations());</code></pre>
+    <p>The filter treats <code>settings.WSL.integrations[distro] === true</code> as enough to include a stopped distro, but that is only safe when the keepalive proxy can start. <code>syncDistroSocketProxy</code> (line 403) refuses to start the proxy whenever <code>dockerSocketProxyReason</code> is set (lines 383-393: quitting, not enforcing, <code>!backendReady</code>, non-Moby). The other <code>syncDistro*</code> helpers still call <code>execCommand({ distro }, ...)</code>, which runs <code>wsl --distribution X --exec ...</code> and starts the distro. With no proxy open, WSL idle-terminates ~30s later and reproduces <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10049" class="gh-ref" data-title="WSLInterop binfmt entry disappears when a systemd-enabled WSL distro terminates" data-state="open" data-type="issue">#10049</a>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L378-L408">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="378" data-line="383-403"><code class="language-typescript">
+  /**
+   * Get the reason that the docker socket should not run; if it _should_ run,
+   * returns undefined.
+   */
+  get dockerSocketProxyReason(): string | undefined {
+    if (this.quitting) {
+      return &#39;quitting Rancher Desktop&#39;;
+    } else if (!this.enforcing) {
+      return &#39;not enforcing&#39;;
+    } else if (!this.backendReady) {
+      return &#39;backend not ready&#39;;
+    } else if (this.settings.containerEngine?.name !== ContainerEngine.MOBY) {
+      return `unsupported container engine ${ this.settings.containerEngine?.name }`;
+    }
+  }
+
+  /**
+   * syncDistroSocketProxy ensures that the background process for the given
+   * distribution is started or stopped, as desired.
+   * @param distro The distribution to manage.
+   * @param state Whether integration is enabled for the given distro.
+   */
+  protected async syncDistroSocketProxy(distro: string, state: boolean) {
+    try {
+      const shouldRun = state &amp;&amp; !this.dockerSocketProxyReason;
+
+      console.debug(`Syncing ${ distro } socket proxy: ${ shouldRun ? &#39;should&#39; : &#39;should not&#39; } run.`);
+      if (shouldRun) {
+        const linuxExecutable = await this.getLinuxToolPath(distro, executable(&#39;wsl-helper-linux&#39;));
+        const logStream = Logging[`wsl-helper.${ distro }`];</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/background.ts#L291"><code>background.ts:291</code></a> calls <code>integrationManager.enforce()</code> — which calls <code>sync()</code> — <em>before</em> <code>startBackend()</code> at line 321 sets <code>backendReady = true</code>. A user with a stopped, integration-enabled distro hits the binfmt clearing on every cold start.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/background.ts#L286-L296">background.ts</a></div>
+      <pre data-start="286" data-line="291"><code class="language-typescript">    await httpCredentialHelperServer.init();
+
+    await initUI();
+    await checkForBackendLock();
+    await setPathManager(cfg.application.pathManagementStrategy);
+    await integrationManager.enforce();
+
+    mainEvents.emit(&#39;settings-update&#39;, cfg);
+
+    // Set up the updater; we may need to quit the app if an update is already
+    // queued.</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L316-L326">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="316" data-line="321"><code class="language-typescript">      {
+        env:         opts.env,
+        encoding:    opts.encoding ?? &#39;utf-8&#39;,
+        stdio:       [&#39;ignore&#39;, logStream, logStream],
+        windowsHide: true,
+      },
+    );
+  }
+
+  /**
+   * Runs the `wsl.exe` command, either on the host or in a specified</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff"> const runningDistros = await this.runningDistros;
++const canKeepStoppedDistroAlive = !this.dockerSocketProxyReason;
+ ...
+-    .filter(distro =&gt; runningDistros.has(distro.name) || this.settings.WSL?.integrations?.[distro.name] === true)
++    .filter(distro =&gt; runningDistros.has(distro.name) ||
++      (canKeepStoppedDistroAlive &amp;&amp; this.settings.WSL?.integrations?.[distro.name] === true))</code></pre>
+    <p>A later <code>k8s-check-state</code> event fires another sync once the backend is ready; the enabled stopped distro then gets included and the proxy starts to hold it open.</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> <code>verifyAllDistrosKubeConfig</code> still execs into stopped distros <span class="pill pill-claude">Claude</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L514-L553">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="514" data-line="519-548"><code class="language-ts">  /**
+   * verifyAllDistrosKubeConfig loops through all the available distros
+   * and checks if the kubeconfig can be managed; if any distro fails
+   * the check, an exception is thrown.
+   */
+  async verifyAllDistrosKubeConfig() {
+    const distros = await this.supportedDistros;
+
+    await Promise.all(distros.map(async(distro) =&gt; {
+      await this.verifyDistroKubeConfig(distro.name);
+    }));
+  }
+
+  /**
+   * verifyDistroKubeConfig calls the wsl-helper kubeconfig --verify per distro.
+   * It determines the condition of the kubeConfig from the returned error code.
+   */
+  protected async verifyDistroKubeConfig(distro: string) {
+    try {
+      const wslHelper = await this.getLinuxToolPath(distro, executable(&#39;wsl-helper-linux&#39;));
+
+      await this.execCommand({ distro }, wslHelper, &#39;kubeconfig&#39;, &#39;--verify&#39;);
+    } catch (cause: any) {
+      // Only throw for a specific error code 1, since we control that from the
+      // kubeconfig --verify command. The logic here is to bubble up this error
+      // so that the diagnostic is very specific to this issue. Any other errors
+      // are captured as log messages.
+      if (cause &amp;&amp; &#39;code&#39; in cause &amp;&amp; cause.code === 1) {
+        throw new Error(`The kubeConfig contains non-Rancher Desktop configuration in distro ${ distro }`, { cause });
+      } else {
+        console.error(`Verifying kubeconfig in distro ${ distro } failed: ${ cause }`);
+      }
+    }
+    console.debug(`Verified kubeconfig in the following distro: ${ distro }`);
+  }
+
+  protected async syncDistroKubeconfig(distro: string, kubeconfigPath: string | undefined, state: boolean) {
+    if (!kubeconfigPath) {
+      console.debug(`Skipping syncing ${ distro } kubeconfig: no kubeconfig found`);
+      this.diagnostic({ key: &#39;kubeconfig&#39;, distro });</code></pre>
+    <p><code>verifyDistroKubeConfig</code> runs <code>execCommand({ distro }, wslHelper, &#39;kubeconfig&#39;, &#39;--verify&#39;)</code> (line 535) — the same <code>wsl --exec</code>-against-foreign-distro pattern that triggers the binfmt teardown. It is invoked by the <code>VERIFY_WSL_INTEGRATION_KUBECONFIG</code> diagnostic checker (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/main/diagnostics/kubeConfigSymlink.ts#L12"><code>pkg/rancher-desktop/main/diagnostics/kubeConfigSymlink.ts:12</code></a>), wired up in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/main/diagnostics/diagnostics.ts#L61"><code>pkg/rancher-desktop/main/diagnostics/diagnostics.ts:61</code></a>. Whenever diagnostics run, every supported stopped distro is started and idle-terminates, reproducing <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10049" class="gh-ref" data-title="WSLInterop binfmt entry disappears when a systemd-enabled WSL distro terminates" data-state="open" data-type="issue">#10049</a> outside the integration-sync path. The PR&#39;s stated goal is &quot;skip stopped WSL distros,&quot; but this sibling call site is left unguarded.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/main/diagnostics/kubeConfigSymlink.ts#L7-L17">pkg/rancher-desktop/main/diagnostics/kubeConfigSymlink.ts</a></div>
+      <pre data-start="7" data-line="12"><code class="language-typescript">
+async function verifyKubeConfigSymlink(): Promise&lt;boolean&gt; {
+  const integrationManager = WindowsIntegrationManager.getInstance();
+
+  try {
+    await integrationManager.verifyAllDistrosKubeConfig();
+
+    return true;
+  } catch (error: any) {
+    console.error(`Error verifying kubeconfig symlinks: ${ error.message }`);
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/main/diagnostics/diagnostics.ts#L56-L66">pkg/rancher-desktop/main/diagnostics/diagnostics.ts</a></div>
+      <pre data-start="56" data-line="61"><code class="language-typescript">        const imports = (await Promise.all([
+          import(&#39;./connectedToInternet&#39;),
+          import(&#39;./dockerCliSymlinks&#39;),
+          import(&#39;./dockerContext&#39;),
+          import(&#39;./integrationsWindows&#39;),
+          import(&#39;./kubeConfigSymlink&#39;),
+          import(&#39;./kubeContext&#39;),
+          import(&#39;./kubeVersionsAvailable&#39;),
+          import(&#39;./limaDarwin&#39;),
+          import(&#39;./limaOverrides&#39;),
+          import(&#39;./mobyImageStore&#39;),</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff"> async verifyAllDistrosKubeConfig() {
+   const distros = await this.supportedDistros;
++  const running = await this.runningDistros;
+-  await Promise.all(distros.map(async(distro) =&gt; {
+-    await this.verifyDistroKubeConfig(distro.name);
+-  }));
++  await Promise.all(distros
++    .filter(distro =&gt; running.has(distro.name))
++    .map(distro =&gt; this.verifyDistroKubeConfig(distro.name)));
+ }</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> <code>listIntegrations</code> issues N parallel <code>wsl --list --running</code> invocations <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L678-L712">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="678" data-line="683-707"><code class="language-ts">    } catch (ex) {
+      console.error(`Failed to mark integration for ${ distro }:`, ex);
+    }
+  }
+
+  async listIntegrations(): Promise&lt;Record&lt;string, boolean | string&gt;&gt; {
+    // Get the results in parallel
+    const distros = await this.nonBlacklistedDistros;
+    const states = distros.map(d =&gt; (async() =&gt; [d.name, await this.getStateForIntegration(d)] as const)());
+
+    return Object.fromEntries(await Promise.all(states));
+  }
+
+  /**
+   * Tells the caller what the state of a distro is. For more information see
+   * the comment on `IntegrationManager.listIntegrations`.
+   */
+  protected async getStateForIntegration(distro: WSLDistro): Promise&lt;boolean | string&gt; {
+    if (distro.version !== 2) {
+      console.log(`WSL distro &quot;${ distro.name }&quot;: is version ${ distro.version }`);
+
+      return `Rancher Desktop can only integrate with v2 WSL distributions (this is v${ distro.version }).`;
+    }
+    // Skip starting stopped distros just to read their state; return the
+    // settings value directly instead (the UI will reflect it correctly).
+    const runningDistros = await this.runningDistros;
+
+    if (!runningDistros.has(distro.name)) {
+      return this.settings.WSL?.integrations?.[distro.name] ?? false;
+    }
+    try {
+      const exe = await this.getLinuxToolPath(distro.name, executable(&#39;wsl-helper-linux&#39;));
+      const stdout = await this.captureCommand(
+        { distro: distro.name },
+        exe, &#39;wsl&#39;, &#39;integration&#39;, &#39;state&#39;, &#39;--mode=show&#39;);</code></pre>
+    <p>The new getter <code>runningDistros</code> (line 654) has no memoization — every property access spawns a fresh <code>wsl --list --running --quiet</code> process. <code>getStateForIntegration</code> awaits it once per call (line 703), and <code>listIntegrations</code> invokes <code>getStateForIntegration</code> in parallel for every non-blacklisted distro. On a host with N distros that is N concurrent <code>wsl.exe</code> processes for a single state refresh. <code>sync()</code> then calls <code>listIntegrations</code> from its <code>finally</code> block (line 213), so a single sync incurs N+1 invocations.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L208-L218">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="208" data-line="213"><code class="language-typescript">          .map(distro =&gt; this.syncDistro(distro.name, kubeconfigPath)),
+      ]);
+    } catch (ex) {
+      console.error(`Integration sync: Error: ${ ex }`);
+    } finally {
+      mainEvents.emit(&#39;integration-update&#39;, await this.listIntegrations());
+      // TypeScript is being too smart and thinking we can only be ACTIVE here;
+      // but that may be set from concurrent calls to sync().
+      const currentState: SyncState = this.syncState as any;
+
+      switch (currentState.state) {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L649-L659">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="649" data-line="654"><code class="language-typescript">  /**
+   * Returns a set of WSL distro names that are currently in Running state.
+   * Used to avoid starting stopped distros just to query or sync them,
+   * which would trigger WSL&#39;s idle-termination and clear binfmt_misc entries.
+   */
+  protected get runningDistros(): Promise&lt;Set&lt;string&gt;&gt; {
+    return (async() =&gt; {
+      try {
+        const output = await this.captureCommand({ encoding: &#39;utf16le&#39; }, &#39;--list&#39;, &#39;--running&#39;, &#39;--quiet&#39;);
+        const names = output
+          .split(/\r?\n/g)</code></pre>
+    <p>Gemini rated this Critical; the impact is wasted CPU and an avoidable race on slow hosts rather than a correctness break, so Important is the right level.</p>
+    <p>Fix: hoist the query into the caller and pass the snapshot down.</p>
+      <pre><code class="language-diff"> async listIntegrations(): Promise&lt;Record&lt;string, boolean | string&gt;&gt; {
+-  const distros = await this.nonBlacklistedDistros;
+-  const states  = distros.map(d =&gt; (async() =&gt; [d.name, await this.getStateForIntegration(d)] as const)());
++  const distros = await this.nonBlacklistedDistros;
++  const running = await this.runningDistros;
++  const states  = distros.map(d =&gt; (async() =&gt; [d.name, await this.getStateForIntegration(d, running)] as const)());
+   return Object.fromEntries(await Promise.all(states));
+ }</code></pre>
+    <p>Accept the set as an optional second argument to <code>getStateForIntegration</code>; <code>sync()</code> can pass the same snapshot through to its own <code>listIntegrations</code> call.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Pre-compute the enabled-distro set <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L201-L213">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="201" data-line="206-208"><code class="language-ts">
+      const runningDistros = await this.runningDistros;
+      await Promise.all([
+        this.syncHostSocketProxy(),
+        this.syncHostDockerPluginConfig(),
+        ...(await this.supportedDistros)
+          .filter(distro =&gt; runningDistros.has(distro.name) || this.settings.WSL?.integrations?.[distro.name] === true)
+          .map(distro =&gt; this.syncDistro(distro.name, kubeconfigPath)),
+      ]);
+    } catch (ex) {
+      console.error(`Integration sync: Error: ${ ex }`);
+    } finally {
+      mainEvents.emit(&#39;integration-update&#39;, await this.listIntegrations());</code></pre>
+    <p>@mook-as asked for this in <a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10364#discussion_r3312893974">discussion r3312893974</a> — mirror the <code>Set</code> shape used for <code>runningDistros</code> so the filter reads as a union of two set memberships.</p>
+      <pre><code class="language-diff">+const enabledDistros = new Set(
++  Object.entries(this.settings.WSL?.integrations ?? {})
++    .filter(([, enabled]) =&gt; enabled === true)
++    .map(([name]) =&gt; name));
+ const runningDistros = await this.runningDistros;
+ ...
+-    .filter(distro =&gt; runningDistros.has(distro.name) || this.settings.WSL?.integrations?.[distro.name] === true)
++    .filter(distro =&gt; runningDistros.has(distro.name) || enabledDistros.has(distro.name))</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Use <code>WSL_UTF8=1</code> instead of <code>utf16le</code> decoding <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L652-L662">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="652" data-line="657"><code class="language-ts">   * which would trigger WSL&#39;s idle-termination and clear binfmt_misc entries.
+   */
+  protected get runningDistros(): Promise&lt;Set&lt;string&gt;&gt; {
+    return (async() =&gt; {
+      try {
+        const output = await this.captureCommand({ encoding: &#39;utf16le&#39; }, &#39;--list&#39;, &#39;--running&#39;, &#39;--quiet&#39;);
+        const names = output
+          .split(/\r?\n/g)
+          .map(x =&gt; x.trim())
+          .filter(x =&gt; x);
+</code></pre>
+    <p>@mook-as flagged this in <a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10364#discussion_r3312982822">discussion r3312982822</a>. The repo already uses <code>WSL_UTF8=1</code> in <code>pkg/rancher-desktop/main/diagnostics/wslDistros.ts</code>, <code>src/go/rdctl/pkg/wsl/wsl_windows.go</code>, and <code>src/go/wsl-helper/pkg/wsl-utils/run_windows.go</code>. The UTF-16LE path also yields a leading <code>﻿</code> BOM that the new parser only swallows because <code>String.prototype.trim</code> removes ZWNBSP per the ECMAScript spec — easy to regress on. The pre-existing <code>nonBlacklistedDistros</code> getter (line 621) carries the same shape but is out of scope.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L616-L626">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="616" data-line="621"><code class="language-typescript">  protected get nonBlacklistedDistros(): Promise&lt;WSLDistro[]&gt; {
+    return (async() =&gt; {
+      let wslOutput: string;
+
+      try {
+        wslOutput = await this.captureCommand({ encoding: &#39;utf16le&#39; }, &#39;--list&#39;, &#39;--verbose&#39;);
+      } catch (error: any) {
+        console.error(`Error listing distros: ${ error }`);
+
+        return Promise.resolve([]);
+      }</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Tests do not cover the UTF-16LE BOM in <code>runningDistros</code> output <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p>The new tests mock plain ASCII (<code>&#39;Ubuntu\r\nMyDistro\r\n&#39;</code>), but the real <code>captureCommand({ encoding: &#39;utf16le&#39; }, ...)</code> path produces a leading <code>﻿</code> BOM. The parser relies on <code>trim()</code> stripping it. Add a BOM-prefixed mock input to pin the behavior — moot if S2 is adopted.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/__tests__/windowsIntegrationManager.spec.ts#L55-L106">pkg/rancher-desktop/integrations/__tests__/windowsIntegrationManager.spec.ts</a></div>
+      <pre data-start="55" data-line="60-101"><code class="language-ts">      expect(distros).toHaveLength(1);
+      expect(distros).not.toEqual(expect.arrayContaining([expect.objectContaining({ version: 1 })]));
+    });
+  });
+
+  describe(&#39;runningDistros&#39;, () =&gt; {
+    it(&#39;should return a set of running distro names&#39;, async() =&gt; {
+      captureCommandMock.mockImplementation((_opts: any, ...args: string[]) =&gt; {
+        if (args.includes(&#39;--running&#39;)) {
+          return &#39;Ubuntu\r\nMyDistro\r\n&#39;;
+        }
+
+        return wslOutput;
+      });
+
+      const running = await integrationManager[&#39;runningDistros&#39;];
+
+      expect(running).toEqual(new Set([&#39;Ubuntu&#39;, &#39;MyDistro&#39;]));
+    });
+
+    it(&#39;should return an empty set when no distros are running&#39;, async() =&gt; {
+      captureCommandMock.mockImplementation((_opts: any, ...args: string[]) =&gt; {
+        if (args.includes(&#39;--running&#39;)) {
+          return &#39;&#39;;
+        }
+
+        return wslOutput;
+      });
+
+      const running = await integrationManager[&#39;runningDistros&#39;];
+
+      expect(running).toEqual(new Set());
+    });
+
+    it(&#39;should return an empty set when the command fails&#39;, async() =&gt; {
+      captureCommandMock.mockImplementation((_opts: any, ...args: string[]) =&gt; {
+        if (args.includes(&#39;--running&#39;)) {
+          throw new Error(&#39;wsl.exe not found&#39;);
+        }
+
+        return wslOutput;
+      });
+
+      const running = await integrationManager[&#39;runningDistros&#39;];
+
+      expect(running).toEqual(new Set());
+    });
+  });
+
+  describe(&#39;getStateForIntegration&#39;, () =&gt; {
+    it(&#39;should return a string explaining that only v2 distros are supported&#39;, async() =&gt; {
+      const distro = new WSLDistro(&#39;Ubuntu&#39;, 1);</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Comment in <code>getStateForIntegration</code> overstates UI consistency <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L696-L712">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="696" data-line="701-707"><code class="language-ts">    if (distro.version !== 2) {
+      console.log(`WSL distro &quot;${ distro.name }&quot;: is version ${ distro.version }`);
+
+      return `Rancher Desktop can only integrate with v2 WSL distributions (this is v${ distro.version }).`;
+    }
+    // Skip starting stopped distros just to read their state; return the
+    // settings value directly instead (the UI will reflect it correctly).
+    const runningDistros = await this.runningDistros;
+
+    if (!runningDistros.has(distro.name)) {
+      return this.settings.WSL?.integrations?.[distro.name] ?? false;
+    }
+    try {
+      const exe = await this.getLinuxToolPath(distro.name, executable(&#39;wsl-helper-linux&#39;));
+      const stdout = await this.captureCommand(
+        { distro: distro.name },
+        exe, &#39;wsl&#39;, &#39;integration&#39;, &#39;state&#39;, &#39;--mode=show&#39;);</code></pre>
+    <p>The function previously read the in-distro marker file, which can disagree with settings (mid-sync crash, manual marker deletion, externally edited settings, marker left from a prior install). Naming the trigger keeps future readers from chasing a phantom consistency bug.</p>
+      <pre><code class="language-diff">-    // Skip starting stopped distros just to read their state; return the
+-    // settings value directly instead (the UI will reflect it correctly).
++    // Reading the marker file requires `wsl --exec` against the target distro,
++    // which would start a stopped distro and (for systemd-enabled distros)
++    // trigger the binfmt teardown described in #10049. Trust the settings
++    // value for stopped distros; any stale marker is reconciled by
++    // markIntegration the next time the distro is running.</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Opaque empty-set fallback in <code>runningDistros</code> skips teardown on transient <code>wsl.exe</code> failure <span class="pill pill-gemini">Gemini</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L659-L673">pkg/rancher-desktop/integrations/windowsIntegrationManager.ts</a></div>
+      <pre data-start="659" data-line="664-668"><code class="language-ts">          .split(/\r?\n/g)
+          .map(x =&gt; x.trim())
+          .filter(x =&gt; x);
+
+        return new Set(names);
+      } catch (error) {
+        console.error(`Error listing running distros: ${ error }`);
+
+        return new Set&lt;string&gt;();
+      }
+    })();
+  }
+
+  protected async markIntegration(distro: string, state: boolean): Promise&lt;void&gt; {
+    try {</code></pre>
+    <p>If <code>wsl --list --running --quiet</code> fails for a non-empty reason (transient WSL service hiccup), the empty set makes <code>sync()</code> skip every running-but-not-explicitly-enabled distro. A distro the user just disabled (settings=false, currently running) would not get <code>syncDistroSocketProxy(_, false)</code> called, so its docker socket proxy keeps running until the next successful sync. The leak self-heals on the next sync but is worth a log line distinguishing &quot;no distros running&quot; from &quot;wsl.exe errored&quot; so operators can diagnose.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <p><strong>Concerns</strong></p>
+    <ul>
+      <li><strong>Property getters that execute subprocesses</strong> (in-scope) <span class="pill pill-gemini">Gemini</span> <span class="pill pill-claude">Claude</span>: <code>runningDistros</code> (and the pre-existing <code>nonBlacklistedDistros</code>) are property getters that fork <code>wsl.exe</code>. Property access reads as cheap and side-effect-free, but each <code>await this.runningDistros</code> spawns a process and there is no memoization. The N+1-invocation pattern flagged in I3 is the direct consequence. Refactoring to explicit <code>async getRunningDistros()</code> (or a memoize-per-sync wrapper) would make the cost visible at call sites and remove an entire class of accidental fan-out bugs.</li>
+      <li><strong>One of three exec-into-distro call sites left unguarded</strong> (in-scope) <span class="pill pill-claude">Claude</span>: The PR fixes <code>sync()</code> and <code>getStateForIntegration()</code> but not <code>verifyAllDistrosKubeConfig</code> (I2). Closing the whole class in this PR is a few lines and keeps the fix coherent.</li>
+      <li><strong>Race between the running-distros check and the exec</strong> (future): After <code>runningDistros</code> resolves, a distro can idle-terminate before <code>syncDistro</code> reaches it. The window is small but non-zero. A retry-or-skip path when the subsequent <code>wsl --exec</code> discovers the distro stopped would close it.</li>
+      <li><strong>The &quot;trust settings for stopped distros&quot; path is silent</strong> (future) <span class="pill pill-claude">Claude</span>: A <code>console.debug</code> breadcrumb would help operators distinguish &quot;marker said X&quot; from &quot;we did not read the marker because the distro was stopped&quot; when triaging integration logs.</li>
+    </ul>
+    <p><strong>Strengths</strong></p>
+    <ul>
+      <li><code>wsl --list --running --quiet</code> is the right primitive — observes state without creating a session in the target distro <span class="pill pill-codex">Codex</span>.</li>
+      <li><code>runningDistros</code> returns an empty set on error rather than throwing, which keeps the legacy &quot;consider all distros&quot; behavior when the listing itself fails. Defaulting in the safe direction is right (see S5 for the related observability gap) <span class="pill pill-claude">Claude</span>.</li>
+      <li>The new tests mock by argument matching (<code>if (args.includes(&#39;--running&#39;))</code>) instead of re-mocking the whole module, which preserves the existing <code>nonBlacklistedDistros</code>/<code>supportedDistros</code> tests unchanged <span class="pill pill-claude">Claude</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Coverage is good for the new getter (running, empty, throw) and the new early-return in <code>getStateForIntegration</code> (stopped+enabled, stopped+missing-from-settings). Ranked gaps:</p>
+    <ol>
+      <li>The new filter in <code>sync()</code> itself is not tested end-to-end — no test verifies that stopped+disabled distros are skipped, that running+disabled distros are still passed through <code>syncDistro</code> for teardown, or that stopped+enabled distros remain included so the proxy can start them (covers I1 once a fix lands).</li>
+      <li><code>sync()</code> with a stopped, settings-enabled distro while <code>dockerSocketProxyReason</code> is non-empty (covers I1).</li>
+      <li>UTF-16LE BOM handling on the <code>runningDistros</code> output (S3).</li>
+      <li><code>getStateForIntegration</code> for a <em>running</em> v2 distro after the new early-return is added — the existing test predates the change.</li>
+      <li>Concurrent invocation of <code>runningDistros</code> during overlapping <code>sync()</code> and <code>listIntegrations</code>.</li>
+    </ol>
+    <p>Codex did not run the Jest suite (the worktree lacks <code>node_modules/jest/bin/jest.js</code>).</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The new <code>runningDistros</code> getter has a useful JSDoc explaining the trigger. The new early-return in <code>getStateForIntegration</code> has an inline comment, but it overstates UI consistency (S4). The function-level JSDoc on <code>getStateForIntegration</code> still describes the marker-file flow only; mentioning that stopped distros fall back to the settings value would help. No README or CHANGELOG changes are needed.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Code comment</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/pkg/rancher-desktop/integrations/windowsIntegrationManager.ts#L651-L653"><code>pkg/rancher-desktop/integrations/windowsIntegrationManager.ts:651-653</code></a>): &quot;Used to avoid starting stopped distros just to query or sync them, which would trigger WSL&#39;s idle-termination and clear binfmt_misc entries.&quot; Documents the trigger and the mitigation. The PR does not address the underlying WSL kernel bug; that is upstream (Linux 6.7+ binfmt namespacing) per <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10049" class="gh-ref" data-title="WSLInterop binfmt entry disappears when a systemd-enabled WSL distro terminates" data-state="open" data-type="issue">#10049</a>.</li>
+      <li><strong>PR comment</strong> by @mook-as on issue <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10049" class="gh-ref" data-title="WSLInterop binfmt entry disappears when a systemd-enabled WSL distro terminates" data-state="open" data-type="issue">#10049</a> (&quot;there&#39;s no hook when a distro starts running, so we can&#39;t put in the kubeconfig / docker socket proxy at the correct time&quot;). Resolved in the thread: enabled distros stay running because of the socket proxy, so no start-hook is needed. The PR is consistent with that rationale — <code>settings.WSL?.integrations?.[distro] === true</code> still includes the distro in the filter so the initial start sequence runs. I1 surfaces the one case where this rationale breaks (proxy cannot start yet).</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li>@mook-as: &quot;This would be easier to read if <code>this.settings.…</code> was also pre-made into a list in the same way <code>runningDistros</code> was.&quot; — https://github.com/rancher-sandbox/rancher-desktop/pull/10364#discussion_r3312893974 — see S1.</li>
+      <li>@mook-as: &quot;Consider using <code>WSL_UTF8=1</code> instead; at this point I&#39;m pretty sure we don&#39;t support anything that old.&quot; — https://github.com/rancher-sandbox/rancher-desktop/pull/10364#discussion_r3312982822 — see S2.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> Did the most systematic call-site enumeration — caught <code>verifyAllDistrosKubeConfig</code> (I2) by tracing every exec-into-distro pattern, and noted the BOM dependency on <code>String.prototype.trim</code> (S3). Missed Codex&#39;s startup-ordering bug (I1) by treating the &quot;settings says enabled&quot; branch as unconditionally safe.</p>
+    <p><strong>[Codex]</strong> The only agent that surfaced I1 — traced from <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/66e252bfbf4ff142ff5e73bcbcf923653ef2fc34/background.ts#L291"><code>background.ts:291</code></a> through <code>syncDistroSocketProxy</code>&#39;s <code>dockerSocketProxyReason</code> guard to show that the keepalive cannot run during initial sync. Compact review with one high-value finding. Did not flag I2 or the perf concern.</p>
+    <p><strong>[Gemini]</strong> Caught the N+1 invocation pattern (I3) and the empty-set fallback observability gap (S5). Calibration ran hot — rated I3 Critical when the impact is wasted CPU, not a correctness break — and missed I1 and I2.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.7</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>8m 31s</td><td>4m 54s</td><td>3m 49s</td></tr>
+        <tr><td>Findings</td><td>2I 4S</td><td>1I</td><td>1I 1S</td></tr>
+        <tr><td>Tool calls</td><td>29 (Bash 19, Read 10)</td><td>49 (shell 49)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2I 4S</strong></td><td><strong>1I</strong></td><td><strong>1I 1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Codex produced the highest-value single finding (I1). Claude&#39;s broader call-site sweep added the second important gap (I2). Gemini surfaced the N+1 pattern but over-rated it and missed the two scope-extension gaps.</p>
+    <h3 id="reconciliation">Reconciliation <a href="#reconciliation" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Gemini C1 concurrent-wsl-invocations: critical → important I3. Impact is wasted process forks and avoidable race, not a correctness break.</li>
+      <li>Gemini I1 empty-set fallback: important → suggestion S5. Failure mode is rare (<code>wsl.exe</code> itself broken) and self-heals on next successful sync.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Repo context updates</strong></p>
+    <ul>
+      <li>[repo] Add to <code>deep-review-context.md</code>: <code>WindowsIntegrationManager</code> has multiple exec-into-distro entry points (<code>sync()</code> → <code>syncDistro*</code>, <code>getStateForIntegration</code>, <code>verifyAllDistrosKubeConfig</code>). When a change guards one against starting stopped distros, grep <code>execCommand({ distro }</code> and <code>captureCommand({ distro }</code> in the same file (and in callers of these methods) to confirm the guard covers every entry point. The trigger surface for the systemd/binfmt teardown is <em>any</em> <code>wsl --distribution X --exec</code>, not the integration-sync path specifically.</li>
+      <li>[repo] Add to <code>deep-review-context.md</code>: At Rancher Desktop startup, <code>background.ts</code> calls <code>integrationManager.enforce()</code> (which calls <code>sync()</code>) <em>before</em> <code>startBackend()</code> ever sets <code>backendReady = true</code>. Any code that branches on <code>dockerSocketProxyReason</code> / <code>backendReady</code> behaves differently during the first sync vs. steady-state. When reviewing changes to <code>WindowsIntegrationManager</code> or anything it touches, trace from the constructor&#39;s settings-update handler and from <code>enforce()</code> to confirm behavior under &quot;backend not ready&quot; is intentional.</li>
+    </ul>
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>When a PR adds a getter that performs subprocess I/O, audit every call site for unintended fan-out. JavaScript/TypeScript property getters look free at the call site, so a getter inside a <code>.map(...)</code> body issues one subprocess per element rather than one per call. Flag this even when the diff only adds the getter and one obvious call site — the cost surfaces at unrelated callers (here, <code>listIntegrations</code>) that the getter does not name.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
