@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260608-100838-pr-10389</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260608-100838-pr-10389</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-06-08 10:08</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of pr-10389)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/immanuwell">@immanuwell</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10389" class="gh-ref" data-title="fix: wait for the Windows certificate stream to close" data-state="open" data-type="pr">#10389</a> — fix: wait for the Windows certificate stream to close</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/54a441542"><code>54a441542</code></a> fix: wait for the Windows certificate stream to close</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the fix is correct and the test passes; add the slow-consumer regression case and the requested test comments before merge.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>23 min 29 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR moves the Windows certificate path from the subprocess <code>exit</code> event to <code>close</code>, serializes emissions through one promise chain, and skips the empty tail; a new regression test covers the <code>data</code>/<code>exit</code>/<code>data</code>/<code>close</code> sequence. The core fix is correct for production, and the test passes (verified, 4.7 s). The one substantive gap: the test omits the slow-consumer path that originally hung, leaving a latent, pre-existing <code>AsyncCallbackIterator.end()</code> race uncovered.</p>
+    <p>All three reviewers converged on that end-of-stream race. The orchestrator reproduced it directly (a synchronous consumer terminates; a consumer that awaits per certificate hangs) and confirmed against the merge-base that the race pre-dates this PR and that every current production consumer is synchronous — so it is latent, not active. One reviewer rated it critical and another labeled it a regression; both are reconciled below. The remaining findings are pre-existing robustness gaps and unaddressed review-comment requests, all at suggestion severity.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Slow-consumer path that originally hung is untested; the underlying iterator end-race is latent and unfixed <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/__tests__/win-ca.spec.ts#L37-L72">pkg/rancher-desktop/main/networking/__tests__/win-ca.spec.ts</a></div>
+      <pre data-start="37" data-line="42-67"><code class="language-ts">}));
+
+class FakeChildProcess extends EventEmitter {
+  stdout = new EventEmitter();
+}
+
+test(&#39;getWinCertificates waits for close before ending and does not emit an empty tail&#39;, async() =&gt; {
+  const { default: getWinCertificates } = await import(&#39;../win-ca&#39;);
+  const proc = new FakeChildProcess();
+  const cert1 = &#39;-----BEGIN CERTIFICATE-----\nfirst\n-----END CERTIFICATE-----\n&#39;;
+  const cert2 = &#39;-----BEGIN CERTIFICATE-----\nsecond\n-----END CERTIFICATE-----\n&#39;;
+  const actual: string[] = [];
+
+  spawnMock.mockReturnValue(proc as any);
+
+  const collecting = (async() =&gt; {
+    for await (const cert of getWinCertificates()) {
+      actual.push(cert);
+    }
+  })();
+
+  // The generator suspends at `await fdStream` before registering its event
+  // listeners; one microtask tick lets it resume and attach them.
+  await Promise.resolve();
+
+  proc.stdout.emit(&#39;data&#39;, cert1);
+  proc.emit(&#39;exit&#39;, 0, null);
+  proc.stdout.emit(&#39;data&#39;, cert2);
+  proc.emit(&#39;close&#39;, 0, null);
+
+  await collecting;
+
+  expect(actual).toEqual([cert1, cert2, &#39;node-root-cert&#39;]);
+  expect(actual).not.toContain(&#39;&#39;);
+  expect(executableMock).toHaveBeenCalledWith(&#39;wsl-helper&#39;);
+});</code></pre>
+    <p><code>iterator.end()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/utils/iterator.ts#L88-L90"><code>utils/iterator.ts:88-90</code></a>) resolves <code>doneSentinel</code> without awaiting <code>#pending</code>. When the consumer lags the producer — any <code>await</code> in the <code>for await</code> body — <code>emit()</code> resolves <code>#next</code> with the last cert before the consumer pulls it; <code>next()</code> then installs a fresh <code>#next</code>, and <code>end()</code> resolves the already-settled promise, dropping the sentinel. Iteration hangs. I reproduced this: a synchronous consumer terminates with all certs, a consumer awaiting per cert hangs after the last one. The race pre-dates this PR (the old <code>exit</code> handler used the same <code>emit(buffer)</code>→<code>end()</code> shape) and stays latent only because every production consumer (<code>main/networking/index.ts:26,70,93</code>) pushes synchronously. The new test asserts the fix using a synchronous consumer, so the scenario that caused the original timeout stays uncovered.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/utils/iterator.ts#L83-L95">pkg/rancher-desktop/utils/iterator.ts</a></div>
+      <pre data-start="83" data-line="88-90"><code class="language-typescript">  }
+
+  /**
+   * Notify the iterator that the enumeration has completed.
+   */
+  end() {
+    this.#resolve(doneSentinel);
+  }
+
+  [Symbol.asyncIterator]() {
+    return this;
+  }
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/index.ts#L21-L31">pkg/rancher-desktop/main/networking/index.ts</a></div>
+      <pre data-start="21" data-line="26"><code class="language-typescript">  const agentOptions = { ...https.globalAgent.options };
+
+  if (!Array.isArray(agentOptions.ca)) {
+    agentOptions.ca = agentOptions.ca ? [agentOptions.ca] : [];
+  }
+  try {
+    for await (const cert of getSystemCertificates()) {
+      agentOptions.ca.push(cert);
+    }
+  } catch (ex) {
+    console.error(&#39;Error getting system certificates:&#39;, ex);</code></pre>
+    <p>Fix: add a regression case whose loop body awaits once per cert and assert it still terminates; remove the root cause by making <code>end()</code> await <code>#pending</code> like <code>emit()</code>.</p>
+      <pre><code class="language-ts">// utils/iterator.ts
+async end() {
+  await this.#pending;
+  this.#resolve(doneSentinel);
+}</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Single-microtask-tick listener attachment is fragile <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/__tests__/win-ca.spec.ts#L53-L70">pkg/rancher-desktop/main/networking/__tests__/win-ca.spec.ts</a></div>
+      <pre data-start="53" data-line="58-65"><code class="language-ts">    for await (const cert of getWinCertificates()) {
+      actual.push(cert);
+    }
+  })();
+
+  // The generator suspends at `await fdStream` before registering its event
+  // listeners; one microtask tick lets it resume and attach them.
+  await Promise.resolve();
+
+  proc.stdout.emit(&#39;data&#39;, cert1);
+  proc.emit(&#39;exit&#39;, 0, null);
+  proc.stdout.emit(&#39;data&#39;, cert2);
+  proc.emit(&#39;close&#39;, 0, null);
+
+  await collecting;
+
+  expect(actual).toEqual([cert1, cert2, &#39;node-root-cert&#39;]);
+  expect(actual).not.toContain(&#39;&#39;);</code></pre>
+    <p>The test attaches listeners by awaiting exactly one microtask before emitting. This works only because <code>logMock.fdStream</code> is <code>Promise.resolve(2)</code>, already settled, so the generator resumes past <code>await Logging[&#39;networking-ca&#39;].fdStream</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/win-ca.ts#L37"><code>win-ca.ts:37</code></a>) in one tick. Add an <code>await</code> before listener registration and the four <code>emit()</code>s fire into the void — half of the original timeout. The test passes today; the coupling is the risk.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/win-ca.ts#L32-L42">pkg/rancher-desktop/main/networking/win-ca.ts</a></div>
+      <pre data-start="32" data-line="37"><code class="language-typescript">  // behaviour, we will enumerate both the Windows store as well as the OpenSSL
+  // one built into NodeJS.
+
+  let buffer = &#39;&#39;;
+  const proc = childProcess.spawn(executable(&#39;wsl-helper&#39;), [&#39;certificates&#39;], {
+    stdio:       [&#39;ignore&#39;, &#39;pipe&#39;, await Logging[&#39;networking-ca&#39;].fdStream],
+    windowsHide: true,
+  });
+  const iterator = new AsyncCallbackIterator&lt;string&gt;();
+  let emissions = Promise.resolve();
+</code></pre>
+    <p>Fix: gate emission on <code>spawnMock</code> having been called — resolve a promise from inside <code>spawnMock</code> and await it before emitting.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Add a comment marking the exit-before-close ordering under test <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p>The <code>proc.emit(&#39;exit&#39;, …)</code> at line 63 is intentionally a no-op: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/win-ca.ts#L78"><code>win-ca.ts:78</code></a> listens only on <code>close</code>. Without a comment, a future edit could reorder or drop the <code>exit</code>/<code>data</code>/<code>close</code> sequence and silently stop testing the regression. @mook-as requested this comment (discussion_r3337617404); it is unaddressed.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/win-ca.ts#L73-L83">pkg/rancher-desktop/main/networking/win-ca.ts</a></div>
+      <pre data-start="73" data-line="78"><code class="language-typescript">      }
+    } catch (ex) {
+      queueError(ex);
+    }
+  });
+  proc.on(&#39;close&#39;, (code, signal) =&gt; {
+    if (!(code === 0 || signal === &#39;SIGTERM&#39;)) {
+      queueError(code || signal);
+    } else {
+      emissions = emissions.then(async() =&gt; {
+        if (buffer) {</code></pre>
+    <p>Fix: add <code>// exit fires before close, with a cert chunk arriving in between; we must wait for close.</code></p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Use the repo&#39;s <code>mockModules</code> helper <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p>The repo provides <code>pkg/rancher-desktop/utils/testUtils/mockModules.ts</code>, which wraps <code>jest.unstable_mockModule</code> with typing and returns handles for <code>mockReturnValue</code>. The hand-rolled mocks duplicate that machinery. @mook-as pointed to the helper (discussion_r3337591885). Stylistic; the current form works and reads clearly.</p>
+    <p>Fix: adopt <code>mockModules({ &#39;@pkg/utils/childProcess&#39;: { spawn: jest.fn() }, … })</code> and drive <code>spawn</code> through the returned handle.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> No <code>error</code> handler on the spawned process <span class="pill pill-gemini">Gemini</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/win-ca.ts#L31-L44">pkg/rancher-desktop/main/networking/win-ca.ts</a></div>
+      <pre data-start="31" data-line="36-39"><code class="language-ts">  // be missing some standard certificates.  To approximate the desired
+  // behaviour, we will enumerate both the Windows store as well as the OpenSSL
+  // one built into NodeJS.
+
+  let buffer = &#39;&#39;;
+  const proc = childProcess.spawn(executable(&#39;wsl-helper&#39;), [&#39;certificates&#39;], {
+    stdio:       [&#39;ignore&#39;, &#39;pipe&#39;, await Logging[&#39;networking-ca&#39;].fdStream],
+    windowsHide: true,
+  });
+  const iterator = new AsyncCallbackIterator&lt;string&gt;();
+  let emissions = Promise.resolve();
+
+  function queueEmit(cert: string) {
+    emissions = emissions.then(async() =&gt; {</code></pre>
+    <p>If <code>wsl-helper</code> cannot be spawned (missing binary, AV block), <code>ChildProcess</code> emits <code>error</code> with no listener, which throws and crashes the main process. Pre-existing — the old code had no handler either — and rare for a bundled binary, but the fix is one line and matches this PR&#39;s hardening of the same path.</p>
+    <p>Fix: <code>proc.on(&#39;error&#39;, queueError);</code></p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Double-error path can leak an unhandled rejection <span class="pill pill-gemini">Gemini</span> <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>queueError</code> chains <code>iterator.error(reason)</code> onto <code>emissions</code> with no terminal handler. <code>iterator.error()</code> throws once <code>#done</code> is set (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/utils/iterator.ts#L73-L74"><code>utils/iterator.ts:73-74</code></a>). A <code>data</code>-handler parse error followed by a clean <code>close(0)</code> runs the success branch, <code>emit(buffer)</code> throws on the done iterator, and nothing catches the rejection. The <code>data</code> handler does only string work, so the catch is near-unreachable; the defect is pre-existing.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/utils/iterator.ts#L68-L79">pkg/rancher-desktop/utils/iterator.ts</a></div>
+      <pre data-start="68" data-line="73-74"><code class="language-typescript">
+  /**
+   * Signal an error to the iterator.
+   * @param reason The error to emit.
+   */
+  async error(reason?: any) {
+    if (this.#done) {
+      throw new Error(&#39;Emitting result when end() has been called&#39;);
+    }
+    await this.#pending;
+    this.#pending = Latch();
+    if (!this.#done) {</code></pre>
+    <p>Fix: add a terminal <code>.catch()</code> on the <code>emissions</code> chain in the <code>close</code> handler.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> Early loop-break leaves the subprocess running <span class="pill pill-claude">Claude</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>AsyncCallbackIterator</code> implements no <code>return()</code>, so a consumer that breaks the <code>for await</code> early (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/index.ts#L70-L76"><code>main/networking/index.ts:70-76</code></a> returns on the first matching cert) abandons <code>proc</code> and its listeners without stopping it. Pre-existing; <code>wsl-helper</code> dumps a finite list and exits on its own. This is the backpressure concern @mook-as raised (discussion_r3337577214), still unanswered in code or reply.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/index.ts#L65-L81">pkg/rancher-desktop/main/networking/index.ts</a></div>
+      <pre data-start="65" data-line="70-76"><code class="language-typescript">      console.log(`Attempting to check system certificates for ${ url } (${ certificate.subjectName }/${ certificate.fingerprint })`);
+      try {
+        for await (const cert of getSystemCertificates()) {
+          // For now, just check that the PEM data matches exactly; this is
+          // probably a little more strict than necessary, but avoids issues like
+          // an attacker generating a cert with the same serial.
+          if (cert === certificate.data.replace(/\r/g, &#39;&#39;)) {
+            console.log(`Accepting system certificate for ${ certificate.subjectName } (${ certificate.fingerprint })`);
+
+            callback(true);
+
+            return;
+          }
+        }
+      } catch (ex) {
+        console.error(ex);
+      }</code></pre>
+    <p>Fix: add a comment at the <code>yield * iterator</code> site noting that an early break does not cancel the subprocess.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <p><strong>Concerns</strong></p>
+    <ul>
+      <li><em></em><code>AsyncCallbackIterator.end()</code> is not backpressure-aware<em></em> (future) <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span> — the root cause behind I1. <code>end()</code> resolves <code>doneSentinel</code> without awaiting <code>#pending</code>, so any caller whose consumer lags the producer loses the end signal and hangs. This PR routes win-ca around the defect for synchronous consumers rather than removing it. Every other <code>Latch()</code>/iterator caller (<code>protocols.ts</code>, <code>k3sHelper.ts</code>, <code>credentials.ts</code>, <code>windowsIntegrationManager.ts</code>) shares the exposure. A follow-up that makes <code>end()</code> await <code>#pending</code> would close the class.</li>
+      <li><strong>Per-certificate promise chaining</strong> (in-scope) <span class="pill pill-gemini">Gemini</span> — <code>emissions = emissions.then(...)</code> allocates a promise and a closure per chunk. Acceptable for the small, finite certificate list; an explicit async queue would be sturdier but is not warranted at this scale.</li>
+    </ul>
+    <p><strong>Strengths</strong></p>
+    <ul>
+      <li>Switching from <code>exit</code> to <code>close</code> is the right primitive (in-scope) <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span> — <code>close</code> fires only after stdout drains, so the last chunk can no longer arrive after termination is signaled.</li>
+      <li>Serializing emits through one ordered chain (in-scope) <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> — guarantees certificate ordering across interleaved <code>data</code>/<code>close</code> events.</li>
+      <li>The <code>if (cert)</code> and <code>if (buffer)</code> guards (in-scope) <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span> — suppress the empty tail without special-casing the close path.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The added test asserts real output — the exact certificate sequence plus the node root cert, and the absence of an empty tail — not mocked behavior. Run from the repo root, it passes: 1 test, 4.7 s, no timeout. Gaps, by risk: the slow-consumer termination path (I1); the non-zero-<code>close</code> error path and the buffered-cert-on-error behavior; early loop-break (S6).</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No user-facing docs or changelog entry needed; <code>getWinCertificates</code> keeps its JSDoc. The documentation gaps are the inline comments proposed in S2 (exit-before-close) and S6 (early break does not cancel).</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>One commit, one concept. The message now embeds the PR description and repro, addressing @mook-as&#39;s CHANGES_REQUESTED request. No fixup commits, no scope creep.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>@mook-as (CHANGES_REQUESTED), commit message</strong> — addressed; <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/54a441542"><code>54a441542</code></a> carries the full description and repro.</li>
+      <li><strong>@jandubois, &quot;test times out&quot;</strong> — addressed; verified the test passes (4.7 s).</li>
+      <li><strong>@immanuwell, &quot;all suggestions addressed&quot;</strong> — the commit-message and listener-timing items are done; the test-comment requests below remain open.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em>@mook-as — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/54a441542020c6141ed0482cc4857af16a1d3750/pkg/rancher-desktop/main/networking/win-ca.ts#L43"><code>win-ca.ts:43</code></a>, backpressure on early break<em></em> (discussion_r3337577214) — substantive and unanswered. The decoupling does not worsen it (neither version implements <code>return()</code>), but the question deserves a reply. Covered by S6.</li>
+      <li><em></em>@mook-as — test, <code>jest.runAllTimers()</code><em></em> (discussion_r3337614681) — partially addressed: the slow-consumer <code>setTimeout</code> is gone, but the single-tick wait the question targets stays implicit. Covered by S1.</li>
+      <li><strong>@mook-as — test:65, exit-before-close comment</strong> (discussion_r3337617404) — unaddressed. Covered by S2.</li>
+      <li><em></em>@mook-as — test:20, <code>mockModules</code> helper<em></em> (discussion_r3337591885) — unaddressed, stylistic. Covered by S3.</li>
+      <li><em></em>@mook-as — test:62, <code>proc.stdout</code> only after <code>spawnMock</code><em></em> (discussion_r3337630062) — resolved: <code>mockReturnValue</code> precedes the emits, which run after the microtask tick.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> — Identified the same end-of-stream race as the others but uniquely traced that all three production consumers push synchronously, reclassifying the issue from active bug to latent gap — the calibration that set the verdict. It reproduced both the hang and the double-error rejection by instrumenting the code, and it alone raised the early-break subprocess leak (S6) and the missing exit-before-close comment (S2) as findings. Its severity on the test-fragility item ran a notch hot for a test that currently passes.</p>
+    <p><strong>[Codex]</strong> — Independently confirmed the race with a clean trace from <code>emit()</code> through <code>next()</code> to the lost sentinel. It labeled the issue a regression, which the merge-base contradicts: the old <code>exit</code> handler carried the same <code>emit</code>→<code>end</code> pattern. It could not run the test (no <code>node_modules</code> in its checkout) and added the least unique material, but its confirmation of the central finding was sound.</p>
+    <p><strong>[Gemini]</strong> — The only agent to flag the missing <code>proc.on(&#39;error&#39;)</code> handler (S4). It rated two findings critical — the race and the spawn-error gap — both of which reconciled downward once production consumers and pre-existing status were checked. It skipped <code>git blame</code> (daily quota), so it could not separate regressions from pre-existing issues, and it marked the test file &quot;Reviewed, no issues&quot; while the coverage gap and three test improvements lived there.</p>
+    <p><strong>Summary</strong></p>
+    <p>All three converged on the core race, which raised confidence enough to justify a direct reproduction. Claude delivered the most value: the production-consumer trace, the reproduction, and the widest finding set. Gemini contributed the one unique production-code finding. Codex corroborated the central issue but added little the others missed.</p>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>7m 56s</td><td>6m 21s</td><td>4m 58s</td></tr>
+        <tr><td>Findings</td><td>1I 5S</td><td>1I 1S</td><td>1I 2S</td></tr>
+        <tr><td>Tool calls</td><td>25 (Bash 16, Read 6, Write 3)</td><td>27 (shell 27)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>0</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 5S</strong></td><td><strong>1I 1S</strong></td><td><strong>1I 2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>1 (I→S)</td><td>0</td><td>3 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Gemini&#39;s &quot;iterator hangs on slow consumers&quot; (critical) → I1 (important): no active trigger, since every production consumer is synchronous. Gemini&#39;s &quot;missing error handler&quot; (critical) → S4 (suggestion): pre-existing, rare for a bundled binary, one-line fix. Gemini&#39;s &quot;error chain masking&quot; (important) → S5 (suggestion): the triggering catch path is near-unreachable and pre-existing. Codex&#39;s I1 (regression) → I1 (gap): the merge-base <code>exit</code> handler had the same pattern. Claude&#39;s &quot;single-microtask-tick fragility&quot; (important) → S1 (suggestion): the test passes today and the regressing edit is speculative.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>When a finding claims that an async iterator, generator, or promise chain hangs, deadlocks, or drops a completion or termination signal in a single-threaded async runtime (the JavaScript/TypeScript event loop, Python asyncio), settle it by writing and running a minimal faithful reproduction: translate the primitive and its caller into a standalone script and execute both the working consumer shape and the alleged-failing one. Hand-tracing microtask and promise-resolution order is unreliable and yields confident errors in both directions, and several agents can share the same wrong conclusion — so agreement among them is not verification. Record the reproduction&#39;s result in the finding.</li>
+    </ul>
+    <p><strong>Repo context updates</strong></p>
+    <ul>
+      <li>[repo] <code>AsyncCallbackIterator.end()</code> (<code>pkg/rancher-desktop/utils/iterator.ts</code>) is not backpressure-aware: it resolves the done sentinel without awaiting <code>#pending</code>, so it drops the sentinel and hangs when a consumer awaits between iterations. Every current production consumer of <code>getSystemCertificates</code>/<code>getWinCertificates</code> pushes synchronously, so the bug is latent. When reviewing <code>iterator.ts</code>, a new <code>AsyncCallbackIterator</code> consumer, or any <code>for await</code> over one, check whether the loop body awaits per item — if it does, the stream can hang at end-of-stream.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
