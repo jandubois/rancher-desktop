@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260610-120801-pr-10420</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260610-120801-pr-10420</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-06-10 12:08</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>2 (of PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10420" class="gh-ref" data-title="Fix indefinite startup hang when a queued update check fails" data-state="open" data-type="pr">#10420</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10420" class="gh-ref" data-title="Fix indefinite startup hang when a queued update check fails" data-state="open" data-type="pr">#10420</a> — Fix indefinite startup hang when a queued update check fails</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c3e2de831"><code>c3e2de831</code></a> Clear stale download progress when a new update check starts<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/53ed59910"><code>53ed59910</code></a> Fix indefinite startup hang when a queued update check fails</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; production fix is correct and well-tested; the one suggestion is optional documentation polish</td></tr>
+      <tr><td>Wall-clock time</td><td><code>24 min 30 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 2 re-reviews the amended hang fix. The queued-install promise in <code>doInitialUpdateCheck</code> now settles on every terminal outcome and removes its one-shot listeners, closing a real startup hang since <code>setupUpdate(enabled, true)</code> is awaited before the backend starts. Both Round-1 fixes verify correct. No critical or important issues survived verification — the two Important findings raised were pre-existing, and one&#39;s proposed fix would have regressed PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10419" class="gh-ref" data-title="Fix update restart button disappearing after a re-check" data-state="merged" data-type="pr">#10419</a>&#39;s restart-button behavior.</p>
+    <p>All three reviewers completed this round (Codex, which hung in Round 1, recovered). Claude and Codex independently confirmed the production code is sound; Claude raised one optional documentation suggestion. Gemini raised two Important findings (a missing UI broadcast and an un-awaited disk-write race); both were verified against the merge-base and the renderer and downgraded — neither is introduced or worsened by this PR, and the broadcast fix would reintroduce the flicker PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10419" class="gh-ref" data-title="Fix update restart button disappearing after a re-check" data-state="merged" data-type="pr">#10419</a> fixed. The two Round-1 fixes (C1 broken test, S1 redundant queued-flag write) are correct, and the prior-round design observation (newer-version download blocks startup) remains correctly deferred.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Install-path <code>onDownloaded</code> silently relies on listener-registration order <span class="pill pill-claude">Claude</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/main/update/index.ts#L300-L316">pkg/rancher-desktop/main/update/index.ts</a></div>
+      <pre data-start="300" data-line="305-311"><code class="language-ts">      };
+      const onNotAvailable = () =&gt; {
+        console.log(&#39;Cached update is no longer offered; continuing startup.&#39;);
+        finish(false);
+      };
+      const onDownloaded = () =&gt; {
+        console.log(&#39;Update download complete; restarting app&#39;);
+        // The persistent update-downloaded handler already recorded the staged
+        // version and set the queued flag; here we only need to install.
+        autoUpdater.quitAndInstall(true, true);
+        finish(true);
+      };
+
+      autoUpdater.once(&#39;error&#39;, onError);
+      autoUpdater.once(&#39;update-not-available&#39;, onNotAvailable);
+      autoUpdater.once(&#39;update-downloaded&#39;, onDownloaded);
+      autoUpdater.checkForUpdates().then((result) =&gt; {</code></pre>
+    <p>Dropping the redundant <code>setHasQueuedUpdate(true)</code> here (the Round-1 S1 fix) is correct only because the persistent <code>update-downloaded</code> handler at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L196"><code>index.ts:196</code></a> is registered during <code>getUpdater()</code>, before this one-shot <code>.once()</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L315"><code>index.ts:315</code></a>. EventEmitter runs listeners in registration order, so the persistent handler sets the queued flag (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L210"><code>index.ts:210</code></a>) and records <code>stagedVersion</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L203"><code>index.ts:203</code></a>) before <code>quitAndInstall</code> fires. The ordering invariant is load-bearing but unstated in the comment.</p>
+    <p>Fix: extend the comment to name the guarantee — the persistent handler at line 196 is registered first, so it has already run for this event.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <p><em></em><code>setHasQueuedUpdate</code> is a non-serialized read-modify-write; un-awaited callers can race (future)<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/main/update/LonghornProvider.ts#L198-L211"><code>pkg/rancher-desktop/main/update/LonghornProvider.ts:198-211</code></a> <span class="pill pill-gemini">Gemini</span></p>
+    <p><code>setHasQueuedUpdate</code> reads <code>updater-longhorn.json</code>, flips <code>isInstallable</code>, and writes it back, with no serialization. The <code>checking-for-update</code> handler calls it with <code>false</code> and the persistent <code>update-downloaded</code> handler calls it with <code>true</code>, both un-awaited (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L153"><code>index.ts:153</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L210"><code>index.ts:210</code></a>); a fast cached-update sequence could interleave the two read-modify-write cycles and persist the wrong flag. This is pre-existing — the function and both callers predate the PR, and the Round-1 S1 fix removed a third concurrent caller from the install path, so this change narrows the race rather than widening it. The outcome is also largely self-healing: the next periodic check re-detects the staged update, and the install-completing case ends with the flag the next boot expects. A promise queue inside <code>setHasQueuedUpdate</code> would close it; out of scope here.</p>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <p><em></em>Not broadcasting <code>update-state</code> from <code>checking-for-update</code> is deliberate (in-scope)<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/main/update/index.ts#L144-L154"><code>pkg/rancher-desktop/main/update/index.ts:144-154</code></a> <span class="pill pill-gemini">Gemini</span></p>
+    <p>The handler clears <code>available</code>, <code>downloaded</code>, <code>error</code>, and now <code>progress</code> in memory but does not call <code>window.send</code>. Broadcasting that transient state would set <code>available=false</code>/<code>downloaded=false</code> in the renderer, where <code>updateReady</code> gates the Restart Now button on <code>available &amp;&amp; downloaded &amp;&amp; !error</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/components/UpdateStatus.vue#L148-L149"><code>UpdateStatus.vue:148-149</code></a>), hiding the update card on every periodic re-check until the check resolves — the flicker PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10419" class="gh-ref" data-title="Fix update restart button disappearing after a re-check" data-state="merged" data-type="pr">#10419</a> fixed. The cleared <code>progress</code> still reaches the UI on the next resolving event, so a newer offer never shows the previous download&#39;s percentage. Gemini flagged the missing broadcast as a regression (I1); re-verified against merge-base <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/8e06bd961"><code>8e06bd961</code></a>, the handler never broadcast, and the proposed fix would reintroduce the flicker.</p>
+    <p><em></em><code>finish()</code> centralizes listener teardown (in-scope)<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/main/update/index.ts#L291-L296"><code>pkg/rancher-desktop/main/update/index.ts:291-296</code></a> <span class="pill pill-claude">Claude</span></p>
+    <p>The closure removes all three one-shot listeners before resolving, so every terminal path settles the promise once and arms no stale <code>update-downloaded</code> listener for a later <code>quitAndInstall</code>. The test &quot;does not install on a later download once the queued install has settled&quot; locks this in.</p>
+    <p><strong>Promise-settling covers the no-event outcomes (in-scope)</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/main/update/index.ts#L316-L322"><code>pkg/rancher-desktop/main/update/index.ts:316-322</code></a> <span class="pill pill-claude">Claude</span></p>
+    <p>Settling on the <code>checkForUpdates()</code> promise itself — <code>.then(result =&gt; !result &amp;&amp; finish(false))</code> for disabled checks and <code>.catch(onError)</code> for a rejected check — handles the two cases that emit no updater event at all. This targets the root cause the commit names, not a symptom.</p>
+    <p><strong>Persistent-handler ordering preserves the queued-flag write (in-scope)</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/pkg/rancher-desktop/main/update/index.ts#L196"><code>pkg/rancher-desktop/main/update/index.ts:196</code></a> <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span></p>
+    <p>Both reviewers traced that the persistent <code>update-downloaded</code> handler runs before the install-path one-shot, so dropping <code>setHasQueuedUpdate(true)</code> from the one-shot (Round-1 S1 fix) loses no state. See S1 for the suggestion to document the dependency.</p>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The new tests exercise real code paths, not mocked behavior, and each was traced against the implementation. The failed-check test drives <code>checkForUpdates().catch(onError)</code> → <code>finish(false)</code> → the fall-through to <code>triggerUpdateCheck()</code>; <code>beforeEach</code> runs <code>jest.clearAllTimers()</code>, so <code>jest.getTimerCount() &gt; 0</code> (<code>index.spec.ts:263</code>) proves the fall-through armed a timer — the Round-1 C1 fix is verified meaningful, not satisfied by setup. The disabled-checks test (<code>mockResolvedValueOnce(null)</code>) and the listener-cleanup test are likewise sound.</p>
+    <p>Three scenarios remain untested, all low-risk:</p>
+    <ul>
+      <li>The install-path <code>error</code> event (not promise rejection): <code>onError</code> is wired to the event (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L313"><code>index.ts:313</code></a>) but every failing test rejects the promise instead.</li>
+      <li>A successful queued install with a real <code>setHasQueuedUpdate</code>/<code>stagedVersion</code> write: the passing install test asserts <code>quitAndInstall</code> but not the persistent-handler write that S1 now depends on.</li>
+      <li>The slow newer-version download that still blocks startup (see Acknowledged Limitations).</li>
+    </ul>
+    <p>The suite could not be run from the agent worktrees (no <code>node_modules</code>); the Round-1 resolution records the update-module suite passing 12/12 with C1 confirmed fail-then-pass.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No gaps. <code>setupUpdate</code>&#39;s <code>@returns Whether the update is being installed</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L232"><code>index.ts:232</code></a>) stays accurate — it returns <code>true</code> only when installing. The new inline comments on the install-path promise (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L286-L290"><code>index.ts:286-290</code></a>) and the fall-through (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c3e2de831b780c40f4efe12130b5130c188df113/e2e/pages/preferences/index.ts#L328-L330"><code>index.ts:328-330</code></a>) describe the control flow and motivation accurately. The one nit is S1: the de-dup comment omits the listener-ordering guarantee it depends on.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Clean. Two commits, each one self-contained concept — <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/53ed59910"><code>53ed59910</code></a> the hang fix and its tests, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c3e2de831"><code>c3e2de831</code></a> the stale-progress clear — neither patching the other. Both messages state what changed and why without narrating mechanics, and match their diffs. The Round-1 caveat (the broken <code>timersMock</code> test) was folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/53ed59910"><code>53ed59910</code></a> by amendment, as recommended.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>PR comment (@jandubois):</strong> &quot;We have a couple of unexplained hangup reports (like <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/8141" class="gh-ref" data-title="Issue with Rancher Desktop Not Starting Properly" data-state="open" data-type="issue">#8141</a>), so maybe this has been the cause for them (just a guess).&quot; Framed as a hypothesis; the fix stands on its own correctness regardless of whether it resolves <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/8141" class="gh-ref" data-title="Issue with Rancher Desktop Not Starting Properly" data-state="open" data-type="issue">#8141</a>.</li>
+    </ul>
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Newer-version download blocks startup</strong> — declined Round 1: pre-existing, deferred to a separate change. When the server offers a version newer than the cached one, electron-updater discards the cache and downloads the new release; the install-path promise settles only on <code>update-downloaded</code>, so a slow link blocks startup for the full download. Re-verified pre-existing against merge-base <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/8e06bd961"><code>8e06bd961</code></a> (the base settled the same promise only on <code>update-downloaded</code>, with no <code>update-not-available</code> handler at all). All three reviewers placed it correctly this round; none re-raised it as a regression. A bounded timeout on the install-path promise would close the remaining window.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> Caught the load-bearing listener-registration-order dependency and raised it as a documentation suggestion (S1) rather than inflating it — calibration held. It verified both Round-1 fixes correct and confirmed the prior design observation pre-existing without re-raising it. Its strengths analysis traced the actual root-cause coverage (the <code>finish()</code> teardown and the promise-settling on no-event outcomes) instead of restating the diff.</p>
+    <p><strong>[Codex]</strong> Recovered from its Round-1 double hang and finished fastest of the three, in well under a minute. The review was correct but thin — no findings, with the persistent-handler ordering noted as a strength that corroborates Claude&#39;s S1. The clean completion is the headline: the Round-1 watchdog recommendation went unexercised because Codex did not hang this round.</p>
+    <p><strong>[Gemini]</strong> Raised the only two Important candidates, both downgraded after verification. I1 (missing <code>checking-for-update</code> broadcast) is pre-existing, and its fix would reintroduce PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10419" class="gh-ref" data-title="Fix update restart button disappearing after a re-check" data-state="merged" data-type="pr">#10419</a>&#39;s restart-button flicker — a false positive traceable to Gemini skipping <code>git blame</code> under quota, so it could not separate the change from the pre-existing handler. I2 (the <code>setHasQueuedUpdate</code> race) is a genuine latent issue no other reviewer found, but pre-existing and out of scope, so it became a design observation. Gemini correctly filed the newer-version-download limitation under Acknowledged Limitations rather than re-raising it as a finding.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>4m 45s</td><td>3m 52s</td><td>4m 59s</td></tr>
+        <tr><td>Findings</td><td>1S</td><td>none</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>21 (Bash 14, Read 7)</td><td>16 (shell 16)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>3</td><td>1</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Unique insights</td><td>1</td><td>0</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>2</td><td>2</td><td>2</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1S</strong></td><td><strong>none</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>1 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p>Claude provided the most value: the one actionable suggestion, correct verification of both prior fixes, and the root-cause framing. Gemini contributed the most novel observation (the <code>setHasQueuedUpdate</code> race) but also the only false positive, and its missing-broadcast fix would have regressed a shipped fix. Codex&#39;s value this round was confirmation and a clean recovery from the Round-1 infrastructure failure.</p>
+    <p><strong>Reconciliation.</strong> Gemini I1 (missing <code>checking-for-update</code> broadcast): Important → dropped as a false positive (re-cast as a Strengths design observation), relabeled regression → pre-existing. Gemini I2 (<code>setHasQueuedUpdate</code> race): Important → design observation (Concerns), kept as a pre-existing gap. No other severities changed.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a finding recommends emitting, broadcasting, or persisting intermediate state that the code currently withholds at a reset or in-progress point, evaluate the cost of emitting it before rating the omission a bug. A deliberately-withheld update often prevents downstream churn — UI flicker, redundant writes, observer thrash. Trace the consumer that would receive the new emission and confirm it improves rather than regresses behavior. A handler that mutates state in memory and lets the next terminal event broadcast it is a common, correct pattern, not a missing-broadcast bug, because the consumer re-renders on every state it receives.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>[repo]</strong> <code>main/update/index.ts</code>: the <code>checking-for-update</code> handler intentionally omits <code>window.send(&#39;update-state&#39;, updateState)</code>. It clears <code>available</code>/<code>downloaded</code>/<code>error</code>/<code>progress</code> in memory so the next resolving event (<code>update-available</code>/<code>update-not-available</code>/<code>error</code>) broadcasts fresh values; broadcasting at the <code>checking-for-update</code> point would set <code>available=false</code>/<code>downloaded=false</code> and hide the Restart Now card in <code>UpdateStatus.vue</code> (gated on <code>updateReady = available &amp;&amp; downloaded &amp;&amp; !error</code>) on every periodic re-check — the flicker PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10419" class="gh-ref" data-title="Fix update restart button disappearing after a re-check" data-state="merged" data-type="pr">#10419</a> fixed. Do not flag the missing broadcast here as a bug.</li>
+      <li><strong>[repo]</strong> <code>main/update/LonghornProvider.ts</code>: <code>setHasQueuedUpdate</code> and <code>hasQueuedUpdate</code> do non-serialized read-modify-write on <code>updater-longhorn.json</code>, and the event handlers call <code>setHasQueuedUpdate</code> un-awaited (<code>false</code> from <code>checking-for-update</code>, <code>true</code> from <code>update-downloaded</code>). This is a known pre-existing latent write race; treat a &quot;concurrent un-awaited write&quot; finding here as pre-existing unless the change under review adds, reorders, or awaits these calls.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
