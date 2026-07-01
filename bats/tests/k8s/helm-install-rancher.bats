@@ -134,7 +134,9 @@ verify_rancher() {
     local host
     host=$(traefik_hostname)
 
-    run try --max 9 --delay 10 curl --insecure --silent --show-error "https://${host}/dashboard/auth/login"
+    # Without `--fail`, curl exits 0 on Traefik's transient "no available
+    # server" 503, so `try` stops retrying before the rancher backend is Ready.
+    run try --max 9 --delay 10 curl --fail --insecure --silent --show-error "https://${host}/dashboard/auth/login"
     assert_success
     assert_output --partial 'src="/dashboard/'
     run kubectl get secret --namespace cattle-system bootstrap-secret -o json
