@@ -6,3 +6,5 @@ locales:
     status: source
   de:
     status: experimental
+  zh-hans:
+    status: experimental
