@@ -1,0 +1,6 @@
+# Locale manifest for i18n-report.
+# Each locale has a status: source, experimental, or shipping.
+# Exactly one locale must have status "source".
+locales:
+  en-us:
+    status: source
