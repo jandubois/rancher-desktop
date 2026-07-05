@@ -43,6 +43,7 @@ var subcommands = map[string]func([]string) error{
 	"remove":       runRemove,
 	"manifest":     runManifest,
 	"meta":         runMeta,
+	"validate":     runValidate,
 }
 
 func main() {
@@ -88,6 +89,7 @@ Subcommands:
   dynamic       Template literal patterns that reference keys dynamically
   manifest      Validate meta/locales.yaml manifest
   meta          Generate source metadata for a locale
+  validate      Structural checks: placeholders, tags, metadata, overrides
 
 Run "i18n-report <subcommand> -h" for subcommand-specific flags.`)
 }
