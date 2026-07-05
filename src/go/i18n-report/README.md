@@ -26,8 +26,8 @@ go build -o src/go/i18n-report/i18n-report ./src/go/i18n-report
   references.
 - `2` — an operational failure: an unreadable file or an invalid flag.
 
-Gate commands (`undefined`) split exit `1` from exit `2`, so CI can tell
-a real finding from a broken invocation. Lister commands (`unused`, `stale`,
+Gate commands (`undefined` and `manifest --cross-validate`) split exit `1`
+from exit `2`, so CI can tell a real finding from a broken invocation. Lister commands (`unused`, `stale`,
 `translate`, `references`, `dynamic`, `untranslated`) exit `0` even when
 they list results.
 
@@ -120,6 +120,29 @@ show which en-us.yaml keys they match.
 i18n-report dynamic [--format=json|text]
 ```
 
+### meta
+
+Generate or regenerate source-text metadata for a locale. The metadata
+records the English text at translation time, enabling drift detection.
+
+```sh
+i18n-report meta --locale=de
+```
+
+### manifest
+
+Validate `meta/locales.yaml`; with `--cross-validate`, also check locale
+registrations across the codebase.
+
+```sh
+i18n-report manifest
+i18n-report manifest --cross-validate
+```
+
+Cross-validation checks that `meta/locales.yaml`, `command-api.yaml`,
+`settingsValidator.ts`, `settingsValidator.spec.ts`, and the `locale.*`
+display-name keys in `en-us.yaml` agree on the set of supported locales.
+
 ## How it works
 
 ### Source scanning
@@ -166,10 +189,12 @@ go test ./src/go/i18n-report/...
 |------|----------|
 | `main.go` | Subcommand dispatch, usage text |
 | `repo.go` | Repository root detection, path helpers |
-| `yaml.go` | YAML flattening |
+| `yaml.go` | YAML flattening, scalar formatting, nested writer |
 | `scan.go` | Source file scanning, key reference detection |
 | `output.go` | Shared text/JSON output formatter |
 | `compute.go` | Shared key-set computations |
+| `manifest.go` | Locale manifest types, `meta/locales.yaml` loader |
+| `metadata.go` | Metadata file I/O, English source-string snapshots |
 | `report_unused.go` | `unused` subcommand |
 | `report_undefined.go` | `undefined` subcommand |
 | `report_stale.go` | `stale` subcommand |
@@ -177,6 +202,8 @@ go test ./src/go/i18n-report/...
 | `report_untranslated.go` | `untranslated` subcommand, heuristic scanner |
 | `report_references.go` | `references` subcommand |
 | `report_dynamic.go` | `dynamic` subcommand, finds dynamic key patterns |
+| `report_meta.go` | `meta` subcommand, source-string metadata generation |
+| `report_manifest.go` | `manifest` subcommand, cross-validation with API spec |
 
 All files are in `package main`. The tool has one external dependency:
 `gopkg.in/yaml.v3`.
