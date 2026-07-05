@@ -4,3 +4,5 @@
 locales:
   en-us:
     status: source
+  de:
+    status: experimental
