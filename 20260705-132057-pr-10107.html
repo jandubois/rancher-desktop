@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260705-132057-pr-10107</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260705-132057-pr-10107</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-05 13:20</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>2 (of PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="open" data-type="pr">#10107</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="open" data-type="pr">#10107</a> — Add i18n-report tool: scanner and key-hygiene reports</td></tr>
+      <tr><td>Branch</td><td><code>i18n-report-tool</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/224577e66"><code>224577e66</code></a> Add i18n-report tool: scanner and key-hygiene reports</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one JSON/text output inconsistency; the rest are documentation and scope cleanups</td></tr>
+      <tr><td>Wall-clock time</td><td><code>23 min 25 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>This PR adds <code>i18n-report</code>, a self-contained Go CLI that scans Vue/TS/JS source and <code>en-us.yaml</code> to report unused, undefined, stale, referenced, and dynamic translation keys. It is the recut first slice of a ten-PR stack — only the scanner and read-only reports — cleanly scoped and fully tested. One output bug matters: <code>references --format=json</code> emits keys absent from <code>en-us.yaml</code>, diverging from text mode. The rest are documentation and scope cleanups.</p>
+    <p>The three reviewers converged. Claude and Gemini independently caught the JSON leak; Codex and Claude flagged package comments that name subcommands (<code>check</code>, <code>drift</code>, <code>merge</code>, <code>translate</code>) and helpers (<code>loadMetadata</code>) absent from this slice; Gemini and Claude noted override/merge machinery in <code>yaml.go</code> carried from later slices and dead here. No critical issues surfaced. Running every report against the live tree confirmed the heuristic scanner produces zero false positives today — the <code>undefined</code> gate finds exactly seven genuine missing keys — so the several &quot;this heuristic could false-positive&quot; concerns are future hardening, not current bugs.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> <code>references --format=json</code> emits keys absent from <code>en-us.yaml</code> <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/report_references.go#L31-L53">src/go/i18n-report/report_references.go</a></div>
+      <pre data-start="31" data-line="36-51"><code class="language-go">	refs, err := findKeyReferences(root, keys)
+	if err != nil {
+		return err
+	}
+
+	if format == formatJSON {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent(&quot;&quot;, &quot;  &quot;)
+		return enc.Encode(refs)
+	}
+
+	for _, k := range sortedKeys(keys) {
+		locations := refs[k]
+		if len(locations) == 0 {
+			continue
+		}
+		fmt.Printf(&quot;%s:\n&quot;, k)
+		for _, loc := range locations {
+			fmt.Printf(&quot;  %s:%d\n&quot;, loc.File, loc.Line)
+		}
+	}
+	return nil
+}</code></pre>
+    <p><code>findKeyReferences</code> returns <code>refs</code>, and <code>addDirect</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L198-L201"><code>scan.go:198-201</code></a>) writes every direct reference into <code>refs</code> — including references to keys missing from <code>en-us.yaml</code>. JSON mode encodes that map verbatim; text mode iterates <code>sortedKeys(keys)</code> and omits them. Verified on the live tree: <code>references --format=json</code> contains <code>&quot;generic.and&quot;</code> (an undefined key) while text output does not. The command documents itself as &quot;where each <code>en-us.yaml</code> key is used,&quot; so the JSON form breaks its own contract — and JSON is the interface downstream tooling consumes. Both agents raised this independently; my run confirmed it.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L193-L206">src/go/i18n-report/scan.go</a></div>
+      <pre data-start="193" data-line="198-201"><code class="language-go">		if n := len(list); n &gt; 0 &amp;&amp; list[n-1] == ref {
+			return list
+		}
+		return append(list, ref)
+	}
+	addDirect := func(key string, ref keyReference) {
+		result.refs[key] = appendRef(result.refs[key], ref)
+		result.directRefs[key] = appendRef(result.directRefs[key], ref)
+	}
+
+	for _, file := range files {
+		data, err := os.ReadFile(file)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, &quot;Warning: cannot read %s: %v\n&quot;, file, err)</code></pre>
+    <p>Fix: filter to en-us keys before encoding, matching text mode.</p>
+      <pre><code class="language-diff"> if format == formatJSON {
++    filtered := make(map[string][]keyReference, len(keys))
++    for k := range keys {
++        if locs := refs[k]; len(locs) &gt; 0 {
++            filtered[k] = locs
++        }
++    }
+-    return enc.Encode(refs)
++    return enc.Encode(filtered)
+ }</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Unreadable source files warn-and-continue, contradicting the documented exit-2 contract <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L198-L212">src/go/i18n-report/scan.go</a></div>
+      <pre data-start="198" data-line="203-207"><code class="language-go">	addDirect := func(key string, ref keyReference) {
+		result.refs[key] = appendRef(result.refs[key], ref)
+		result.directRefs[key] = appendRef(result.directRefs[key], ref)
+	}
+
+	for _, file := range files {
+		data, err := os.ReadFile(file)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, &quot;Warning: cannot read %s: %v\n&quot;, file, err)
+			continue
+		}
+		relPath, _ := filepath.Rel(root, file)
+		content := string(data)
+		lines := strings.Split(content, &quot;\n&quot;)
+		for i, line := range lines {</code></pre>
+    <p>The README&#39;s exit-codes section promises exit <code>2</code> for &quot;an unreadable file,&quot; and the primary inputs honor it — a <code>loadYAMLFlat(enPath)</code> failure returns an error and exits 2. Source-file read errors are the exception: they downgrade to a warning, so <code>undefined</code> can exit 0 while an unreadable file hides a missing key. Source files are always readable in CI, so this never fires today. Reconcile the two — return the error for a strict gate, or scope the README&#39;s exit-2 promise to the inputs it covers.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>dynamic --format=json</code> emits <code>null</code> for empty results <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>reportDynamic</code> declares <code>var entries []dynamicReportEntry</code> and <code>var matches []string</code>, then JSON-encodes them directly, bypassing the nil-slice normalization <code>outputStrings</code> applies (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/output.go#L15-L16"><code>output.go:15-16</code></a>). With no dynamic patterns — or a pattern matching nothing — the JSON field serializes as <code>null</code>, not <code>[]</code>, forcing consumers to handle two shapes. Initialize both to empty slices.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/output.go#L10-L21">src/go/i18n-report/output.go</a></div>
+      <pre data-start="10" data-line="15-16"><code class="language-go">const formatJSON = &quot;json&quot;
+
+// outputStrings prints a list of strings in text or JSON format.
+func outputStrings(w io.Writer, items []string, format, label string) error {
+	if format == formatJSON {
+		if items == nil {
+			items = []string{}
+		}
+		enc := json.NewEncoder(w)
+		enc.SetIndent(&quot;&quot;, &quot;  &quot;)
+		return enc.Encode(items)
+	}</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Unsupported <code>--format</code> values silently render as text <span class="pill pill-codex">Codex</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p>Every report accepts <code>--format</code> but compares only against <code>&quot;json&quot;</code>, so any other value — including a typo like <code>--format=jsoon</code> — renders as text and exits 0. A shared validator returning an operational error (exit 2) for values other than <code>text</code> or <code>json</code> would catch the mistake. The pattern repeats in <code>report_dynamic.go</code>, <code>report_references.go</code>, <code>report_stale.go</code>, and <code>report_undefined.go</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Package comments name subcommands and helpers absent from this slice <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/compute.go#L1-L13">src/go/i18n-report/compute.go</a></div>
+      <pre data-start="1" data-line="3-8"><code class="language-go">package main
+
+// Shared key-set computations. The gate commands (check, drift) and the
+// listers (stale, missing, translate) all derive their findings from these
+// helpers, so a gate and its matching lister agree by construction.
+//
+// All comparisons use raw scalar text: loadYAMLFlat and loadMetadata both
+// preserve the source bytes, so drift detection compares like with like.
+
+// computeStale returns locale keys that no longer exist in en-us, sorted.
+func computeStale[V any](enKeys map[string]string, localeKeys map[string]V) []string {
+	var stale []string
+	for _, k := range sortedKeys(localeKeys) {</code></pre>
+    <p>None of <code>check</code>, <code>drift</code>, <code>missing</code>, <code>translate</code>, or <code>loadMetadata</code> exist in this slice (<code>grep</code> confirms). <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/docker-credential-none/main.go#L16-L18"><code>main.go:16-18</code></a> similarly cites &quot;drifted keys ... failed policy gates,&quot; though only <code>undefined</code> uses <code>errFindings</code> here. Trim the comments to what ships, and reintroduce the cross-references with the commands that need them.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/docker-credential-none/main.go#L11">src/go/docker-credential-none/main.go</a></div>
+      <pre data-start="11" data-line="16-18"><code class="language-go">}</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> <code>.golangci.yaml</code> goconst exception for <code>&#39;&#39;</code> references absent code <span class="pill pill-claude">Claude</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/.golangci.yaml#L30-L42">.golangci.yaml</a></div>
+      <pre data-start="30" data-line="35-37"><code class="language-yaml">      min-occurrences: 3
+      # Skip values that read better as literals than as named constants:
+      # &quot;error&quot; is the conventional log-field key, &quot;--&quot; is the POSIX
+      # end-of-options marker, &quot;eth0&quot; shares a platform-interface table
+      # with other literal names, and &quot;--address&quot; is a wsl.exe / nerdctl
+      # flag inlined in command-line slices, and &#39;&#39; plays three distinct
+      # YAML-quoting roles in i18n-report (empty scalar, escape, unescape).
+      ignore-string-values: ^(error|--|eth0|--address|&#39;&#39;)$
+    gocritic:
+      disabled-checks:
+        - dupImport # https://github.com/go-critic/go-critic/issues/845
+        - ifElseChain
+        - unnamedResult</code></pre>
+    <p>The escape/unescape handling the comment describes lives in the future <code>merge</code>/<code>translate</code> slices; <code>grep &quot;&#39;&#39;&quot; src/go/i18n-report/*.go</code> returns nothing here. The entry is a no-op today, and its comment points a reader at code that is not in the tree. Drop the <code>&#39;&#39;</code> entry until the code that needs it lands, or land them together.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> README drifts from the implementation in three places <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+    <p>Line 73 says <code>dynamic</code> finds <code>t()</code> calls with template literals &quot;or concatenation,&quot; but <code>scan.go</code> matches only template literals (this drift persisted from Round 1). The file-layout table (lines 117-120) lists <code>report_unused/stale/references/dynamic.go</code> yet omits <code>report_undefined.go</code>, a documented subcommand. Line 97 &quot;Comment lines are ignored&quot; overstates: only full-line comments matched by <code>commentLinePattern</code> are skipped — not trailing comments, nor the whole-file <code>multilineKeyPattern</code> scan. Correct all three.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/README.md#L112-L125">README.md</a></div>
+      <pre data-start="112" data-line="117-120"><code class="language-plaintext">   npm config set msvs_version 2022
+   npm config set msbuild_path &quot;C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe&quot;
+   ```
+
+   If you get an error message when trying to run `npm config set...`, run `npm config edit` and then add lines like
+
+   ```
+   msvs_version=2022
+   msbuild_path=C:\Program Files (x86)\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe
+   ```
+
+   Do not quote the values to the right side of the equal sign. They aren&#39;t needed, and it&#39;s possible that some
+   processor will treat them as literal parts of the path, and then fail.
+</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> Dead override/comment machinery and over-generic <code>computeStale</code> (YAGNI) <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/yaml.go#L23-L96">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="23" data-line="28-91"><code class="language-go">	}
+	return result, nil
+}
+
+// mergeEntry holds a translated key-value pair with an optional comment.
+type mergeEntry struct {
+	key      string
+	value    string
+	comment  string // may be multi-line (joined with &quot;\n&quot;)
+	override bool   // true if comment contains @override
+}
+
+// loadYAMLWithComments loads a YAML file and returns flattened entries
+// that preserve YAML comments (e.g. @reason, @context annotations).
+func loadYAMLWithComments(path string) (map[string]mergeEntry, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	var doc yaml.Node
+	if err := yaml.Unmarshal(data, &amp;doc); err != nil {
+		return nil, fmt.Errorf(&quot;parsing %s: %w&quot;, path, err)
+	}
+	result := make(map[string]mergeEntry)
+	if doc.Kind == yaml.DocumentNode &amp;&amp; len(doc.Content) &gt; 0 {
+		flattenNodeWithComments(&quot;&quot;, doc.Content[0], result)
+	}
+	return result, nil
+}
+
+// flattenNodeWithComments recursively flattens a yaml.Node tree into
+// dotted keys, preserving HeadComment from leaf key nodes.
+func flattenNodeWithComments(prefix string, node *yaml.Node, result map[string]mergeEntry) {
+	if node.Kind != yaml.MappingNode {
+		return
+	}
+	for i := 0; i &lt; len(node.Content)-1; i += 2 {
+		keyNode := node.Content[i]
+		valNode := node.Content[i+1]
+		key := keyNode.Value
+		if prefix != &quot;&quot; {
+			key = prefix + &quot;.&quot; + key
+		}
+		if valNode.Kind == yaml.MappingNode {
+			flattenNodeWithComments(key, valNode, result)
+		} else {
+			result[key] = mergeEntry{
+				key:      key,
+				value:    valNode.Value,
+				comment:  keyNode.HeadComment,
+				override: commentHasOverride(keyNode.HeadComment),
+			}
+		}
+	}
+}
+
+// overrideMarker is the comment line that protects a hand-tuned translation.
+const overrideMarker = &quot;# @override&quot;
+
+// commentHasOverride returns true if a comment string contains @override.
+func commentHasOverride(comment string) bool {
+	for _, line := range strings.Split(comment, &quot;\n&quot;) {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == overrideMarker || strings.HasPrefix(trimmed, overrideMarker+&quot; &quot;) {
+			return true
+		}
+	}
+	return false
+}
+
+// sortedKeys returns sorted keys of a string-keyed map.
+func sortedKeys[V any](m map[string]V) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {</code></pre>
+    <p><code>loadYAMLWithComments</code> populates <code>comment</code>, <code>override</code>, and calls <code>commentHasOverride</code>, but its sole consumer <code>loadYAMLFlat</code> reads only <code>.value</code>. No report reads <code>.comment</code> or <code>.override</code>, so those fields, <code>commentHasOverride</code>, and <code>overrideMarker</code> are dead — and <code>yaml_test.go</code> tests that dead behavior. <code>computeStale[V any]</code> is likewise generic over one concrete caller (<code>map[string]string</code>). This is scaffolding for the future <code>merge</code> slice. Defer it to the slice that consumes it, or note in the README that the machinery is forward-looking.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> <code>indirectKeyPattern</code> misses double-quoted object property names <span class="pill pill-gemini">Gemini</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+    <p>The pattern matches property names only as bare words (<code>\b\w+</code>) or single-quoted strings (<code>&#39;[^&#39;]+&#39;</code>). A double-quoted property with a key-shaped value — <code>&quot;my-prop&quot;: &#39;foo.bar&#39;</code> — is missed, so <code>foo.bar</code> is never counted as referenced and <code>unused</code> reports it as dead. This affects <code>unused</code> precision only (not the <code>undefined</code> gate), and no such construct exists in the tree today. Add <code>&quot;[^&quot;]+&quot;</code> to the property-name alternation.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> Dead <code>${</code> guard in <code>extractDynamicPatterns</code> <span class="pill pill-gemini">Gemini</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+    <p>The loop skips a template that lacks <code>${</code>, but <code>dynamicKeyLiteral</code> already requires <code>\$\{[^}]+\}</code> to match, so the guard can never fire. Drop it.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> Line-based comment filter misses block comments without leading asterisks <span class="pill pill-gemini">Gemini</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>commentLinePattern</code> matches lines starting with <code>//</code>, <code>*</code>, <code>/*</code>, or <code>&lt;!--</code>. Block-comment inner lines lacking a leading <code>*</code>, and multi-line HTML comments, read as live code. A stateful <code>inBlockComment</code> flag in the line loop would close the gap. Theoretical today — the scan produces no false positives on the current tree.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>(future) The <code>undefined</code> gate&#39;s heuristics can false-positive once wired to CI<em></em> — <code>scan.go</code> <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span>. <code>keyAttrPattern</code> captures any <code>*-key=&quot;literal&quot;</code> attribute; the <code>keyPropLine</code>→<code>dottedKeyLiteral</code> path captures every dotted lowercase literal on a line containing <code>titleKey</code>/<code>labelKey</code>/<code>descriptionKey</code>; <code>multilineKeyPattern</code> and trailing/block comments bypass the line-based comment filter. All feed <code>directRefs</code>, which drives the exit-1 gate. Today the tree is clean — exactly seven real undefined keys, no false positives. But a future attribute like <code>sort-key=&quot;metadata.name&quot;</code>, or an unrelated dotted literal on a <code>labelKey</code> line, would be reported as undefined and, once a later slice wires the gate into CI, fail the build on non-translation code. Constrain <code>keyAttrPattern</code>&#39;s value to the key shape, or gate <code>undefined</code> on a curated attribute allowlist. (Gemini raised the <code>keyPropLine</code> and <code>multilineKeyPattern</code> cases as important findings; the zero-false-positive result recalibrates them to this forward concern.)</li>
+      <li><em></em>(in-scope) <code>unused</code> folds dynamic matches into &quot;used,&quot; under-reporting truly dead keys<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L256-L263"><code>scan.go:256-263</code></a> <span class="pill pill-codex">Codex</span>. A broad pattern like <code>snapshots.dialog.{}.info</code> marks <code>snapshots.dialog.delete.info</code> used even though only the <code>restore</code> branch calls it (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/pkg/rancher-desktop/components/SnapshotCard.vue#L139"><code>SnapshotCard.vue:139</code></a>). For a deletion tool this is the safe direction — treating a dynamically-matchable key as used avoids proposing deletion of a live key. A &quot;possibly used&quot; tier (or listing dynamic matches separately) would surface those keys without that risk. Assessment: the current behavior is correct by default; the tier is a precision enhancement, not a fix.</li>
+      <li><strong>(future) Regex-heuristic scanning versus a Vue/TS parser</strong> — <code>scan.go</code> <span class="pill pill-claude">Claude</span>. Roughly eleven regexes over raw lines: fast (&lt;1s over the tree) and conservative. Residual noise shows in <code>dynamic</code>, which reports a JS object-access literal <code>WSL.integrations[&quot;{}&quot;]</code> with zero matches. If the heuristic set keeps growing across the stack, a lightweight parse would remove the trailing-comment and object-access corners wholesale.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>(in-scope) The <code>refs</code>/<code>directRefs</code> split<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L151-L161"><code>scan.go:151-161</code></a> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span>. <code>unused</code> uses the permissive set (indirect and dynamic) to avoid false deletions; <code>undefined</code> uses the strict set to avoid false alarms. The rationale is documented at the point of use.</li>
+      <li><strong>(in-scope) Exit-code discipline</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/docker-credential-none/main.go#L49-L55"><code>main.go:49-55</code></a> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span>. <code>errFindings</code> maps to exit 1 for findings and 2 for operational errors — the right primitive for CI gating, explained in both code and README.</li>
+      <li><strong>(in-scope) Complete integration touches</strong> <span class="pill pill-claude">Claude</span>. A single dependency (<code>yaml.v3</code>), the module wired into <code>go.work</code>, a <code>package.json</code> test target, <code>.gitignore</code>, and spelling excludes all land together and correctly.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Tests exercise real temporary repos and real scans (no mocked behavior) and all pass. Gaps, by risk:</p>
+    <ol>
+      <li><em></em>Dynamic-pattern resolution into <code>unused</code>/<code>references</code><em></em> — the load-bearing behavior that a dynamically-referenced key is <em>not</em> reported unused (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L256-L263"><code>scan.go:256-263</code></a>) has no end-to-end test; only the regex helper is covered.</li>
+      <li><em></em><code>references</code> output<em></em> — no test covers either format, so the I1 JSON/text divergence went uncaught.</li>
+      <li><em></em><code>computeStale</code>/<code>stale</code><em></em> — no direct or end-to-end test; the only coverage is transitive.</li>
+      <li><em></em><code>undefined</code> exit-code contract<em></em> — <code>reportUndefined</code> returning <code>errFindings</code> and <code>main</code> mapping it to exit 1 is untested.</li>
+      <li><strong>Dead-code coverage</strong> — <code>yaml_test.go</code> tests the override machinery that S7 flags as dead, rather than active formatting boundaries.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Godoc coverage on package-level symbols is good. The gaps are the inaccurate comments (S4, S5) and the three README drifts (S6). No user-facing documentation is affected.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>A single squashed commit, appropriate for slice 1 of a declared ten-PR stack; the history is clean. Minor scope bleed: the commit carries forward-looking artifacts (S4, S5, S7) that belong to later slices. Folding each into the slice that consumes it would keep every PR&#39;s diff self-justifying.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/report_dynamic.go#L44-L46"><code>report_dynamic.go:44-46</code></a><em></em> — dedup reports only the first location for each dynamic pattern. Deliberate; the change does not make it more likely to matter.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L50-L55"><code>scan.go:50-55</code></a><em></em> — <code>indirectKeyPattern</code> is validated against the en-us key set to suppress false positives from settings paths and resource types. Correct and tested.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/224577e66485612cd175f2101269ce42095f416c/src/go/i18n-report/scan.go#L36-L39"><code>scan.go:36-39</code></a><em></em> — bound Vue attributes (<code>:label-key=&quot;expr&quot;</code>) are intentionally excluded via the leading <code>^|\s</code> requirement; covered by tests.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude"><span class="pill pill-claude">Claude</span> <a href="#claude" class="pilcrow">&#182;</a></h3>
+    <p>Claude gave the most calibrated, verification-backed review. It ran every report against the live repo, confirming the JSON leak with a concrete key (<code>generic.and</code>) and proving the <code>undefined</code> gate finds exactly seven genuine missing keys. It uniquely caught the <code>.golangci.yaml</code> no-op entry and the README table omission, and framed the gate-heuristic risk as a future concern rather than an active bug. Its severity judgments matched the consolidation with no changes. Its one gap: it missed the unreadable-file exit-code mismatch that Codex found.</p>
+    <h3 id="codex"><span class="pill pill-codex">Codex</span> <a href="#codex" class="pilcrow">&#182;</a></h3>
+    <p>Codex contributed the two findings no other agent reached — the unreadable-file warning that contradicts the documented exit-2 contract, and the silent <code>--format</code> fallback. It also owns the sharpest design concern: dynamic matches counted as definite references let <code>unused</code> under-report dead keys. Both of its &quot;important&quot; findings were code-accurate but overstated for this slice — the unreadable-file path never fires in CI, and the dynamic-as-used direction is safe by design — so both were downgraded. Its reasoning trace reflects real tracing; it cited <code>SnapshotCard.vue</code> by line to ground the dynamic example.</p>
+    <h3 id="gemini"><span class="pill pill-gemini">Gemini</span> <a href="#gemini" class="pilcrow">&#182;</a></h3>
+    <p>Gemini produced the widest finding set and the most severity inflation: five of eight findings were &quot;important,&quot; but four rested on heuristic edge cases that produce zero false positives on the real tree (double-quoted properties, block comments, <code>keyPropLine</code> over-capture, the comment-bypassing multiline scan). Running the tool recalibrated these to suggestions and a design concern. Its genuine wins were independently confirming the JSON leak — its one surviving important — and the dead override machinery. As usual it ran no tools, so it could not separate theoretical from live failure modes.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>8m 28s</td><td>5m 26s</td><td>7m 09s</td></tr>
+        <tr><td>Findings</td><td>1I 4S</td><td>4S</td><td>1I 5S</td></tr>
+        <tr><td>Tool calls</td><td>31 (Read 16, Bash 15)</td><td>52 (shell 51, plan 1)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>3</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>2</td><td>3</td><td>3</td></tr>
+        <tr><td>Files reviewed</td><td>24</td><td>24</td><td>24</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 4S</strong></td><td><strong>4S</strong></td><td><strong>1I 5S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>2 (I→S)</td><td>4 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation:</strong> Codex I1 (unreadable files): important → suggestion S1 (never fires in CI; documented-contract nit). Codex I2 (dynamic-as-definite): important → design observation (safe by design for a deletion tool). Gemini I1 (dynamic JSON <code>null</code>): important → suggestion S2 (trivial output nit). Gemini I3 (double-quoted properties): important → suggestion S8 (affects <code>unused</code> precision only, no live case). Gemini I4 (<code>keyPropLine</code> over-capture) and I5 (multiline comment bypass): important → design observations (zero live false positives). Gemini I2 (references JSON leak) was kept at important as consolidated I1. Claude&#39;s severities were unchanged.</p>
+    <p>Claude delivered the most value: the calibrated verdict, the two unique documentation catches, and the empirical grounding that recalibrated six inflated findings. Codex added the only findings outside the scanner and the best design framing. Gemini&#39;s breadth helped, but required the most downgrading. The lone important finding was caught by two of three agents independently and confirmed by running the tool.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When the change adds or modifies a source scanner, linter, code generator, or CI gate, run it against the real repository before rating any finding that alleges a false positive or false negative. Base severity on the observed output: a heuristic that could misfire in theory but produces none on the current tree is a hardening suggestion, not a correctness bug. State the command run and its result in the finding. Reviewers that reason about the regex in isolation systematically inflate the severity of edge cases the real input never hits.</li>
+      <li>When a round-N PR has been recut rather than incrementally updated — the current diff no longer contains the files a prior round&#39;s findings referenced — state this in the prompt and skip injecting prior findings whose code is gone. Re-verify only the prior findings whose files survive the recut. Asking agents to re-check findings against deleted code wastes tokens and invites confusion between the old and new scope.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] <code>src/go/i18n-report</code> is a heuristic scanner and CI-gate tool built as a ten-PR stack. When reviewing any slice, run the affected reports against the real repo (<code>cd src/go/i18n-report &amp;&amp; go run . undefined | unused | references | stale --locale=&lt;x&gt; | dynamic</code>) and calibrate severity on the output. The scanner is a stack of line-based regexes; on the current tree the <code>undefined</code> gate reports exactly seven genuine missing keys with zero false positives, so a &quot;this pattern could false-positive&quot; claim is a forward-looking hardening note unless the run reproduces it.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
