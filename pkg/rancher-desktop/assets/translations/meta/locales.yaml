@@ -16,3 +16,5 @@ locales:
     status: experimental
   ja:
     status: experimental
+  it:
+    status: experimental
