@@ -600,7 +600,7 @@ components:
               # Keep in sync with meta/locales.yaml and settingsValidator.ts;
               # run `i18n-report manifest --cross-validate` to check.
               # Add this check to CI to catch mismatches automatically.
-              enum: [none, de, en-us, fr, zh-hans]
+              enum: [none, de, en-us, es, fr, zh-hans]
               x-rd-usage: set the UI language
             theme:
               type: string

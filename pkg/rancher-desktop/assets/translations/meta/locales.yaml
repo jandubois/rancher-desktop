@@ -10,3 +10,5 @@ locales:
     status: experimental
   fr:
     status: experimental
+  es:
+    status: experimental
