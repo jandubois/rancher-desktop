@@ -8,3 +8,5 @@ locales:
     status: experimental
   zh-hans:
     status: experimental
+  fr:
+    status: experimental
