@@ -18,9 +18,9 @@ import (
 )
 
 // errFindings marks an error that reports problems in the data being checked
-// (such as undefined key references) rather than an operational failure (an
-// unreadable file, a bad flag). main exits 1 for findings and 2 for
-// operational errors, so CI can tell them apart.
+// (drifted keys, undefined references, failed policy gates) rather than an
+// operational failure (an unreadable file, a bad flag). main exits 1 for
+// findings and 2 for operational errors, so CI can tell them apart.
 var errFindings = errors.New("findings")
 
 // findingsError matches errFindings without wrapping it, so the sentinel
@@ -40,9 +40,11 @@ var subcommands = map[string]func([]string) error{
 	"untranslated": runUntranslated,
 	"references":   runReferences,
 	"dynamic":      runDynamic,
+	"check":        runCheck,
 	"remove":       runRemove,
 	"manifest":     runManifest,
 	"meta":         runMeta,
+	"drift":        runDrift,
 	"validate":     runValidate,
 }
 
@@ -87,8 +89,10 @@ Subcommands:
   untranslated  Hardcoded English strings in Vue/TS files (heuristic)
   references    Where each en-us.yaml key is used (file:line)
   dynamic       Template literal patterns that reference keys dynamically
+  check         Source gate (unused + undefined); per-locale policy with --locale
   manifest      Validate meta/locales.yaml manifest
   meta          Generate source metadata for a locale
+  drift         Detect translated keys whose English source has changed
   validate      Structural checks: placeholders, tags, metadata, overrides
 
 Run "i18n-report <subcommand> -h" for subcommand-specific flags.`)

@@ -22,13 +22,13 @@ go build -o src/go/i18n-report/i18n-report ./src/go/i18n-report
 ## Exit codes
 
 - `0` — success; no problems found.
-- `1` — the command found problems in the data, such as undefined
-  references.
+- `1` — the command found problems in the data: drifted keys, undefined
+  references, or a failed policy gate.
 - `2` — an operational failure: an unreadable file or an invalid flag.
 
-Gate commands (`undefined`, `validate`, and `manifest --cross-validate`)
-split exit `1` from exit `2`, so CI can tell a real finding from a broken
-invocation. Lister commands (`unused`, `stale`,
+Gate commands (`check`, `undefined`, `drift`, `validate`, and `manifest
+--cross-validate`) split exit `1` from exit `2`, so CI can tell a real
+finding from a broken invocation. Lister commands (`unused`, `stale`,
 `translate`, `references`, `dynamic`, `untranslated`) exit `0` even when
 they list results.
 
@@ -245,6 +245,18 @@ Checks include:
 - `@override` placement (leaf keys only)
 - Metadata coherence (every translated key has a metadata entry)
 
+### drift
+
+Detect keys whose English source text changed since last translation.
+Compares current `en-us.yaml` values against stored metadata.
+
+```sh
+i18n-report drift --locale=de
+```
+
+Exits with code 1 when drift is detected, and also when metadata is
+missing or orphaned.
+
 ### meta
 
 Generate or regenerate source-text metadata for a locale. The metadata
@@ -268,6 +280,42 @@ Cross-validation checks that `meta/locales.yaml`, `command-api.yaml`,
 `settingsValidator.ts`, `settingsValidator.spec.ts`, and the `locale.*`
 display-name keys in `en-us.yaml` agree on the set of supported locales.
 
+### check
+
+The command CI runs. It has three forms.
+
+Bare `check` runs the locale-independent source gate: keys defined in
+`en-us.yaml` but referenced nowhere (unused), and keys referenced in source
+but missing from `en-us.yaml` (undefined).
+
+```sh
+i18n-report check
+```
+
+`check --locale=<code>` runs the source gate, then per-locale policy checks.
+The policy defaults to the locale's status in `meta/locales.yaml`
+(experimental or shipping); `--policy` overrides it. Checking the source
+locale (`en-us`) per-locale is an error.
+
+```sh
+i18n-report check --locale=de
+i18n-report check --locale=de --policy=shipping
+```
+
+`check --locale=all` runs the source gate once, then the policy checks for
+every translation locale in the manifest.
+
+```sh
+i18n-report check --locale=all
+```
+
+Passing `--policy` without `--locale` is an error.
+
+**Experimental** policy checks: manifest valid, locale file readable,
+no undefined keys, no stale keys, validate passes.
+
+**Shipping** policy adds: no missing keys, no drifted keys.
+
 ## Common workflows
 
 ### Clean up dead keys
@@ -287,6 +335,9 @@ i18n-report translate --locale=de --batch=3 --batches=3 > batch3.txt
 
 # Merge translated output back into the locale file.
 i18n-report merge --locale=de batch1.out batch2.out batch3.out
+
+# Verify the result.
+i18n-report check --locale=de
 ```
 
 ### Retranslate drifted keys
@@ -373,8 +424,10 @@ go test ./src/go/i18n-report/...
 | `report_dynamic.go` | `dynamic` subcommand, finds dynamic key patterns |
 | `report_remove.go` | `remove` subcommand, YAML key removal |
 | `report_validate.go` | `validate` subcommand, placeholder and structure checks |
+| `report_drift.go` | `drift` subcommand, detects stale translations |
 | `report_meta.go` | `meta` subcommand, source-string metadata generation |
 | `report_manifest.go` | `manifest` subcommand, cross-validation with API spec |
+| `report_check.go` | `check` subcommand |
 
 All files are in `package main`. The tool has one external dependency:
 `gopkg.in/yaml.v3`.
