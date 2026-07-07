@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260707-152324-pr-10580</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260707-152324-pr-10580</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-07 15:23</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of pr-10580)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10580" class="gh-ref" data-title="Add the translation data model: metadata and node layer" data-state="open" data-type="pr">#10580</a> — Add the translation data model: metadata and node layer</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/5213b08a5"><code>5213b08a5</code></a> Add the translation data model: metadata and node layer<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/835a9ecfc"><code>835a9ecfc</code></a> i18n-report: harden translation-key regexes <em>(base PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="merged" data-type="pr">#10107</a>)</em><br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/85023dc8a"><code>85023dc8a</code></a> Add i18n-report tool: scanner and key-hygiene reports <em>(base PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="merged" data-type="pr">#10107</a>)</em></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; two latent data-model flaws (dotted-key corruption, metadata location) are cheap to fix now and costly once consumers land</td></tr>
+      <tr><td>Wall-clock time</td><td><code>23 min 33 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The top commit adds the translation data model: per-locale English-source snapshots for drift detection (<code>metadata.go</code>), a comment-preserving <code>yaml.Node</code> document layer (<code>yaml.go</code>), and the <code>meta</code> subcommand. The metadata and drift logic are correct and well-tested. Two latent design flaws stand out: the node layer&#39;s dotted-key path model corrupts keys that contain literal dots, and metadata files land where the renderer&#39;s locale glob will ingest them.</p>
+    <p>Only the top commit is new to this PR; the two lower commits come from the stacked base PR (<a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="merged" data-type="pr">#10107</a>), so findings in <code>scan.go</code> and other base files belong there. Both Important findings are latent — neither is reachable through any command this PR wires up — but both sit in the foundational data model the PR exists to establish. Codex raised both; Claude cleared the same files with only suggestions, and Gemini&#39;s two headline findings were hallucinations against code that reads correctly on disk.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Metadata files land in the renderer&#39;s locale-discovery tree <span class="pill pill-codex">Codex</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/metadata.go#L12-L22">src/go/i18n-report/metadata.go</a></div>
+      <pre data-start="12" data-line="17"><code class="language-go">	&quot;gopkg.in/yaml.v3&quot;
+)
+
+// metadataPath returns the path to a locale&#39;s metadata file.
+func metadataPath(root, locale string) string {
+	return filepath.Join(root, translationsDir, &quot;meta&quot;, locale+&quot;.yaml&quot;)
+}
+
+// loadMetadata reads a metadata file into a map of dotted keys to English
+// source strings. Returns an empty map if the file does not exist.
+func loadMetadata(root, locale string) (map[string]string, error) {</code></pre>
+    <p>Metadata is written under <code>pkg/rancher-desktop/assets/translations/meta/</code>. The renderer builds its locale list from a recursive glob of that tree — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/pkg/rancher-desktop/store/i18n.js#L8"><code>store/i18n.js:8</code></a>, <code>webpackContext(&#39;@pkg/assets/translations&#39;, { recursive: true, regExp: /.*/ })</code> — and maps each match to its basename (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/pkg/rancher-desktop/store/i18n.js#L16"><code>store/i18n.js:16</code></a>). Once <code>meta/de.yaml</code> exists, webpack bundles it and <code>state.available</code> gains a duplicate <code>de</code>; the tool-only metadata YAML ships in the renderer bundle and couples runtime locale discovery to tool state. Latent today: <code>meta/</code> does not yet exist and is not gitignored, so this manifests the first time <code>meta</code> runs before a build.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/pkg/rancher-desktop/store/i18n.js#L3-L21">pkg/rancher-desktop/store/i18n.js</a></div>
+      <pre data-start="3" data-line="8-16"><code class="language-javascript">import en from &#39;@pkg/assets/translations/en-us.yaml&#39;;
+import { LOCALE } from &#39;@pkg/config/cookies&#39;;
+import { getProduct, getVendor } from &#39;@pkg/config/private-label&#39;;
+import { get } from &#39;@pkg/utils/object&#39;;
+
+const translationContext = import.meta.webpackContext(&#39;@pkg/assets/translations&#39;, { recursive: true, regExp: /.*/ });
+
+const NONE = &#39;none&#39;;
+
+// Formatters can&#39;t be serialized into state
+const intlCache = {};
+
+export const state = function() {
+  const available = translationContext.keys().map(path =&gt; path.replace(/^.*\/([^\/]+)\.[^.]+$/, &#39;$1&#39;));
+
+  const out = {
+    default:      &#39;en-us&#39;,
+    selected:     null,
+    previous:     null,</code></pre>
+    <p>Fix: write metadata outside the translations tree (e.g. <code>assets/translation-meta/</code>), or narrow the glob to root-level locale files.</p>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> Node path model corrupts YAML keys containing literal dots <span class="pill pill-codex">Codex</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L202-L212">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="202" data-line="207"><code class="language-go">// nodeSetLeaf sets a leaf value in a yaml.Node tree by dotted key path.
+// It creates intermediate MappingNode entries as needed.
+// If comment is non-empty, it replaces the key node&#39;s HeadComment.
+// If comment is empty and the key already exists, the existing comment is preserved.
+func nodeSetLeaf(root *yaml.Node, dottedKey, value, comment string) error {
+	parts := strings.Split(dottedKey, &quot;.&quot;)
+	current := root
+
+	// Navigate or create intermediate mapping nodes.
+	for i, part := range parts {
+		isLeaf := i == len(parts)-1</code></pre>
+    <p><code>flattenNodeWithComments</code> joins nested keys with <code>.</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L66"><code>yaml.go:66</code></a>); <code>nodeSetLeaf</code> and <code>nodeGetLeaf</code> split back on <code>.</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L207"><code>yaml.go:207</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L292"><code>yaml.go:292</code></a>). Locale files hold active leaf keys that themselves contain dots — <code>&#39;kubernetes.io/dockercfg&#39;</code> and <code>&#39;bootstrap.kubernetes.io/token&#39;</code> under <code>secret.types</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/pkg/rancher-desktop/assets/translations/en-us.yaml#L3122"><code>en-us.yaml:3122</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/pkg/rancher-desktop/assets/translations/en-us.yaml#L3127"><code>en-us.yaml:3127</code></a>). I reproduced the round-trip: writing the flattened key <code>secret.types.kubernetes.io/dockercfg</code> back through <code>nodeSetLeaf</code> builds <code>kubernetes:</code> → <code>io/dockercfg:</code> nested mappings instead of the original leaf, silently restructuring the file.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L61-L71">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="61" data-line="66"><code class="language-go">		return
+	}
+	for i := 0; i &lt; len(node.Content)-1; i += 2 {
+		keyNode := node.Content[i]
+		valNode := node.Content[i+1]
+		key := keyNode.Value
+		if prefix != &quot;&quot; {
+			key = prefix + &quot;.&quot; + key
+		}
+		if valNode.Kind == yaml.MappingNode {
+			flattenNodeWithComments(key, valNode, result)</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L202-L212">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="202" data-line="207"><code class="language-go">// nodeSetLeaf sets a leaf value in a yaml.Node tree by dotted key path.
+// It creates intermediate MappingNode entries as needed.
+// If comment is non-empty, it replaces the key node&#39;s HeadComment.
+// If comment is empty and the key already exists, the existing comment is preserved.
+func nodeSetLeaf(root *yaml.Node, dottedKey, value, comment string) error {
+	parts := strings.Split(dottedKey, &quot;.&quot;)
+	current := root
+
+	// Navigate or create intermediate mapping nodes.
+	for i, part := range parts {
+		isLeaf := i == len(parts)-1</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L287-L297">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="287" data-line="292"><code class="language-go">}
+
+// nodeGetLeaf retrieves a leaf&#39;s value and HeadComment from the tree.
+// Returns empty strings and false if the key is not found.
+func nodeGetLeaf(root *yaml.Node, dottedKey string) (value, comment string, found bool) {
+	parts := strings.Split(dottedKey, &quot;.&quot;)
+	current := root
+	for i, part := range parts {
+		idx := nodeFindKey(current, part)
+		if idx &lt; 0 {
+			return &quot;&quot;, &quot;&quot;, false</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/pkg/rancher-desktop/assets/translations/en-us.yaml#L3117-L3132">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="3117" data-line="3122-3127"><code class="language-yaml">    token: Token
+  type: Type
+  types:
+    &#39;opaque&#39;: &#39;Opaque&#39;
+    &#39;kubernetes.io/service-account-token&#39;: &#39;Svc Acct Token&#39;
+    &#39;kubernetes.io/dockercfg&#39;: &#39;Registry&#39;
+    &#39;kubernetes.io/dockerconfigjson&#39;: &#39;Registry&#39;
+    &#39;kubernetes.io/basic-auth&#39;: &#39;HTTP Basic Auth&#39;
+    &#39;kubernetes.io/ssh-auth&#39;: &#39;SSH Key&#39;
+    &#39;kubernetes.io/tls&#39;: &#39;TLS Certificate&#39;
+    &#39;bootstrap.kubernetes.io/token&#39;: &#39;Bootstrap Token&#39;
+    &#39;istio.io/key-and-cert&#39;: &#39;Istio Certificate&#39;
+    &#39;helm.sh/release.v1&#39;: &#39;Helm Release&#39;
+    &#39;fleet.cattle.io/cluster-registration-values&#39;: &#39;Fleet Cluster&#39;
+    &#39;provisioning.cattle.io/cloud-credential&#39;: &#39;Cloud Credential&#39;
+  initials:</code></pre>
+    <p>Latent: no command in this PR calls <code>nodeSetLeaf</code> (grep confirms only tests reach it), but <code>merge</code> and <code>remove</code> — later PRs — route every write through it.</p>
+    <p>Fix: carry <code>[]string</code> path segments internally, or use a quote-aware split/join matching the JS <code>get</code> semantics.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> &quot;raw scalar text / source bytes&quot; comment misstates a decoded comparison <span class="pill pill-claude">Claude</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>loadYAMLFlat</code> returns the YAML-<em>decoded</em> scalar, not raw bytes: <code>k: &quot;Hello&quot;</code> and <code>k: Hello</code> both yield <code>Hello</code>, and <code>k: &quot;a\tb&quot;</code> yields a real tab. Comparing decoded values is the right call — re-quoting English never falsely triggers drift — but the comment claims byte preservation, the opposite. The same wording predates this commit in <code>loadYAMLFlat</code>&#39;s own doc (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L16"><code>yaml.go:16</code></a>).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L11-L21">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="11" data-line="16"><code class="language-go">	&quot;strings&quot;
+
+	&quot;gopkg.in/yaml.v3&quot;
+)
+
+// loadYAMLFlat loads a YAML file and returns flattened key-value pairs.
+// Values are the raw scalar text as written, with no YAML type resolution,
+// so every consumer sees the same string the translation file contains.
+func loadYAMLFlat(path string) (map[string]string, error) {
+	entries, err := loadYAMLWithComments(path)
+	if err != nil {</code></pre>
+    <p>Fix: state that both sides decode through the same YAML decoder, so drift compares decoded values; drop the &quot;raw bytes&quot; framing in both places.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>stripOverrideMarker</code> strips by substring while <code>commentHasOverride</code> matches exactly <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>commentHasOverride</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L87"><code>yaml.go:87</code></a>) counts a line as a marker only when it equals <code># @override</code> or starts with <code># @override </code> (the test pins <code># @overridden</code> → false). <code>stripOverrideMarker</code> deletes any line <em>containing</em> <code>@override</code>, so a value update drops a translator note like <code># @overridden spelling</code> — a comment this layer exists to preserve. Latent: only <code>nodeSetLeaf</code> reaches it.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L82-L92">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="82" data-line="87"><code class="language-go">
+// overrideMarker is the comment line that protects a hand-tuned translation.
+const overrideMarker = &quot;# @override&quot;
+
+// commentHasOverride returns true if a comment string contains @override.
+func commentHasOverride(comment string) bool {
+	for _, line := range strings.Split(comment, &quot;\n&quot;) {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == overrideMarker || strings.HasPrefix(trimmed, overrideMarker+&quot; &quot;) {
+			return true
+		}</code></pre>
+    <p>Fix: strip with the same predicate <code>commentHasOverride</code> uses.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Redundant sort when building metadata entries <span class="pill pill-gemini">Gemini</span> <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>entries</code> is a map, so the <code>sortedKeys(localeKeys)</code> iteration order is discarded, and <code>serializeMetadata</code> marshals via <code>yaml.Marshal</code>, which sorts keys itself (<code>TestMetadataDeterministic</code> confirms determinism). The sort over ~2,300 keys changes nothing in the output.</p>
+    <p>Fix: iterate <code>for key := range localeKeys</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> New <code>sourceLocale</code> const not used at the en-us call sites <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+    <p>This commit adds <code>const sourceLocale = &quot;en-us&quot;</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/repo.go#L17"><code>repo.go:17</code></a>) and uses it in <code>translationLocales</code>, yet <code>generateMetadata</code> and <code>regenerateMetadata</code> (<code>report_meta.go</code>) still hardcode <code>&quot;en-us.yaml&quot;</code>. The source locale now has two spellings in one commit.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/repo.go#L12-L22">src/go/i18n-report/repo.go</a></div>
+      <pre data-start="12" data-line="17"><code class="language-go">)
+
+const translationsDir = &quot;pkg/rancher-desktop/assets/translations&quot;
+
+// sourceLocale is the locale every translation derives from.
+const sourceLocale = &quot;en-us&quot;
+
+// repoRoot returns the repository root by walking up from the current
+// directory looking for the translations directory. Nested package.json
+// files (bats/, sudo-prompt/) make that marker ambiguous.
+func repoRoot() (string, error) {</code></pre>
+    <p>Fix: use <code>translationsPath(root, sourceLocale+&quot;.yaml&quot;)</code> at these sites.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Per-line scan misses multi-line dynamic template literals <span class="pill pill-gemini">Gemini</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>extractDynamicPatterns</code> runs per line, and <code>dynamicKeyLiteral</code> needs both backticks on one line, so a template literal split across lines is missed and its keys then read as unused. Regular multi-line <code>t()</code> calls already match whole-file content (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/scan.go#L245"><code>scan.go:245</code></a>); dynamic literals do not. This lives in <code>scan.go</code> — base PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="merged" data-type="pr">#10107</a> — and is low-impact, since multi-line dynamic literals are rare.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/scan.go#L240-L250">src/go/i18n-report/scan.go</a></div>
+      <pre data-start="240" data-line="245"><code class="language-go">			}
+			// Dynamic template literal patterns.
+			result.dynamics = append(result.dynamics, extractDynamicPatterns(line, ref)...)
+		}
+		// Multi-line t( calls span lines, so match against the whole file.
+		for _, m := range multilineKeyPattern.FindAllStringSubmatchIndex(content, -1) {
+			key := content[m[2]:m[3]]
+			line := 1 + strings.Count(content[:m[2]], &quot;\n&quot;)
+			addDirect(key, keyReference{File: relPath, Line: line})
+		}
+	}</code></pre>
+    <p>Fix: match <code>dynamicKeyLiteral</code> against the whole file, as <code>multilineKeyPattern</code> does.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> Indirect-key regexes are stricter than the canonical <code>dottedKey</code> <span class="pill pill-gemini">Gemini</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>dottedKeyLiteral</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/scan.go#L44"><code>scan.go:44</code></a>) and <code>indirectKeyPattern</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/scan.go#L64"><code>scan.go:64</code></a>) require <code>[a-z][a-zA-Z0-9]*</code> segments — no underscore, lowercase-first — while the <code>dottedKey</code> const allows <code>[a-zA-Z0-9_-]</code>. Real keys break the stricter form: <code>onlyFromVentura_x64</code>, <code>RBAC_ROLE</code>, <code>storage_class_provisioner</code>. A key referenced only indirectly (a string value or ternary) is then missed and reported unused; direct <code>t()</code> calls use <code>dottedKey</code> and are unaffected. This lives in base PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="merged" data-type="pr">#10107</a>; commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0dd432ac5"><code>0dd432ac5</code></a> routed other patterns through <code>dottedKey</code> but left these two.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/scan.go#L39-L69">src/go/i18n-report/scan.go</a></div>
+      <pre data-start="39" data-line="44-64"><code class="language-go">	keyPropPattern = regexp.MustCompile(`(?:titleKey|descriptionKey|labelKey):\s*[&#39;&quot;](` + dottedKey + `)[&#39;&quot;]`)
+	// Lines containing a Key property may use ternaries; extract all dotted keys.
+	keyPropLine = regexp.MustCompile(`(?:titleKey|descriptionKey|labelKey)[:\s=]`)
+	// Dotted key literals in quoted strings.
+	dottedKeyLiteral = regexp.MustCompile(`[&#39;&quot;]([a-z][a-zA-Z0-9]*(?:\.[a-z][a-zA-Z0-9]*)+)[&#39;&quot;]`)
+	// Vue template attributes that pass translation keys: bare k=&quot;...&quot; on
+	// the &lt;t&gt; component and any *-key=&quot;...&quot; attribute (label-key,
+	// no-rows-key, ...). Bound forms (:label-key=&quot;expr&quot;) are expressions,
+	// not keys, and are excluded by the leading ^|\s requirement.
+	keyAttrPattern = regexp.MustCompile(`(?:^|\s)(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*-key|k)=[&#39;&quot;]([a-zA-Z0-9_.-]+)[&#39;&quot;]`)
+	// v-t=&quot;&#39;...&#39;&quot; Vue directive for translation.
+	vtDirectivePattern = regexp.MustCompile(`v-t=&quot;&#39;(` + dottedKey + `)&#39;&quot;`)
+	// Direct store getter calls: getters[&#39;i18n/t&#39;](&#39;key&#39;).
+	getterCallPattern = regexp.MustCompile(`\[&#39;i18n/t&#39;\]\(\s*[&#39;&quot;\x60](` + dottedKey + `)[&#39;&quot;\x60]`)
+	// t( calls with the key literal on the following line.
+	multilineKeyPattern = regexp.MustCompile(`(?:^|[^a-zA-Z])t\(\s*\n\s*[&#39;&quot;\x60](` + dottedKey + `)[&#39;&quot;\x60]`)
+	// Comment lines; keys mentioned in comments are not real references.
+	commentLinePattern = regexp.MustCompile(`^\s*(//|\*|/\*|&lt;!--)`)
+
+	// String values that look like translation keys in property assignments
+	// (e.g., `bar: &#39;product.kubernetesVersion&#39;`). Catches indirect references
+	// where the value is later passed to t() by a different component.
+	// Validated against the en-us.yaml key set to avoid false positives from
+	// settings paths, Kubernetes resource types, and other dotted strings.
+	indirectKeyPattern = regexp.MustCompile(`(?:\b\w+|&#39;[^&#39;]+&#39;|&quot;[^&quot;]+&quot;):\s+[&#39;&quot;]([a-z][a-zA-Z0-9]*(?:\.[a-z][a-zA-Z0-9]*)+)[&#39;&quot;]`)
+
+	// Template literals that look like dynamic translation key patterns.
+	// Matches backtick strings containing at least one dot and one ${...}
+	// interpolation, with a key-like prefix (e.g., `prefix.${var}.suffix`).
+	dynamicKeyLiteral = regexp.MustCompile(&quot;\x60([a-zA-Z][a-zA-Z0-9]*\\.[^\x60]*\\$\\{[^}]+\\}[^\x60]*)\x60&quot;)
+</code></pre>
+    <p>Fix: build both regexes from the <code>dottedKey</code> const.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>The path model should match runtime lookup semantics (in-scope)</strong> <span class="pill pill-codex">Codex</span> — I2 shows the Go model and the JS runtime already disagree on object-path rules. Carrying <code>[]string</code> path segments internally and formatting only at report boundaries, or sharing one escaping convention with the JS <code>get</code>, removes a whole class of bugs around dots, slashes, and quoted keys.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Atomic metadata writes (in-scope)</strong> <span class="pill pill-claude">Claude</span> — <code>writeFileAtomic</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/repo.go#L70"><code>repo.go:70</code></a>) writes a temp file and renames it, cleaning up on every error branch, so an interrupted write cannot truncate the target.</li>
+      <li><strong>Sound drift guard (in-scope)</strong> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> — <code>regenerateMetadata</code> blocks regeneration that would erase outstanding drift markers, while bootstrap and <code>--force</code> proceed. Every state traces correctly.</li>
+      <li><strong>Drift compares decoded values (in-scope)</strong> <span class="pill pill-claude">Claude</span> — routing both sides through the same YAML decoder makes drift robust to cosmetic English edits (re-quoting, block-vs-plain scalars). Good choice, though under-documented (S1).</li>
+      <li><strong>Tests lead consumers (in-scope)</strong> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> — the node layer ships with its own tests ahead of <code>merge</code>/<code>remove</code>, keeping each PR in the stack reviewable.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Coverage of the new code is strong: <code>nodeSetLeaf</code> insert/update/get, single-line serialization, override placement and detection, the drift guard&#39;s block/force/bootstrap states, and metadata round-trips (including a multi-line value). Gaps, ranked by risk:</p>
+    <ol>
+      <li><strong>Keys with literal dots</strong> — no node-layer test round-trips a key like <code>secret.types.&#39;kubernetes.io/dockercfg&#39;</code>. Such a test would have caught I2.</li>
+      <li><strong>Metadata excluded from renderer discovery</strong> — no test or fixture asserts generated metadata stays out of the renderer&#39;s locale glob. This would have caught I1.</li>
+      <li><em></em><code>stripOverrideMarker</code> on value change<em></em> — no test updates an <code>@override</code> leaf with an empty comment and asserts the marker drops while other comment lines survive (S2).</li>
+      <li><em></em><code>serializeNode</code> multi-line branch<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L379"><code>yaml.go:379</code></a>) and <em></em><code>nodeSetLeaf</code> error branches<em></em> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L220"><code>yaml.go:220</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L238"><code>yaml.go:238</code></a>) are unexercised. I verified the multi-line and long-scalar round-trips by hand; nothing pins them against a yaml.v3 bump.</li>
+      <li><em></em><code>meta --locale=all</code><em></em> — the loop and aggregate-findings path in <code>runMeta</code> are untested; only single-locale <code>regenerateMetadata</code> is.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li>S1 covers the inaccurate <code>compute.go</code> and <code>loadYAMLFlat</code> comments.</li>
+      <li><code>README.md</code>&#39;s <code>meta</code> section documents only <code>--locale=de</code>; it omits <code>--force</code> and <code>--locale=all</code>, both of which the subcommand accepts. One line closes the gap.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Clean. The top commit is one self-contained concept with an accurate message. The two lower commits belong to base PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10107" class="gh-ref" data-title="Add i18n-report tool: scanner and key-hygiene reports" data-state="merged" data-type="pr">#10107</a> and are out of scope; the diff shrinks to the single top commit once that PR merges.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>The node layer ships without a production consumer.</strong> <code>nodeSetLeaf</code>, <code>serializeYAMLNode</code>, <code>loadYAMLDocument</code>, <code>nodeGetLeaf</code>, and siblings are reached only by tests. Intentional per the stack plan (<code>merge</code>/<code>remove</code>/<code>validate</code>/<code>drift</code> follow in later PRs) — not flagged as YAGNI.</li>
+      <li><em></em>The metadata header credits <code>merge</code>, not <code>meta</code>.<em></em> <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/metadata.go#L50"><code>metadata.go:50</code></a> writes &quot;Auto-generated by i18n-report merge&quot;; the PR explains that <code>merge</code> updates the file during routine translation while <code>meta</code> bootstraps or regenerates it.</li>
+      <li><strong>Rescan performance.</strong> A prior comment noted every subcommand rescans the source tree; the author declined it, citing compiled runs under half a second. The implementation stays consistent with that rationale, so this review does not flag it.</li>
+      <li><em></em><code>nodeSetLeaf</code> leaves <code>valNode.Style</code> unreset on a value update.<em></em> Documented at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5213b08a5317d57fc4d6f83fdc4c61d46974a82c/src/go/i18n-report/yaml.go#L230"><code>yaml.go:230</code></a> as safe for the only in-tree serializer; a latent snag only if a future caller marshals these nodes via <code>yaml.Marshal</code> directly.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Codex]</strong> — Both Important findings came from Codex alone, and both hold up: the dotted-key corruption (which I reproduced) and the metadata-in-renderer-tree coupling. It was the only reviewer to trace the cross-component path from the Go tool into the renderer&#39;s webpack glob. Both findings were labeled &quot;regression,&quot; which overstates them — the code is new, so they are latent gaps, not regressions of shipped behavior. No false positives. The strongest reviewer this round.</p>
+    <p><strong>[Claude]</strong> — Cleared every file with no critical or important findings, and all four of its suggestions were valid; the decoded-vs-raw comment (S1) and the <code>sourceLocale</code> inconsistency (S4) were unique to it. It verified the serialization round-trips empirically rather than reasoning from the source. But it missed both of Codex&#39;s Important findings in files it marked &quot;logic correct&quot; (<code>metadata.go</code>, <code>yaml.go</code>) — two coverage misses. Conservative but accurate within the scope it examined.</p>
+    <p><strong>[Gemini]</strong> — Its two headline findings — a &quot;critical&quot; <code>Split(comment, &quot;n&quot;)</code> bug and an <code>@override → vue-select-overrides.js</code> find-and-replace corruption — were hallucinations. The code on disk and the inlined diff both read correctly, and neither string exists in either. Gemini then built its Testing and Documentation assessments around the same fictional corruption. Its two genuine findings (S5, S6) were real but confined to base-PR <code>scan.go</code>, and a third (S3) duplicated Claude&#39;s. Skipping <code>git blame</code> (quota) left it unable to tell base-PR code from this commit, which is why its real findings all landed in inherited files.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>10m 34s</td><td>9m 01s</td><td>4m 18s</td></tr>
+        <tr><td>Findings</td><td>4S</td><td>2I</td><td>3S</td></tr>
+        <tr><td>Tool calls</td><td>22 (Bash 15, Read 7)</td><td>99 (shell 99)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>3</td><td>0</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>2</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>2</td><td>2</td></tr>
+        <tr><td>Files reviewed</td><td>30</td><td>30</td><td>30</td></tr>
+        <tr><td>Coverage misses</td><td>2</td><td>0</td><td>2</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>4S</strong></td><td><strong>2I</strong></td><td><strong>3S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>2 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>2</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Gemini&#39;s C1 (critical) and I1 (important) were dropped as false positives — both were hallucinations refuted against the on-disk file and the inlined diff. Gemini&#39;s I2 (important) → S5 and I3 (important) → S6, each downgraded to a suggestion: real, but low-impact and in base-PR <code>scan.go</code>. Codex&#39;s I1 and I2 kept their Important severity; only their &quot;regression&quot; label was corrected to latent gap.</p>
+    <p>Codex delivered the only findings that matter this round, Claude was a reliable but scope-limited second, and Gemini&#39;s asserted criticals were noise. Both real Important issues came from one reviewer tracing tool-to-runtime coupling, not from cross-agent consensus — an argument for keeping diverse reviewers rather than trusting agreement.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a PR is stacked on an unmerged base PR, the merge-base diff includes the base PR&#39;s commits, so the Changed Files list mixes files the top commit introduces with files inherited from below. Run <code>git show --stat &lt;head&gt;</code> to find which files the top commit actually changes, scope findings to those, and mark any finding in an inherited file as belonging to the base PR&#39;s review rather than raising it as net-new. Reviewers that cannot separate the two (for example, one that skips <code>git blame</code>) will concentrate their findings in inherited code and mislabel scope.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] The renderer discovers locales in <code>pkg/rancher-desktop/store/i18n.js</code> via a recursive <code>webpackContext(&#39;@pkg/assets/translations&#39;, { recursive: true, regExp: /.*/ })</code>, keying each match by filename basename. Any file added anywhere under <code>assets/translations/</code> — including a subdirectory — becomes a locale entry in <code>state.available</code> and ships in the renderer bundle. Flag any change that writes non-locale files (metadata, fixtures, generated artifacts) into that tree.</li>
+      <li>[repo] Translation keys in <code>en-us.yaml</code> include leaf keys that contain literal dots and slashes — for example <code>kubernetes.io/dockercfg</code> and <code>bootstrap.kubernetes.io/token</code> under <code>secret.types</code>. Any code that flattens nested keys into dotted paths, or splits dotted paths back into segments, must be quote/dot-aware or it corrupts these keys. Verify key round-trips against these, not only simple <code>a.b.c</code> keys.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
