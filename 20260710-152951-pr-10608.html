@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260710-152951-pr-10608</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260710-152951-pr-10608</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-10 15:29</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of pr-10608)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10608" class="gh-ref" data-title="Add merge and remove, and the translate improve/drift modes" data-state="open" data-type="pr">#10608</a> — Add merge and remove, and the translate improve/drift modes</td></tr>
+      <tr><td>Branch</td><td><code>i18n-report-merge</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c08b0dbae"><code>c08b0dbae</code></a> Add merge and remove, and the translate improve/drift modes<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ef582bec8"><code>ef582bec8</code></a> Quote key segments that contain a literal dot<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37f69ed3b"><code>37f69ed3b</code></a> Quote mapping keys that would not round-trip</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one Important round-trip bug (I1) silently drops secret-type keys through the text/pipe paths; fix before merge, the rest are follow-ups.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>20 min 0 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>This well-contained PR adds <code>merge</code> and <code>remove</code> commands plus <code>translate</code> improve/drift modes to the i18n-report CLI, with strong test coverage. All three reviewers independently found one Important bug: the text-merge and <code>remove</code>-pipe input gate (<code>isValidDottedKey</code>) rejects the quoted dotted-segment key form the tool itself emits, silently dropping the ~24 <code>kubernetes.io/*</code> secret-type keys the PR&#39;s own dot-quoting fix was meant to protect. The JSON path is unaffected.</p>
+    <p>All three agents converged on that single bug (I1) from independent angles — Codex and Claude via the merge/remove call chains, Gemini via the validator&#39;s charset — and I reproduced it end-to-end against a built binary. The remaining items are one small robustness gap and three test/coverage suggestions. No security, concurrency, or data-corruption issues in the write path itself, which is carefully guarded.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> <code>isValidDottedKey</code> rejects the quoted dotted-segment key form → text-merge and <code>remove</code>-pipe silently drop secret-type keys <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/yaml.go#L187-L213">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="187" data-line="192-208"><code class="language-go">
+// stripYAMLQuotes removes outer YAML quotes from a value string.
+func stripYAMLQuotes(s string) string {
+	if len(s) &gt;= 2 &amp;&amp; s[0] == &#39;\&#39;&#39; &amp;&amp; s[len(s)-1] == &#39;\&#39;&#39; {
+		inner := s[1 : len(s)-1]
+		return strings.ReplaceAll(inner, &quot;&#39;&#39;&quot;, &quot;&#39;&quot;)
+	}
+	if len(s) &gt;= 2 &amp;&amp; s[0] == &#39;&quot;&#39; &amp;&amp; s[len(s)-1] == &#39;&quot;&#39; {
+		inner := s[1 : len(s)-1]
+		inner = strings.ReplaceAll(inner, `\&quot;`, `&quot;`)
+		inner = strings.ReplaceAll(inner, `\\`, `\`)
+		return inner
+	}
+	return s
+}
+
+// loadYAMLDocument loads a YAML file into a yaml.Node document tree.
+// Returns a DocumentNode wrapping a MappingNode root; any other top level
+// is an error, since serializing it would erase the file.
+// If the file does not exist, returns an empty document.
+func loadYAMLDocument(path string) (*yaml.Node, error) {
+	data, err := os.ReadFile(path)
+	if os.IsNotExist(err) {
+		// Return an empty document with an empty mapping root.
+		return &amp;yaml.Node{
+			Kind: yaml.DocumentNode,
+			Content: []*yaml.Node{</code></pre>
+    <p><code>en-us.yaml</code> nests ~24 secret-type labels under keys whose own segment holds a dot (<code>kubernetes.io/service-account-token</code>, <code>bootstrap.kubernetes.io/token</code>, lines 3121-3144). <code>translate</code>, <code>stale</code>, and <code>unused</code> all emit the canonical quoted form <code>secret.types.&quot;kubernetes.io/service-account-token&quot;</code> via <code>appendKeyPath</code>. But this validator splits on every <code>.</code> and allows only <code>[A-Za-z0-9_-]</code>, so <code>parseMergeInput</code> (<code>report_merge.go:409,417</code>) and <code>readKeysFromStdin</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_remove.go#L118"><code>report_remove.go:118</code></a>) reject that form. <code>looksLikeEntry</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_merge.go#L25"><code>report_merge.go:25</code></a>) also misses it, so no warning fires.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_merge.go#L20-L30">src/go/i18n-report/report_merge.go</a></div>
+      <pre data-start="20" data-line="25"><code class="language-go">const modeNormal = &quot;normal&quot;
+
+// looksLikeEntry matches lines that were probably meant as key-value
+// entries, so their silent loss can be reported. Report header lines
+// (&quot;Found 15 keys ...&quot;) contain spaces before the separator and stay quiet.
+var looksLikeEntry = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]*\s*[:=]`)
+
+func runMerge(args []string) error {
+	fs := flag.NewFlagSet(&quot;merge&quot;, flag.ExitOnError)
+	locale := fs.String(&quot;locale&quot;, &quot;&quot;, &quot;Target locale code (required)&quot;)
+	dryRun := fs.Bool(&quot;dry-run&quot;, false, &quot;Show what would change without writing&quot;)</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_merge.go#L404-L414">src/go/i18n-report/report_merge.go</a></div>
+      <pre data-start="404" data-line="409"><code class="language-go">
+		// Parse key-value pair: try &quot;key: value&quot; then &quot;key=value&quot;.
+		var key, value string
+		if idx := strings.Index(trimmed, &quot;: &quot;); idx &gt; 0 {
+			candidate := trimmed[:idx]
+			if isValidDottedKey(candidate) {
+				key = candidate
+				value = stripYAMLQuotes(trimmed[idx+2:])
+			}
+		}
+		if key == &quot;&quot; {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_remove.go#L113-L123">src/go/i18n-report/report_remove.go</a></div>
+      <pre data-start="113" data-line="118"><code class="language-go">func readKeysFromStdin() ([]string, error) {
+	var keys []string
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		key := strings.TrimSpace(scanner.Text())
+		if isValidDottedKey(key) {
+			keys = append(keys, key)
+		}
+	}
+	return keys, scanner.Err()
+}</code></pre>
+    <p>I reproduced end-to-end against a built binary: a text-format <code>merge</code> of <code>translate</code>&#39;s own output wrote 1 of 3 keys, exit 0, no warning — the two secret-type keys vanished. Gemini rated this Critical; consolidated to Important because this is a maintainer-only CLI and the JSON path (<code>--format=json</code>) plus <code>remove --stale</code> work, but it is the must-fix item: silent, and it defeats the PR&#39;s own dot-quoting fix.</p>
+    <p>Fix: validate through the same tokenizer the write path uses.</p>
+      <pre><code class="language-diff">-	parts := strings.Split(s, &quot;.&quot;)
++	parts := splitKeyPath(s)
+ 	...
+-		if ... &amp;&amp; c != &#39;_&#39; &amp;&amp; c != &#39;-&#39; {
++		if ... &amp;&amp; c != &#39;_&#39; &amp;&amp; c != &#39;-&#39; &amp;&amp; c != &#39;.&#39; &amp;&amp; c != &#39;/&#39; {</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>parseInputData</code> hard-fails when text input begins with <code>[</code> <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_merge.go#L235-L253">src/go/i18n-report/report_merge.go</a></div>
+      <pre data-start="235" data-line="240-248"><code class="language-go">// lossless path for multiline values; everything else goes through the
+// line-based text formats.
+func parseInputData(data []byte) ([]mergeEntry, error) {
+	data = bytes.TrimPrefix(data, []byte(&quot;\xef\xbb\xbf&quot;))
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) &gt; 0 &amp;&amp; trimmed[0] == &#39;[&#39; {
+		var pairs []struct {
+			Key     string `json:&quot;key&quot;`
+			Value   string `json:&quot;value&quot;`
+			Comment string `json:&quot;comment&quot;`
+		}
+		if err := json.Unmarshal(trimmed, &amp;pairs); err != nil {
+			return nil, fmt.Errorf(&quot;parsing JSON array input: %w&quot;, err)
+		}
+		entries := make([]mergeEntry, 0, len(pairs))
+		for _, p := range pairs {
+			entries = append(entries, mergeEntry{key: p.Key, value: p.Value, comment: localeCommentLines(p.Comment)})
+		}
+		return entries, nil</code></pre>
+    <p>Any input whose first non-whitespace byte is <code>[</code> is committed to the JSON path; a raw text batch that opens with a note like <code>[WIP] ...</code> aborts with <code>parsing JSON array input: invalid character</code>. I reproduced this (exit 2). Impact is low — the failure is loud and writes nothing, and <code>translate</code> text output never starts with <code>[</code>. Gemini proposed falling back to text extraction on a JSON error; that has a downside (a genuinely-intended JSON array with a typo would then be silently mis-parsed as text and mostly dropped), so if changed, keep the failure loud. Downgraded from Gemini&#39;s Important on that basis.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>stripYAMLQuotes</code> decodes only <code>\&quot;</code> and <code>\\</code> in double-quoted values <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/yaml.go#L224-L239">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="224" data-line="229-234"><code class="language-go">	}
+	if doc.Kind != yaml.DocumentNode || len(doc.Content) == 0 {
+		return &amp;yaml.Node{
+			Kind: yaml.DocumentNode,
+			Content: []*yaml.Node{
+				{Kind: yaml.MappingNode},
+			},
+		}, nil
+	}
+	if doc.Content[0].Kind != yaml.MappingNode {
+		return nil, fmt.Errorf(&quot;parsing %s: top level is not a mapping&quot;, path)
+	}
+	return &amp;doc, nil
+}
+
+// documentRoot returns the root MappingNode from a DocumentNode.</code></pre>
+    <p>A hand-authored double-quoted text value using <code>\n</code>, <code>\t</code>, or <code>\uXXXX</code> merges as literal backslash text (<code>&quot;a\nb&quot;</code> → the 4-char string <code>a\nb</code>). Impact is low: the tool&#39;s own text output never quotes values and JSON is the documented lossless path. Prefer unmarshaling the quoted value through <code>yaml.Unmarshal</code> over extending a partial hand-rolled unquoter, or document that only <code>\&quot;</code>/<code>\\</code> are supported in text input.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>TestRemoveKeyFromNode</code> never compares against <code>wantYAML</code>; its absence check is dead code <span class="pill pill-codex">Codex</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_remove_test.go#L96-L115">src/go/i18n-report/report_remove_test.go</a></div>
+      <pre data-start="96" data-line="101-110"><code class="language-go">				t.Fatal(err)
+			}
+
+			got := string(data)
+
+			// For removed cases, verify the removed key is absent.
+			if tc.removed {
+				parts := strings.Split(tc.key, &quot;.&quot;)
+				leaf := parts[len(parts)-1]
+				// Simple check: the leaf key should not appear with its
+				// original value.
+				if strings.Contains(got, leaf+&quot;:&quot;) &amp;&amp; removed == 0 {
+					t.Errorf(&quot;key %q still present in output&quot;, tc.key)
+				}
+			}
+		})
+	}
+}
+
+func TestRemoveMultipleKeys(t *testing.T) {</code></pre>
+    <p><code>wantYAML</code> is set for all seven cases but never read. The only structural check sits under <code>if tc.removed</code> guarded by <code>removed == 0</code>, which line 88 already fails on — so a bad rewrite that returns <code>removed &gt; 0</code> while leaving the key (or corrupting a sibling) passes. Assert the parsed output equals parsed <code>wantYAML</code> (via <code>loadYAMLFlat</code>, avoiding serializer scalar-style churn) to cover pruning and serialization.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_remove_test.go#L83-L93">src/go/i18n-report/report_remove_test.go</a></div>
+      <pre data-start="83" data-line="88"><code class="language-go">			if err != nil {
+				t.Fatal(err)
+			}
+
+			if tc.removed &amp;&amp; removed == 0 {
+				t.Error(&quot;expected key to be removed, but it was not&quot;)
+			}
+			if !tc.removed &amp;&amp; removed &gt; 0 {
+				t.Error(&quot;expected no removal, but key was removed&quot;)
+			}
+</code></pre>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>TestReadKeysFiltersNonKeys</code> omits any slash/quoted key, so it passes against I1 <span class="pill pill-claude">Claude</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+    <p>The fixture filters only simple keys (<code>action.refresh</code>, <code>nav.home.title</code>). Add <code>secret.types.&quot;kubernetes.io/service-account-token&quot;</code> to the input and assert it survives; that case fails today and would guard the I1 fix. Pair it with a text-format <code>merge</code> test for the same key — the merge/remove round-trip of dotted-segment keys is exercised only through the JSON path, never the text/<code>key=value</code> path a translator&#39;s batch file uses.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Two divergent key representations</strong> (in-scope) <span class="pill pill-claude">Claude</span> — The write path (<code>splitKeyPath</code>/<code>appendKeyPath</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/yaml.go#L23-L46"><code>yaml.go:23-46</code></a>) faithfully mirrors the renderer&#39;s <code>splitObjectPath</code>/<code>joinObjectPath</code>: quoted dotted segments, both quote styles stripped. The input-validation path (<code>isValidDottedKey</code>) uses a stricter, incompatible <code>[A-Za-z0-9_-]</code> charset with a naive <code>.</code>-split, and the JSON merge path bypasses validation entirely — which is exactly why JSON round-trips while text/stdin drop. Routing every key-shaped gate (<code>isValidDottedKey</code>, and ideally <code>looksLikeEntry</code>) through <code>splitKeyPath</code> collapses the two representations into one and forecloses the whole I1 class rather than patching one call site.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Serialize-then-atomic-write</strong> (in-scope) <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span> — <code>reportMerge</code> builds the full document in a buffer before <code>writeFileAtomic</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_merge.go#L212-L218"><code>report_merge.go:212-218</code></a>), so a serialization failure leaves the file untouched; co-located <code>@source</code> means one atomic write keeps a translation and its snapshot in sync.</li>
+      <li><em></em><code>validateNoAliases</code> guardrail<em></em> (in-scope) <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span> — anchors, aliases, and sequences the custom serializer cannot round-trip are rejected before any mutation (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/yaml.go#L377-L393"><code>yaml.go:377-393</code></a>).</li>
+      <li><strong>Minimal key quoting</strong> (in-scope) <span class="pill pill-claude">Claude</span> — <code>keyRoundTripsPlain</code>/<code>yamlKey</code> quote a key only when the plain form would not survive a parse, so benign scalars like <code>yes</code> stay unquoted and checked-in locale files do not churn.</li>
+      <li><em></em><code>applied</code>-only <code>@source</code> refresh<em></em> (in-scope) <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span> — the refresh loop touches only keys this merge wrote, preserving drift markers on untouched translations (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_merge.go#L195-L207"><code>report_merge.go:195-207</code></a>).</li>
+      <li><strong>Mapping-overwrite refusal</strong> (in-scope) <span class="pill pill-gemini">Gemini</span> <span class="pill pill-claude">Claude</span> — <code>nodeSetLeaf</code> refuses to replace a populated mapping with a scalar, preventing accidental subtree erasure.</li>
+      <li><strong>Graceful markdown-fence extraction</strong> (in-scope) <span class="pill pill-gemini">Gemini</span> — <code>extractTranslationText</code> drops LLM prose around <code></code>`yaml fences, matching the agent-driven translation workflow.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Coverage is thorough: the mode matrix (normal/drift/improve, <code>--include-overrides</code>, dry-run), duplicate/unknown-key rejection, comment preservation, mapping-vs-leaf refusal, and BOM/JSONL/markdown-fence extraction are all exercised, and the suite passes (<code>go test ./src/go/i18n-report/... -count=1</code>). Gaps, ranked by risk:</p>
+    <ol>
+      <li><strong>Text-format merge of a dotted-segment key</strong> — untested and broken (I1). The dotted-key round-trip is covered only through the JSON array path (<code>TestMergeReadsTranslateJSONArray</code>) and the tree path (<code>TestNodeRoundTripPreservesDottedSegmentKey</code>), never the text/<code>key=value</code> path.</li>
+      <li><em></em><code>remove</code> stdin/pipe with a slash/quoted key<em></em> — untested and broken (I1); see S4.</li>
+      <li><em></em><code>TestRemoveKeyFromNode</code> structural assertion<em></em> — <code>wantYAML</code> never compared (S3).</li>
+      <li><em></em><code>stripYAMLQuotes</code> with <code>\n</code>/<code>\t</code>/unicode escapes<em></em> — untested (S2).</li>
+      <li><em></em><code>validateNoAliases</code> sequence rejection<em></em> — anchors/aliases are covered (<code>TestMergeRejectsAliases</code>); a bare <code>SequenceNode</code> in a locale file is not directly exercised.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The README documents <code>--format=json</code> as lossless and the text format as lossy <strong>for multiline values</strong>, but nowhere warns that the text-batch <code>merge</code> and the <code>unused|remove</code> / <code>stale|remove</code> pipe workflows silently drop dotted-segment (secret-type) keys — a distinct, non-multiline limitation. If I1 is fixed, no doc change is needed; if deferred, the &quot;Translate missing keys&quot; and &quot;Clean up dead keys&quot; workflow sections should state that dotted-segment keys require <code>--format=json</code> / <code>remove --stale</code>. The new annotation and subcommand docs otherwise match the code.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>History is clean and the messages accurately describe intent and motivation. One note: <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ef582bec8"><code>ef582bec8</code></a> (&quot;Quote key segments that contain a literal dot&quot;) fixes a corruption that <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c08b0dbae"><code>c08b0dbae</code></a>&#39;s new <code>merge</code>/<code>remove</code> first introduce, so folding it into the introducing commit would keep every commit non-corrupting through a bisect. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37f69ed3b"><code>37f69ed3b</code></a> fixes a genuinely pre-existing <code>serializeNode</code> latent bug (keys that would not round-trip) and is correctly kept separate. This is a mild preference, not a blocker.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Text format is lossy for multiline values</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_translate.go#L17-L19"><code>report_translate.go:17-19</code></a> documents this and points to <code>--format=json</code> for a lossless round-trip. The change adds no new multiline-text hazard. This acknowledgment does <strong>not</strong> cover I1: the dotted-key drop affects even single-line values, so I1 remains a finding rather than an accepted limitation.</li>
+      <li><em></em><code>findTranslationFiles</code> matches any <code>.yaml</code><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c08b0dbae0abeccf902eb1e8b2c7b9094c929fc0/src/go/i18n-report/report_remove.go#L126-L127"><code>report_remove.go:126-127</code></a> notes this is &quot;sufficient for current naming conventions.&quot; Acceptable given the flat translations directory.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> — The only agent to trace the input-validation gap to a structural &quot;two representations&quot; root cause and to tie it explicitly to the renderer&#39;s <code>splitObjectPath</code>/<code>joinObjectPath</code>, which sharpened the recommended fix. It surfaced two unique low-severity items the others missed — the <code>stripYAMLQuotes</code> partial unquoter and the untested slash-key filter — and verified I1 end-to-end itself rather than reasoning from the code alone. Its severity calibration matched the consolidated view.</p>
+    <p><strong>[Codex]</strong> — Landed the same I1 with the tightest call-chain citations (every gate site named) and confirmed the suite green before reviewing. Its unique catch — that <code>TestRemoveKeyFromNode</code> defines <code>wantYAML</code> but never asserts it, leaving a dead absence check — is a sharp test-quality find, and its proposed comparison via <code>loadYAMLFlat</code> correctly sidesteps the serializer&#39;s scalar-style churn. Cleanest, most citation-dense review.</p>
+    <p><strong>[Gemini]</strong> — Reached I1 from a different angle (the validator&#39;s charset rather than the call chain), a useful independent confirmation. It over-rated I1 as Critical and its own bracket-prefix finding as Important; both were calibrated down, and its proposed I1 fix (widening the charset while keeping the naive split) is less safe than routing through <code>splitKeyPath</code>. As expected it skipped <code>git blame</code>, so it could not weigh the regression-vs-new-code question that Claude and Codex covered — but three-way convergence on I1 with zero false positives is a strong signal.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>10m 57s</td><td>5m 47s</td><td>5m 04s</td></tr>
+        <tr><td>Findings</td><td>1I 2S</td><td>1I 1S</td><td>1I 1S</td></tr>
+        <tr><td>Tool calls</td><td>25 (Read 14, Bash 11)</td><td>49 (shell 49)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>2</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>15</td><td>15</td><td>15</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 2S</strong></td><td><strong>1I 1S</strong></td><td><strong>1I 1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>2 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>All three delivered real value and converged on the one must-fix bug with zero false positives — an unusually clean round. Claude gave the best root-cause framing and the most unique findings; Codex the most precise citations and the sharpest test catch; Gemini a valuable independent-angle confirmation that needed the most severity recalibration. Claude and Codex provided the most actionable value.</p>
+    <p><strong>Reconciliation.</strong> Two severities changed, both Gemini&#39;s: C1 <code>isValidDottedKey</code> Critical → Important (I1); bracket-prefix hard-fail Important → Suggestion (S1). Separately, all three agents labeled I1 a <em>regression</em>; it is reclassified as a new-code correctness bug — <code>merge</code> and <code>remove</code> are absent at the merge-base (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fe330b1fc"><code>fe330b1fc</code></a>) and base <code>translate</code> emitted unquoted keys, so no previously-shipped round-trip regressed. No findings were dropped as false positives.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a change adds or modifies a tool that both <strong>produces</strong> a serialized identifier (a key path, ID, slug, or name) and <strong>consumes</strong> it back — including consuming its own output in a documented round-trip — verify the consumer accepts every form the producer emits. Read the producer&#39;s formatting/escaping/quoting routine and the consumer&#39;s parsing/validation routine side by side and confirm they share one grammar. A stricter validator on the read side silently drops or rejects values the write side emits, and such round-trip breaks are invisible in tests that exercise only one direction. Flag any validation gate that re-implements identifier parsing (naive <code>strings.Split</code>, a hand-rolled charset check) instead of reusing the canonical tokenizer the write path uses.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] The <code>i18n-report</code> tool (<code>src/go/i18n-report/</code>) carries two key-path representations that must stay in sync: the quote-aware write path (<code>splitKeyPath</code>/<code>appendKeyPath</code> in <code>yaml.go</code>, mirroring the renderer&#39;s <code>splitObjectPath</code>/<code>joinObjectPath</code>) and looser text-input validators (<code>isValidDottedKey</code>, <code>looksLikeEntry</code>) that split naively on <code>.</code> and restrict the charset. The JSON merge path bypasses validation entirely. When reviewing a change to any key-path gate, confirm it routes through <code>splitKeyPath</code> rather than a fresh <code>.</code>-split, and check the text and JSON input paths behave identically.</li>
+      <li>[repo] <code>en-us.yaml</code> nests ~24 secret-type labels (lines ~3121-3144) under keys whose own segment contains a literal dot and a slash — <code>kubernetes.io/service-account-token</code>, <code>kubernetes.io/dockercfg</code>, <code>bootstrap.kubernetes.io/token</code>. These are the canonical stress-test keys for any i18n-report key-handling change; a round-trip that does not exercise them (text <code>translate</code>→<code>merge</code>, <code>stale</code>/<code>unused</code>→<code>remove</code>) leaves the highest-risk path uncovered.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
