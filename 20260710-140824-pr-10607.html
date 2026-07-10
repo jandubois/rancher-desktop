@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260710-140824-pr-10607</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260710-140824-pr-10607</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-10 14:08</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10607" class="gh-ref" data-title="Add validate with a real ICU MessageFormat parser" data-state="open" data-type="pr">#10607</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10607" class="gh-ref" data-title="Add validate with a real ICU MessageFormat parser" data-state="open" data-type="pr">#10607</a> — Add validate with a real ICU MessageFormat parser</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/74a33cf75"><code>74a33cf75</code></a> Add validate with a real ICU MessageFormat parser</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; two regex-based checks produce false results on the shipping corpus; both fixes are localized</td></tr>
+      <tr><td>Wall-clock time</td><td><code>22 min 35 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR adds an <code>i18n-report validate</code> subcommand and a hand-written ICU MessageFormat parser mirroring intl-messageformat 11, gating each translation on placeholder, plural/select, tag, href/<code>data-*</code>, <code>@override</code>, and <code>@source</code> parity. The parser is faithful: it parses the entire en-us corpus and already caught a latent runtime crash in zh-hans. Two regex checks misfire on the shipping corpus — literal angle-bracket prose reads as HTML tags, and repeated href attributes collapse to the last.</p>
+    <p>All three reviewers converged on the attribute-collapse bug (I1); Claude and Codex also caught the tag-prose bug (I2). Both were confirmed by running <code>validate --locale=zh-hans</code> against the live corpus. Gemini raised plural-branch rigidity as Critical; the tool produced zero branch-parity errors on the current locales, so this review reframes it as an in-scope design decision (see Design Observations) with one live manifestation. One Gemini finding — a claimed search-and-replace corruption of <code>@override</code>/<code>@source</code> strings — did not survive verification and was dropped as a false positive.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Repeated href/attribute values collapse to the last <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/report_validate.go#L398-L415">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="398" data-line="403-414"><code class="language-go">	}
+	return result
+}
+
+// extractDataAttrs returns a map of data-* attribute name to value from a string.
+func extractDataAttrs(s string) map[string]string {
+	matches := attrRe.FindAllStringSubmatch(s, -1)
+	result := make(map[string]string)
+	for _, m := range matches {
+		// m[2] is the double-quoted value, m[3] is the single-quoted value.
+		if m[2] != &quot;&quot; {
+			result[m[1]] = m[2]
+		} else {
+			result[m[1]] = m[3]
+		}
+	}
+	return result
+}</code></pre>
+    <p><code>extractDataAttrs</code> keys attributes by name, so a value with two <code>&lt;a href=...&gt;</code> links keeps only the last. Two shipping strings carry two different links each: <code>needHelp</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L4905"><code>en-us.yaml:4905</code></a>, slack + github) and <code>istio…tip</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L1738"><code>en-us.yaml:1738</code></a>). A translation that changes the <em>first</em> target passes validation, defeating the stated guarantee that a translation must not change link targets (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/report_validate.go#L234-L236"><code>report_validate.go:234-236</code></a>); the same collapse hides a reordered pair. The pattern <code>data-\w+</code> also misses hyphenated names such as <code>data-test-id</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L1733-L1743">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="1733" data-line="1738"><code class="language-yaml">      description: Monitor and Troubleshoot microservices-based distributed systems.
+    disabled: &#39;{app} is not installed&#39;
+  cni: Enabled CNI
+  customOverlayFile:
+    label: Custom Overlay File
+    tip: &#39;The &lt;a target=&quot;_blank&quot; rel=&quot;noopener noreferrer nofollow&quot; href=&quot;https://istio.io/latest/docs/setup/install/istioctl/#customizing-the-configuration&quot;&gt;overlay file&lt;/a&gt; allows for additional configuration on top of the base {vendor} Istio installation. You can utilize the &lt;a href=&quot;https://istio.io/latest/docs/reference/config/istio.operator.v1alpha1/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer nofollow&quot; &gt;IstioOperator API&lt;/a&gt; to make changes and additions for all components and apply those changes via this overlay YAML file.&#39;
+  description: &#39;{vendor} Istio helm chart installs a minimal Istio configuration for you to get started integrating with your applications.
+  If you would like to get additional information about Istio, visit &lt;a target=&quot;_blank&quot; href=&quot;https://istio.io/latest/docs/concepts/what-is-istio&quot; rel=&quot;noopener noreferrer nofollow&quot;&gt;https://istio.io/latest/docs/concepts/what-is-istio/&lt;/a&gt;&#39;
+  egressGateway: Enabled Egress Gateway
+  ingressGateway: Enabled Ingress Gateway
+  istiodRemote: Enabled istiodRemote</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L4900-L4910">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="4900" data-line="4905"><code class="language-yaml">        message: Perform a factory reset?
+        detail: &lt;p&gt;Doing a factory reset will remove your cluster and all Rancher Desktop settings, and shut down Rancher Desktop. If you intend to continue using Rancher Desktop, you will need to manually start it and go through the initial set up again.&lt;/p&gt;&lt;p&gt;Are you sure you want to reset everything?&lt;/p&gt;
+        checkboxLabel: Keep cached Kubernetes images
+        ok: Factory Reset
+        cancel: Cancel
+  needHelp: &#39;Still having problems? Start a discussion in the &lt;b&gt;#rancher-desktop&lt;/b&gt; channel on the &lt;a href=&quot;https://slack.rancher.io/&quot;&gt;Rancher Users Slack&lt;/a&gt; or &lt;a href=&quot;https://github.com/rancher-sandbox/rancher-desktop/issues&quot;&gt;Report an Issue&lt;/a&gt;.&#39;
+
+##############################
+### Diagnostics Page
+##############################
+diagnostics:</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/report_validate.go#L229-L241">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="229" data-line="234-236"><code class="language-go">}
+
+// tagRe matches HTML-like tags: &lt;tag&gt;, &lt;/tag&gt;, &lt;tag/&gt;, &lt;tag attr=&quot;...&quot;&gt;.
+var tagRe = regexp.MustCompile(`&lt;/?(\w+)[^&gt;]*/?&gt;`)
+
+// attrRe matches the HTML attributes a translation must preserve verbatim:
+// data-* (runtime click handlers dispatch on them) and href (a translation
+// must not change link targets).
+var attrRe = regexp.MustCompile(`(data-\w+|href)=(?:&quot;([^&quot;]*)&quot;|&#39;([^&#39;]*)&#39;)`)
+
+// checkTags verifies that the locale value contains the same HTML-like
+// tag names as the English source, and that required data-* attributes
+// are preserved (runtime handlers depend on these).</code></pre>
+    <p>Fix: collect every occurrence per name and compare as sorted multisets.</p>
+      <pre><code class="language-go">result := map[string][]string{}
+for _, m := range matches {
+    val := m[2]; if val == &quot;&quot; { val = m[3] }
+    result[m[1]] = append(result[m[1]], val)
+}</code></pre>
+    </div>
+    <div class="card card-important">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> <code>tagRe</code> reads literal angle-bracket prose as HTML tags <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/report_validate.go#L227-L237">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="227" data-line="232"><code class="language-go">
+	return errors
+}
+
+// tagRe matches HTML-like tags: &lt;tag&gt;, &lt;/tag&gt;, &lt;tag/&gt;, &lt;tag attr=&quot;...&quot;&gt;.
+var tagRe = regexp.MustCompile(`&lt;/?(\w+)[^&gt;]*/?&gt;`)
+
+// attrRe matches the HTML attributes a translation must preserve verbatim:
+// data-* (runtime click handlers dispatch on them) and href (a translation
+// must not change link targets).
+var attrRe = regexp.MustCompile(`(data-\w+|href)=(?:&quot;([^&quot;]*)&quot;|&#39;([^&#39;]*)&#39;)`)</code></pre>
+    <p>The regex counts every <code>&lt;word…&gt;</code> run as a tag, but the corpus uses angle brackets for literal prose. Running <code>validate --locale=zh-hans</code> today emits false errors on real keys: <code>detailText.binary</code> (<code>&lt;Binary Data: {n, number} bytes&gt;</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L1433"><code>en-us.yaml:1433</code></a>) and <code>advancedSettings.descriptions.ingress-ip-domain</code> (<code>&lt;ingress-name&gt;</code>, <code>&lt;ip address of ingress controller&gt;</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L4688"><code>en-us.yaml:4688</code></a>). Each yields a spurious missing/unexpected tag error that would block a correct translation once <code>@source</code> is populated. The corpus holds only eight real HTML tag names (a, b, br, code, li, p, pre, span).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L1428-L1438">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="1428" data-line="1433"><code class="language-yaml">  reviewYaml: &quot;Keep editing YAML&quot;
+  previewYaml: Edit as YAML
+
+detailText:
+  collapse: Hide
+  binary: &#39;&lt;Binary Data: {n, number} bytes&gt;&#39;
+  empty: &#39;&lt;Empty&gt;&#39;
+  unsupported: &#39;&lt;Value not supported by UI, see YAML&gt;&#39;
+  plusMore: |-
+    {n, plural,
+      =1 {+ 1 more char}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/pkg/rancher-desktop/assets/translations/en-us.yaml#L4683-L4693">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="4683" data-line="4688"><code class="language-yaml">    &#39;cluster-defaults&#39;: &#39;Override RKE Defaults when creating new clusters.&#39;
+    &#39;engine-install-url&#39;: &#39;Default Docker engine installation URL (for most node drivers).&#39;
+    &#39;engine-iso-url&#39;: &#39;Default OS installation URL (for vSphere driver).&#39;
+    &#39;engine-newest-version&#39;: &#39;The newest supported version of Docker at the time of this release.  A Docker version that does not satisfy supported docker range but is newer than this will be marked as untested.&#39;
+    &#39;engine-supported-range&#39;: &#39;Semver range for supported Docker engine versions.  Versions which do not satisfy this range will be marked unsupported in the UI.&#39;
+    &#39;ingress-ip-domain&#39;: &#39;Wildcard DNS domain to use for automatically generated Ingress hostnames. &lt;ingress-name&gt;.&lt;namespace-name&gt;.&lt;ip address of ingress controller&gt; will be added to the domain.&#39;
+    &#39;server-url&#39;: &#39;Default {appName} install url. Must be HTTPS. All nodes in your cluster must be able to reach this.&#39;
+    &#39;system-default-registry&#39;: &#39;Private registry to be used for all system Docker images.&#39;
+    &#39;ui-index&#39;: &#39;HTML index location for the Cluster Manager UI.&#39;
+    &#39;ui-dashboard-index&#39;: &#39;HTML index location for the {appName} UI.&#39;
+    &#39;ui-offline-preferred&#39;: &#39;Controls whether UI assets are served locally by the server container or from the remote URL defined in the ui-index and ui-dashboard-index settings. The `Dynamic` option will use local assets in production builds of {appName}.&#39;</code></pre>
+    <p>Fix: match a known-tag allowlist so literal tokens are ignored.</p>
+      <pre><code class="language-go">var tagRe = regexp.MustCompile(`(?i)&lt;/?(a|b|br|code|li|p|pre|span|ul)\b[^&gt;]*/?&gt;`)</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Duplicate ICU constructs of the same variable+keyword overwrite each other <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/report_validate.go#L313-L329">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="313" data-line="318-324"><code class="language-go">
+// compareConstructs compares two construct trees, reporting missing/unexpected
+// constructs, missing/unexpected branch labels, and recursing into nested
+// constructs of matched pairs.
+func compareConstructs(key string, en, locale []icuConstruct) []validationError {
+	enByKey := make(map[string]icuConstruct)
+	for _, c := range en {
+		enByKey[c.Variable+&quot;,&quot;+c.Keyword] = c
+	}
+	localeByKey := make(map[string]icuConstruct)
+	for _, c := range locale {
+		localeByKey[c.Variable+&quot;,&quot;+c.Keyword] = c
+	}
+
+	var errors []validationError
+
+	// Constructs in English, matched against the locale.</code></pre>
+    <p><code>compareConstructs</code> keys constructs by <code>variable,keyword</code>, so a message with two <code>{count, plural, ...}</code> blocks keeps only the last; a missing branch in the earlier block goes unreported. No current corpus string trips this, so the risk is latent. Fix: group into <code>map[string][]icuConstruct</code> and compare positionally, or consume matched constructs from the slices.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>checkICU</code> re-parses each value three times <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>checkICU</code> parses en and locale for the syntax check, then <code>checkPlaceholders</code> and <code>checkICUStructure</code> each parse both again — six <code>parseICU</code> calls per key. Parse once and pass <code>[]icuNode</code> down: performance is irrelevant for a CLI, but a single parse keeps the three call sites from drifting.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> The locale file is read three times per run <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>validateLocale</code> loads the locale through <code>loadYAMLFlat</code>, <code>loadYAMLDocument</code>, and <code>loadSources</code> — three reads and parses of one file. A single <code>yaml.Node</code> parse yields the flat values, the <code>@source</code> comments, and the override placement together.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>skipArgStyle</code> ignores apostrophe quoting <span class="pill pill-gemini">Gemini</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>skipArgStyle</code> counts braces to find a typed argument&#39;s closing brace but, unlike <code>parseText</code>, does not skip apostrophe-quoted regions. A style with a quoted literal brace (e.g. <code>{n, number, &#39;{&#39;}</code>) would miscount depth. No corpus string exercises this and simple number/date styles rarely contain braces, so the gap is theoretical; align it with <code>parseText</code>&#39;s quote handling if typed styles grow.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Exact ICU structural parity may reject valid locale-specific plurals</strong> (in-scope) <span class="pill pill-gemini">Gemini</span> — <code>checkICUStructure</code> requires a translation&#39;s plural/select constructs and branch labels to match English exactly. Exact parity is right for <code>select</code> (gender, boolean), but <code>plural</code> uses locale-specific CLDR categories: Chinese needs only <code>other</code>, Polish needs <code>few</code>/<code>many</code>. On the current en + zh-hans locales the tool reports zero branch mismatches because zh-hans mirrors English&#39;s branches. It does already flag one case: <code>sortableTable.paging.generic</code>, where the Chinese dropped the nested <code>{count, plural}</code> (Chinese does not inflect) and validate reports <code>missing {count, plural, ...} construct</code>. The sibling <code>resource</code> key kept the structure, so today the drop reads as an inconsistency worth surfacing — but adding a <code>few</code>/<code>many</code> language would turn exact parity into blocked correct translations. Decide whether plural structure should be exact or relaxed to exact-match labels (<code>=N</code>) plus <code>other</code>. Gemini rated this Critical; the live impact is a single construct, hence the reframe.</li>
+      <li><strong>Tag and attribute checks bypass the parser they ship beside</strong> (future) <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span> — Placeholder and plural/select checks use the intl-messageformat-mirroring parser, but the tag and attribute checks use a separate regex tokenizer. That tokenizer cannot tell HTML from literal prose (I2), ignores ICU apostrophe quoting (a <code>&#39;&lt;b&gt;&#39;</code> literal counts as a <code>&lt;b&gt;</code> tag), and collapses repeats (I1). Routing tag detection through the ICU grammar, which already models <code>&lt;tag&gt;…&lt;/tag&gt;</code> rich text, would fold three defects into one path. The I2 allowlist is the cheap step; the parser-integrated model is the direction.</li>
+      <li><em></em><code>@source</code> errors bury the structural findings<em></em> (future) <span class="pill pill-claude">Claude</span> — On zh-hans today, validate prints 2373 errors, 2348 of them <code>[source]</code>; the 16 placeholder, 7 tag, and 2 ICU findings — including the runtime crash — are lost in the noise. A <code>--check=&lt;category&gt;</code> filter or per-category counts would surface the high-value findings during locale migration.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>The parser faithfully mirrors intl-messageformat</strong> (in-scope) <span class="pill pill-claude">Claude</span> <span class="pill pill-gemini">Gemini</span> — apostrophe quoting, <code>&#39;&#39;</code> collapse, and <code>#</code>-scoping (significant only inside the nearest plural/selectordinal, literal inside a nested <code>select</code>) all match formatjs.</li>
+      <li><strong>The gate already earns its keep</strong> (in-scope) <span class="pill pill-claude">Claude</span> — it flagged <code>workload.validation.containerImage</code> in zh-hans (<code>容器{{name}</code>, a doubled brace) that would crash intl-messageformat at runtime.</li>
+      <li><em></em><code>TestParseICURealCorpus</code> pins the parser to the whole en-us corpus<em></em> (in-scope) <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span> — a strong guard on the fidelity claim.</li>
+      <li><em></em>Co-located <code>@source</code> keeps provenance on the key<em></em> (in-scope) <span class="pill pill-codex">Codex</span> — no parallel metadata file to drift.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The unit tests cover each <code>check*</code> helper well, and <code>TestParseICURealCorpus</code> guards parser fidelity. Gaps, highest-risk first:</p>
+    <ol>
+      <li><strong>Multiple links / repeated href in one value</strong> (I1) — coverage stops at single-link <code>changed href</code>/<code>dropped href</code>, which is exactly why the collapse slipped through.</li>
+      <li><strong>Literal angle-bracket prose vs. real tags</strong> (I2) — no test feeds <code>&lt;Binary Data: {n} bytes&gt;</code> or <code>&lt;ip …&gt;</code> to <code>checkTags</code>.</li>
+      <li><em></em><code>validateLocale</code>/<code>reportValidate</code> end-to-end<em></em> — aggregation, the <code>@source</code> check, override integration, error sorting, output format, and exit code are unexercised; only the individual helpers are tested.</li>
+      <li><em></em><code>selectordinal</code> and non-plural <code>select</code> structure<em></em> — the parser supports both, but no test or corpus string covers them.</li>
+      <li><em></em><code>extractDataAttrs</code> and <code>data-*</code> preservation<em></em> — no direct test, and the corpus carries no <code>data-*</code> attribute, so that whole path is untested against real data.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The README updates are accurate: the check list, the file-map row, and the exit-code paragraph all include <code>validate</code>. One gap: validate depends on the <code>@source</code> snapshots that <code>i18n-report source</code> writes, so a first run on an unmigrated locale (zh-hans today) reports thousands of <code>[source]</code> errors. Document the <code>source</code>-before-<code>validate</code> order, or ship the initial annotations with the feature. <span class="pill pill-codex">Codex</span></p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Parser handles a subset of ICU</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/icu.go#L13-L17"><code>icu.go:13-17</code></a> scopes out <code>offset:N</code> on plurals and typed-argument skeletons (style is parsed, then ignored). A string using <code>offset:</code> would fail the syntax check, but none exist in the corpus and <code>TestParseICURealCorpus</code> guards the en side. Consistent with the stated scope. <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span></li>
+      <li><em></em><code>@source</code> required on every translated key<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/74a33cf7507262989db053c946abf154f892fafc/src/go/i18n-report/report_validate.go#L104-L105"><code>report_validate.go:104-105</code></a> documents that the snapshot lives on the key, so the zh-hans flood reflects unmigrated locales, not a checker defect. <span class="pill pill-claude">Claude</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> produced the cleanest set: both important bugs with the sharpest framing, including the reorder-induced false-positive angle on I1 that the others missed and the observability concern about <code>@source</code> errors drowning structural findings. It did the most live verification, running <code>validate</code> against zh-hans to confirm the tag and attribute false positives and surfacing the doubled-brace crash as evidence the gate works. Its two performance suggestions are minor but correct, and it raised no false positives.</p>
+    <p><strong>[Codex]</strong> matched Claude on the two important bugs and added two details neither other agent caught: the hyphenated <code>data-*</code> gap in the attribute regex, and the README bootstrap-order gap. It over-labeled all three findings as &quot;regression&quot; on new-file code, and its duplicate-construct finding is real but latent, so this review demoted it to a suggestion. Precise, with no false positives.</p>
+    <p><strong>[Gemini]</strong> contributed the one genuinely novel angle — the CLDR plural-category concern — which no other agent raised and which is worth a decision, though its &quot;Critical, halts the localization pipeline&quot; framing overstated a single live construct. It also matched the attribute-collapse bug and raised the theoretical <code>skipArgStyle</code> quoting gap. Against that, it produced one clear false positive: a claimed automated search-and-replace that corrupted <code>@override</code>/<code>@source</code> strings, which the files flatly contradict. Its severity calibration ran hot in both directions.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>14m 04s</td><td>5m 40s</td><td>6m 41s</td></tr>
+        <tr><td>Findings</td><td>2I 2S</td><td>2I 1S</td><td>1I 2S</td></tr>
+        <tr><td>Tool calls</td><td>22 (Bash 13, Read 9)</td><td>50 (shell 50)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>2</td><td>2</td></tr>
+        <tr><td>Files reviewed</td><td>8</td><td>8</td><td>8</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2I 2S</strong></td><td><strong>2I 1S</strong></td><td><strong>1I 2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>1 (I→S)</td><td>2 (I→S)</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p>Claude and Codex delivered the most value: together they pinned both live bugs, and each added a unique detail (Claude the reorder false positive, Codex the hyphenated-attribute and bootstrap gaps). Gemini&#39;s plural-category insight is the single most consequential design question in the review, but its one hallucinated finding and hot severity calibration mean its output needed the heaviest verification.</p>
+    <p><strong>Reconciliation.</strong> Four severity changes: Gemini&#39;s C1 (plural branch parity) Critical → Design Observation, after the tool showed zero live branch-parity errors and one construct-level manifestation; Gemini&#39;s I2 and Codex&#39;s I3 (duplicate-construct collapse) Important → Suggestion S1, merged as one latent issue with no corpus trigger; Gemini&#39;s I3 (search-and-replace corruption) Important → Dropped as a false positive, since <code>report_validate.go</code> and <code>source.go</code> contain intact <code>@override</code>/<code>@source</code> strings. Separately, the &quot;regression&quot; label on both important findings was removed: <code>icu.go</code> and <code>report_validate.go</code> are new files (<code>−0</code>), so there is no merge-base behavior to regress.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a change adds a regex that extracts or classifies a token type (HTML tags, placeholders, identifiers, attributes) from free-form text, run it against the project&#39;s real data before trusting it. Two failure modes stay hidden until real data hits them: the pattern over-matches literal text shaped like the token, and a result map keyed by token name silently drops duplicate occurrences. Flag both.</li>
+      <li>When a change adds a check that enforces exact structural parity between a source artifact and a derived one, verify the derived form is allowed to match exactly. Derived forms often diverge legitimately along their varying dimension — locale (CLDR plural categories differ by language), platform, or version — so an exact-parity check rejects valid variants. Flag parity checks that assume the derived form must structurally mirror the source.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] Rancher Desktop&#39;s translation corpus (<code>pkg/rancher-desktop/assets/translations</code>) uses angle brackets for literal display text (<code>&lt;Binary Data: N bytes&gt;</code>, <code>&lt;ingress-name&gt;</code>), not only HTML. Real HTML tag names in the corpus are limited to a, b, br, code, li, p, pre, span. A tool that treats every <code>&lt;word&gt;</code> as an HTML tag produces false positives.</li>
+      <li>[repo] The app ships two locales, en-us and zh-hans; zh-hans mirrors English&#39;s ICU plural branch structure (keeping never-selected branches) rather than using native CLDR categories. Exact plural-structure parity passes on the current corpus but would block correct translations once a <code>few</code>/<code>many</code> language is added.</li>
+      <li>[repo] The <code>i18n-report validate</code> subcommand depends on <code>@source</code> snapshots that <code>i18n-report source</code> writes onto each translated key; running validate on a locale not yet processed by <code>source</code> floods the output with <code>[source]</code> errors.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
