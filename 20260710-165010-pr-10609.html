@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260710-165010-pr-10609</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css">
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Fix label */
+.fix-label { font-weight: 700; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260710-165010-pr-10609</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-10 17:09</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of pr-10609)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10609" class="gh-ref" data-title="rddepman: record full asset metadata in dependency manifests" data-state="open" data-type="pr">#10609</a> — rddepman: record full asset metadata in dependency manifests</td></tr>
+      <tr><td>Branch</td><td><code>rddepman-asset-metadata</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/5a857cfe3"><code>5a857cfe3</code></a> rddepman: record full asset metadata in dependency manifests</td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude</span> Opus 4.8 (effort: xhigh), <span class="pill pill-codex">Codex</span> GPT 5.5 (effort: xhigh), <span class="pill pill-gemini">Gemini</span> 3.1 Pro (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; restore the dropped Moby commit-SHA validation; everything else is optional.</td></tr>
+      <tr><td>Wall-clock time</td><td><code>26 min 6 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>This PR replaces the manifest&#39;s per-dependency <code>checksums</code> map with an <code>assets</code> list, where each artifact carries its own platform, arch, url, and checksum, so the install path selects and verifies an asset without reconstructing URLs. It adds <code>rddepman --regenerate</code>. The refactor is thorough, correct, and well unit-tested; every dependency class was converted and selectors resolve to exactly the manifest&#39;s assets. The one notable issue is a dropped commit-SHA validation for the Moby spec.</p>
+    <p>All three reviewers converged on &quot;approve.&quot; No critical issues surfaced. The single Important finding — a validation guard this PR removed — was raised by two reviewers (Codex as important, Claude as a suggestion); verifying against the merge-base confirmed the guard existed before and now does not. The remaining findings are hardening and clarity suggestions. Codex flagged the credential-helper guard as important; Claude independently traced the same path and judged it adequate, so it lands as a suggestion here.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Dropped commit-SHA validation for the Moby spec <span class="pill pill-codex">Codex</span> <span class="pill pill-claude">Claude</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/moby-openapi.ts#L94-L111">scripts/dependencies/moby-openapi.ts</a></div>
+      <pre data-start="94" data-line="99-106"><code class="language-ts">
+    await simpleSpawn(&#39;go&#39;, [&#39;generate&#39;, &#39;-x&#39;, &#39;pkg/dockerproxy/generate.go&#39;], { cwd: path.join(process.cwd(), &#39;src&#39;, &#39;go&#39;, &#39;wsl-helper&#39;) });
+    console.log(&#39;Moby API swagger models generated.&#39;);
+  }
+
+  async getAssets(version: MobyOpenAPISpecVersion): Promise&lt;DependencyAsset[]&gt; {
+    // version.commit pins the URL to an immutable git object; raw.githubusercontent.com
+    // serves no sidecar to cross-check.  rddepman records the digest we observe
+    // at bump time as the source of truth.  The spec is a single, platform-independent file.
+    const fileName = `v${ version.apiVersion }.yaml`;
+    const url = `https://raw.githubusercontent.com/${ this.githubOwner }/${ this.githubRepo }/${ version.commit }/api/docs/${ fileName }`;
+
+    return [{ platform: &#39;linux&#39;, url, checksum: await downloadAndHash(url) }];
+  }
+
+  // Returns each historical apiVersion with a placeholder commit;
+  // latestVersion resolves the real commit only for the winner.
+  // Resolving a commit per entry would burn one listCommits call per</code></pre>
+    <p>The old <code>download()</code> rejected a <code>mobyOpenAPISpec</code> entry whose <code>commit</code> was not a 40-char SHA (merge-base <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/moby-openapi.ts#L32"><code>moby-openapi.ts:32</code></a>). The new <code>download()</code> reads <code>asset.url</code> directly and never inspects <code>commit</code>, and <code>parseVersion</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L206-L222"><code>dependencies.ts:206-222</code></a>) only checks that <code>commit</code> is a string. So <code>--regenerate</code> builds the URL from <code>version.commit</code> and pins a checksum to it: a hand-edited mutable ref (<code>commit: main</code>) records a digest against a moving target, and later upstream drift becomes an install-time checksum failure. The class documents manual commit edits as a supported path (&quot;To adopt a new commit, edit dependencies.yaml manually&quot;), so the misuse is reachable. Codex rated this important; Claude rated it a suggestion, noting the URL is authoritative at install and the commit is otherwise decorative.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/moby-openapi.ts#L27-L37">scripts/dependencies/moby-openapi.ts</a></div>
+      <pre data-start="27" data-line="32"><code class="language-typescript">  readonly githubRepo = &#39;moby&#39;;
+  readonly releaseFilter = &#39;custom&#39;;
+
+  async download(context: DownloadContext): Promise&lt;void&gt; {
+    const asset = selectAsset(context, this.name, { platform: &#39;linux&#39; });
+    const outPath = path.join(process.cwd(), &#39;src&#39;, &#39;go&#39;, &#39;wsl-helper&#39;, &#39;pkg&#39;, &#39;dockerproxy&#39;, &#39;swagger.yaml&#39;);
+    const modifiedPath = path.join(path.dirname(outPath), &#39;swagger-modified.yaml&#39;);
+
+    await download(asset.url, outPath, {
+      expectedChecksum: assetChecksum(asset),
+      access:           fs.constants.W_OK,</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L201-L227">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="201" data-line="206-222"><code class="language-typescript"> * version string; `alpineLimaISO` and `mobyOpenAPISpec` track a structured
+ * version (see {@link AlpineLimaISOVersion} / {@link MobyOpenAPISpecVersion}),
+ * so those two shapes are accepted too.  A bare YAML number (e.g. `1.0`) is
+ * rejected so an unquoted version cannot silently lose precision.
+ */
+function parseVersion(name: string, path: string, raw: unknown): Version {
+  if (typeof raw === &#39;string&#39;) {
+    return raw;
+  }
+  if (raw &amp;&amp; typeof raw === &#39;object&#39; &amp;&amp; !Array.isArray(raw)) {
+    const obj = raw as Record&lt;string, unknown&gt;;
+
+    if (typeof obj.isoVersion === &#39;string&#39; &amp;&amp; typeof obj.alpineVersion === &#39;string&#39;) {
+      return { isoVersion: obj.isoVersion, alpineVersion: obj.alpineVersion };
+    }
+    if (typeof obj.apiVersion === &#39;string&#39; &amp;&amp; typeof obj.commit === &#39;string&#39;) {
+      return { apiVersion: obj.apiVersion, commit: obj.commit };
+    }
+  }
+
+  throw new Error(`Entry ${ name } in ${ path } has invalid version ${ JSON.stringify(raw) }; expected a string or a structured version`);
+}
+
+/**
+ * Reads a `dependencies.yaml` into the typed manifest.  An entry with no
+ * `assets` list parses with an empty one, so `rddepman --regenerate` can
+ * migrate a manifest still written in the old `checksums` schema.  Remove</code></pre>
+    <p>Fix: restore the 40-hex check in <code>parseVersion</code> so every read — install and regenerate — rejects a non-SHA commit.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Credential-helper guard checks count, not identity <span class="pill pill-codex">Codex</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/tools.ts#L363-L394">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="363" data-line="368-389"><code class="language-ts">  };
+
+  async download(context: DownloadContext): Promise&lt;void&gt; {
+    const version = context.dependencies[this.name].version;
+    const arch = hostArch(context);
+    const assets = selectAssets(context, this.name, { platform: context.goPlatform, arch });
+    const expected = DockerProvidedCredHelpers.helperNames[context.goPlatform];
+
+    // selectAssets() returns [] on no match, so a missing helper would install silently.
+    if (assets.length !== expected.length) {
+      throw new Error(
+        `Expected ${ expected.length } ${ this.name } assets for ` +
+        `${ context.goPlatform }/${ arch }, found ${ assets.length }.`,
+      );
+    }
+    // starting with the 0.7.0 the upstream releases have a broken ad-hoc signature
+    const codesign = context.platform === &#39;darwin&#39;;
+
+    await Promise.all(assets.map((asset) =&gt; {
+      const fullBinName = path.basename(new URL(asset.url).pathname);
+      const baseName = fullBinName
+        .replace(`-v${ version }.${ context.goPlatform }-${ arch }`, &#39;&#39;)
+        .replace(/\.exe$/, &#39;&#39;);
+      const destPath = path.join(context.binDir, exeName(context, baseName));
+
+      return download(asset.url, destPath, { expectedChecksum: assetChecksum(asset), codesign });
+    }));
+  }
+
+  async getAssets(version: string): Promise&lt;DependencyAsset[]&gt; {
+    const baseURL = `https://github.com/${ this.githubOwner }/${ this.githubRepo }/releases/download/v${ version }`;
+    const upstream = await fetchUpstreamChecksums(`${ baseURL }/checksums.txt`, &#39;sha256&#39;);</code></pre>
+    <p>The guard checks only the matching-asset count, then derives each destination name from the asset URL (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/tools.ts#L381-L386"><code>tools.ts:381-386</code></a>). A manifest carrying two <code>docker-credential-pass</code> assets and no <code>docker-credential-secretservice</code> passes the count check and installs <code>pass</code> twice, silently omitting <code>secretservice</code>. The old installer iterated each expected helper name and fetched that exact artifact (merge-base <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/tools.ts#L375-L385"><code>tools.ts:375-385</code></a>), so it could not miss one — this PR weakens it to a count-only check. The trigger requires a corrupted manifest: <code>getAssets</code> always emits the correct distinct set, and this machine-generated file has no documented manual-edit path, so Claude traced the same code and judged the count-check adequate. Hence a suggestion, not important.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/tools.ts#L370-L391">scripts/dependencies/tools.ts</a></div>
+      <pre data-start="370" data-line="375-386"><code class="language-typescript">
+    // selectAssets() returns [] on no match, so a missing helper would install silently.
+    if (assets.length !== expected.length) {
+      throw new Error(
+        `Expected ${ expected.length } ${ this.name } assets for ` +
+        `${ context.goPlatform }/${ arch }, found ${ assets.length }.`,
+      );
+    }
+    // starting with the 0.7.0 the upstream releases have a broken ad-hoc signature
+    const codesign = context.platform === &#39;darwin&#39;;
+
+    await Promise.all(assets.map((asset) =&gt; {
+      const fullBinName = path.basename(new URL(asset.url).pathname);
+      const baseName = fullBinName
+        .replace(`-v${ version }.${ context.goPlatform }-${ arch }`, &#39;&#39;)
+        .replace(/\.exe$/, &#39;&#39;);
+      const destPath = path.join(context.binDir, exeName(context, baseName));
+
+      return download(asset.url, destPath, { expectedChecksum: assetChecksum(asset), codesign });
+    }));
+  }
+</code></pre>
+    <p>Fix: map assets by derived helper name and reject unless the set of names equals <code>expected</code>.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Speculative multi-config / manifestPath scaffolding (YAGNI) <span class="pill pill-claude">Claude</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/rddepman.ts#L37-L49">scripts/rddepman.ts</a></div>
+      <pre data-start="37" data-line="42-44"><code class="language-ts">interface DependencyConfig {
+  manifest: VersionedDependency[];
+  extras:   VersionedDependency[];
+}
+
+const configs: Record&lt;string, DependencyConfig&gt; = {
+  host: { manifest: globalDependencies, extras: getExtensions(true) },
+};
+
+/**
+ * Run a git command line.  If the first argument is `true`, return the exit
+ * code.  Otherwise, throw an error if the command did not exit with `0`.
+ */</code></pre>
+    <p><code>configs</code> holds a single <code>host</code> entry, yet <code>parseArgs</code> parses a positional argument to select among configs and throws on any other name (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/rddepman.ts#L355-L367"><code>rddepman.ts:355-367</code></a>), and <code>GlobalDependency.manifestPath</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L671"><code>dependencies.ts:671</code></a>) is settable but never overridden. The docstrings point at a future guest <code>rdd/dependencies.yaml</code> that this PR does not add. The <code>manifest</code>/<code>extras</code> split earns its place (regenerate skips <code>extras</code>); the config registry, positional selection, and <code>manifestPath</code> override do not yet. Verified: <code>manifestPath</code> has no override, and the guest manifest appears only in a docstring.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/rddepman.ts#L350-L372">scripts/rddepman.ts</a></div>
+      <pre data-start="350" data-line="355-367"><code class="language-typescript">
+    await dependency.updateManifest(version, assets);
+  }
+}
+
+/** Selects the config (positional argument, default `host`) and mode. */
+function parseArgs(): { config: DependencyConfig, regenerate: boolean } {
+  const args = process.argv.slice(2);
+  const regenerate = args.includes(&#39;--regenerate&#39;);
+  const name = args.find(arg =&gt; !arg.startsWith(&#39;--&#39;)) ?? &#39;host&#39;;
+  const config = configs[name];
+
+  if (!config) {
+    throw new Error(`Unknown dependency config &quot;${ name }&quot;; expected one of ${ Object.keys(configs).join(&#39;, &#39;) }.`);
+  }
+
+  return { config, regenerate };
+}
+
+(async() =&gt; {
+  const { config, regenerate } = parseArgs();
+
+  if (regenerate) {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L666-L676">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="666" data-line="671"><code class="language-typescript">  abstract class GlobalDependency extends Base {
+    /** The dependency&#39;s name, a top-level key in the manifest at {@link manifestPath}. */
+    abstract name: string;
+
+    /** The manifest file this dependency&#39;s version and assets live in. */
+    readonly manifestPath: string = DEP_VERSIONS_PATH;
+
+    get currentVersion(): Promise&lt;Version&gt; {
+      return getCachedManifest(this.manifestPath).then(m =&gt; m[this.name].version);
+    }
+</code></pre>
+    <p>Fix: keep the split; inline the single config and drop the positional lookup and <code>manifestPath</code> override until a second manifest lands.</p>
+    </div>
+    <div class="card card-suggestion">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Misleading <code>regenerateAssets</code> precheck comment <span class="pill pill-claude">Claude</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/rddepman.ts#L325-L344">scripts/rddepman.ts</a></div>
+      <pre data-start="325" data-line="330-339"><code class="language-ts"> * Re-resolves and rewrites the assets for every manifest dependency at its
+ * current version.  Migrates or refreshes a `dependencies.yaml` without a
+ * version bump; needs no GitHub token, only network access to the artifacts.
+ */
+async function regenerateAssets(dependencies: VersionedDependency[]): Promise&lt;void&gt; {
+  // Every write rewrites the whole manifest, so the first regenerated sibling
+  // would drop the assets of a dependency skipped below.
+  for (const dependency of dependencies.filter(d =&gt; !d.regenerable)) {
+    if ((await dependency.currentAssets).length === 0) {
+      throw new Error(
+        `${ dependency.name } records no assets, and is bumped rather than regenerated. ` +
+        `Restore its manifest entry before regenerating.`,
+      );
+    }
+  }
+
+  for (const dependency of dependencies) {
+    if (!dependency.regenerable) {
+      console.log(`Skipping ${ dependency.name } (bumped by rddepman, not regenerated).`);
+      continue;</code></pre>
+    <p><code>updateManifest</code> reads the full manifest, replaces only its own entry, and writes it back (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L681-L688"><code>dependencies.ts:681-688</code></a>), so a skipped dependency&#39;s assets are never dropped by a sibling&#39;s write — the stated mechanism does not occur. The guard&#39;s actual purpose: a non-regenerable dependency is skipped during regeneration, so if it already has empty assets (migrated from the old schema) the run emits a manifest that leaves it broken. The comment misstates why the check exists.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L676-L693">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="676" data-line="681-688"><code class="language-typescript">
+    get currentAssets(): Promise&lt;DependencyAsset[]&gt; {
+      return getCachedManifest(this.manifestPath).then(m =&gt; m[this.name].assets);
+    }
+
+    async updateManifest(newVersion: Version, newAssets: DependencyAsset[]): Promise&lt;Set&lt;string&gt;&gt; {
+      const manifest = await getCachedManifest(this.manifestPath);
+
+      manifest[this.name] = { version: newVersion, assets: newAssets };
+      await writeDependencyManifest(this.manifestPath, manifest);
+
+      return new Set([this.manifestPath]);
+    }
+  }
+
+  return GlobalDependency;
+}
+</code></pre>
+    <p>Fix: reword to state that a skipped dependency is never re-resolved, so empty assets here would survive into the output manifest; fail fast instead.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <p><strong>Strengths</strong></p>
+    <ul>
+      <li><strong>(in-scope)</strong> The <code>AssetSelector</code> / <code>selectAsset</code> / <code>selectAssets</code> abstraction separates &quot;which artifact&quot; from &quot;how to install it,&quot; and the exactly-one contract turns a silently-missing asset into a hard error at install time. <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini</span></li>
+      <li><strong>(in-scope)</strong> Every resolved URL is version- or commit-pinned (GitHub release assets, <code>raw.githubusercontent.com/&lt;commit&gt;</code>, versioned S3/chart paths) — no mutable refs, so upstream drift is caught by checksum rather than swapped in silently. <span class="pill pill-claude">Claude</span></li>
+      <li><strong>(in-scope)</strong> <code>serializeAsset</code> fixes key order so the emitted YAML is deterministic regardless of how the asset object was built; the round-trip and structured-version tests lock this in. <span class="pill pill-claude">Claude</span></li>
+      <li><strong>(in-scope)</strong> The extracted <code>cartesian</code> helper replaces several near-duplicate nested platform/arch loops with one matrix. <span class="pill pill-gemini">Gemini</span></li>
+    </ul>
+    <p><strong>Concerns</strong></p>
+    <ul>
+      <li><strong>(future)</strong> The migration path is asymmetric: new code tolerates an old <code>checksums</code> entry by parsing it to <code>assets: []</code>, but <code>--regenerate</code> cannot fully migrate an all-old manifest — non-regenerable <code>electron</code> trips the precheck with empty assets and aborts before any dependency is rewritten. Moot post-merge (the committed manifest is already new-format and the tolerance is marked temporary), but relevant if the tool is ever pointed at a stale branch. <span class="pill pill-claude">Claude</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Library-level coverage is strong and meaningful — the new tests exercise real selection, parse, and serialize logic, not mocks: manifest round-trip, structured versions, the DO-NOT-EDIT header, legacy-schema tolerance, invalid platform/arch/checksum/version rejection, selector ambiguity, and the credential-helper count guard.</p>
+    <p>Untested surfaces, by risk: <code>regenerateAssets</code> orchestration (the non-regenerable precheck and the skip-then-rewrite loop) has no test, and a regression there silently corrupts the manifest — the precheck logic could be extracted and unit-tested even though the full loop needs network and git; <code>parseArgs</code> unknown-config rejection and <code>--regenerate</code> detection are untested; and the successful <code>DockerProvidedCredHelpers</code> baseName-reconstruction path (the strip of <code>-v&lt;version&gt;.&lt;platform&gt;-&lt;arch&gt;</code>/<code>.exe</code>) is untested, though the count-check throw is covered.</p>
+    <p>No agent executed the suite: Codex reported that <code>yarn</code> and a Jest binary were unavailable in its worktree copy, so the tests were read but not run.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The manifest header comment and the <code>DependencyAsset</code> / <code>DependencyEntry</code> docstrings are accurate and match the emitted YAML. <code>RawAsset</code> / <code>RawEntry</code> lack docstrings but are internal, which is acceptable.</p>
+    <p>Two out-of-diff comments still describe the manifest as holding &quot;checksums&quot; — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/postinstall.ts#L188"><code>scripts/postinstall.ts:188</code></a> (&quot;load desired versions and checksums of dependencies&quot;) and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/global.ts#L1"><code>scripts/dependencies/global.ts:1</code></a> (&quot;whose version and checksums live in <code>dependencies.yaml</code>&quot;). Both now hold versions plus assets (each asset carries a checksum); update the terminology when convenient. S3 covers the one misleading in-diff comment.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Migration tolerance is temporary</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/lib/dependencies.ts#L224-L228"><code>dependencies.ts:224-228</code></a> accepts an entry with no <code>assets</code> list so <code>--regenerate</code> can migrate an old <code>checksums</code>-schema manifest; the author flags it for removal once this lands on <code>main</code>, and the committed manifest is already new-format, so install never relies on it.</li>
+      <li><strong>Electron opts out of regeneration</strong> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/5a857cfe35388a529e82742ef0ecf76adda74972/scripts/dependencies/electron.ts#L35-L37"><code>electron.ts:35-37</code></a>: its assets are pinned to the <code>package.json</code> version, which a regenerate cannot resolve, so <code>regenerable = false</code> and rddepman bumps it instead.</li>
+      <li><strong>Qemu has no Linux/arm64 build</strong> — <code>lima.ts:95,115</code>: the <code>download</code> skip and the <code>getAssets</code> combos both omit linux/arm64, and the manifest matches (3 qemu assets). Pre-existing, correctly mirrored.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude]</strong> — Claude gave the most comprehensive pass: it traced every download path against the regenerated manifest, checked <code>isM1</code> truthiness-equivalence, and surfaced the two clarity/design findings (the YAGNI scaffolding and the misleading precheck comment) that neither other agent raised. It rated the Moby commit issue a suggestion, framing it as provenance drift; the merge-base check showed the guard was previously enforced, which nudged it to important here. It also traced the credential-helper path and judged the count-check adequate — a defensible call that nonetheless missed the identity-collision case Codex caught. Its coverage summary accounted for every file with specific per-file notes.</p>
+    <p><strong>[Codex]</strong> — Codex was the sharpest on validation regressions: it caught both the dropped Moby commit check and the credential-helper count-only guard, each confirmed against the merge-base as behavior this PR weakened. It rated both important; consolidation kept one and downgraded the other. It also flagged stale &quot;checksums&quot; terminology in two out-of-diff files, which verified. Codex could not run the Jest suite (no yarn/Jest in its worktree), so its testing notes are static. Its distinctive value was reading the old code to establish what changed — exactly what the regression labels required.</p>
+    <p><strong>[Gemini]</strong> — Gemini approved with no critical, important, or suggestion findings, offering only positive design observations. Its coverage summary marked every file &quot;no issues,&quot; including <code>moby-openapi.ts</code>, where the other two agents found the Important issue — a genuine coverage miss. It does not run <code>git blame</code>, so it could not have identified the dropped guard as a regression, but it did not surface the concern in any form. The review reads as a fluent summary of the PR&#39;s intent rather than an audit of its edges.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude</span> Opus 4.8</th><th><span class="pill pill-codex">Codex</span> GPT 5.5</th><th><span class="pill pill-gemini">Gemini</span> 3.1 Pro</th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>10m 56s</td><td>6m 07s</td><td>4m 20s</td></tr>
+        <tr><td>Findings</td><td>1I 2S</td><td>1I 1S</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>27 (Read 16, Bash 11)</td><td>43 (shell 43)</td><td>—</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>1</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>2</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>12</td><td>12</td><td>12</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 2S</strong></td><td><strong>1I 1S</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>1 (I→S)</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Codex and Claude together supplied essentially all the actionable signal — Codex on what regressed, Claude on breadth and clarity — and the two most valuable findings each surfaced only because an agent read the pre-change code. Gemini confirmed the design&#39;s soundness but contributed no findings.</p>
+    <p><strong>Reconciliation</strong> — Claude&#39;s S3 (Moby commit) was promoted to Important I1 after the merge-base check showed this PR removed a previously-enforced guard; Codex raised the same issue at important, and the two were merged. Codex&#39;s I2 (credential-helper count check) was downgraded to Suggestion S1: the regression is real, but its only trigger is a corrupted machine-generated manifest with no documented manual-edit path, and Claude independently judged the count-check adequate.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>When reviewing a refactor that relocates or restructures validation, enumerate the guards (format checks, required-field assertions, exact-identity lookups) present on the touched code paths at the merge-base and confirm each still fires after the change. A guard that existed before and is absent afterward is a regression even when no test fails and the happy path is unchanged — the check most often disappears when a value that was validated at its point of use becomes a pre-resolved field that later code reads blindly from a manifest or config. (Check whether the dimensions already ask for this before adding.)</li>
+    </ul>
+    <p><strong>Repo context updates</strong></p>
+    <ul>
+      <li>[repo] <code>pkg/rancher-desktop/assets/dependencies.yaml</code> is machine-generated by <code>rddepman</code> and marked DO-NOT-EDIT. When a finding&#39;s only trigger is a malformed or inconsistent manifest, calibrate severity by whether a manual-edit path is documented: most dependency classes generate their entries correct-by-construction, so treat corruption-only findings as low severity — but a class that documents hand-editing a field (e.g. <code>mobyOpenAPISpec.version.commit</code>, &quot;edit dependencies.yaml manually&quot;) makes weak validation of that field a genuine, higher-severity gap.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-go.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-diff.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-typescript.min.js"></script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
