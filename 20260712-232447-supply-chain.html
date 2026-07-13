@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Supply Chain Scan: 20260712-232447-supply-chain</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Supply Chain Scan: 20260712-232447-supply-chain</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-12 23:24</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Branch</td><td><code>rddepman-asset-metadata</code> @ <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/bf27d8700"><code>bf27d8700</code></a></td></tr>
+      <tr><td>Kind</td><td>Supply chain scan</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">28 open issues, 5 critical</span> &mdash; the core dependency surface is exemplary (every runtime binary carries a sha256; every GitHub Action is SHA-pinned), but five sites fetch code from a moving ref and execute it, two of them on end-user machines</td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <table class="summary-table">
+      <thead><tr><th>Ecosystem</th><th>Items</th><th>Pinned</th><th>Open issues</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Custom manifest (<code>dependencies.yaml</code>)</td><td>24 deps / 108 assets</td><td>21 deps, every asset <code>version</code> + <code>sha256</code>, verified at download</td><td>3 deps with <code>assets: []</code></td><td>rddepman ✓</td></tr>
+        <tr><td><a href="#go-modules">Go modules</a></td><td>13 modules</td><td>11 with <code>go.sum</code>; <code>go.work.sum</code> present</td><td>0</td><td>Dependabot ✓</td></tr>
+        <tr><td>Node (yarn-berry)</td><td>2 <code>package.json</code></td><td><code>yarn.lock</code>, 1619/1619 descriptors carry checksums</td><td>1 advisory</td><td>Dependabot ✓</td></tr>
+        <tr><td>GitHub Actions <code>uses:</code></td><td>109 refs</td><td>84 SHA-pinned, 25 local/docker</td><td>0</td><td>Dependabot ✓</td></tr>
+        <tr><td>Workflow token permissions</td><td>24 declarations</td><td>—</td><td>9</td><td>—</td></tr>
+        <tr><td>Container images</td><td>3 <code>FROM</code> + 1 k8s + 6 CI <code>image:</code></td><td>0 digest-pinned</td><td>10</td><td>—</td></tr>
+        <tr><td><a href="#submodules">Submodules</a></td><td>4</td><td>gitlink-pinned by git design</td><td>0</td><td>—</td></tr>
+        <tr><td>Inline downloads</td><td>6 candidates</td><td>0 verified</td><td>5</td><td>—</td></tr>
+        <tr><td>Run-from-network</td><td>5 commands</td><td>2 (Go module proxy)</td><td>2</td><td>—</td></tr>
+        <tr><td>Git clone in scripts</td><td>1</td><td>0</td><td>1</td><td>—</td></tr>
+        <tr><td>Tool-mediated installs</td><td>3 sites</td><td>0</td><td>3</td><td>—</td></tr>
+        <tr><td>PowerShell download+execute</td><td>3 sites</td><td>0</td><td>3</td><td>—</td></tr>
+        <tr><td>Python (pip)</td><td>1 <code>requirements.txt</code></td><td>0/1 lines hashed</td><td>1</td><td>no bot coverage</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <hr>
+    <h2 id="pinned-dependencies" class="section-design">Pinned dependencies <a href="#pinned-dependencies" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="custom-manifest-pkg-rancher-desktop-assets-dependencies-yaml">Custom manifest: `pkg/rancher-desktop/assets/dependencies.yaml` <a href="#custom-manifest-pkg-rancher-desktop-assets-dependencies-yaml" class="pilcrow">&#182;</a></h3>
+    <p>This is the repo&#39;s largest dependency surface and its strongest one. 24 dependencies — Lima, QEMU, Electron, helm, the Docker CLI, buildx, compose, the credential helpers, trivy, steve, spin, cert-manager — each pair a concrete <code>version</code> with an <code>assets:</code> list, and every asset carries its resolved <code>url</code> and a <code>checksum: sha256:&lt;64 hex&gt;</code>. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/lib/dependencies.ts#L105"><code>scripts/lib/dependencies.ts:105</code></a> rejects any checksum that is not exactly <code>sha256:</code> plus 64 hex characters, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/lib/download.ts#L117"><code>scripts/lib/download.ts:117</code></a> hashes the downloaded bytes and throws when they differ from the manifest. The cache-hit path re-hashes the file on disk rather than trusting its existence, and the codesign path keeps the verified bytes at <code>.unsigned</code> so the digest still means something after signing.</p>
+    <p><code>mobyOpenAPISpec</code> goes further: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/lib/dependencies.ts#L220"><code>scripts/lib/dependencies.ts:220</code></a> requires its <code>commit</code> to be a full 40-character SHA, so a regenerate cannot bake a branch name into the download URL.</p>
+    <p>Three entries carry <code>assets: []</code> because another mechanism fetches them. Two of those mechanisms are sound, one is not — see Open issues.</p>
+    <ul>
+      <li><code>golangci-lint</code> (2.12.2) — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/lint-go.ts#L180"><code>scripts/lint-go.ts:180</code></a> runs <code>go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v&lt;version&gt;</code> with the version read from the manifest. The Go module proxy and checksum database verify the bytes. Pinned.</li>
+      <li><code>check-spelling</code> (0.0.26) and <code>spinKubePlugin</code> (0.4.0) — both fetch by mutable ref. See Open issues.</li>
+    </ul>
+    </div>
+    <div class="card card-design">
+    <h3 id="go-modules">Go modules <a href="#go-modules" class="pilcrow">&#182;</a></h3>
+    <p>13 modules in the <code>go.work</code>, <code>go.work.sum</code> present, <code>go.sum</code> in all 11 modules that declare requirements (<code>src/go/extension-proxy</code> and <code>src/go/spin-stub</code> have none). One <code>replace</code> directive, at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/src/go/guestagent/go.mod#L123"><code>src/go/guestagent/go.mod:123</code></a>, points at the <code>rancher-sandbox/lima</code> fork with a pseudo-version (<code>v1.0.3-0.20250115235144-24eb898b3a96</code>), which <code>go.sum</code> covers like any other module.</p>
+    </div>
+    <div class="card card-design">
+    <h3 id="node">Node <a href="#node" class="pilcrow">&#182;</a></h3>
+    <p><code>yarn.lock</code> (yarn-berry) covers both <code>package.json</code> files, and all 1619 installable descriptors carry a checksum; the 88 skipped entries are platform-conditioned and never fetch on this platform. <code>.yarnrc.yml</code> sets <code>enableScripts: false</code>, so a compromised transitive package cannot run a postinstall script.</p>
+    </div>
+    <div class="card card-design">
+    <h3 id="github-actions">GitHub Actions <a href="#github-actions" class="pilcrow">&#182;</a></h3>
+    <p>All 84 remote <code>uses:</code> references are SHA-pinned; the other 25 are local (<code>./.github/actions/...</code>) or <code>docker://</code>. Zero unpinned actions — this is the exception, not the rule, in repos this size.</p>
+    </div>
+    <div class="card card-design">
+    <h3 id="submodules">Submodules <a href="#submodules" class="pilcrow">&#182;</a></h3>
+    <p>Four bats submodules (<code>bats-core</code>, <code>bats-assert</code>, <code>bats-support</code>, <code>bats-file</code>), each pinned by gitlink SHA.</p>
+    </div>
+    <hr>
+    <h2 id="open-issues" class="section-critical">Open issues <a href="#open-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <h3 id="critical-code-fetched-from-a-moving-ref-and-executed">Critical — code fetched from a moving ref and executed <a href="#critical-code-fetched-from-a-moving-ref-and-executed" class="pilcrow">&#182;</a></h3>
+    <div class="issue-list">
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/windows-setup.ps1#L49"><code>scripts/windows-setup.ps1:49</code></a></div>
+        <div class="issue-desc"><code>Invoke-WebRequest -Uri &#39;https://get.scoop.sh&#39; | Invoke-Expression</code> pipes an unpinned remote script straight into the PowerShell interpreter. This is <code>curl | bash</code> (wiki §3.5). Pin the URL to a release SHA, download to disk, verify a stored digest, then run it.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/windows-setup.ps1#L74"><code>scripts/windows-setup.ps1:74</code></a></div>
+        <div class="issue-desc">the loop fetches four <code>.ps1</code> files from <code>https://raw.githubusercontent.com/rancher-sandbox/rancher-desktop/main/scripts/windows/$file</code> and line 80 executes <code>sudo-install-wsl.ps1</code> with administrator rights. The ref is <code>main</code>, so anyone who can push to <code>main</code> controls what runs as admin on a developer&#39;s machine. All four files already exist in this repo at <code>scripts/windows/</code>; the download serves no purpose. Copy them from the local checkout and delete the fetch.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/windows/install-wsl.ps1#L39"><code>scripts/windows/install-wsl.ps1:39</code></a></div>
+        <div class="issue-desc">downloads <code>wsl_update_x64.msi</code> and hands it to <code>msiexec /i</code> on the next line with no digest check. TLS is the only thing authenticating an MSI that installs as SYSTEM. Store the sha256 and verify with <code>Get-FileHash</code> before <code>msiexec</code> runs.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/resources/setup-spin#L41"><code>resources/setup-spin:41</code></a></div>
+        <div class="issue-desc">when the tagged template tarball fails to download, the script silently falls back to <code>https://github.com/spinframework/${repo}/archive/refs/heads/main.tar.gz</code> and installs whatever is on that third-party branch. This script ships in <code>resources/</code> and runs on end-user machines. A transient 404 on the pinned tag is enough to trigger it. Drop the fallback and fail loudly.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/resources/setup-spin#L53"><code>resources/setup-spin:53</code></a></div>
+        <div class="issue-desc"><code>install_plugin</code> builds a manifest URL under <code>spin-plugins/raw/refs/heads/main/manifests/</code> and passes it to <code>spin plugins install --url</code>, which installs the binary the manifest names. The version in the filename is pinned from <code>dependencies.yaml</code> (<code>spinKubePlugin</code>), but the manifest itself is read from a moving branch, and neither the manifest nor the binary it points to is verified. This also runs on end-user machines. Pin the manifest URL to a commit SHA.</div>
+      </div>
+    </div>
+    </div>
+    <div class="card card-critical">
+    <h3 id="unpinned-container-images">Unpinned container images <a href="#unpinned-container-images" class="pilcrow">&#182;</a></h3>
+    <p>None of the 10 image references carry an <code>@sha256:</code> digest. All are test or CI fixtures rather than product images, which lowers the impact but does not remove it — a poisoned <code>golang:latest</code> runs with the test job&#39;s token.</p>
+    <div class="issue-list">
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/bats/tests/extensions/testdata/Dockerfile#L1"><code>bats/tests/extensions/testdata/Dockerfile:1</code></a></div>
+        <div class="issue-desc"><code>registry.suse.com/bci/golang:latest</code> (also at line 6); line 12 uses <code>bci-minimal:16.0</code>, tag-pinned but no digest.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/e2e/assets/k8s-deploy-sample/nginx-sample-app.yaml#L19"><code>e2e/assets/k8s-deploy-sample/nginx-sample-app.yaml:19</code></a></div>
+        <div class="issue-desc"><code>nginx:latest</code>.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/smoke-test.yaml#L170"><code>.github/workflows/smoke-test.yaml:170</code></a></div>
+        <div class="issue-desc">the repository-smoke-test matrix runs containers on <code>registry.opensuse.org/opensuse/tumbleweed:latest</code>, <code>opensuse/leap:latest</code>, <code>debian:latest</code>, and <code>fedora:latest</code> (lines 170-173), plus <code>tumbleweed:latest</code> and <code>rockylinux/rockylinux:9</code> at lines 257-258.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/bats/tests/helpers/images.bash#L5"><code>bats/tests/helpers/images.bash:5</code></a></div>
+        <div class="issue-desc">the bats image set (<code>alpine</code>, <code>busybox</code>, <code>nginx</code>, <code>ruby</code>, <code>tonistiigi/binfmt</code>, <code>python:3.12-alpine</code>, <code>registry:2.8.1</code>) is tag-only, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/bats/scripts/ghcr-mirror.sh#L43"><code>bats/scripts/ghcr-mirror.sh:43</code></a> mirrors those tags to ghcr.io by tag, so the mirror inherits whatever the tag pointed at on mirror day.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/bats/tests/compose/testdata/Dockerfile.nginx#L2"><code>bats/tests/compose/testdata/Dockerfile.nginx:2</code></a></div>
+        <div class="issue-desc"><code>FROM ${IMAGE_NGINX}</code> with no in-file <code>ARG</code> default; the value comes from <code>images.bash</code> above.</div>
+      </div>
+    </div>
+    </div>
+    <div class="card card-critical">
+    <h3 id="downloads-without-digest-verification">Downloads without digest verification <a href="#downloads-without-digest-verification" class="pilcrow">&#182;</a></h3>
+    <div class="issue-list">
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/actions/setup-environment/action.yaml#L45"><code>.github/actions/setup-environment/action.yaml:45</code></a></div>
+        <div class="issue-desc"><code>curl --location --output &quot;$bindir/yq.exe&quot; https://github.com/mikefarah/yq/releases/download/v4.43.1/yq_windows_amd64.exe</code>, then <code>chmod a+x</code>. The version is pinned, the bytes are not. This action runs in most Windows CI jobs. Record the sha256 and check it (wiki §3.5).</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/bats/Makefile#L39"><code>bats/Makefile:39</code></a></div>
+        <div class="issue-desc"><code>wget --no-verbose $(JQ_URL)/jq-osx-amd64 -O $@</code> fetches jq 1.7.1 with no checksum, and the matching Linux download sits at line 44. The binary is then packaged into <code>bats.tar.gz</code> and executed by the test suite. Note the URL also still points at <code>stedolan/jq</code>, which has moved to <code>jqlang/jq</code>.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/smoke-test.yaml#L66"><code>.github/workflows/smoke-test.yaml:66</code></a></div>
+        <div class="issue-desc"><code>curl -L -o rancher-desktop.AppImage &quot;${OBS_DOWNLOAD_URL}${artifact_name}&quot;</code>, where <code>artifact_name</code> comes from an OBS directory listing parsed two lines above. Line 68 then does <code>sha512sum rancher-desktop.AppImage &gt; rancher-desktop.AppImage.sha512sum</code>, under a comment that says &quot;The AppImage does not have a checksum; make one up.&quot; That hash is computed from the downloaded bytes, so it authenticates nothing — it only makes the artifact look verified to the downstream smoke test. Publish a checksum from the build that produced the AppImage, and verify against that.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/linux-release.yaml#L36"><code>.github/workflows/linux-release.yaml:36</code></a></div>
+        <div class="issue-desc"><code>curl -L -o &quot;dist/${release_zip_name}&quot;</code> pulls the published release zip and the next step re-uploads it to <code>s3://rancher-desktop-assets-for-obs</code>, where OBS builds the Linux packages from it. The release publishes a <code>.zip.sha512sum</code> alongside; fetch it and verify before the upload.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/test.yaml#L20"><code>.github/workflows/test.yaml:20</code></a></div>
+        <div class="issue-desc"><code>go install mvdan.cc/sh/v3/cmd/shfmt@latest</code>. The module proxy verifies the bytes, but <code>@latest</code> means a new shfmt release changes CI behaviour without a commit. Pin the version.</div>
+      </div>
+    </div>
+    </div>
+    <div class="card card-critical">
+    <h3 id="source-fetched-by-mutable-tag-and-executed">Source fetched by mutable tag and executed <a href="#source-fetched-by-mutable-tag-and-executed" class="pilcrow">&#182;</a></h3>
+    <div class="issue-list">
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/spelling.sh#L66"><code>scripts/spelling.sh:66</code></a></div>
+        <div class="issue-desc"><code>git clone --branch &quot;$version&quot; --depth 1 &quot;$repo&quot; &quot;$checkout&quot;</code> clones check-spelling at tag <code>v0.0.26</code> (read from <code>dependencies.yaml</code>), and line 129 runs <code>exec &quot;$script&quot;</code> on the cloned <code>unknown-words.sh</code>. A git tag is mutable; upstream can move <code>v0.0.26</code> and the next <code>--depth 1</code> clone picks it up. Line 69&#39;s re-checkout path has the same exposure. Pin to the 40-hex commit SHA — this is the one entry in <code>dependencies.yaml</code> whose &quot;version&quot; does not commit to bytes.</div>
+      </div>
+    </div>
+    </div>
+    <div class="card card-critical">
+    <h3 id="github-actions-token-permissions">GitHub Actions token permissions <a href="#github-actions-token-permissions" class="pilcrow">&#182;</a></h3>
+    <div class="issue-list">
+      <div class="issue-row">
+        <div class="issue-desc">Eight workflows declare no top-level <code>permissions:</code> block, so each job gets the repository default token scope: <code>codeql.yaml</code>, <code>docker-cli-monitor.yaml</code>, <code>linux-e2e.yaml</code>, <code>linux-release.yaml</code>, <code>macM1-e2e.yaml</code>, <code>package.yaml</code>, <code>screenshot.yaml</code>, and <code>windows-e2e.yaml</code>. <code>linux-release.yaml</code> is the one to fix first: it holds <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code>, and <code>OBS_WEBHOOK_TOKEN</code>, and it needs no write scope at all. Set <code>permissions: read-all</code> at the workflow level and grant writes per job.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/smoke-test.yaml#L24"><code>.github/workflows/smoke-test.yaml:24</code></a></div>
+        <div class="issue-desc">job-level <code>contents: write</code>. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/k3s-versions.yaml#L8"><code>k3s-versions.yaml:8</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/rddepman.yaml#L8"><code>rddepman.yaml:8</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/yarn-dedupe.yaml#L9"><code>yarn-dedupe.yaml:9</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/release-merge-to-main.yaml#L32"><code>release-merge-to-main.yaml:32</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/upgrade-generate.yaml#L56"><code>upgrade-generate.yaml:56</code></a> also take <code>contents: write</code>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/rdx-host-api-tests.yaml#L11"><code>rdx-host-api-tests.yaml:11</code></a> takes <code>packages: write</code>. Each is plausible for a bot that opens PRs, but <code>contents: write</code> on a workflow that runs untrusted code is a repo-takeover primitive; confirm each one still needs it.</div>
+      </div>
+    </div>
+    </div>
+    <div class="card card-critical">
+    <h3 id="advisory">Advisory <a href="#advisory" class="pilcrow">&#182;</a></h3>
+    <div class="issue-list">
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/smoke-test/install-from-repo.sh#L21"><code>.github/workflows/smoke-test/install-from-repo.sh:21</code></a></div>
+        <div class="issue-desc"><code>curl -s .../Release.key | gpg --dearmor &gt; .../keyrings/isv-rancher-dev-archive-keyring.gpg</code> trusts the key on first use. The repo then authenticates its own packages with a key it served. Compare the fingerprint against a hard-coded constant, or commit the key.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/.github/workflows/smoke-test/install-from-repo.sh#L39"><code>.github/workflows/smoke-test/install-from-repo.sh:39</code></a></div>
+        <div class="issue-desc"><code>zypper --gpg-auto-import-keys</code> does the same for the openSUSE path; line 38&#39;s <code>addrepo</code> and line 48&#39;s <code>dnf config-manager addrepo</code> fetch the repo definition itself over the network.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/bats/tests/compose/testdata/app/requirements.txt#L1"><code>bats/tests/compose/testdata/app/requirements.txt:1</code></a></div>
+        <div class="issue-desc"><code>flask</code>, with no version and no <code>--hash</code>. It is a test fixture built into a test container, but pip is also the one ecosystem Dependabot does not cover here.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/package.json#L1"><code>package.json:1</code></a></div>
+        <div class="issue-desc">the corepack <code>packageManager</code> field is <code>yarn@4.15.0</code> with no <code>+sha1.&lt;hex&gt;</code> suffix, so corepack trusts whatever it downloads for that version. Append the hash (<code>yarn@4.15.0+sha224.&lt;hex&gt;</code>) to close the loop.</div>
+      </div>
+      <div class="issue-row">
+        <div class="issue-loc"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/dev.ts#L67"><code>scripts/dev.ts:67</code></a></div>
+        <div class="issue-desc"><code>new https.Agent({ rejectUnauthorized: false })</code> disables certificate verification, but only for <code>https://localhost:8888</code> under <code>RD_ENV_PLUGINS_DEV</code>. Benign as written; worth a comment so it is not copied elsewhere.</div>
+      </div>
+    </div>
+    </div>
+    <hr>
+    <h2 id="retro-dependency-types-not-explicitly-covered">Retro: dependency types not explicitly covered <a href="#retro-dependency-types-not-explicitly-covered" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="r1-the-assets-checksum-manifest-schema-is-invisible-to-the-scanner-misclassification">R1. The `assets:`/`checksum:` manifest schema is invisible to the scanner (misclassification) <a href="#r1-the-assets-checksum-manifest-schema-is-invisible-to-the-scanner-misclassification" class="pilcrow">&#182;</a></h3>
+    <p><strong>What was seen.</strong> <code>pkg/rancher-desktop/assets/dependencies.yaml</code> declares 24 dependencies and 108 downloadable assets, each with a <code>version</code> and a <code>sha256</code>. <code>inventory.json</code> reports <code>custom_manifests: []</code>. The single largest — and best-pinned — dependency surface in the repo produced no inventory entry at all: not pinned, not open, absent.</p>
+    <p><strong>Why current rules missed it.</strong> Phase 1&#39;s custom-manifest detector keys on &quot;YAML pairing deps with <code>version:</code> keys AND literal <code>checksums:</code> blocks.&quot; <code>main</code> uses that shape:</p>
+      <pre><code class="language-yaml">lima:
+  version: 2.1.2.rd1
+  checksums:
+    lima.macos-15.amd64.tar.gz: sha256:bd95...</code></pre>
+    <p>This branch (<code>rddepman-asset-metadata</code>, commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/bf27d8700"><code>bf27d8700</code></a>) replaces it with a per-asset list:</p>
+      <pre><code class="language-yaml">lima:
+  version: 2.1.2.rd1
+  assets:
+    - platform: darwin
+      arch: amd64
+      url: https://github.com/.../lima.macos-15.amd64.tar.gz
+      checksum: sha256:bd95...</code></pre>
+    <p>The key is now singular <code>checksum:</code> inside an <code>assets:</code> sequence, and the detector&#39;s <code>checksums:</code>-block requirement no longer matches. The schema is strictly better — it records the resolved URL next to the digest — but the scanner reads it as an ordinary YAML file.</p>
+    <p><strong>Proposed change.</strong> Extend the custom-manifest detector to accept either shape: a <code>checksums:</code> mapping block (current rule) <strong>or</strong> an <code>assets:</code> sequence whose items carry a <code>checksum:</code> scalar matching <code>^sha256:[0-9a-f]{64}$</code>. Both reduce to the same judgment — &quot;entry pairs a concrete version with stored digests&quot; — so the Phase 2 rules need no change once the entry exists. A digest-carrying key can be singular or plural; keying on the plural alone is brittle across schema revisions.</p>
+    </div>
+    <div class="card card-neutral">
+    <h3 id="r2-git-clone-exec-of-the-cloned-script-is-classified-read-only-consumer-misclassification">R2. `git clone` + `exec` of the cloned script is classified &quot;read-only consumer&quot; (misclassification) <a href="#r2-git-clone-exec-of-the-cloned-script-is-classified-read-only-consumer-misclassification" class="pilcrow">&#182;</a></h3>
+    <p><strong>What was seen.</strong> The digest labels <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/scripts/spelling.sh#L66"><code>scripts/spelling.sh:66</code></a> as <code>_(read-only consumer)_</code>. Line 129 of that same file is <code>exec &quot;$script&quot;</code>, where <code>$script</code> is <code>$checkout/unknown-words.sh</code> — the cloned tree&#39;s entry point. The clone is the opposite of read-only: its contents replace the current process.</p>
+    <p><strong>Why current rules missed it.</strong> <code>git_clones_in_scripts[].executes_cloned_code</code> looks for execution of the clone path, but <code>spelling.sh</code> executes through two levels of indirection: <code>find_script()</code> builds <code>$script</code> from a local <code>$checkout</code> variable, echoes it to stdout, and the caller assigns it with <code>script=$(find_script)</code> before <code>exec &quot;$script&quot;</code>. Neither the clone destination nor the executed variable share a name.</p>
+    <p><strong>Proposed change.</strong> When a script&#39;s clone destination flows into any variable that is later the target of <code>exec</code>, <code>source</code>, <code>.</code>, <code>bash</code>, <code>sh</code>, or a bare <code>&quot;$var&quot;</code> command position, set <code>executes_cloned_code: true</code>. A cheaper approximation that catches this case: if the file contains a clone <em>and</em> an <code>exec</code>/<code>source</code> of any variable, set the flag and let Phase 2 judge. False positives here cost one Read; a false negative downgrades a code-execution finding to a documentation finding.</p>
+    </div>
+    <div class="card card-neutral">
+    <h3 id="r3-tool-install-url-url-is-not-a-recognized-archive-install-shape-new-detection">R3. `&lt;tool&gt; install --url &lt;URL&gt;` is not a recognized archive-install shape (new detection) <a href="#r3-tool-install-url-url-is-not-a-recognized-archive-install-shape-new-detection" class="pilcrow">&#182;</a></h3>
+    <p><strong>What was seen.</strong> <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/bf27d8700e0b7fe44d646c8634c0a3fb37e249c2/resources/setup-spin#L59"><code>resources/setup-spin:59</code></a> — <code>&quot;$spin&quot; plugins install --yes --url &quot;${url}&quot;</code>, where <code>$url</code> points into <code>spin-plugins/raw/refs/heads/main/manifests/</code>. The tool fetches the manifest, then fetches and installs the binary the manifest names. Nothing is verified, the ref is a moving branch, and this ships to end users. The scan flagged the sibling <code>--tar</code> calls at lines 39 and 42 but not this one.</p>
+    <p><strong>Why current rules missed it.</strong> The tool-mediated archive-install detector matches <code>--(tar|archive|file|from)\b</code>. <code>--url</code> is not in the set, so a plugin installer that takes a URL flag reads as an ordinary command.</p>
+    <p><strong>Proposed change.</strong> Add <code>url</code> to the flag alternation: <code>--(tar|archive|file|from|url)\b</code>. The value is a remote URL either way, and the Phase 2 rule already says to default an unknown tool to open-issue. While there, note that this detector is the right place to catch the &quot;manifest URL points to a binary&quot; indirection — the fetched thing is not the artifact, it names the artifact — but the flag fix alone surfaces the site for judgment, which is enough.</p>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){var n=/[*&][^\s[\]{},]+/,r=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,t="(?:"+r.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+r.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,(function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"})),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var r="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\\]|\\}|(?:[\r\n]\\s*)?#))".replace(/<<prop>>/g,(function(){return t})).replace(/<<value>>/g,(function(){return e}));return RegExp(r,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)\\S[^\r\n]*(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,(function(){return t}))),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,(function(){return t})).replace(/<<key>>/g,(function(){return"(?:"+a+"|"+d+")"}))),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?(?:[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?))?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("false|true","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:r,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
