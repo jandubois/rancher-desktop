@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260718-122026-pr-10637</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260718-122026-pr-10637</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-18 12:20</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10637" class="gh-ref" data-title="Extract UI strings to translation keys and gate them in CI" data-state="open" data-type="pr">#10637</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10637" class="gh-ref" data-title="Extract UI strings to translation keys and gate them in CI" data-state="open" data-type="pr">#10637</a> — Extract UI strings to translation keys and gate them in CI</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f3f048283"><code>f3f048283</code></a> Extract UI strings to translation keys and gate them in CI<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/3642c6d75"><code>3642c6d75</code></a> Remove unused translation keys<br>_(<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/5d074b397"><code>5d074b397</code></a> Add a language picker — PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10623" class="gh-ref" data-title="Add a language picker to Application preferences" data-state="open" data-type="pr">#10623</a>, out of scope)_</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f3f048283a6dc750994e22251c897e7701ad8f00"><code>f3f048283a6dc750994e22251c897e7701ad8f00</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; one accidental chart-styling regression (I1); everything else is optional</td></tr>
+      <tr><td>Wall-clock time</td><td><code>36 min 19 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR deletes ~2,900 inherited-but-unused translation keys plus the vestigial <code>zh-hans.yaml</code>, then routes every hardcoded UI string in pages, components, menus, the tray, and backend dialogs through <code>t()</code>/<code>titleKey</code>/<code>labelKey</code>, and adds a CI key-hygiene gate. The extraction is careful, and the gate (<code>i18n-report check --locale=all</code>) passes cleanly on this tree (independently verified). One accidental regression should block merge: the memory-limit chart lost its dashed, unfilled styling. All other findings are optional gaps and cleanups.</p>
+    <p>Two independent reviewers (Claude, Codex) found and reproduced the chart regression; the other two missed it. No agent produced a false positive this round. Findings cluster around extraction completeness (backend progress labels, sanitizer consistency) and locale reactivity of one fallback title.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="pkg/rancher-desktop/components/ContainerStats.vue">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Memory-limit chart series lost its dashed, unfilled styling <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/ContainerStats.vue#L308-L319">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="308" data-line="313-314"><code class="language-ts">}));
+
+const memChartData = computed(() =&gt; ({
+  labels:   [...labels.value],
+  datasets: [
+    dataset(t(&#39;containerStats.series.used&#39;), memData.value, chartPalette.value.mem),
+    dataset(t(&#39;containerStats.series.limit&#39;), memLimitData.value, chartPalette.value.memLim),
+  ],
+}));
+
+const netChartData = computed(() =&gt; ({
+  labels:   labels.value.slice(1),</code></pre>
+    <p>At the merge-base this call was <code>dataset(&#39;Limit&#39;, memLimitData.value, chartPalette.value.memLim, true)</code>. The i18n edit dropped the fourth argument, so <code>dashed</code> defaults to <code>false</code>. The <code>dataset</code> helper (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/ContainerStats.vue#L289"><code>ContainerStats.vue:289</code></a>) then maps that to <code>fill: true</code>, <code>backgroundColor: color + &#39;33&#39;</code> (20% alpha), <code>borderWidth: 2</code>, and <code>borderDash: []</code>. The Limit series now renders as a solid, double-width, filled area that shades the chart up to the limit and obscures the &quot;Used&quot; series it is drawn over. It reproduces on every container&#39;s Stats memory chart, and no test covers dataset styling. Both agents confirmed by direct reproduction; blame attributes the changed line to <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f3f048283"><code>f3f048283</code></a>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/ContainerStats.vue#L284-L294">pkg/rancher-desktop/components/ContainerStats.vue</a></div>
+      <pre data-start="284" data-line="289"><code class="language-markup">    blockR: readCssColor(el, &#39;--info&#39;, chartPalette.value.blockR),
+    blockW: readCssColor(el, &#39;--warning-text&#39;, chartPalette.value.blockW),
+  };
+}
+
+function dataset(label: string, data: number[], color: string, dashed = false) {
+  return {
+    label,
+    data:            [...data],
+    borderColor:     color,
+    backgroundColor: dashed ? &#39;transparent&#39; : color + &#39;33&#39;, // 33 = 20% alpha in hex</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-    dataset(t(&#39;containerStats.series.limit&#39;), memLimitData.value, chartPalette.value.memLim),
++    dataset(t(&#39;containerStats.series.limit&#39;), memLimitData.value, chartPalette.value.memLim, true),</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/backend/kube/lima.ts">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Backend progress labels left hardcoded while siblings were extracted <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/kube/lima.ts#L67-L77">pkg/rancher-desktop/backend/kube/lima.ts</a></div>
+      <pre data-start="67" data-line="72"><code class="language-ts">      };
+
+      const current = sum(&#39;current&#39;);
+      const max = sum(&#39;max&#39;);
+
+      this.progressTracker.numeric(&#39;Downloading Kubernetes components&#39;, current, max);
+    });
+
+    try {
+      const persistedVersion = await K3sHelper.getInstalledK3sVersion(this.vm);
+      const desiredVersion = await this.desiredVersion;</code></pre>
+    <p>This PR routed most <code>ProgressTracker</code> descriptions through <code>t(&#39;progress.*&#39;)</code> (see <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/lima.ts#L1073"><code>backend/lima.ts:1073</code></a>, <code>1830</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/mock.ts#L82"><code>mock.ts:82</code></a>), but left several English literals: this line, the identical <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/kube/wsl.ts#L146"><code>backend/kube/wsl.ts:146</code></a>, <code>&#39;Recovering broken virtual machine&#39;</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/lima.ts#L1888"><code>backend/lima.ts:1888</code></a>), and <code>&#39;Starting mock backend&#39;</code> (<code>backend/mock.ts:70,73</code>). Blame confirms these predate the PR, so this is an extraction gap, not a regression — but &quot;Downloading Kubernetes components&quot; shows on every non-English K3s start, alongside progress steps that now translate. The scanner cannot see these template-literal descriptions, so the CI gate misses them.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/lima.ts#L1068-L1078">pkg/rancher-desktop/backend/lima.ts</a></div>
+      <pre data-start="1068" data-line="1073"><code class="language-typescript">        explanations[cmd.reason] = (explanations[cmd.reason] ?? []).concat(...cmd.paths);
+      }
+    };
+
+    if (os.platform() === &#39;darwin&#39;) {
+      await this.progressTracker.action(t(&#39;progress.settingUpVirtualEthernet&#39;), 10, async() =&gt; {
+        processCommand(await this.installVMNETTools());
+      });
+      await this.progressTracker.action(t(&#39;progress.settingLimaPermissions&#39;), 10, async() =&gt; {
+        processCommand(await this.ensureRunLimaLocation());
+        processCommand(await this.createLimaSudoersFile(randomTag));</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/lima.ts#L1883-L1893">pkg/rancher-desktop/backend/lima.ts</a></div>
+      <pre data-start="1883" data-line="1888"><code class="language-typescript">        if (vmStatus?.status === &#39;Broken&#39;) {
+          const orphanError = vmStatus.errors?.find(e =&gt; /(driver|host agent) is running but/.test(e));
+
+          if (orphanError) {
+            console.log(`Lima instance is broken (${ orphanError }); cleaning up before restart.`);
+            await this.progressTracker.action(&#39;Recovering broken virtual machine&#39;, 100,
+              this.lima(&#39;stop&#39;, &#39;--force&#39;, MACHINE_NAME));
+            vmStatus = await this.status;
+          }
+        }
+        let isVMAlreadyRunning = vmStatus?.status === &#39;Running&#39;;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/mock.ts#L77-L87">pkg/rancher-desktop/backend/mock.ts</a></div>
+      <pre data-start="77" data-line="82"><code class="language-typescript">  }
+
+  async stop(): Promise&lt;void&gt; {
+    console.log(&#39;Stopping mock backend...&#39;);
+    this.setState(State.STOPPING);
+    await this.progressTracker.action(t(&#39;progress.stoppingMockBackend&#39;), 0,
+      util.promisify(setTimeout)(1_000));
+    this.setState(State.STOPPED);
+    console.log(&#39;Mock backend stopped.&#39;);
+  }
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/kube/wsl.ts#L141-L151">pkg/rancher-desktop/backend/kube/wsl.ts</a></div>
+      <pre data-start="141" data-line="146"><code class="language-typescript">      };
+
+      const current = sum(&#39;current&#39;);
+      const max = sum(&#39;max&#39;);
+
+      this.progressTracker.numeric(&#39;Downloading Kubernetes components&#39;, current, max);
+    });
+
+    try {
+      const desiredVersion = await this.desiredVersion;
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/mock.ts#L65-L75">pkg/rancher-desktop/backend/mock.ts</a></div>
+      <pre data-start="65" data-line="70"><code class="language-typescript">    }
+    console.log(&#39;Starting mock backend...&#39;);
+    this.setState(State.STARTING);
+    this.cfg = config;
+    for (let i = 0; i &lt; 10; i++) {
+      this.progressTracker.numeric(&#39;Starting mock backend&#39;, i, 10);
+      await util.promisify(setTimeout)(1_000);
+    }
+    this.progressTracker.numeric(&#39;Starting mock backend&#39;, 10, 10);
+    await this.kubeBackend.start(config, new semver.SemVer(&#39;1.0.0&#39;));
+    this.setState(State.STARTED);</code></pre>
+    <p>Fix: add a <code>progress.downloadingKubernetesComponents</code> key, reuse it in both <code>kube/*.ts</code> sites, and add keys for the VM-recovery message. The mock-backend strings are test-only and can stay.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/KubernetesError.vue">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Raw <code>v-html</code> where the app-wide pattern is <code>v-clean-html</code> <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/KubernetesError.vue#L34-L47">pkg/rancher-desktop/pages/KubernetesError.vue</a></div>
+      <pre data-start="34" data-line="39-42"><code class="language-html">        &lt;/div&gt;
+        &lt;div
+          v-if=&quot;lastLogLines.length&quot;
+          class=&quot;error-part grow&quot;
+        &gt;
+          &lt;!-- eslint-disable-next-line vue/no-v-html --&gt;
+          &lt;h4
+            @click.prevent=&quot;onLogLinesClick&quot;
+            v-html=&quot;t(&#39;kubernetesError.logLines&#39;)&quot;
+          /&gt;
+          &lt;pre id=&quot;log-lines&quot;&gt;{{ joinedLastLogLines }}&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;</code></pre>
+    <p>Four converted sites render translated HTML through raw <code>v-html</code> behind an eslint-disable — here, plus <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/General.vue#L6"><code>General.vue:6</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/Troubleshooting.vue#L79"><code>Troubleshooting.vue:79</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/UpdateStatus.vue#L74"><code>UpdateStatus.vue:74</code></a> — while sibling conversions in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/Preferences/BodyKubernetes.vue#L204"><code>BodyKubernetes.vue:204</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/Preferences/ContainerEngineGeneral.vue#L93"><code>ContainerEngineGeneral.vue:93</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/ExtensionsUninstalled.vue#L44"><code>ExtensionsUninstalled.vue:44</code></a> use the registered <code>v-clean-html</code> (DOMPurify) directive. <code>plugins/i18n.js</code> documents <code>v-clean-html</code> as the intended sink for translator-controlled markup. DOMPurify keeps <code>data-*</code> and <code>href=&quot;#&quot;</code> by default, so <code>data-navigate</code> wiring survives sanitization and <code>v-clean-html</code> works identically. The strings are app-controlled today, so this is not exploitable — but the split drops the sanitizer that becomes load-bearing once user-supplied translations land (noted as future work).</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/General.vue#L1-L11">pkg/rancher-desktop/pages/General.vue</a></div>
+      <pre data-start="1" data-line="6"><code class="language-markup">&lt;template&gt;
+  &lt;div class=&quot;general&quot;&gt;
+    &lt;div&gt;
+      &lt;ul&gt;
+        &lt;!-- eslint-disable-next-line vue/no-v-html --&gt;
+        &lt;li v-html=&quot;t(&#39;general.projectDiscussions&#39;)&quot; /&gt;
+        &lt;li class=&quot;project-links&quot;&gt;
+          &lt;span&gt;{{ t(&#39;general.projectLinks&#39;) }}&lt;/span&gt;
+          &lt;a href=&quot;https://github.com/rancher-sandbox/rancher-desktop&quot;&gt;{{ t(&#39;general.homepage&#39;) }}&lt;/a&gt;
+          &lt;a href=&quot;https://github.com/rancher-sandbox/rancher-desktop/issues&quot;&gt;{{ t(&#39;general.issues&#39;) }}&lt;/a&gt;
+        &lt;/li&gt;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/Troubleshooting.vue#L74-L84">pkg/rancher-desktop/pages/Troubleshooting.vue</a></div>
+      <pre data-start="74" data-line="79"><code class="language-markup">    &lt;/div&gt;
+    &lt;div class=&quot;need-help&quot;&gt;
+      &lt;hr&gt;
+      &lt;span
+        class=&quot;description&quot;
+        v-html=&quot;t(&#39;troubleshooting.needHelp&#39;)&quot;
+      /&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/UpdateStatus.vue#L69-L79">pkg/rancher-desktop/components/UpdateStatus.vue</a></div>
+      <pre data-start="69" data-line="74"><code class="language-markup">        &lt;p&gt;
+          {{ t(&#39;updateStatus.unsupported.message&#39;) }}
+        &lt;/p&gt;
+        &lt;br&gt;
+        &lt;!-- eslint-disable-next-line vue/no-v-html --&gt;
+        &lt;p v-html=&quot;t(&#39;updateStatus.unsupported.seeDocumentation&#39;)&quot; /&gt;
+      &lt;/template&gt;
+      &lt;template #actions&gt;
+        &lt;div /&gt;
+      &lt;/template&gt;
+    &lt;/card&gt;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/Preferences/BodyKubernetes.vue#L199-L209">pkg/rancher-desktop/components/Preferences/BodyKubernetes.vue</a></div>
+      <pre data-start="199" data-line="204"><code class="language-markup">          &lt;banner
+            color=&quot;warning&quot;
+            @click.prevent=&quot;onWarningClick&quot;
+          &gt;
+            &lt;!-- v-clean-html: the translated warning embeds a link --&gt;
+            &lt;span v-clean-html=&quot;t(&#39;kubernetesPrefs.options.spinkubeWarning&#39;)&quot; /&gt;
+          &lt;/banner&gt;
+        &lt;/template&gt;
+      &lt;/rd-checkbox&gt;
+    &lt;/rd-fieldset&gt;
+  &lt;/div&gt;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/Preferences/ContainerEngineGeneral.vue#L88-L98">pkg/rancher-desktop/components/Preferences/ContainerEngineGeneral.vue</a></div>
+      <pre data-start="88" data-line="93"><code class="language-markup">          &lt;banner
+            color=&quot;warning&quot;
+            @click.prevent=&quot;onWarningClick&quot;
+          &gt;
+            &lt;!-- v-clean-html: the translated warning embeds a link --&gt;
+            &lt;span v-clean-html=&quot;t(&#39;preferences.containerEngine.webAssembly.warning&#39;)&quot; /&gt;
+          &lt;/banner&gt;
+        &lt;/template&gt;
+      &lt;/rd-checkbox&gt;
+    &lt;/rd-fieldset&gt;
+  &lt;/div&gt;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/ExtensionsUninstalled.vue#L39-L49">pkg/rancher-desktop/components/ExtensionsUninstalled.vue</a></div>
+      <pre data-start="39" data-line="44"><code class="language-markup">    :icon=&quot;emptyStateIcon&quot;
+    :heading=&quot;emptyStateHeading&quot;
+  &gt;
+    &lt;template #body&gt;
+      &lt;!-- v-clean-html: the interpolated extension id is not our content --&gt;
+      &lt;span v-clean-html=&quot;emptyStateBody&quot; /&gt;
+    &lt;/template&gt;
+    &lt;template #primary-action&gt;
+      &lt;button
+        class=&quot;btn role-primary&quot;
+        @click=&quot;browseExtensions&quot;</code></pre>
+    <p>Fix: use <code>v-clean-html</code> at all four sites.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/containers/ContainerInfo.vue">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Fallback title does not update on locale change <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/containers/ContainerInfo.vue#L191-L206">pkg/rancher-desktop/pages/containers/ContainerInfo.vue</a></div>
+      <pre data-start="191" data-line="196-201"><code class="language-ts">  }
+  return currentContainer.value.state === &#39;running&#39;;
+});
+
+// Watchers
+watch(containerName, (name) =&gt; {
+  store.dispatch(&#39;page/setHeader&#39;, {
+    title:       name || t(&#39;containerInfo.fallbackTitle&#39;),
+    description: &#39;&#39;,
+    action:      &#39;ContainerStatusBadge&#39;,
+  });
+}, { immediate: true });
+
+watch(activeTab, (tab) =&gt; {
+  if (tab === &#39;tab-shell&#39;) {
+    shellEverActivated.value = true;</code></pre>
+    <p><code>setHeader</code> stores the evaluated string in Vuex, so a <code>title:</code> value never re-translates; only <code>titleKey</code> recomputes reactively in <code>TheTitle.displayTitle</code>. This watcher observes only <code>containerName</code>, so a container viewed without a name keeps its fallback title in the old language after a locale switch, until navigation. The 14 other pages that own their title use <code>titleKey</code>; this one mixes dynamic data with a translated fallback. The merge-base fallback was a permanent-English literal, so this is a minor pre-existing-pattern gap, not a regression (Gemini&#39;s &quot;regression&quot; label is reconciled below).</p>
+    <p>Fix: pass <code>titleKey: name ? &#39;&#39; : &#39;containerInfo.fallbackTitle&#39;</code> alongside <code>title: name || &#39;&#39;</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/volumes/files/_name.vue">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Dead <code>titleKey</code> component-option metadata <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/volumes/files/_name.vue#L113-L125">pkg/rancher-desktop/pages/volumes/files/_name.vue</a></div>
+      <pre data-start="113" data-line="118-120"><code class="language-ts">  size:        number;
+  modified:    Date;
+  isDirectory: boolean;
+}
+
+export default defineComponent({
+  name:       &#39;VolumeFiles&#39;,
+  titleKey:   &#39;volumes.files.title&#39;,
+  components: {
+    BadgeState,
+    Banner,
+    LoadingIndicator,
+    SortableTable,</code></pre>
+    <p>Nothing reads <code>$options.titleKey</code> (grep is empty); <code>mounted()</code> sets the header via <code>setHeader</code> at lines 213-214. The old dead <code>title: &#39;Volume Files&#39;</code> component option was renamed to <code>titleKey</code> rather than removed. It is harmless but misleading — a reader may assume the framework consumes it. Six other pages dropped the option entirely.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/pages/volumes/files/_name.vue#L208-L219">pkg/rancher-desktop/pages/volumes/files/_name.vue</a></div>
+      <pre data-start="208" data-line="213-214"><code class="language-markup">    if (!this.isValidVolumeName) {
+      this.error = this.t(&#39;volumes.files.invalidVolumeName&#39;, { name: this.volumeName });
+      return;
+    }
+
+    this.$store.dispatch(&#39;page/setHeader&#39;, {
+      titleKey:    &#39;volumes.files.title&#39;,
+      description: this.volumeName,
+    });
+
+    ipcRenderer.on(&#39;settings-read&#39;, this.onSettingsRead);
+    ipcRenderer.send(&#39;settings-read&#39;);</code></pre>
+    <p>Fix: delete line 120.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Main-process <code>t()</code> does not auto-inject <code>appName</code>/<code>vendor</code>; the renderer does<em></em> <code>(future)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — <code>store/i18n.js</code> merges <code>{ vendor, appName }</code> into every format call, so <code>t(&#39;kubernetesError.title&#39;)</code> resolves <code>{appName}</code> with no explicit arg. <code>main/i18n.ts</code>&#39;s <code>t()</code> has no such injection, so a main-process call to a shared <code>{appName}</code> key must pass it explicitly or ICU throws and degrades to the literal. Every current main-process caller (<code>mainmenu.ts</code>) does pass <code>{ appName }</code>, so this is latent — but a future reference to a shared key is a quiet trap. Consider injecting <code>appName</code>/<code>vendor</code> in <code>main/i18n.ts</code> too.</li>
+      <li><strong>Navigation labels have a hand-maintained mirror</strong> <code>(future)</code> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/Nav.vue#L123-L133"><code>Nav.vue:123-133</code></a> maps paths to translation keys separately from <code>window/constants.ts</code> and the router. The mapping is complete today, but a future route can silently display its English <code>name</code>. Putting <code>labelKey</code> on route metadata would make route registration the single source of truth.</li>
+      <li><strong>HTML links embedded in translation strings</strong> <code>(future)</code> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — keys such as <code>kubernetesPrefs.options.spinkubeWarning</code> embed <code>&lt;a&gt;</code> tags with <code>data-navigate</code>, coupling presentation to translations; translators must keep the markup intact. <code>validate</code> enforces tag/<code>data-*</code>/<code>href</code> parity, and the README documents the coupling. Component-slot interpolation would remove it later.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/backend/backendHelper.ts#L177"><code>backendHelper.ts:177</code></a> replaces the <code>/field &quot;.*&quot; is locked/</code> stderr regex with the structured <code>sv.hasLockedFieldError</code> flag — the right move now that validator messages are localized <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li><code>store/page.ts</code> <code>setHeader</code> clears the opposing field on every branch (<code>titleKey</code> set ⇒ <code>title=&#39;&#39;</code> and vice-versa), so a key-based title cannot leak past a navigation to a literal-title page <span class="pill pill-claude">Claude</span>.</li>
+      <li>Each per-window <code>onLocaleChange</code> registration (<code>tray.ts</code>, <code>dashboard.ts</code>, <code>preferences.ts</code>) is paired with an unregister on teardown <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li>Separate infinitive/gerund/past-tense image-action keys resolve <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/1481" class="gh-ref" data-title="l10n: relying on pasted strings (`add.loadingText`) is hazardous" data-state="open" data-type="issue">#1481</a> without assembling sentences from English fragments <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li>Tests were upgraded from <code>t: jest.fn()</code> stubs to the real ICU helper, so <code>UpdateStatus.spec.ts</code> and <code>Containers.spec.ts</code> now exercise rendered text <span class="pill pill-claude">Claude</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><code>node_modules</code> is absent from the review worktrees, so no agent executed the Jest suites; the risk was assessed statically. The Go CI gate (<code>i18n-report check --locale=all</code>) was run and passes. Gaps worth noting:</p>
+    <ul>
+      <li><em></em>No test covers dataset styling in <code>ContainerStats.vue</code><em></em> — the dropped <code>dashed</code> argument (I1) passed CI silently for exactly this reason <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span>.</li>
+      <li><em></em><code>deploymentProfiles.spec.ts</code> (unchanged) asserts now-localized strings.<em></em> Claude confirmed byte-for-byte that ICU <code>&#39;&#39;</code>→<code>&#39;</code> rendering reproduces each asserted message, and the PR&#39;s own new <code>i18n.spec.ts</code> case locks in that behavior.</li>
+      <li><strong>No integration test switches locale while the menu, tray, and windows are open</strong> to verify rebuild, retitle, and listener cleanup <span class="pill pill-codex">Codex</span>.</li>
+      <li><em></em><code>ImagesOutputWindow</code> lacks coverage for the build/pull verb forms<em></em> (loading/success/error) <span class="pill pill-codex">Codex</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><code>translations/README.md</code> stays consistent: the PR removes the <code>zh-hans</code> row alongside the file, and the &quot;Validation messages&quot;, &quot;HTML in translation strings&quot;, and &quot;Callback lifecycle&quot; sections accurately describe the new code. No gaps.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Clean. Two in-scope commits, each a single self-contained concept — bulk key removal, then string extraction plus the gate. Splitting the deletion from the additions makes the ~490 added keys reviewable apart from the ~8,600 deletions, as the PR intends. The bottom commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/5d074b397"><code>5d074b397</code></a> is PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10623" class="gh-ref" data-title="Add a language picker to Application preferences" data-state="open" data-type="pr">#10623</a> (language picker) and falls outside scope.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/UpdateStatus.vue#L154"><code>UpdateStatus.vue:154</code></a><em></em> — the <code>${prefix}.</code> / <code>${prefix}; ...</code> assembly keeps period and semicolon outside the catalog, documented by an in-code comment deferring it until more locales ship. Flash raised this as actionable (S1 in its review) with a fully-templated-message fix; it is real but consciously deferred, so it lands here rather than as a numbered Suggestion.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/main/deploymentProfiles.ts#L9"><code>deploymentProfiles.ts:9</code></a><em></em> — early deployment-profile errors fall back to English because they can be thrown before <code>initMainI18n()</code> loads the locale. Verified: <code>currentLocale</code> defaults to <code>en-us</code>.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/f3f048283a6dc750994e22251c897e7701ad8f00/pkg/rancher-desktop/components/Preferences/navigateClick.ts#L13"><code>navigateClick.ts:13</code></a><em></em> — nothing validates <code>data-navigate</code> values from the bundled catalog against known page names; a malformed value is an inert no-op.</li>
+      <li><strong>Table headers do not re-translate until navigation remounts the component</strong> — a pre-existing lifecycle constraint the README documents; extraction exposes more headers to it but does not worsen it.</li>
+      <li><strong>Scanner blind spots</strong> — <code>ProgressTracker</code> descriptions and other template-literal strings are invisible to the CI gate (this is why S1 escaped it); documented in both READMEs.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 4.8]</strong> — The strongest review. It found the one blocking issue (I1) and reproduced it against the merge-base, and it was the only agent to catch both the raw-<code>v-html</code> inconsistency (S2) and the dead <code>titleKey</code> option (S4). It verified statically that the unchanged <code>deploymentProfiles.spec.ts</code> assertions still match ICU output, byte-for-byte. Coverage was complete, and it correctly held the base-PR files (<a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10623" class="gh-ref" data-title="Add a language picker to Application preferences" data-state="open" data-type="pr">#10623</a>) out of scope rather than re-flagging them.</p>
+    <p><strong>[Codex GPT 5.6 Sol]</strong> — Independently found and reproduced I1, corroborating Claude with its own <code>dataset()</code> output check and a blame attribution to <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f3f048283"><code>f3f048283</code></a>. It uniquely caught the backend <code>ProgressTracker</code> extraction gap (S1) that the other three missed, and calibrated it correctly as a gap rather than a regression by checking blame. It ran the real Go gate to confirm the CI claim. High signal, no noise.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> — Contributed one narrow but genuine edge (S3, the fallback-title reactivity gap) that the others passed over. It mislabeled that finding a &quot;regression&quot;; because it does not run <code>git blame</code>, it could not see that the merge-base fallback was already permanent-English. It marked much of the diff &quot;Trivial&quot; and missed I1.</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> — The most exhaustive process: it ran the Go gate and the Jest suites and produced a complete file-by-file coverage summary. Its single finding (the <code>UpdateStatus</code> punctuation split) was already acknowledged by an in-code comment, so it survived only as an Acknowledged Limitation, and its snippet slightly misquoted the code (<code>undefined</code>/<code>decimal</code> for the actual <code>this.locale</code>/<code>unit</code> call). It missed I1. The two Gemini models share a family; here they neither converged on findings nor caught the regression, so their coverage counts as one perspective, not two.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>20m 29s</td><td>21m 35s</td><td>7m 39s</td><td>4m 02s</td></tr>
+        <tr><td>Findings</td><td>1I 2S</td><td>1I 1S</td><td>1S</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>60 (Bash 57, Read 3)</td><td>—</td><td>76 (run<em>shell</em>command 76)</td><td>64 (run<em>shell</em>command 40, grep<em>search 14, read</em>file 6)</td></tr>
+        <tr><td>Design observations</td><td>6</td><td>4</td><td>0</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>4</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>73</td><td>73</td><td>73</td><td>73</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 2S</strong></td><td><strong>1I 1S</strong></td><td><strong>1S</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Gemini 3.1 Pro&#39;s ContainerInfo finding (S3) was reclassified from &quot;regression&quot; to &quot;gap&quot;: the merge-base fallback title was a permanent-English literal, so localizing it non-reactively worsens nothing. Gemini 3.5 Flash&#39;s <code>UpdateStatus</code> punctuation finding was moved from Suggestions to Acknowledged Limitations, since an in-code comment already documents and defers it. No finding was dropped as a false positive this round.</p>
+    <p>Claude and Codex together carried the review: they found and confirmed the only merge-blocking issue, and Codex added the sole unique gap. The Gemini pair added one narrow suggestion between them and both missed the regression — useful for confirming breadth of coverage, weaker on the defect that mattered.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a diff replaces one positional argument of a function call — a string literal becoming a <code>t()</code> call, a value becoming a wrapper — diff the call&#39;s <strong>entire</strong> argument list against the base revision, not just the replaced token. Mechanical extraction and rename edits frequently drop a trailing positional argument (a boolean flag, an options object) along with the token being rewritten, which silently changes behavior while looking like a pure refactor in review. Flag any call whose argument count or trailing arguments changed without a stated reason.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] In the page-header system (<code>store/page.ts</code> + <code>components/TheTitle.vue</code>), only <code>titleKey</code>/<code>descriptionKey</code> produce a locale-reactive header: <code>setHeader</code> stores a <code>title:</code>/<code>description:</code> value as a frozen string in Vuex, so even <code>title: t(&#39;…&#39;)</code> will not re-translate on a locale change, while <code>TheTitle.displayTitle</code> resolves <code>titleKey</code> reactively. When reviewing a <code>setHeader</code> caller, treat a translated <code>title:</code> value as a reactivity gap — except where the title is genuinely dynamic data (a resource name), which legitimately uses <code>title:</code> with a <code>titleKey</code> fallback for the empty case.</li>
+      <li>[repo] Translator-controlled HTML must render through the registered <code>v-clean-html</code> (DOMPurify) directive, not raw <code>v-html</code>; <code>plugins/i18n.js</code> documents this as the intended sink, and DOMPurify preserves <code>data-*</code> and <code>href=&quot;#&quot;</code> so <code>data-navigate</code>/<code>data-action</code> wiring survives sanitization. Flag any new <code>v-html</code> bound to a translation lookup, even behind an <code>eslint-disable vue/no-v-html</code>, and recommend <code>v-clean-html</code> — the strings are app-controlled today but become untrusted once user-supplied translations land.</li>
+      <li>[repo] Backend <code>ProgressTracker.action()</code>/<code>numeric()</code> descriptions are user-facing progress text but are invisible to the <code>i18n-report</code> CI gate (first-arg template literals the scanner skips). When reviewing an i18n extraction PR, grep <code>progressTracker\.(action|numeric)\(&#39;</code> for remaining English literals — the gate will pass regardless, so you must catch these gaps by reading.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
