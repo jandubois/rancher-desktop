@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260717-224506-pr-10599</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260717-224506-pr-10599</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-17 22:45</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>2 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10599" class="gh-ref" data-title="Show recent blog posts on the General page" data-state="open" data-type="pr">#10599</a> — Show recent blog posts on the General page</td></tr>
+      <tr><td>Branch</td><td><code>welcome-blog-feed</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b6ec2c667"><code>b6ec2c667</code></a> Show recent blog posts on the General page</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b6ec2c6678eb477e301e1c0df8c6182615726295"><code>b6ec2c6678eb477e301e1c0df8c6182615726295</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6-sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; all five Round 1 fixes verified complete; no correctness, security, or regression issues; remaining items are optional polish</td></tr>
+      <tr><td>Wall-clock time</td><td><code>39 min 11 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 2 verifies the five Round 1 fixes and finds no new correctness, security, or regression issues. <code>safeLink</code> rejects non-http(s) links before binding, both HTML-strip paths run through an inert <code>DOMParser</code>, the fetch carries a 10-second timeout, the <code>settings-read</code> listener is torn down on unmount, and the new <code>parseFeed</code> tests drive real XML. Every surviving finding is optional polish.</p>
+    <p>All five reviewers approve. Codex ran twice this round: the initial gpt-5.5 run raised two polish suggestions (S2, S3), and a mid-review model bump prompted a gpt-5.6-sol re-run that raised none. Claude contributed the two most substantive items — a scoped-style coupling and the silent-failure gap. The two Gemini models share a family, so treat their agreement as one opinion.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/AutoUpdateCheckbox.vue">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>AutoUpdateCheckbox</code> scoped style reaches into <code>RdCheckbox</code>&#39;s root class <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/AutoUpdateCheckbox.vue#L61-L72">pkg/rancher-desktop/components/AutoUpdateCheckbox.vue</a></div>
+      <pre data-start="61" data-line="66-71"><code class="language-scss">    @update:value=&quot;onChange&quot;
+  /&gt;
+&lt;/template&gt;
+
+&lt;style lang=&quot;scss&quot; scoped&gt;
+// The title line sizes itself to the heading; center the checkbox against it.
+.rd-checkbox-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+&lt;/style&gt;</code></pre>
+    <p>This scoped rule centers the checkbox by matching <code>.rd-checkbox-container</code>, the root element of <code>RdCheckbox</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/form/RdCheckbox.vue#L43"><code>form/RdCheckbox.vue:43</code></a>). Vue stamps a parent&#39;s scope id onto a child&#39;s root, so the rule reaches that class today — but it couples this component&#39;s centering to <code>RdCheckbox</code>&#39;s internal class name, and a rename there would break the centering with no error. Sixteen component files reach into child internals through an explicit <code>:deep()</code> (for example <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/UpdateStatus.vue#L189"><code>UpdateStatus.vue:189</code></a>), which names the coupling instead of relying on it.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/form/RdCheckbox.vue#L38-L48">pkg/rancher-desktop/components/form/RdCheckbox.vue</a></div>
+      <pre data-start="38" data-line="43"><code class="language-markup">  },
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div class=&quot;rd-checkbox-container&quot;&gt;
+    &lt;checkbox
+      v-bind=&quot;$attrs&quot;
+      class=&quot;checkbox&quot;
+      :disabled=&quot;$attrs.disabled || isLocked&quot;
+    &gt;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/UpdateStatus.vue#L184-L194">pkg/rancher-desktop/components/UpdateStatus.vue</a></div>
+      <pre data-start="184" data-line="189"><code class="language-markup">  // Keep the card tall enough to read the notes once they are open.
+  .update-status:has(.release-notes[open]) {
+    min-height: 14rem;
+  }
+
+  :deep(.card-container) {
+    // Drop the Card&#39;s grid margin so the box aligns with the blog box.
+    margin-left: 0;
+    margin-right: 0;
+    // Fill and shrink past the Card&#39;s 100px minimum, so the body scrolls.
+    flex: 1;</code></pre>
+    <p>Fix: center a wrapper this component owns, or make the reach explicit with <code>:deep(.rd-checkbox-container)</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/BlogFeed.vue">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Repeated &quot;Read more&quot; links share one accessible name <span class="pill pill-codex">Codex GPT 5.5</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/BlogFeed.vue#L90-L105">pkg/rancher-desktop/components/BlogFeed.vue</a></div>
+      <pre data-start="90" data-line="95-100"><code class="language-vue">            :href=&quot;entry.link&quot;
+            class=&quot;blog-entry-title&quot;
+          &gt;{{ entry.title }}&lt;/a&gt;
+          &lt;span class=&quot;blog-entry-date&quot;&gt;{{ entry.date }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;p class=&quot;blog-entry-summary&quot;&gt;
+          {{ entry.summary }} &lt;a
+            :href=&quot;entry.link&quot;
+            class=&quot;blog-entry-more&quot;
+          &gt;Read more&lt;/a&gt;
+        &lt;/p&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+    <p>Every &quot;Read more&quot; link exposes the same link text to screen-reader link navigation, though each opens a different post. The title link above it (<code>:89-92</code>) is unique, so a user tabbing the summary links lands on destinations they cannot tell apart.</p>
+    <p>Fix: give each link an accessible name that includes the post title.</p>
+      <pre><code class="language-diff">  {{ entry.summary }} &lt;a
+    :href=&quot;entry.link&quot;
++   :aria-label=&quot;`Read more: ${ entry.title }`&quot;
+    class=&quot;blog-entry-more&quot;
+  &gt;Read more&lt;/a&gt;</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/__tests__/BlogFeed.spec.ts">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Malformed-XML test asserts only that something throws <span class="pill pill-codex">Codex GPT 5.5</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/__tests__/BlogFeed.spec.ts#L87-L95">pkg/rancher-desktop/components/__tests__/BlogFeed.spec.ts</a></div>
+      <pre data-start="87" data-line="92-94"><code class="language-ts">    expect(parsed).toHaveLength(2);
+    expect(parsed.map((entry: any) =&gt; entry.title)).not.toContain(&#39;Sneaky&#39;);
+    expect(parsed.every((entry: any) =&gt; entry.link.startsWith(&#39;https://&#39;))).toBe(true);
+  });
+
+  it(&#39;throws on XML it cannot parse&#39;, () =&gt; {
+    expect(() =&gt; parse(&#39;&lt;rss&gt;&lt;channel&gt;&lt;item&gt;&lt;/rss&gt;&#39;)).toThrow();
+  });
+});</code></pre>
+    <p><code>parse</code> mounts the component before calling <code>parseFeed</code>, so a bare <code>toThrow()</code> passes for any error — including a mount or setup failure that never reaches the <code>parsererror</code> branch (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/BlogFeed.vue#L24"><code>BlogFeed.vue:24</code></a>). Pinning the message ties the test to the parser failure it was added to guard.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/BlogFeed.vue#L19-L29">pkg/rancher-desktop/components/BlogFeed.vue</a></div>
+      <pre data-start="19" data-line="24"><code class="language-markup">  },
+  methods: {
+    parseFeed(xml) {
+      const doc = new DOMParser().parseFromString(xml, &#39;text/xml&#39;);
+
+      if (doc.querySelector(&#39;parsererror&#39;)) {
+        throw new Error(&#39;Could not parse the blog feed XML&#39;);
+      }
+
+      return Array.from(doc.querySelectorAll(&#39;item&#39;)).map(item =&gt; ({
+        title:   item.querySelector(&#39;title&#39;)?.textContent ?? &#39;&#39;,</code></pre>
+      <pre><code class="language-diff">-    expect(() =&gt; parse(&#39;&lt;rss&gt;&lt;channel&gt;&lt;item&gt;&lt;/rss&gt;&#39;)).toThrow();
++    expect(() =&gt; parse(&#39;&lt;rss&gt;&lt;channel&gt;&lt;item&gt;&lt;/rss&gt;&#39;)).toThrow(&#39;Could not parse the blog feed XML&#39;);</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/UpdateStatus.vue">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Empty update-status wrapper adds a flex gap when no update is available <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/UpdateStatus.vue#L1-L8">pkg/rancher-desktop/components/UpdateStatus.vue</a></div>
+      <pre data-start="1" data-line="1-3"><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;update-status&quot;&gt;
+    &lt;template v-if=&quot;hasUpdate&quot;&gt;
+      &lt;h3&gt;Update Available&lt;/h3&gt;
+      &lt;card
+        ref=&quot;updateInfo&quot;
+        :show-highlight-border=&quot;false&quot;
+      &gt;</code></pre>
+    <p>When neither <code>hasUpdate</code> nor <code>unsupportedUpdateAvailable</code> holds — the common case — the component still renders an empty <code>&lt;div class=&quot;update-status&quot;&gt;</code>. <code>General.vue</code>&#39;s <code>.general</code> is a flex column with <code>gap: 0.625rem</code>, so the empty box stays a flex item and inserts an extra 10px between the <code>&lt;hr&gt;</code> and the blog feed below it. The empty wrapper predates this PR, but the feed now sits directly beneath it, so the gap is newly visible. <code>BlogFeed.vue</code> avoids this by putting its <code>v-if</code> on its own root (<code>:77</code>).</p>
+    <p>Fix: gate the root element itself.</p>
+      <pre><code class="language-diff">-  &lt;div class=&quot;update-status&quot;&gt;
++  &lt;div v-if=&quot;hasUpdate || unsupportedUpdateAvailable&quot; class=&quot;update-status&quot;&gt;</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/BlogFeed.vue">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> <code>firstParagraph</code> skips the rest of a post when its first paragraph is empty <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/BlogFeed.vue#L38-L50">pkg/rancher-desktop/components/BlogFeed.vue</a></div>
+      <pre data-start="38" data-line="43-45"><code class="language-js">    firstParagraph(item) {
+      // Prefer the first paragraph of the full post; fall back to the RSS summary.
+      // Both may embed HTML, so read parsed text rather than raw markup.
+      const encoded = item.getElementsByTagName(&#39;content:encoded&#39;)[0]?.textContent ?? &#39;&#39;;
+      const description = item.querySelector(&#39;description&#39;)?.textContent ?? &#39;&#39;;
+      const post = new DOMParser().parseFromString(encoded, &#39;text/html&#39;);
+      const summary = new DOMParser().parseFromString(description, &#39;text/html&#39;);
+      const text = post.querySelector(&#39;p&#39;)?.textContent || summary.body.textContent || &#39;&#39;;
+
+      return text.replace(/\s+/g, &#39; &#39;).trim();
+    },
+    formatDate(pubDate) {
+      const date = new Date(pubDate);</code></pre>
+    <p><code>post.querySelector(&#39;p&#39;)</code> takes the first <code>&lt;p&gt;</code> in <code>content:encoded</code>. If that paragraph is empty (<code>&lt;p&gt;&lt;/p&gt;&lt;p&gt;real text&lt;/p&gt;</code>), its <code>textContent</code> is falsy, so <code>||</code> discards the rest of the post and falls back to the <code>description</code>. The Rancher feed&#39;s posts open with real text, so this is a robustness edge case rather than an observed break.</p>
+      <pre><code class="language-diff">-      const text = post.querySelector(&#39;p&#39;)?.textContent || summary.body.textContent || &#39;&#39;;
++      const paragraph = [...post.querySelectorAll(&#39;p&#39;)].find(p =&gt; p.textContent?.trim());
++      const text = paragraph?.textContent || summary.body.textContent || &#39;&#39;;</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/BlogFeed.vue">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> A blog-load failure is invisible to the user <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/BlogFeed.vue#L11-L23">pkg/rancher-desktop/components/BlogFeed.vue</a></div>
+      <pre data-start="11" data-line="16-18"><code class="language-js">  async mounted() {
+    try {
+      const xml = await ipcRenderer.invoke(&#39;get-blog-feed&#39;);
+
+      this.entries = this.parseFeed(xml);
+    } catch (error) {
+      console.error(&#39;Failed to load the blog feed:&#39;, error);
+    }
+  },
+  methods: {
+    parseFeed(xml) {
+      const doc = new DOMParser().parseFromString(xml, &#39;text/xml&#39;);
+</code></pre>
+    <p>The PR frames the blog as a last-resort channel when auto-update and release notes both fail, yet a fetch or parse failure only writes to <code>console.error</code> and hides the section via <code>v-if=&quot;entries.length&quot;</code> (<code>:78</code>); the user sees nothing. The renderer console forwards to the main log, so operators can still diagnose it. This is a deliberate graceful degrade, so the only cost is that a future reader may &quot;fix&quot; the silence into an error banner.</p>
+    <p>Fix: keep the silent degrade; add a one-line comment at <code>:16</code> recording that hiding the section on failure is intentional.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Duplicated IPC wiring between <code>General.vue</code> and <code>AutoUpdateCheckbox.vue</code><em></em> <code>(future)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — Both subscribe to <code>settings-update</code>/<code>settings-read</code>/<code>update-state</code> and re-request <code>settings-read</code> and <code>update-state</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/pages/General.vue#L52-L56"><code>General.vue:52-56</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/b6ec2c6678eb477e301e1c0df8c6182615726295/pkg/rancher-desktop/components/AutoUpdateCheckbox.vue#L24-L33"><code>AutoUpdateCheckbox.vue:24-33</code></a>), so each General visit runs the round-trips twice and keeps two copies of <code>enabled</code>. The header <code>action</code> slot renders its component with no props (<code>TheTitle.vue</code>), which forces the action component to source its own state, as Snapshots and Images already do. No change is warranted here; a props channel on the slot would let the two share one subscription.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Untrusted feed content cannot inject</strong> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6-sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — feed text reaches the DOM only through mustache interpolation, <code>safeLink</code> rejects non-http(s) schemes before an <code>:href</code> binding, and HTML is stripped by parsing into an inert <code>DOMParser</code> document rather than <code>v-html</code>.</li>
+      <li><strong>Main-process fetch is the right layer</strong> <code>(in-scope)</code> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-codex">Codex GPT 5.6-sol</span> — <code>Electron.net.fetch</code> in <code>background.ts</code> bypasses renderer CORS and inherits Chromium&#39;s proxy configuration, so users behind a corporate proxy still reach the feed.</li>
+      <li><em></em>The refactor simplifies <code>UpdateStatus.vue</code><em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — dropping the embedded checkbox and the <code>updatesEnabled</code> getter/setter collapses a prop round-trip that had spanned two components.</li>
+      <li><strong>Independent scroll regions</strong> <code>(in-scope)</code> <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-codex">Codex GPT 5.6-sol</span> — the update card and the feed each scroll their own content, so neither crowds the other off a short window.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The new <code>parseFeed</code> suite drives real XML through the parser and asserts extraction, both HTML-strip paths, an invalid date, the dropped <code>javascript:</code> link, and a throw on malformed XML — the security-critical and fallback paths. Read statically, both changed specs follow the repo&#39;s <code>mockModules</code> + top-level-<code>await import</code> convention and are sound.</p>
+    <p>I could not confirm a passing run. This working copy&#39;s <code>node_modules</code> is skewed (jest 30.4.2 against ts-jest 29.4.11), so top-level <code>await import</code> fails to compile (TS1378) across the whole suite, not just these specs — a toolchain state unrelated to this PR. Codex and Gemini hit the same wall (no <code>node_modules</code> in their worktrees), and Claude&#39;s report of 31 passing tests could not be reproduced here.</p>
+    <p>Untested, by risk: the <code>get-blog-feed</code> main handler&#39;s ok / non-ok / timeout paths; a feed request that resolves after <code>BlogFeed</code> unmounts; and the <code>content:encoded</code>-present-but-no-<code>&lt;p&gt;</code> sub-case behind S5. <code>AutoUpdateCheckbox</code> still has no spec (declined).</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The new IPC channel carries a doc comment (<code>electron-ipc.d.ts:131</code>), both new components have accurate component-level docstrings, and the non-obvious choices (UTC dates, dropping empty-link entries, main-process fetch for CORS) are commented. The deleted <code>TelemetryOptIn.vue</code> leaves no dangling references. No gaps.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Clean. The three iterative Round 1 commits were recut into one self-contained commit (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b6ec2c667"><code>b6ec2c667</code></a>) with the fixes folded in, resolving the Round 1 note about the feature spanning three commits.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Blog as a fallback channel</strong> — the feed stays visible alongside the update card by design: auto-update is broken, so the release notes and blog may be the only channels left to reach users.</li>
+      <li><strong>Telemetry relocation</strong> — the telemetry checkbox left General because Preferences owns it (<code>Preferences/ApplicationGeneral.vue</code>); verified in Round 1, and this round does not touch it.</li>
+    </ul>
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>New user-facing strings bypass i18n</strong> — &quot;From the blog&quot;, &quot;Read more&quot;, and &quot;Check for updates automatically&quot; stay literal English; declined Round 1, deferred to the in-flight i18n workflow so all locales receive the keys together.</li>
+      <li><strong>New components use the Options API</strong> — declined Round 1 as a deliberate style choice matching much of the codebase.</li>
+      <li><em></em><code>AutoUpdateCheckbox</code> has no spec<em></em> — declined Round 1 as a thin settings wrapper mirroring the tested <code>UpdateStatus</code> behavior.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 4.8]</strong> — The most thorough review, and the round&#39;s two most substantive findings are its own: the <code>RdCheckbox</code> scoped-style coupling (S1) and the silent-failure gap (S6). Both sit in files byte-identical to Round 1 that the other four marked clean in both rounds. It verified all five Round 1 fixes line by line and traced the header action-slot wiring. One calibration note: it reported 31 passing tests, but the local toolchain is broken repo-wide, so that run could not be reproduced — read it as an unverified claim, most likely a static count stated as a result.</p>
+    <p><strong>[Codex GPT 5.5]</strong> — The initial-run model, and the source of the two polish items that survived from the Codex slot: the repeated &quot;Read more&quot; accessible-name gap (S2) and the weak <code>toThrow()</code> assertion (S3). Both are real and cheap to fix. It labeled them &quot;(regression)&quot; though both sit in new code, a minor miscalibration corrected here. Concise, no false positives.</p>
+    <p><strong>[Codex GPT 5.6-sol]</strong> — The re-run after the mid-review model bump. It reviewed the same nine files and reached the same verdict — approve, nothing blocking — but raised zero suggestions, missing the accessibility and test-assertion points its predecessor caught. Its design and testing notes matched the others. On this one PR it was the more conservative of the two Codex models: fewer actionable items, no new misses.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> — Correctly scoped and clean. Its one unique contribution, the empty-<code>update-status</code>-wrapper flex gap (S4), is a genuine cosmetic point the others missed, and its fix is a safe one-liner. It gave the clearest account of why the main-process fetch inherits Chromium&#39;s proxy configuration. Beyond the shared strengths it added little.</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> — The broadest and noisiest again. Its unique real find was the empty-first-<code>&lt;p&gt;</code> fallback (S5), a marginal but valid edge case. It also proposed a defensive <code>|| 0</code> on <code>UpdateStatus.vue</code>&#39;s download speed, dropped here as out of scope: that code is pre-existing, untouched by the PR, and the guarded <code>progress</code> object always carries <code>bytesPerSecond</code>. It did not repeat Round 1&#39;s namespace false positive, which the prompt pre-empted.</p>
+    <p>The two Gemini models share a family; treat their agreement on the shared strengths as one opinion.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>12m 09s</td><td>7m 40s</td><td>7m 12s</td><td>3m 02s</td></tr>
+        <tr><td>Findings</td><td>2S</td><td>none</td><td>1S</td><td>1S</td></tr>
+        <tr><td>Tool calls</td><td>38 (Bash 26, Read 12)</td><td>—</td><td>11 (run<em>shell</em>command 11)</td><td>25 (read<em>file 12, grep</em>search 6, run<em>shell</em>command 3)</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>3</td><td>2</td><td>4</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Unique insights</td><td>2</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>9</td><td>9</td><td>9</td><td>9</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2S</strong></td><td><strong>none</strong></td><td><strong>1S</strong></td><td><strong>1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p>The Codex column reflects the gpt-5.6-sol re-run, whose session is the one on disk; the gpt-5.5 initial run contributed S2 and S3, which the table does not count. For a Round 2 verification pass, Claude carried the round — it produced the only substantive findings and the complete fix verification, while the Codex pair and the two Gemini models added one accessibility gap, one test-hardening point, one cosmetic gap, and one parser edge case among them.</p>
+    <p><strong>Reconciliation.</strong> Gemini 3.5 Flash&#39;s defensive-speed-format suggestion was dropped as out of scope — pre-existing code untouched by the PR, with <code>bytesPerSecond</code> always present on the guarded <code>progress</code> object. Codex GPT 5.5&#39;s S2 and S3 were relabeled from &quot;(regression)&quot; to new-code suggestions, with no change in severity. No other severities changed.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a reviewer reports concrete execution results — a test pass/fail count, a built binary, a green suite, a live control plane — confirm the review environment could actually produce them before repeating the claim in the consolidated report. A reviewer sometimes states a static count, or a run against a broken or partial toolchain, as if it were a clean pass. Recognise the pattern when one reviewer reports executed results that its siblings say they could not run at all; reconcile by reproducing the run or labelling the claim unverified, never by passing it through.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] A repo-wide jest failure — <code>TS1378</code> on top-level <code>await import</code>, or &quot;Cannot use import statement outside a module&quot; across many unrelated specs — is almost never a PR defect. It signals a local toolchain problem: a jest/ts-jest major-version skew in <code>node_modules</code>, or locked <code>.claude/worktrees</code> adding duplicate spec files that collide in the haste map. The repo&#39;s standard unit-test pattern is <code>mockModules</code> plus a top-level <code>await import</code> of the component under test, which needs the ESM ts-jest transform intact. When the suite will not run, assess changed specs statically against that pattern rather than reporting the failure against the PR.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
