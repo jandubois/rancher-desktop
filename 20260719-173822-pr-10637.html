@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260719-173822-pr-10637</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260719-173822-pr-10637</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-19 17:38</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>4 (of <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10637" class="gh-ref" data-title="Extract UI strings to translation keys and gate them in CI" data-state="open" data-type="pr">#10637</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10637" class="gh-ref" data-title="Extract UI strings to translation keys and gate them in CI" data-state="open" data-type="pr">#10637</a> — Extract UI strings to translation keys and gate them in CI</td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/3642c6d75"><code>3642c6d75</code></a> Remove unused translation keys<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/bba83236c"><code>bba83236c</code></a> Extract UI strings to translation keys and gate them in CI<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/105069d8d"><code>105069d8d</code></a> Use the product name for {appName} in the renderer<br>_(<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/5d074b397"><code>5d074b397</code></a> Add a language picker — PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10623" class="gh-ref" data-title="Add a language picker to Application preferences" data-state="open" data-type="pr">#10623</a>, base, out of scope)_</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/105069d8d642ea603c63c739b8817cfcb9829377"><code>105069d8d642ea603c63c739b8817cfcb9829377</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; no Critical or Important issues; the one substantive Suggestion is a pre-existing, self-healing listener leak</td></tr>
+      <tr><td>Wall-clock time</td><td><code>1 h 42 min 31 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 4 applies Round 3&#39;s two suggestions and adds one commit sourcing <code>{appName}</code> from <code>package.json</code> <code>productName</code> instead of the never-initialized <code>getProduct()</code>. The About-panel fix (S1 last round) is complete. The preferences-listener fix (S2 last round) improves the leak without closing it, because a canceled dirty-close defeats its one-time guard. No Critical or Important issues survive, and two low-severity Suggestions remain, none a merge blocker.</p>
+    <p>All four cloud reviewers ran and converged on merge. Codex traced the deepest point. The preferences guard leans on <code>Shortcuts.isRegistered</code>, which clears its sentinel on the cancellable <code>close</code> event, so reopening a survived window re-registers the listener. Gemini 3.1 Pro reached the same code from the unguarded sibling handlers. Claude and Flash both flagged the whole-manifest <code>package.json</code> import and proposed a leaner form, but that form was already tried and rejected against jest, so this review records it as a deliberate tradeoff rather than a fix (see Design Observations). The two Gemini models agree as one opinion.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/window/preferences.ts">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>openPreferences</code> re-runs its tail on every reopen and the one-time guard leaks <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/window/preferences.ts#L96-L112">pkg/rancher-desktop/window/preferences.ts</a></div>
+      <pre data-start="96" data-line="101-107"><code class="language-ts">    });
+
+    window.on(&#39;closed&#39;, offLocaleChange);
+  }
+
+  window.webContents.on(&#39;ipc-message&#39;, (_event, channel) =&gt; {
+    if (channel === &#39;preferences/load&#39;) {
+      window.show();
+    }
+  });
+
+  window.on(&#39;close&#39;, (event) =&gt; {
+    if (!isDirty || (process.env.RD_TEST ?? &#39;&#39;).includes(&#39;e2e&#39;)) {
+      return;
+    }
+
+    const cancelPosition = 1;</code></pre>
+    <p><code>createWindow</code> returns the open preferences window (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/window/index.ts#L69"><code>window/index.ts:69</code></a>), yet <code>openPreferences</code> re-runs this tail on every tray or menu invocation. Round 3&#39;s fix put <code>onLocaleChange</code> inside the <code>if (!Shortcuts.isRegistered(window))</code> guard (line 36), but <code>Shortcuts</code> clears that sentinel on the cancellable <code>close</code> event (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/utils/shortcuts.ts#L143"><code>utils/shortcuts.ts:143</code></a>), not <code>closed</code>. Cancel a dirty close and the surviving window loses its sentinel, so the next open passes the guard and adds a second listener; Codex reproduced <code>localeCallbacks=2</code>. The <code>ipc-message</code> and <code>close</code> handlers here never had a guard, so they stack on every reopen, and each <code>close</code> runs <code>showMessageBoxSync</code> (line 114), so a dirty window shows one discard dialog per prior open. Both paths predate this PR and self-heal once the window truly closes.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/window/index.ts#L64-L74">pkg/rancher-desktop/window/index.ts</a></div>
+      <pre data-start="64" data-line="69"><code class="language-typescript"> * @param options A hash of options used by `new BrowserWindow(options)`
+ */
+export function createWindow(name: string, url: string, options: Electron.BrowserWindowConstructorOptions) {
+  let window = getWindow(name);
+
+  if (restoreWindow(window)) {
+    return window;
+  }
+
+  window = new BrowserWindow(options);
+  window.webContents.on(&#39;console-message&#39;, (event) =&gt; {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/utils/shortcuts.ts#L138-L148">pkg/rancher-desktop/utils/shortcuts.ts</a></div>
+      <pre data-start="138" data-line="143"><code class="language-typescript">    }
+
+    if (!this.windows[id]) {
+      this.windows[id] = new WindowShortcuts(window);
+
+      window.on(&#39;close&#39;, () =&gt; {
+        delete this.windows[id];
+      });
+    }
+
+    shortcuts.forEach((s) =&gt; {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/window/preferences.ts#L31-L41">pkg/rancher-desktop/window/preferences.ts</a></div>
+      <pre data-start="31" data-line="36"><code class="language-typescript">      nodeIntegration:  true,
+      contextIsolation: false,
+    },
+  });
+
+  if (!Shortcuts.isRegistered(window)) {
+    Shortcuts.register(
+      window,
+      [{
+        key:      &#39;?&#39;,
+        meta:     true,</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/window/preferences.ts#L109-L119">pkg/rancher-desktop/window/preferences.ts</a></div>
+      <pre data-start="109" data-line="114"><code class="language-typescript">      return;
+    }
+
+    const cancelPosition = 1;
+
+    const result = dialog.showMessageBoxSync(
+      window,
+      {
+        title:    t(&#39;preferencesWindow.close.title&#39;),
+        type:     &#39;warning&#39;,
+        message:  t(&#39;preferencesWindow.close.message&#39;),</code></pre>
+    <p>Fix: clear the shortcuts sentinel on <code>closed</code> and move the sibling handlers inside the guard, or early-return when the window already exists (as <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/window/dashboard.ts#L13"><code>window/dashboard.ts:13</code></a> does), which covers every listener at once.</p>
+      <pre><code class="language-diff">-      window.on(&#39;close&#39;, () =&gt; {
++      window.on(&#39;closed&#39;, () =&gt; {
+         delete this.windows[id];
+       });</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/config/private-label.js">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>getProduct</code> is dead after its last caller was removed <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/config/private-label.js#L47-L54">pkg/rancher-desktop/config/private-label.js</a></div>
+      <pre data-start="47" data-line="52"><code class="language-js">  }
+
+  return vendor;
+}
+
+export function getProduct() {
+  return product;
+}</code></pre>
+    <p>Dropping the <code>getProduct</code> import from <code>store/i18n.js</code> removed its last consumer anywhere under <code>pkg/</code> (grep confirms only the definition and its <code>product</code>/<code>STANDARD_PRODUCT</code> backing remain). Its sibling <code>getVendor</code> is still used (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/store/i18n.js#L90"><code>store/i18n.js:90</code></a>), so the import change itself is safe. This file is not in the PR&#39;s diff, and it mirrors <code>@rancher/shell</code>&#39;s private-label API, so keeping the <code>getProduct</code>/<code>getVendor</code> pair for surface parity is defensible. Optional cleanup, out of this PR&#39;s scope.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/store/i18n.js#L85-L95">pkg/rancher-desktop/store/i18n.js</a></div>
+      <pre data-start="85" data-line="90"><code class="language-javascript">    if ( typeof formatter === &#39;string&#39; ) {
+      return formatter;
+    } else if ( formatter &amp;&amp; formatter.format ) {
+      // Inject things like appName so they&#39;re always available in any translation
+      const moreArgs = {
+        vendor:  getVendor(),
+        appName: packageJson.productName,
+        ...args,
+      };
+
+      try {</code></pre>
+    <p>Fix: remove <code>getProduct</code> (and <code>product</code>, <code>STANDARD_PRODUCT</code>) if surface parity is not required.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>The renderer imports the whole <code>package.json</code>, and the leaner alternatives were tried and rejected<em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/store/i18n.js#L3"><code>store/i18n.js:3</code></a> binds the whole manifest (about 7 KB: 37 dependencies, 70 devDependencies, 36 scripts) to read only <code>productName</code> at line 91. Claude proposed a named import; Flash a <code>DefinePlugin</code> constant. Neither is right here. A named import (<code>import { productName }</code>) breaks jest, whose ESM treats JSON as default-export-only and never sees the named export webpack synthesizes; the author tried it and dropped it. A plain default import without the attribute loads but makes jest emit a JSON-import deprecation warning, which fails the repo&#39;s pristine-test-output rule and becomes a hard error in a later Node, so the author landed on the attribute form (<code>with { type: &#39;json&#39; }</code>), the one variant that passes jest, eslint, babel, and webpack, all four verified when the commit landed. Flash&#39;s <code>DefinePlugin</code> route is ruled out separately. A hardcoded value would not track <code>productName</code>, and tracking it is the point, so <code>appName</code> becomes &quot;Rancher Desktop 2&quot; automatically on the rancher-desktop-2 merge. The 7 KB is an accepted cost, and nothing sensitive leaks since the repo is public. A future reviewer should not re-suggest either form; a one-line comment on the import would head that off in code.</li>
+      <li><em></em><code>{appName}</code> now tracks <code>productName</code>, but ~36 corpus strings still spell out &quot;Rancher Desktop&quot;<em></em> <code>(future)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — Commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/105069d8d"><code>105069d8d</code></a> makes the renderer&#39;s 8 <code>{appName}</code> keys resolve to <code>productName</code>, and the main-process menu passes <code>Electron.app.name</code>, so both become &quot;Rancher Desktop 2&quot; automatically on the rancher-desktop-2 merge. The source text of 36 other keys hard-codes &quot;Rancher Desktop&quot; (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/assets/translations/en-us.yaml#L63"><code>en-us.yaml:63</code></a> <code>tray.tooltip</code>, <code>:75</code> <code>tray.quitRancherDesktop</code>, <code>:115</code>, <code>:436</code>), which will read wrong after that merge. This is the deliberate app-wide pattern (literal source text), not a defect in this slice, so the RD2 merge should plan a corpus sweep rather than this PR fixing one instance.</li>
+      <li><em></em><code>DiagnosticsBody.vue</code> builds headers in <code>computed</code> where the README prefers <code>data()</code><em></em> <code>(future)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — carried from Round 3 and unchanged; both patterns are blessed, so this is a consistency note, not a finding.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>The CI gate (<code>i18n-report check --locale=all</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/.github/workflows/test.yaml#L23"><code>test.yaml:23</code></a>) mechanically guarantees every referenced key exists and none is orphaned; both Codex and Claude ran it green (0 unused, 0 undefined) <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li>Long-lived windows and menus register <code>onLocaleChange</code> and unregister it on teardown (<code>tray.ts</code> <code>hide()</code>, <code>preferences.ts</code>/<code>dashboard.ts</code> on <code>closed</code>); apart from S1 there are no listener leaks <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span>.</li>
+      <li>Menu, tray, and nav lookups key on the stable <code>id</code>/<code>name</code>, not the localized label (<code>tray.ts</code>, <code>ModalNav.vue</code>, <code>preferenceConstants.ts</code>), so localization cannot break a value a parser reads <span class="pill pill-claude">Claude</span>.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/backend/backendHelper.ts#L177"><code>backendHelper.ts:177</code></a> swaps the <code>/field &quot;.*&quot; is locked/</code> stderr regex for the structured <code>hasLockedFieldError</code> flag, pre-empting a cross-component break once validator messages translate <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li><code>ImagesOutputWindow.vue</code> looks up per-action gerund/infinitive/past-tense keys instead of splicing raw English verbs, resolving <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/1481" class="gh-ref" data-title="l10n: relying on pasted strings (`add.loadingText`) is hazardous" data-state="open" data-type="issue">#1481</a> for <code>build</code> and <code>pull</code> <span class="pill pill-claude">Claude</span> <span class="pill pill-codex">Codex</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li>Translated HTML routes through the DOMPurify <code>v-clean-html</code> directive, hardening the <code>nodeIntegration:true</code> renderer against injected content <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Coverage is strong for an extraction PR, and the added tests exercise real logic rather than mocks. The new <code>store/__tests__/i18n.spec.ts</code> case drives the real <code>t</code> getter with the real <code>packageJson.productName</code>; <code>UpdateStatus.spec.ts</code> and <code>pages/__tests__/Containers.spec.ts</code> replace <code>jest.fn()</code>/identity <code>t</code> stubs with an ICU-backed helper; <code>main/__tests__/i18n.spec.ts</code> adds interpolation and ICU-quote cases. Codex and Claude both ran the Go gate green, and Codex also ran <code>go test ./...</code> in <code>i18n-report</code> and confirmed Node accepts the JSON import-attribute syntax. No agent ran Jest or the webpack build, since the worktrees lack <code>node_modules</code> and yarn; the specs were read statically.</p>
+    <p>Untested, ranked by risk:</p>
+    <ol>
+      <li>The <code>data-action</code>/<code>data-navigate</code> delegated-click paths (<code>KubernetesError</code>, <code>BodyKubernetes</code> → <code>handleNavigateClick</code>). Correctness depends on DOMPurify keeping <code>data-*</code> and <code>href</code> through <code>v-clean-html</code>, which Claude verified against its config, but no mount-and-click test locks it in.</li>
+      <li>S1&#39;s canceled-close-then-reopen listener path, and multi-window live locale-switch (declined R1 as disproportionate).</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><code>README.md</code> drops the <code>zh-hans.yaml</code> row to match the file deletion, and no stale reference remains. <code>en-us.yaml</code> carries translator-preservation comments on the two embedded-link keys; <code>js-yaml-loader</code> strips these at runtime, so they serve translators only, which is their intent. The new exported <code>handleNavigateClick</code> has a JSDoc block. No documentation gaps.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Clean. Three commits run in a sensible order: remove unused keys, extract strings and gate, then fix the <code>{appName}</code> source. Round-3 fixes were amended into the extraction commit rather than appended as fixups. One stale note: the PR description still says &quot;Two commits,&quot; but the branch now carries three, since the <code>{appName}</code> fix landed after that text was written.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Diagnostics &quot;Last run&quot; locale wiring</strong> — declined Round 2 (S3); the relative time renders in English and the tooltip in the OS locale, deferred in-code.</li>
+      <li><em></em><code>volumes/files/_name.vue</code> &quot;root&quot; breadcrumb<em></em> — deferred as a path-token design question tracked in pending-work.</li>
+      <li><strong>Chart-styling regression test</strong>, <strong>multi-window live locale-switch test</strong>, <em></em><code>ImagesOutputWindow</code> verb-form mount test<em></em> — declined Round 1 as disproportionate or low-value.</li>
+    </ul>
+    <h3 id="standing-limitations-documented-in-scope">Standing limitations (documented, in scope) <a href="#standing-limitations-documented-in-scope" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><code>deploymentProfiles.ts</code> early errors fall back to English<em></em> — thrown before <code>initMainI18n()</code> loads the locale; Claude verified <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/105069d8d642ea603c63c739b8817cfcb9829377/pkg/rancher-desktop/main/i18n.ts#L17"><code>main/i18n.ts:17</code></a> eager-loads <code>en-us</code>, so the text is English, not a <code>%key%</code> placeholder.</li>
+      <li><em></em><code>UpdateStatus.vue</code> punctuation stays outside the catalog<em></em> — documented, deferred until more locales ship.</li>
+      <li><em></em><code>data()</code>-captured table headers refresh on remount, not live<em></em> — README-accepted; <code>DiagnosticsBody.vue</code>&#39;s <code>computed</code> headers are a blessed alternative.</li>
+      <li><strong>README-documented scanner gaps</strong> (<code>showErrorBox</code>, port-forward errors) — known blind spots the new gate does not widen.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 4.8]</strong> Covered all 74 files, verified both prior-round fixes against the tree, and ran the Go gate green. Its <code>package.json</code> analysis was the most detailed of the four. It counted the bundled manifest and explained why a default JSON import defeats webpack tree-shaking. Its named-import fix, though, was the exact form the author had already tried and dropped because it breaks jest, a history no agent could infer from the diff. Its one unique contribution was the forward-looking note that 36 literal &quot;Rancher Desktop&quot; source strings will not track <code>productName</code> on the downstream merge. It did judge the S2 preferences fix &quot;correct,&quot; missing the sentinel-lifecycle hole Codex found, a shallow read of the one file that most needed a deep trace.</p>
+    <p><strong>[Codex GPT 5.6 Sol]</strong> The highest-value review. It alone traced the S2 fix past its surface. The guard leans on <code>Shortcuts.isRegistered</code>, which clears its sentinel on the cancellable <code>close</code>, so a canceled dirty-close plus reopen re-registers the listener. It backed the claim with a Node reproduction (<code>localeCallbacks=2</code>), ran the Go gate and <code>go test</code>, and confirmed Node loads the JSON import attribute. It labeled the finding a regression; consolidation reconciled that to a pre-existing gap, since the sibling handlers and the <code>shortcuts.ts</code> timing predate the PR.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> Reached the preferences leak from a different angle, the unguarded <code>ipc-message</code>/<code>close</code> siblings, and named the concrete double-dialog symptom Codex left implicit. But it credited the <code>package.json</code> import as a zero-cost, tree-shaken line and claimed &quot;testing confirms&quot; the stripping, which is false for a default binding and which it never built to check. It skipped <code>git blame</code> per its usual quota posture, immaterial on a fix-verification round. Its dead-code Suggestion overlaps Flash&#39;s.</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> Prefixed the review with about 31 lines of tool-call narration the format does not ask for. Its two Suggestions, the <code>package.json</code> bundle and the dead <code>getProduct</code>/<code>setProduct</code>, are both real, but its bundle fix hardcodes &quot;Rancher Desktop&quot; in a <code>DefinePlugin</code>, which would defeat the auto-tracking the new commit introduces. It mislabeled the bundle finding a regression and mis-cited two Acknowledged Limitations. It covered all 74 files. The two Gemini models converged on the dead-code cleanup, so count them there as one opinion.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>22m 00s</td><td>8m 27s</td><td>5m 55s</td><td>3m 02s</td></tr>
+        <tr><td>Findings</td><td>1S</td><td>1S</td><td>2S</td><td>1S</td></tr>
+        <tr><td>Tool calls</td><td>70 (Bash 58, Read 12)</td><td>—</td><td>45 (run<em>shell</em>command 45)</td><td>33 (read<em>file 15, grep</em>search 8, glob 4)</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>3</td><td>2</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>74</td><td>74</td><td>74</td><td>74</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1S</strong></td><td><strong>1S</strong></td><td><strong>2S</strong></td><td><strong>1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Codex delivered the round&#39;s one non-obvious finding and proved it by reproduction; Claude matched it on coverage and contributed the only forward-looking observation. Claude and Flash both flagged the <code>package.json</code> import and reached for a fix that jest had already ruled out, an understandable miss given neither could run jest in the worktree. Value ranking: Codex and Claude first, then Gemini 3.1 Pro, then Gemini 3.5 Flash.</p>
+    <p><strong>Reconciliation.</strong> Codex&#39;s S1 carried a &quot;regression&quot; label, reconciled to pre-existing, because the preferences sibling handlers and the <code>shortcuts.ts</code> sentinel timing predate <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10637" class="gh-ref" data-title="Extract UI strings to translation keys and gate them in CI" data-state="open" data-type="pr">#10637</a>. The <code>package.json</code> bundle finding that Claude and Flash filed as a Suggestion moved to a Design Observation. The leaner import both proposed was already tried and rejected against jest, so no action remains. Gemini 3.1 Pro&#39;s contrary &quot;zero-cost, tree-shaken&quot; claim on the same line is a false positive on the mechanism, since a default binding is not tree-shaken, even though its &quot;no change needed&quot; verdict happens to match the outcome.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] UPDATE the i18n note that says &quot;The app ships en-us and zh-hans.&quot; This slice deletes the inherited partial <code>zh-hans.yaml</code> (cluster-explorer keys only, never selectable), so once it merges only en-us ships until a real per-locale slice lands. Keep the ICU plural-parity observation, but drop the present-tense claim that zh-hans ships today. (Carried unapplied from Rounds 2 and 3.)</li>
+      <li>[repo] UPDATE the note that the <code>check</code>/<code>drift</code> gates &quot;remain in flight on the <code>i18n-workflow-v2</code> integration tree&quot; and that on a stacked branch &quot;<code>check --locale</code> aborts on a missing enum and bare <code>check</code> reports thousands of unused keys.&quot; The string-extraction slice is the commit that authors the en-us keys and adds the gate, so from this slice forward <code>i18n-report check --locale=all</code> passes cleanly on the branch itself (verified this round: 0 unused, 0 undefined, exit 0). The abort/flood behavior applies only to slices before extraction lands. (Carried unapplied from Round 3.)</li>
+      <li>[repo] ADD: <code>Shortcuts.isRegistered(window)</code> is not a reliable &quot;this window is already initialized&quot; guard. <code>utils/shortcuts.ts</code> deletes its per-window sentinel on the cancellable <code>close</code> event, not <code>closed</code>, so a canceled dirty-close leaves the window alive with the sentinel gone. Any function that reuses an existing window and gates one-time setup on <code>isRegistered</code> (for example <code>openPreferences</code>) re-runs that setup after a canceled close and reopen. When reviewing window-lifecycle code, prefer an early-return on the existing window, as <code>window/dashboard.ts</code> does, over an <code>isRegistered</code> guard.</li>
+      <li>[repo] ADD: <code>store/i18n.js</code> imports the whole <code>package.json</code> (<code>import packageJson from &#39;../../../package.json&#39; with { type: &#39;json&#39; }</code>) on purpose; do not flag the whole-manifest import or suggest a leaner form. A named import (<code>import { productName }</code>) breaks jest, whose ESM treats JSON as default-export-only and never sees the named export webpack synthesizes. A plain default import emits a JSON-import deprecation warning that fails the repo&#39;s pristine-test-output rule. The attribute-default form is the only variant that passes jest, eslint, babel, and webpack. Sourcing the name by import rather than a build-time constant is deliberate, so <code>appName</code> tracks <code>productName</code> for the rancher-desktop-2 rename.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
