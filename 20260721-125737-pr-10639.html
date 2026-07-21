@@ -221,6 +221,12 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
     <p>All four reviewers ran. Three independently found that round 1&#39;s <code>!inEn</code> coverage fix does not pin the branch it claims; I confirmed by mutation. I verified every finding against the code and reran both suites.</p>
     </div>
     <hr>
+    <h2 id="addressed">Addressed <a href="#addressed" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Every finding here was resolved or deliberately declined on 2026-07-21, and the branch was force-pushed to <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/63b60b866"><code>63b60b866</code></a>. The code each finding cites has changed since the review ran, so each finding ends with a note on what happened to it. The Resolution section at the end carries the full record, including the five testing gaps.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -290,6 +296,7 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
     # @source Waiting for image manager to be ready</code></pre>
     <p>Nothing detects this. <code>validate</code> checks placeholders, tags and ICU, never whitespace, and the substitution is invisible in a diff.</p>
     <p>Fix: restore U+00A0 on both sides of <code>{ image }</code> in both values.</p>
+    <p><strong>Addressed:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1a949662a"><code>1a949662a</code></a>. Both values carry U+00A0 inside the guillemets again, and a byte-level sweep of all eight locales against the merge base reports no other typography loss.</p>
     </div>
     <div class="card card-important" data-file="src/go/i18n-report/report_validate.go">
       <div class="finding-title" id="I2">
@@ -344,6 +351,7 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
         runs-on: [windows-latest, macos-latest]</code></pre>
     <p>Before this commit, such a key still held superseded English and failed <code>validate</code> as <code>identical</code>. It now passes CI silently. Latent today: <code>drift</code> is clean on all eight locales.</p>
     <p>Fix: gate drift in CI, or keep the finding and reword it to name the stale snapshot.</p>
+    <p><strong>Addressed:</strong> Addressed by comment in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/78f19efb3"><code>78f19efb3</code></a>. The comment now states that a default check run skips drift unless <code>--strict</code> is set. Gating drift in CI is a pre-existing gap tracked separately in pending-work.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -395,6 +403,7 @@ secret:
     kubernetes.io/basic-auth: Opaque</code></pre>
     <p>Gemini rated this Important. The runtime behavior is correct either way, so this is a false coverage claim.</p>
     <p>Fix: keep the guard as documentation but drop the test comment&#39;s claim that the fixture pins it.</p>
+    <p><strong>Addressed:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/78f19efb3"><code>78f19efb3</code></a>. The test comment no longer claims the fixture pins the guard, and records that removing the guard leaves the fixture green. The guard itself was kept.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/README.md">
       <div class="finding-title" id="S2">
@@ -447,6 +456,7 @@ Detect keys whose English source text changed since last translation.
 Compares current `en-us.yaml` values against the `@source` snapshot on each key.</code></pre>
     <p>Round 1&#39;s S2 caught this same shape once already. The check gained a condition and its prose summaries stayed behind.</p>
     <p>Fix: say the snapshot must match current English, and that stale ones are <code>drift</code>&#39;s.</p>
+    <p><strong>Addressed:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6e6b81dde"><code>6e6b81dde</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6910eca0c"><code>6910eca0c</code></a>. All three sites now state that the snapshot must match current English and that stale ones belong to <code>drift</code>.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/en-us.yaml">
       <div class="finding-title" id="S3">
@@ -517,6 +527,7 @@ containerStats:
     <p>Coverage is also partial across keys. In <code>progress:</code>, six values naming a product go unannotated (<code>installingBuildkit</code>, <code>startingBuildkit</code>, <code>installingDockerCredentialHelper</code>, <code>settingDockerContext</code>, <code>updatingKubeconfig</code>, <code>removingSpinkubeOperator</code>) while three neighbours carry markers.</p>
     <p>Since <code>translate</code> forwards these to whoever writes the next locale, a bare name reads as an invitation to translate it.</p>
     <p>Fix: complete the term lists and annotate the remaining <code>progress:</code> names.</p>
+    <p><strong>Addressed:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1baa3899b"><code>1baa3899b</code></a>. Six term lists completed and twelve keys newly annotated, extending past the sites cited here to neighbours that would otherwise read as deliberately unannotated.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/i18n-report/yaml.go">
       <div class="finding-title" id="S4">
@@ -537,6 +548,7 @@ containerStats:
 					// The value is machine-replaced; a retained @override</code></pre>
     <p>A single-entry mapping reads &quot;a mapping with 1 children&quot;. This is the last count-plus-countable-noun site the sweep missed; every other remaining <code>%d</code> precedes an uninflected word (&quot;new&quot;, &quot;total&quot;, &quot;skipped&quot;). It sits in a file the PR already edits, and <code>children</code> is irregular, so <code>plural</code> does not cover it.</p>
     <p>Fix: special-case <code>child</code>/<code>children</code> at this site.</p>
+    <p><strong>Addressed:</strong> Declined. The message is pre-existing and unrelated to this PR&#39;s purpose, and round 1 already classified the same line as not attributable to this change.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/README.md">
       <div class="finding-title" id="S5">
@@ -560,6 +572,7 @@ ceiling on translation quality.
     <p><code>troubleshooting.debugModeLockedTooltip</code> had no Spanish or French translation at the merge base. This PR added both, already carrying a subject. The bare participles belonged to the other string the same commit reworded, <code>preferences.locked.tooltip</code>, whose merge-base values were <code>Bloqueado por la política…</code> and <code>Verrouillé par la politique…</code>.</p>
     <p>A maintainer checking the cited string&#39;s history finds nothing.</p>
     <p>Fix: attribute the participle evidence to <code>preferences.locked.tooltip</code>.</p>
+    <p><strong>Addressed:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a791d3f65"><code>a791d3f65</code></a>. The rule now quotes <code>preferences.locked.tooltip</code>, the string whose Spanish and French translations actually carried the bare participle.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
