@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260721-125737-pr-10639</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260721-125737-pr-10639</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-21 12:57</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>2 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10639" class="gh-ref" data-title="Enforce @reason on identical translations and clean up deferred i18n items" data-state="open" data-type="pr">#10639</a> — Enforce @reason on identical translations and clean up deferred i18n items</td></tr>
+      <tr><td>Branch</td><td><code>i18n-cleanup</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/7d5227d93"><code>7d5227d93</code></a> Fix the locale-addition steps in the translations README<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a6a4ac90a"><code>a6a4ac90a</code></a> Require a @reason on translations identical to their source<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/14127d88a"><code>14127d88a</code></a> Document the identical-value review step in the maintenance workflow<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/96547c55c"><code>96547c55c</code></a> Fix plural agreement in count messages<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/32adff787"><code>32adff787</code></a> Lock root-level settings by their qualified name<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ad6f294dd"><code>ad6f294dd</code></a> Translate the last four untranslated keys<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a749ab4a4"><code>a749ab4a4</code></a> Name the subject in lock tooltips and drop VM status jargon<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d7e1c83bd"><code>d7e1c83bd</code></a> Document the @reason overload and tidy i18n-report loose ends<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f5be649c0"><code>f5be649c0</code></a> Scope the identity check to a current @source<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2d9e18708"><code>2d9e18708</code></a> Split the image error messages into two sentences<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f8da996c0"><code>f8da996c0</code></a> Annotate fixed product names with @no-translate<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0d7c5d6f3"><code>0d7c5d6f3</code></a> Document how to write source strings</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6"><code>0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; a silent French typography regression and a narrowed CI gate, both cheap to fix</td></tr>
+      <tr><td>Wall-clock time</td><td><code>18 min 57 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 2 resolves all three reviewer comments in code and every round-1 finding. Two issues are new. Rewording the image errors silently replaced four non-breaking spaces inside French guillemets with ordinary ones, a shipped regression no gate catches and no diff shows. Separately, scoping the identity check to a current <code>@source</code> hands its skipped case to <code>drift</code>, which CI never runs.</p>
+    <p>All four reviewers ran. Three independently found that round 1&#39;s <code>!inEn</code> coverage fix does not pin the branch it claims; I confirmed by mutation. I verified every finding against the code and reran both suites.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="pkg/rancher-desktop/assets/translations/fr.yaml">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Rewording the image errors dropped the non-breaking spaces inside French guillemets <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/fr.yaml#L675-L685">pkg/rancher-desktop/assets/translations/fr.yaml</a></div>
+      <pre data-start="675" data-line="680"><code class="language-yaml">      # @reason Tab label translated as a French verb; the raw &quot;pull&quot;/&quot;build&quot; identifiers only appear where code interpolates them (loadingText/errorText).
+      # @source Pull
+      pull: Télécharger
+    # @reason Guillemets replace the ICU-escaped apostrophes, matching images.scan.errorText; « en tentant de » takes the infinitive { action }.
+    # @source Error trying to { action } &#39;&#39;{ image }&#39;&#39;. See console output for more information.
+    errorText: Erreur en tentant de { action } « { image } ». Consultez la sortie de la console pour plus d&#39;informations.
+    # @reason Restructured: {action} receives an action noun (Construction/Téléchargement); « en cours » conveys the progressive aspect, as in the previous translation.
+    # @source {action} image...
+    loadingText: &#39;{action} de l&#39;&#39;image en cours...&#39;
+    # @reason Reordered: {action} receives the feminine past participle from images.add.action.pastTense.*.
+    # @source {action} image</code></pre>
+    <p>At the merge base this value read <code>«\xa0{ image }\xa0»</code> with two U+00A0. Commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2d9e18708"><code>2d9e18708</code></a> rewrote the line and both spaces became ordinary ones; <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/fr.yaml#L753"><code>fr.yaml:753</code></a> repeats it. French typography requires a non-breaking space inside guillemets, and the file is otherwise consistent. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/fr.yaml#L767"><code>fr.yaml:767</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/fr.yaml#L783"><code>fr.yaml:783</code></a> keep theirs, as do roughly forty <code>validation.*</code> values.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/fr.yaml#L748-L788">pkg/rancher-desktop/assets/translations/fr.yaml</a></div>
+      <pre data-start="748" data-line="753-783"><code class="language-yaml">      # @source Primary URL
+      primaryUrl: URL principale
+      # @source References
+      references: Références
+    # @source Error trying to scan &#39;&#39;{ image }&#39;&#39;. See console output for more information.
+    errorText: Erreur lors de l&#39;analyse de « { image } ». Consultez la sortie de la console pour plus d&#39;informations.
+    labels:
+      # @source CRITICAL
+      critical: CRITIQUE
+      # @reason Feminine form, agreeing with &quot;Gravité&quot; (severity); same for MOYENNE.
+      # @source HIGH
+      high: ÉLEVÉE
+      # @source Issues Found
+      issuesFound: Problèmes détectés
+      # @source LOW
+      low: FAIBLE
+      # @source MEDIUM
+      medium: MOYENNE
+    # @source Scanning &#39;&#39;{ image }&#39;&#39;
+    loadingText: Analyse de « { image } »
+    results:
+      headers:
+        # @reason Expanded; the bare participle would be ambiguous as a column header.
+        # @source Fixed
+        fixed: Version corrigée
+        # @reason Expanded; the bare participle would be ambiguous as a column header.
+        # @source Installed
+        installed: Version installée
+        # @source Package
+        package: Paquet
+        # @source Severity
+        severity: Gravité
+        # @source Vulnerability ID
+        vulnerabilityId: ID de vulnérabilité
+    # @source Scan details for &#39;&#39;{ image }&#39;&#39;
+    title: Détails de l&#39;analyse de « { image } »
+  sortableTables:
+    # @source There are no images to show
+    noRows: Aucune image à afficher
+  state:
+    # @source Waiting for image manager to be ready</code></pre>
+    <p>Nothing detects this. <code>validate</code> checks placeholders, tags and ICU, never whitespace, and the substitution is invisible in a diff.</p>
+    <p>Fix: restore U+00A0 on both sides of <code>{ image }</code> in both values.</p>
+    </div>
+    <div class="card card-important" data-file="src/go/i18n-report/report_validate.go">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> The identity check&#39;s stale-<code>@source</code> skip defers to a gate CI never runs <span class="pill pill-claude">Claude Opus 4.8</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_validate.go#L128-L142">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="128" data-line="133-137"><code class="language-go">		}
+		storedSource, hasSource := meta[key]
+		if !hasSource || e.value != storedSource {
+			continue // no snapshot (reported above), or translated
+		}
+		if storedSource != enValue {
+			// The snapshot is stale, so the value matches English that has
+			// since changed. The key needs retranslation, which drift reports.
+			continue
+		}
+		if e.override || commentHasReason(e.comment) {
+			continue
+		}
+		errors = append(errors, validationError{
+			Key:     key,</code></pre>
+    <p>The comment justifies dropping the finding by naming <code>drift</code> as owner, but <code>reportCheckLocale</code> computes drift only under <code>strict</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_check.go#L383-L389"><code>report_check.go:383-389</code></a>), and CI runs <code>check --locale=all</code> with no <code>--strict</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/.github/workflows/test.yaml#L24"><code>.github/workflows/test.yaml:24</code></a>). No <code>--strict</code> invocation of the tool exists anywhere in <code>.github/</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_check.go#L378-L394">src/go/i18n-report/report_check.go</a></div>
+      <pre data-start="378" data-line="383-389"><code class="language-go">	if metaErr != nil {
+		printResult(&quot;@source readable&quot;, false, errString(metaErr))
+	}
+
+	// Completeness checks.
+	if strict {
+		missingCount := len(computeMissing(enKeys, localeKeys))
+		printResult(&quot;no missing keys&quot;, missingCount == 0, countDetail(missingCount))
+
+		if meta != nil {
+			driftCount := len(computeDrifted(enKeys, meta, localeKeys))
+			printResult(&quot;no drifted keys&quot;, driftCount == 0, countDetail(driftCount))
+		}
+	}
+
+	if passed {
+		fmt.Fprintf(w, &quot;All checks passed for %s.\n&quot;, locale)</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/.github/workflows/test.yaml#L19-L29">.github/workflows/test.yaml</a></div>
+      <pre data-start="19" data-line="24"><code class="language-yaml">    - name: Install shfmt
+      run: go install mvdan.cc/sh/v3/cmd/shfmt@latest
+    - run: make -C bats lint
+    - run: yarn test
+    - name: i18n checks
+      run: go run ./src/go/i18n-report check --locale=all
+  lint:
+    strategy:
+      matrix:
+        # We run the Linux lint in the `test` flow, no need to repeat it.
+        runs-on: [windows-latest, macos-latest]</code></pre>
+    <p>Before this commit, such a key still held superseded English and failed <code>validate</code> as <code>identical</code>. It now passes CI silently. Latent today: <code>drift</code> is clean on all eight locales.</p>
+    <p>Fix: gate drift in CI, or keep the finding and reword it to name the stale snapshot.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="src/go/i18n-report/report_validate.go">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> The <code>!inEn</code> guard is unreachable, and its new test cannot detect its removal <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_validate.go#L117-L130">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="117" data-line="122-125"><code class="language-go">
+	// A translation left identical to its English source must be marked as
+	// deliberate with a @reason (or @override) comment; without one it is
+	// indistinguishable from a missed translation.
+	for key, e := range entries {
+		enValue, inEn := enKeys[key]
+		if !inEn {
+			continue // stale key, reported by stale check
+		}
+		if e.value == &quot;&quot; {
+			continue // an empty source stays empty; nothing to explain
+		}
+		storedSource, hasSource := meta[key]
+		if !hasSource || e.value != storedSource {</code></pre>
+    <p>When <code>!inEn</code>, <code>enValue</code> is <code>&quot;&quot;</code>. Reaching line 133 needs <code>e.value != &quot;&quot;</code> and <code>e.value == storedSource</code>, so <code>storedSource != &quot;&quot;</code> and the stale-source check already continues. The guard cannot change the outcome.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_validate.go#L128-L138">src/go/i18n-report/report_validate.go</a></div>
+      <pre data-start="128" data-line="133"><code class="language-go">		}
+		storedSource, hasSource := meta[key]
+		if !hasSource || e.value != storedSource {
+			continue // no snapshot (reported above), or translated
+		}
+		if storedSource != enValue {
+			// The snapshot is stale, so the value matches English that has
+			// since changed. The key needs retranslation, which drift reports.
+			continue
+		}
+		if e.override || commentHasReason(e.comment) {</code></pre>
+    <p>Round 1 recorded this branch as covered (&quot;Test written&quot;). I deleted lines 123-125 and the whole suite still passed. The <code>withdrawn: Gone</code> fixture at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_validate_test.go#L418"><code>report_validate_test.go:418</code></a> is caught by the stale-source branch instead. Mutating the other three guards each fails the test, so coverage there is real.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/report_validate_test.go#L413-L423">src/go/i18n-report/report_validate_test.go</a></div>
+      <pre data-start="413" data-line="418"><code class="language-go"># @source Superseded
+renamed: Current
+# @source Original
+moved: Original
+# @source Gone
+withdrawn: Gone
+secret:
+  types:
+    # @override
+    # @source Opaque
+    kubernetes.io/basic-auth: Opaque</code></pre>
+    <p>Gemini rated this Important. The runtime behavior is correct either way, so this is a false coverage claim.</p>
+    <p>Fix: keep the guard as documentation but drop the test comment&#39;s claim that the fixture pins it.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/README.md">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Both READMEs describe the identity check without its new precondition <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/README.md#L85-L98">pkg/rancher-desktop/assets/translations/README.md</a></div>
+      <pre data-start="85" data-line="90-93"><code class="language-markdown">| `@context` | en-us.yaml | Where in the UI the string appears |
+| `@meaning` | en-us.yaml | Domain-specific meaning when English is ambiguous |
+| `@no-translate` | en-us.yaml | Terms that should stay in English by default |
+| `@reason` | locale files | Why a wording was chosen, or why English was kept |
+
+`@reason` carries two meanings. It records why a wording was chosen, and it
+marks a value left identical to its English source as a deliberate keep
+rather than a missed translation. `validate` flags an unmarked identical
+value and accepts either `@reason` or `@override`.
+
+`merge` preserves a `@reason` across a value change and strips only
+`@override`, so a note written for an earlier wording can outlive it and
+still satisfy the identical-value check. Re-read the note whenever you
+change the value it describes.</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f5be649c0"><code>f5be649c0</code></a> made the check fire only when the <code>@source</code> snapshot is current, but the prose still promises that every unmarked identity is reported.</p>
+    <p>The same omission sits in the maintenance workflow at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/README.md#L204-L207"><code>README.md:204-207</code></a> and in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/README.md#L296-L297"><code>src/go/i18n-report/README.md:296-297</code></a>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/README.md#L199-L212">README.md</a></div>
+      <pre data-start="199" data-line="204-207"><code class="language-markdown">
+[Node.js]: https://nodejs.org/
+[ffi-napi]: https://www.npmjs.com/package/ffi-napi
+[node-gyp]: https://github.com/nodejs/node-gyp#on-unix
+[yarn-classic]: https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable
+
+
+## Running
+
+Once you have your dependencies installed you can run a development version
+of Rancher Desktop with:
+
+```
+yarn dev</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/README.md#L291-L302">src/go/i18n-report/README.md</a></div>
+      <pre data-start="291" data-line="296-297"><code class="language-markdown">- ICU MessageFormat structure (plural/select branch names)
+- HTML tag preservation (`&lt;a&gt;`, `&lt;b&gt;`, etc.)
+- `data-*` attribute preservation (runtime handlers depend on these)
+- `@override` placement (leaf keys only)
+- `@source` coverage (every translated key carries a `@source`)
+- Deliberate identity (a translation identical to its `@source` carries a
+  `@reason` or `@override`)
+
+### drift
+
+Detect keys whose English source text changed since last translation.
+Compares current `en-us.yaml` values against the `@source` snapshot on each key.</code></pre>
+    <p>Round 1&#39;s S2 caught this same shape once already. The check gained a condition and its prose summaries stayed behind.</p>
+    <p>Fix: say the snapshot must match current English, and that stale ones are <code>drift</code>&#39;s.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/en-us.yaml">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>@no-translate</code> coverage is partial, both across keys and within values <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/en-us.yaml#L443-L454">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="443" data-line="448-449"><code class="language-yaml">    duplicate: This item is a duplicate.
+  enable: Enable
+  alert: The image name needs to match one of the patterns defined in the Allowed Images preference tab.
+pathManagement:
+  label: Configure PATH
+  # @no-translate Rancher Desktop, kubectl, nerdctl
+  tooltip: Rancher Desktop ships with tools, such as kubectl, nerdctl, helm and docker. In order to use these tools, &lt;code&gt;$HOME/.rd/bin&lt;/code&gt; must be in your PATH.
+  options:
+    rcFiles:
+      label: Automatic
+      # @no-translate Rancher Desktop
+      description: Rancher Desktop edits your shell profile for you. Restart any open shells for changes to take effect.</code></pre>
+    <p>The list omits <code>helm</code> and <code>docker</code>. Others omit SUSE (lines 137, 299), Wasm (line 434), and Moby (line 925). The most consequential is line 464, which names the literal <code>docker</code> context and the <code>rancher-desktop</code> context name; translating either would break the instruction.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/en-us.yaml#L132-L142">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="132" data-line="137"><code class="language-yaml">    recommendedVersions: Recommended Versions
+  ok: OK
+  # @no-translate Kubernetes
+  enableKubernetes: Enable Kubernetes
+  # @no-translate Rancher Desktop
+  welcome: Welcome to Rancher Desktop by SUSE
+marketplace:
+  title: Extensions
+  noResults: No extension found for the search criteria
+  tabs:
+    catalog: Catalog</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/en-us.yaml#L429-L439">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="429" data-line="434"><code class="language-yaml">      label: containerd
+      # @no-translate nerdctl
+      description: Namespaces for container images; use with nerdctl.
+webAssembly:
+  # @no-translate WebAssembly
+  label: WebAssembly (Wasm)
+  enabled: Enabled
+  # @no-translate WebAssembly
+  description: Please read the documentation before enabling the experimental WebAssembly feature!
+allowedImages:
+  label: Allowed Image Patterns</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/en-us.yaml#L459-L469">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="459" data-line="464"><code class="language-yaml">sudoPrompt:
+  title: Administrative Access Required
+  # @no-translate Rancher Desktop
+  message: &#39;Rancher Desktop requires administrative access (&quot;sudo access&quot;) for the following reasons:&#39;
+  # @no-translate Rancher Desktop
+  messageSecondPart: The prompt will be displayed once this window is closed. Cancelling the prompt or disabling administrative access requires you to switch the docker context to rancher-desktop in order to continue using Rancher Desktop.
+  explanation: &#39;This will modify the following paths:&#39;
+  buttonText: OK
+  alwaysRunWithout: Always run without administrative access
+  reasons:
+    dockerSocket:</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/en-us.yaml#L920-L930">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="920" data-line="925"><code class="language-yaml">    added: Added
+    dropped: Dropped
+containerStats:
+  notRunning: Stats are only available for running containers.
+  # @no-translate Docker
+  mobyOnly: Stats are currently only available for the Docker (Moby) engine.
+  # @context Label of the dropdown selecting the stats refresh interval
+  refresh: Refresh
+  interval:
+    seconds: &#39;{seconds} s&#39;
+    minutes: &#39;{minutes} min&#39;</code></pre>
+    <p>Coverage is also partial across keys. In <code>progress:</code>, six values naming a product go unannotated (<code>installingBuildkit</code>, <code>startingBuildkit</code>, <code>installingDockerCredentialHelper</code>, <code>settingDockerContext</code>, <code>updatingKubeconfig</code>, <code>removingSpinkubeOperator</code>) while three neighbours carry markers.</p>
+    <p>Since <code>translate</code> forwards these to whoever writes the next locale, a bare name reads as an invitation to translate it.</p>
+    <p>Fix: complete the term lists and annotate the remaining <code>progress:</code> names.</p>
+    </div>
+    <div class="card card-suggestion" data-file="src/go/i18n-report/yaml.go">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> <code>%d children</code> escaped the plural sweep <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/src/go/i18n-report/yaml.go#L340-L351">src/go/i18n-report/yaml.go</a></div>
+      <pre data-start="340" data-line="345-346"><code class="language-go">		if keyIdx &gt;= 0 {
+			// Key exists.
+			valNode := current.Content[keyIdx+1]
+			if isLeaf {
+				if valNode.Kind == yaml.MappingNode {
+					return fmt.Errorf(&quot;key %q is a mapping with %d children; refusing to replace it with a leaf value&quot;,
+						dottedKey, len(valNode.Content)/2)
+				}
+				if comment != &quot;&quot; {
+					current.Content[keyIdx].HeadComment = comment
+				} else if valNode.Value != value {
+					// The value is machine-replaced; a retained @override</code></pre>
+    <p>A single-entry mapping reads &quot;a mapping with 1 children&quot;. This is the last count-plus-countable-noun site the sweep missed; every other remaining <code>%d</code> precedes an uninflected word (&quot;new&quot;, &quot;total&quot;, &quot;skipped&quot;). It sits in a file the PR already edits, and <code>children</code> is irregular, so <code>plural</code> does not cover it.</p>
+    <p>Fix: special-case <code>child</code>/<code>children</code> at this site.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/README.md">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> The &quot;Name the subject&quot; rule cites evidence belonging to a different string <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/assets/translations/README.md#L58-L71">pkg/rancher-desktop/assets/translations/README.md</a></div>
+      <pre data-start="58" data-line="63-66"><code class="language-markdown">## Writing source strings
+
+en-us.yaml is the source every locale translates from, so its phrasing sets the
+ceiling on translation quality.
+
+- **Name the subject.** A subjectless passive like &quot;Cannot be modified because
+  the RD_DEBUG_ENABLED environment variable is set&quot; gives a gendered language
+  nothing to agree with, so each translator invents a referent and they disagree.
+  Spanish and French were left with a bare participle agreeing with nothing.
+- **Keep a sentence in one key.** `images.add` assembles one from `{action}` plus
+  its `gerund`/`infinitive`/`pastTense` sub-keys, which forces English word order
+  onto every language; German and Brazilian Portuguese had to rephrase around it.
+- **Headings are noun phrases.** English tolerates a fragment like &quot;From the
+  blog&quot; because the layout supplies the missing noun. Chinese, Japanese, and</code></pre>
+    <p><code>troubleshooting.debugModeLockedTooltip</code> had no Spanish or French translation at the merge base. This PR added both, already carrying a subject. The bare participles belonged to the other string the same commit reworded, <code>preferences.locked.tooltip</code>, whose merge-base values were <code>Bloqueado por la política…</code> and <code>Verrouillé par la politique…</code>.</p>
+    <p>A maintainer checking the cited string&#39;s history finds nothing.</p>
+    <p>Fix: attribute the participle evidence to <code>preferences.locked.tooltip</code>.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <p><strong>Concerns</strong></p>
+    <ul>
+      <li><em></em><code>@no-translate</code> in en-us does not exempt a locale from the identity check<em></em> <em>(future)</em>. The 108 new annotations tell the next translator to keep those terms in English, and <code>validate</code> then demands a <code>@reason</code> on each one they keep. The check reads the locale file&#39;s comment, so the en-us annotation cannot satisfy it. Green today: of the 108 keys, nine are identical in each locale and all nine already carry a marker. The friction lands on the next locale, which is the audience <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f8da996c0"><code>f8da996c0</code></a> was written for.</li>
+      <li><em></em><code>check</code> still reports a validation-error count, not the failing keys<em></em> <em>(future)</em> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. A CI consumer must rerun <code>validate --locale=X</code> to learn which keys failed. Raised in round 1 and unchanged, but the identity category will fire far more often than the structural ones, so the extra round trip becomes routine.</li>
+      <li><strong>Translations README step 6 still does not verify step 3</strong> <em>(future)</em> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. Step 6 runs <code>check --locale=all</code> &quot;to verify the registration&quot;, but the registration check asserts <code>locale.{code}</code> in <code>en-us.yaml</code> only. Sibling display names surface under <code>--strict</code>, which nothing runs. Also raised in round 1.</li>
+    </ul>
+    <p><strong>Strengths</strong></p>
+    <ul>
+      <li>The identity check derives from data the file already carries, the <code>@source</code> snapshot and the comment markers, so it needs no exemption list of its own <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 4.8</span>. Grandfathering falls out for free from the keys that already have a <code>@reason</code>.</li>
+      <li>Scoping the check to a current <code>@source</code> resolves the reviewer&#39;s point without weakening the current-snapshot case <em>(in-scope)</em> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>.</li>
+      <li>The S5 helper dedup preserves behavior <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. <code>lineIsMarker</code> reproduces the old <code>lineIsOverrideMarker</code> logic, and every caller still routes through the same predicate. It also leaves the tracked marker-grammar mismatch exactly as wide as it was.</li>
+      <li>The S6 parse removal is equivalent <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. <code>loadYAMLFlat</code> is a projection of <code>loadYAMLWithComments</code>, so the derived entries carry the same keys, quoted dotted segments included.</li>
+      <li>Each of the eight locale replacements translates the new English rather than carrying the old text forward <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 4.8</span>. ICU placeholders and quote escaping survive, and the <code>@reason</code> notes that went stale were edited, not left. Japanese and Korean already read as two sentences, so only their <code>@source</code> needed refreshing.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>I ran the suites rather than trusting the reports. <code>go test ./...</code> passes in <code>src/go/i18n-report</code>. <code>check --locale=all</code> exits 0 on all eight locales, <code>--strict</code> passes too, and <code>drift</code> is clean everywhere.</p>
+    <p>I also mutation-tested the new validate loop, which is how S1 was confirmed. Deleting the stale-source guard, the empty-value guard, or the <code>@reason</code> acceptance each fails <code>TestValidateIdenticalNeedsReason</code>. Deleting the <code>!inEn</code> guard fails nothing.</p>
+    <p>Ranked by risk, the gaps are:</p>
+    <ol>
+      <li><strong>The default CI gate has no test for the case I2 describes.</strong> Nothing asserts what <code>check --locale</code> does with an untranslated key whose English has since changed. The unit fixture (<code>moved</code>) covers <code>validateLocale</code>, not the gate.</li>
+      <li><em></em>The <code>!inEn</code> guard has a fixture that cannot fail<em></em> (S1).</li>
+      <li><strong>The root-level lock fix has no test.</strong> Declined in round 1; I reverified the rationale and it holds.</li>
+      <li><em></em>The stale-<code>@reason</code> merge path has no test.<em></em> Declined in round 1 by the same reasoning.</li>
+      <li><em></em>No corpus check verifies that a <code>@no-translate</code> list names every fixed term in its value<em></em> (S3) <span class="pill pill-codex">Codex GPT 5.6 Sol</span>.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The round-1 documentation fixes all landed. All three stale <code>validate</code> summaries now name the identity check, and the README comment table gives <code>@reason</code> both meanings (&quot;Why a wording was chosen, or why English was kept&quot;).</p>
+    <p>The <code>@reason</code> hazard declined as round-1 I1 is documented accurately in three places, and I traced the prose against <code>nodeSetLeaf</code> and <code>stripOverrideMarker</code>. The strip site states the consequence plainly: a <code>@reason</code> survives a value change, so review it by hand after a merge. The prose omits that keys already carrying a <code>@reason</code> are exempt from day one, which is a rollout fact rather than a tool behavior.</p>
+    <p>The new &quot;Writing source strings&quot; section is well grounded, with each rule tied to a string that already cost rework. Its first rule cites the wrong string as evidence (S5).</p>
+    <p>Two gaps remain: S2, and the pre-existing claim at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/README.md#L214"><code>README.md:214</code></a> that periodic runs add <code>--strict</code>, which no configured run satisfies.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The history reads cleanly commit by commit, and each message explains motivation instead of restating the diff. Two things are worth folding before merge.</p>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d7e1c83bd"><code>d7e1c83bd</code></a> bundles the round-1 fixes S2 through S7 across nine files. Each chunk has a home in the commit that introduced the code it fixes: the <code>yaml.go</code> dedup and the <code>report_validate.go</code> parse removal belong in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a6a4ac90a"><code>a6a4ac90a</code></a>, the <code>report_source.go</code> plurals in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/96547c55c"><code>96547c55c</code></a>. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/14127d88a"><code>14127d88a</code></a> documents a feature that <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a6a4ac90a"><code>a6a4ac90a</code></a> added one commit earlier.</p>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ad6f294dd"><code>ad6f294dd</code></a> translates two keys across eight locales, and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a749ab4a4"><code>a749ab4a4</code></a>, the next commit, rewords both English sources and retranslates all eight. Writing sixteen translation entries and rewriting them one commit later inverts the natural order; the English rewording should come first.</p>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f5be649c0"><code>f5be649c0</code></a>&#39;s subject names only the identity-check scoping, but the diff also carries the <code>output.go</code> empty-result fix. The PR body mentions both, so the commit message should too.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Declined in prior rounds</strong></p>
+    <ul>
+      <li><em></em>A stale <code>@reason</code> survives a value overwrite and satisfies the identity check<em></em> — declined Round 1: both candidate fixes change <code>merge</code> behavior, judged too big for a cleanup PR; documented in both READMEs and at the strip site, with the marker split tracked in pending-work. I verified the documentation is accurate and materially complete.</li>
+      <li><strong>The corrected root-level lock lookup has no test</strong> — declined Round 1: the branch is unreachable with the real schema, so a test would exercise only synthetic scaffolding. I reverified every clause of the comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/0d7c5d6f3a31fbbfd99400efa825e565fa00ccf6/pkg/rancher-desktop/main/commandServer/settingsValidator.ts#L285-L288"><code>settingsValidator.ts:285-288</code></a>. <code>version</code> is the only root-level leaf and <code>checkUnchanged</code> returns <code>false</code> unconditionally, so <code>changeNeededHere</code> is never true there.</li>
+      <li><em></em>The stale-<code>@reason</code> merge path is untested<em></em> — declined Round 1: a test would pin the known hazard as correct behavior.</li>
+    </ul>
+    <p><strong>Tracked in pending-work, not made worse here</strong></p>
+    <ul>
+      <li>The <code>@reason</code> marker split.</li>
+      <li>The writer/reader marker-grammar mismatch, where <code>localeCommentLines</code> accepts <code># @override:</code> by bare prefix while <code>lineIsMarker</code> rejects it. The S5 dedup left the grammar byte-identical.</li>
+      <li>Locale completeness is never gated in CI, since <code>--strict</code> never runs. I2 is a new consequence of this standing gap.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>All three of @Nino-K&#39;s inline comments have landed in code, and I confirmed each by running the tool.</p>
+    <ul>
+      <li>The misleading &quot;drifted&quot; skip comment now reads <code>// no snapshot (reported above), or translated</code>.</li>
+      <li><code>stale --locale=de</code> now prints <code>No stale keys found in de.</code>, with the asymmetry against the non-empty header explained in a comment and both forms pinned by a test.</li>
+      <li>The current-<code>@source</code> scoping is implemented literally. The suggestion is correct on its own terms and opens no escape hatch inside <code>validate</code>. But the case it hands off lands in a report CI never runs, which is I2. That residual is worth raising with the reviewer instead of closing the thread silently.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 4.8]</strong> — Carried the round again, and its two best findings both came from stepping outside the diff. I2 required reading the CI workflow to discover that the report the new comment delegates to never runs, and S5 required checking the merge base to find that a README rule cites a string whose evidence belongs to a different key. I had verified that same README claim earlier and passed it, because I confirmed the bare participles existed without noticing the bullet quotes a different string. It also mutation-tested the validate loop on its own initiative, which is how it reached S1 with proof rather than argument.</p>
+    <p><strong>[Codex GPT 5.6 Sol]</strong> — Produced the finding of the round. The lost non-breaking spaces are invisible in a rendered diff, survive every gate the repo has, and no other reviewer looked at the bytes. Its severity call was low, since it filed a shipped regression as a suggestion. Its <code>@no-translate</code> sweep was also the more careful of the two, checking whether each annotation names every fixed term in its own value, and its weakest-looking citation turned out to be its strongest once I read the full line. It ran <code>--strict</code> where I had only run the default gate.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> — Recovered from the quota exhaustion that produced nothing in round 1, hitting a 429 and succeeding on backoff. It filed exactly one finding, the <code>!inEn</code> gap, and reasoned it through to a stronger conclusion than my mutation test reached: the guard cannot be load-bearing for any input, not merely for the fixtures at hand. Against that, it skipped design observations entirely with &quot;Skip this section as there are no observations worth raising&quot;, and its one finding was over-rated at Important.</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> — Zero findings for the second round running, while marking all 29 files &quot;Reviewed, no issues&quot; and returning a bare &quot;APPROVED&quot;. Its factual claims were accurate as far as they went, including the two acknowledged limitations and the strengths it listed, and I confirmed its test claim independently. But a reviewer that approves a diff carrying a shipped regression and a narrowed CI gate contributed no signal. Both Gemini models share a family, so their agreement counts as one opinion; here only one of them had an opinion at all.</p>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>10m 15s</td><td>11m 15s</td><td>6m 02s</td><td>1m 39s</td></tr>
+        <tr><td>Findings</td><td>1I 3S</td><td>1I 2S</td><td>1S</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>48 (Bash 37, Read 11)</td><td>—</td><td>37 (run<em>shell</em>command 35, update_topic 2)</td><td>24 (run<em>shell</em>command 9, grep<em>search 8, read</em>file 6)</td></tr>
+        <tr><td>Design observations</td><td>6</td><td>5</td><td>0</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>2</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>29</td><td>29</td><td>29</td><td>29</td></tr>
+        <tr><td>Coverage misses</td><td>1</td><td>2</td><td>5</td><td>6</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 3S</strong></td><td><strong>1I 2S</strong></td><td><strong>1S</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>1 (I→S)</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Two severities changed. Codex&#39;s S1 (French non-breaking spaces) was promoted to I1, because it is a regression in shipped user-facing content that no gate detects and no diff review would surface. Gemini&#39;s I1 (<code>!inEn</code> coverage) was demoted to S1, because the runtime behavior is correct with or without the guard and the defect is a false coverage claim in the round-1 resolution. Claude&#39;s S3 and Codex&#39;s S3 were merged into one finding covering both facets of partial <code>@no-translate</code> coverage; I extended it with <code>startingBuildkit</code>, which neither reported.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <p>Claude and Codex produced the whole yield between them and complemented each other cleanly: Claude traced interactions across files and history, Codex read the bytes and swept the corpus. Gemini 3.1 Pro contributed one real finding with the sharpest reasoning attached to it. Flash contributed nothing for the second consecutive round on this PR.</p>
+    <p>Three of the four agents independently found the <code>!inEn</code> gap, which is the strongest convergence this target has produced. That is worth noting precisely because the round-1 resolution table records the branch as covered: the claim was checkable, and everyone who checked it reached the same answer.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>When a change rewrites a user-facing string that already has translations, compare the old and new values byte for byte, not as rendered text. Locale files carry typography that a diff view renders identically to its plain-ASCII counterpart: non-breaking spaces, narrow no-break spaces, directional quotes, and locale-specific punctuation. A rewrite that retypes the string silently drops them, and placeholder- and tag-based validation does not inspect whitespace. Check the surrounding file for the convention before deciding whether a difference is a regression.</li>
+      <li>When a change adds a skip, exemption, or early return that delegates a case to another check, verify that the named check actually runs in CI. Read the workflow files for the invocation and its flags. A comment naming another report as the owner is a claim about process, not code, and the delegated case disappears when that report is optional, manual, or gated behind a flag nothing sets.</li>
+      <li>When a prior round&#39;s resolution records a finding as fixed by a new test, verify the test fails without the fix. Delete or invert the code the test claims to pin and run the suite. A fixture added for a branch frequently exercises a different branch that shares its outcome, and the resolution table then records coverage the suite does not have.</li>
+      <li>When reviewing documentation that cites a specific code identifier, string, or symbol as evidence for a rule, check that the cited item has the history the prose claims. A rule generalized from one incident often ends up quoting a neighbouring item that was changed in the same commit, which leaves a maintainer unable to find the evidence.</li>
+    </ul>
+    <p><strong>Repo context updates</strong></p>
+    <ul>
+      <li>[repo] REMOVE the note that the <code>check</code> and <code>drift</code> subcommands &quot;remain in flight on the <code>i18n-workflow-v2</code> integration tree&quot;, and REMOVE the bullet directing reviewers to validate i18n-report gate changes inside an <code>i18n-workflow-v2</code> worktree. Both subcommands are on the default branch and <code>check --locale=all</code> runs clean from an ordinary worktree. This was raised in the previous round and has not been applied; the stale text reached every agent again this round.</li>
+      <li>[repo] Translation files carry per-language typography that must survive an edit: French uses U+00A0 inside <code>« »</code> guillemets and before <code>: ; ! ?</code>, and Japanese and Chinese use full-width parentheses and punctuation. When a PR rewrites a translated value, diff the bytes rather than the rendered text, since <code>validate</code> checks placeholders, tags, and ICU structure but never whitespace.</li>
+      <li>[repo] The i18n CI gate is <code>go run ./src/go/i18n-report check --locale=all</code> in <code>.github/workflows/test.yaml</code>, with no <code>--strict</code>. Completeness checks, missing keys, and drifted keys therefore never run in CI, even though the translations README states that periodic and pre-release runs add <code>--strict</code>. When reviewing a change that defers a case to <code>drift</code> or to a completeness check, treat that case as ungated.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+Prism.languages.go=Prism.languages.extend("clike",{string:{pattern:/(^|[^\\])"(?:\\.|[^"\\\r\n])*"|`[^`]*`/,lookbehind:!0,greedy:!0},keyword:/\b(?:break|case|chan|const|continue|default|defer|else|fallthrough|for|func|go(?:to)?|if|import|interface|map|package|range|return|select|struct|switch|type|var)\b/,boolean:/\b(?:_|false|iota|nil|true)\b/,number:[/\b0(?:b[01_]+|o[0-7_]+)i?\b/i,/\b0x(?:[a-f\d_]+(?:\.[a-f\d_]*)?|\.[a-f\d_]+)(?:p[+-]?\d+(?:_\d+)*)?i?(?!\w)/i,/(?:\b\d[\d_]*(?:\.[\d_]*)?|\B\.\d[\d_]*)(?:e[+-]?[\d_]+)?i?(?!\w)/i],operator:/[*\/%^!=]=?|\+[=+]?|-[=-]?|\|[=|]?|&(?:=|&|\^=?)?|>(?:>=?|=)?|<(?:<=?|=|-)?|:=|\.\.\./,builtin:/\b(?:append|bool|byte|cap|close|complex|complex(?:64|128)|copy|delete|error|float(?:32|64)|u?int(?:8|16|32|64)?|imag|len|make|new|panic|print(?:ln)?|real|recover|rune|string|uintptr)\b/}),Prism.languages.insertBefore("go","string",{char:{pattern:/'(?:\\.|[^'\\\r\n]){0,10}'/,greedy:!0}}),delete Prism.languages.go["class-name"];
+!function(e){var n=/[*&][^\s[\]{},]+/,r=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,t="(?:"+r.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+r.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,(function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"})),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var r="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\\]|\\}|(?:[\r\n]\\s*)?#))".replace(/<<prop>>/g,(function(){return t})).replace(/<<value>>/g,(function(){return e}));return RegExp(r,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)\\S[^\r\n]*(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,(function(){return t}))),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,(function(){return t})).replace(/<<key>>/g,(function(){return"(?:"+a+"|"+d+")"}))),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?(?:[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?))?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("false|true","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:r,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
+!function(n){function e(n){return n=n.replace(/<inner>/g,(function(){return"(?:\\\\.|[^\\\\\n\r]|(?:\n|\r\n?)(?![\r\n]))"})),RegExp("((?:^|[^\\\\])(?:\\\\{2})*)(?:"+n+")")}var t="(?:\\\\.|``(?:[^`\r\n]|`(?!`))+``|`[^`\r\n]+`|[^\\\\|\r\n`])+",a="\\|?__(?:\\|__)+\\|?(?:(?:\n|\r\n?)|(?![^]))".replace(/__/g,(function(){return t})),i="\\|?[ \t]*:?-{3,}:?[ \t]*(?:\\|[ \t]*:?-{3,}:?[ \t]*)+\\|?(?:\n|\r\n?)";n.languages.markdown=n.languages.extend("markup",{}),n.languages.insertBefore("markdown","prolog",{"front-matter-block":{pattern:/(^(?:\s*[\r\n])?)---(?!.)[\s\S]*?[\r\n]---(?!.)/,lookbehind:!0,greedy:!0,inside:{punctuation:/^---|---$/,"front-matter":{pattern:/\S+(?:\s+\S+)*/,alias:["yaml","language-yaml"],inside:n.languages.yaml}}},blockquote:{pattern:/^>(?:[\t ]*>)*/m,alias:"punctuation"},table:{pattern:RegExp("^"+a+i+"(?:"+a+")*","m"),inside:{"table-data-rows":{pattern:RegExp("^("+a+i+")(?:"+a+")*$"),lookbehind:!0,inside:{"table-data":{pattern:RegExp(t),inside:n.languages.markdown},punctuation:/\|/}},"table-line":{pattern:RegExp("^("+a+")"+i+"$"),lookbehind:!0,inside:{punctuation:/\||:?-{3,}:?/}},"table-header-row":{pattern:RegExp("^"+a+"$"),inside:{"table-header":{pattern:RegExp(t),alias:"important",inside:n.languages.markdown},punctuation:/\|/}}}},code:[{pattern:/((?:^|\n)[ \t]*\n|(?:^|\r\n?)[ \t]*\r\n?)(?: {4}|\t).+(?:(?:\n|\r\n?)(?: {4}|\t).+)*/,lookbehind:!0,alias:"keyword"},{pattern:/^```[\s\S]*?^```$/m,greedy:!0,inside:{"code-block":{pattern:/^(```.*(?:\n|\r\n?))[\s\S]+?(?=(?:\n|\r\n?)^```$)/m,lookbehind:!0},"code-language":{pattern:/^(```).+/,lookbehind:!0},punctuation:/```/}}],title:[{pattern:/\S.*(?:\n|\r\n?)(?:==+|--+)(?=[ \t]*$)/m,alias:"important",inside:{punctuation:/==+$|--+$/}},{pattern:/(^\s*)#.+/m,lookbehind:!0,alias:"important",inside:{punctuation:/^#+|#+$/}}],hr:{pattern:/(^\s*)([*-])(?:[\t ]*\2){2,}(?=\s*$)/m,lookbehind:!0,alias:"punctuation"},list:{pattern:/(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/m,lookbehind:!0,alias:"punctuation"},"url-reference":{pattern:/!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,inside:{variable:{pattern:/^(!?\[)[^\]]+/,lookbehind:!0},string:/(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,punctuation:/^[\[\]!:]|[<>]/},alias:"url"},bold:{pattern:e("\\b__(?:(?!_)<inner>|_(?:(?!_)<inner>)+_)+__\\b|\\*\\*(?:(?!\\*)<inner>|\\*(?:(?!\\*)<inner>)+\\*)+\\*\\*"),lookbehind:!0,greedy:!0,inside:{content:{pattern:/(^..)[\s\S]+(?=..$)/,lookbehind:!0,inside:{}},punctuation:/\*\*|__/}},italic:{pattern:e("\\b_(?:(?!_)<inner>|__(?:(?!_)<inner>)+__)+_\\b|\\*(?:(?!\\*)<inner>|\\*\\*(?:(?!\\*)<inner>)+\\*\\*)+\\*"),lookbehind:!0,greedy:!0,inside:{content:{pattern:/(^.)[\s\S]+(?=.$)/,lookbehind:!0,inside:{}},punctuation:/[*_]/}},strike:{pattern:e("(~~?)(?:(?!~)<inner>)+\\2"),lookbehind:!0,greedy:!0,inside:{content:{pattern:/(^~~?)[\s\S]+(?=\1$)/,lookbehind:!0,inside:{}},punctuation:/~~?/}},"code-snippet":{pattern:/(^|[^\\`])(?:``[^`\r\n]+(?:`[^`\r\n]+)*``(?!`)|`[^`\r\n]+`(?!`))/,lookbehind:!0,greedy:!0,alias:["code","keyword"]},url:{pattern:e('!?\\[(?:(?!\\])<inner>)+\\](?:\\([^\\s)]+(?:[\t ]+"(?:\\\\.|[^"\\\\])*")?\\)|[ \t]?\\[(?:(?!\\])<inner>)+\\])'),lookbehind:!0,greedy:!0,inside:{operator:/^!/,content:{pattern:/(^\[)[^\]]+(?=\])/,lookbehind:!0,inside:{}},variable:{pattern:/(^\][ \t]?\[)[^\]]+(?=\]$)/,lookbehind:!0},url:{pattern:/(^\]\()[^\s)]+/,lookbehind:!0},string:{pattern:/(^[ \t]+)"(?:\\.|[^"\\])*"(?=\)$)/,lookbehind:!0}}}}),["url","bold","italic","strike"].forEach((function(e){["url","bold","italic","strike","code-snippet"].forEach((function(t){e!==t&&(n.languages.markdown[e].inside.content.inside[t]=n.languages.markdown[t])}))})),n.hooks.add("after-tokenize",(function(n){"markdown"!==n.language&&"md"!==n.language||function n(e){if(e&&"string"!=typeof e)for(var t=0,a=e.length;t<a;t++){var i=e[t];if("code"===i.type){var r=i.content[1],o=i.content[3];if(r&&o&&"code-language"===r.type&&"code-block"===o.type&&"string"==typeof r.content){var l=r.content.replace(/\b#/g,"sharp").replace(/\b\+\+/g,"pp"),s="language-"+(l=(/[a-z][\w-]*/i.exec(l)||[""])[0].toLowerCase());o.alias?"string"==typeof o.alias?o.alias=[o.alias,s]:o.alias.push(s):o.alias=[s]}}else n(i.content)}}(n.tokens)})),n.hooks.add("wrap",(function(e){if("code-block"===e.type){for(var t="",a=0,i=e.classes.length;a<i;a++){var s=e.classes[a],d=/language-(.+)/.exec(s);if(d){t=d[1];break}}var p=n.languages[t];if(p)e.content=n.highlight(e.content.replace(r,"").replace(/&(\w{1,8}|#x?[\da-f]{1,8});/gi,(function(n,e){var t;return"#"===(e=e.toLowerCase())[0]?(t="x"===e[1]?parseInt(e.slice(2),16):Number(e.slice(1)),l(t)):o[e]||n})),p,t);else if(t&&"none"!==t&&n.plugins.autoloader){var u="md-"+(new Date).valueOf()+"-"+Math.floor(1e16*Math.random());e.attributes.id=u,n.plugins.autoloader.loadLanguages(t,(function(){var e=document.getElementById(u);e&&(e.innerHTML=n.highlight(e.textContent,n.languages[t],t))}))}}}));var r=RegExp(n.languages.markup.tag.pattern.source,"gi"),o={amp:"&",lt:"<",gt:">",quot:'"'},l=String.fromCodePoint||String.fromCharCode;n.languages.md=n.languages.markdown}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
