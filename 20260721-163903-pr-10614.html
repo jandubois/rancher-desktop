@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260721-163903-pr-10614</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260721-163903-pr-10614</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-21 16:39</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10614" class="gh-ref" data-title="build: stop bundling electron-updater into the main process" data-state="open" data-type="pr">#10614</a> — build: stop bundling electron-updater into the main process</td></tr>
+      <tr><td>Branch</td><td><code>fix-updater-bundled-electron-updater</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ac645e57b"><code>ac645e57b</code></a> build: stop bundling electron-updater into the main process</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54"><code>ac645e57b1c2fa22bd6ff1c93b9b357b652cad54</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; build-verified correct; three cheap gaps remain in the predicate it rewrites</td></tr>
+      <tr><td>Wall-clock time</td><td><code>18 min 4 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The fix is correct and verified by build. A production build of the main bundle externalizes all six <code>electron-updater/out/*</code> subpaths as <code>module-import …*.js</code>, keeps <code>fs-extra</code> external, and all 33 emitted specifiers resolve under ESM import conditions. Three gaps remain in the predicate this PR rewrites: <code>optionalDependencies</code> are excluded, the preload config inherits an ESM-only external type, and nothing guards the regression.</p>
+    <p>All four reviewers ran against a build-only diff (1 file, +42 −1). The consolidator verified every finding below against a real build. Where an agent&#39;s mechanism was wrong, the corrected mechanism appears inline.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="scripts/lib/build-utils.ts">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> <code>optionalDependencies</code> are excluded, leaving <code>posix-node</code> bundled and inert <span class="pill pill-claude">Claude Opus 4.8</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L243-L255">scripts/lib/build-utils.ts</a></div>
+      <pre data-start="243" data-line="248-250"><code class="language-ts">        // binding, so it must stay behind its `import()`.
+        externals:   [
+          ({ request }, callback) =&gt; {
+            const packageName = /^(?:@[^/]+\/)?[^/]+/.exec(request ?? &#39;&#39;)?.[0];
+
+            if (!packageName || !(packageName in this.packageMeta.dependencies)) {
+              return callback();
+            }
+
+            return callback(null, `module-import ${ externalSpecifier(request ?? &#39;&#39;) }`);
+          },
+        ],
+        devtool:     this.isDevelopment ? &#39;source-map&#39; : false,</code></pre>
+    <p><code>package.json</code> declares <code>optionalDependencies: { dmg-license, posix-node }</code>. Those are production dependencies (electron-builder ships them), and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/background.ts#L123"><code>background.ts:123</code></a> loads one at runtime via <code>import(&#39;posix-node&#39;)</code>. The predicate tests <code>dependencies</code> only, so <code>posix-node</code> gets bundled.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/background.ts#L118-L128">background.ts</a></div>
+      <pre data-start="118" data-line="123"><code class="language-typescript">const httpCredentialHelperServer = new HttpCredentialHelperServer();
+
+if (process.platform === &#39;linux&#39;) {
+  // On Linux, put Electron into a new process group so that we can more
+  // reliably kill processes we spawn from extensions.
+  import(&#39;posix-node&#39;).then(({ default: { setpgid } }) =&gt; {
+    setpgid?.(0, 0);
+  }).catch(ex =&gt; {
+    console.error(`Ignoring error setting process group: ${ ex }`);
+  });
+}</code></pre>
+    <p>Verified by build: bundled, <code>setpgid</code> is <code>undefined</code>; unbundled it is a function. posix-node&#39;s templated <code>require(&#39;./&lt;platform&gt;.node&#39;)</code> becomes a webpack context module, the binding fails to load, and its own <code>try</code>/<code>catch</code> swallows it into an empty object. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/background.ts#L126"><code>background.ts:126</code></a> reduces that to a <code>console.error</code>, so Linux silently loses process-group setup.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/background.ts#L121-L131">background.ts</a></div>
+      <pre data-start="121" data-line="126"><code class="language-typescript">  // On Linux, put Electron into a new process group so that we can more
+  // reliably kill processes we spawn from extensions.
+  import(&#39;posix-node&#39;).then(({ default: { setpgid } }) =&gt; {
+    setpgid?.(0, 0);
+  }).catch(ex =&gt; {
+    console.error(`Ignoring error setting process group: ${ ex }`);
+  });
+}
+
+// Scheme must be registered before the app is ready
+Electron.protocol.registerSchemesAsPrivileged([</code></pre>
+    <p><strong>Pre-existing, not a regression:</strong> a build with the pre-PR string externals also yields <code>setpgid is undefined</code>. It is in scope because this PR rewrites the deciding predicate.</p>
+    <p>Fix: merge both sections and use <code>Object.hasOwn</code> (folds in S1):</p>
+      <pre><code class="language-diff">-            if (!packageName || !(packageName in this.packageMeta.dependencies)) {
++            const runtimeDeps = { ...this.packageMeta.dependencies, ...this.packageMeta.optionalDependencies };
++
++            if (!packageName || !Object.hasOwn(runtimeDeps, packageName)) {</code></pre>
+    <p>With that change the same probe reports <code>setpgid is function</code>.</p>
+    </div>
+    <div class="card card-important" data-file="scripts/lib/build-utils.ts">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> Preload inherits <code>module-import</code> while emitting CommonJS <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L325-L335">scripts/lib/build-utils.ts</a></div>
+      <pre data-start="325" data-line="330"><code class="language-ts">          path:     path.join(this.rootDir, &#39;resources&#39;),
+        },
+        experiments: { outputModule: false },
+      };
+
+      const result = _.merge({}, await this.webpackConfig, overrides);
+      const rules = (result.module?.rules ?? []).filter(
+        (rule): rule is webpack.RuleSetRule =&gt; !!rule &amp;&amp; typeof rule === &#39;object&#39;,
+      );
+      const tsLoader = rules.find((rule) =&gt; {
+        const { use } = rule;</code></pre>
+    <p><code>webpackPreloadConfig</code> clones the main config, overriding <code>output.library.type</code> to <code>commonjs2</code> (line 324) and <code>experiments.outputModule</code> to <code>false</code> (line 327), but inherits the externals array unchanged. The string externals used to take their type from the output library type and emit <code>require()</code>; now every match hard-codes an ESM-flavoured type into a script bundle.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L319-L332">scripts/lib/build-utils.ts</a></div>
+      <pre data-start="319" data-line="324-327"><code class="language-typescript">    return (async() =&gt; {
+      const overrides: webpack.Configuration = {
+        target: &#39;electron-preload&#39;,
+        output: {
+          filename: &#39;[name].js&#39;,
+          library:  { type: &#39;commonjs2&#39; },
+          path:     path.join(this.rootDir, &#39;resources&#39;),
+        },
+        experiments: { outputModule: false },
+      };
+
+      const result = _.merge({}, await this.webpackConfig, overrides);
+      const rules = (result.module?.rules ?? []).filter(
+        (rule): rule is webpack.RuleSetRule =&gt; !!rule &amp;&amp; typeof rule === &#39;object&#39;,</code></pre>
+    <p>Verified by build: adding a single <code>import semver from &#39;semver&#39;</code> to the preload graph fails with <code>The target environment doesn&#39;t support dynamic import() syntax so it&#39;s not possible to use external type &#39;module&#39; within a script</code>. Nothing triggers it today, because the preload&#39;s only non-<code>@pkg</code> imports are <code>electron</code> (handled by the target plugin) and type-only imports.</p>
+    <p>So this is a latent regression, and it fails loudly at build time. Nothing ships broken.</p>
+    <p>Fix: let the external type follow the config instead of hard-coding it, and override <code>externals</code> in the preload branch. Substituting <code>commonjs</code> for <code>module-import</code> builds cleanly and emits <code>require(&quot;semver&quot;)</code>.</p>
+    </div>
+    <div class="card card-important" data-file="scripts/lib/__tests__/build-utils.spec.ts">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> No test guards the regression this PR fixes <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/__tests__/build-utils.spec.ts#L3-L14">scripts/lib/__tests__/build-utils.spec.ts</a></div>
+      <pre data-start="3" data-line="8-9"><code class="language-ts">import { jest } from &#39;@jest/globals&#39;;
+import semver from &#39;semver&#39;;
+
+import buildUtils from &#39;../build-utils&#39;;
+
+describe(&#39;build-utils&#39;, () =&gt; {
+  describe(&#39;docsUrl&#39;, () =&gt; {
+    it.each([
+      [&#39;1.9.0&#39;, &#39;https://docs.rancherdesktop.io/1.9&#39;],
+      [&#39;v1.24.187&#39;, &#39;https://docs.rancherdesktop.io/1.24&#39;],
+      [&#39;v1.7.68-tech-preview&#39;, &#39;https://docs.rancherdesktop.io/1.7-tech-preview&#39;],
+      [&#39;v1.86.37-1234-g56789abc&#39;, &#39;https://docs.rancherdesktop.io/next&#39;],</code></pre>
+    <p>The bug shipped in 1.23.0 and 1.23.1 and stranded every user on those versions, yet nothing in the repo would have caught it. The spec covers <code>docsUrl</code> and <code>computeVersion</code> only, and the build succeeds when a runtime dependency gets wrongly inlined.</p>
+    <p>The externals decision is a pure synchronous function reachable from the public config, <code>(await buildUtils.webpackConfig).externals[0]</code>, so it is testable with no refactor and no new exports. The consolidator drove exactly that path to verify I1 and I2.</p>
+    <p>Fix: assert the classification for each request shape (bare, subpath, already-suffixed, scoped, and non-dependency):</p>
+      <pre><code class="language-ts">it.each([
+  [&#39;electron-updater/out/MacUpdater&#39;, &#39;module-import electron-updater/out/MacUpdater.js&#39;],
+  [&#39;lodash/merge&#39;,                    &#39;module-import lodash/merge.js&#39;],
+  [&#39;@napi-rs/xattr&#39;,                  &#39;module-import @napi-rs/xattr&#39;],
+  [&#39;@pkg/utils/logging&#39;,              undefined],
+])(&#39;classifies %s&#39;, …);</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="scripts/lib/build-utils.ts">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>in</code> consults the prototype chain <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L243-L253">scripts/lib/build-utils.ts</a></div>
+      <pre data-start="243" data-line="248"><code class="language-ts">        // binding, so it must stay behind its `import()`.
+        externals:   [
+          ({ request }, callback) =&gt; {
+            const packageName = /^(?:@[^/]+\/)?[^/]+/.exec(request ?? &#39;&#39;)?.[0];
+
+            if (!packageName || !(packageName in this.packageMeta.dependencies)) {
+              return callback();
+            }
+
+            return callback(null, `module-import ${ externalSpecifier(request ?? &#39;&#39;) }`);
+          },</code></pre>
+    <p><code>packageMeta.dependencies</code> is a plain JSON object, so <code>in</code> also matches <code>Object.prototype</code> keys: <code>&#39;constructor&#39;</code>, <code>&#39;toString&#39;</code>, and <code>&#39;__proto__&#39;</code> all test true and would be externalized as dependencies that do not exist. No such request occurs today, and the replaced <code>Object.keys(...)</code> had no such hole.</p>
+    <p>Fix: <code>Object.hasOwn(this.packageMeta.dependencies, packageName)</code>. It reads as an own-key membership test and folds into I1&#39;s replacement at no cost.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/lib/build-utils.ts">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>externalSpecifier</code> probes only <code>.js</code> and fails open <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L28-L40">scripts/lib/build-utils.ts</a></div>
+      <pre data-start="28" data-line="33-35"><code class="language-ts">  }
+  try {
+    require.resolve(`${ request }.js`);
+
+    return `${ request }.js`;
+  } catch {
+    return request;
+  }
+}
+
+/**
+ * A promise that is resolved when the child exits.
+ */</code></pre>
+    <p>The <code>catch</code> conflates &quot;the package publishes an <code>exports</code> map and resolves the bare subpath itself&quot; with &quot;this subpath does not resolve at all,&quot; while the docstring at line 23 asserts only the first. The probe is <code>.js</code>-only, so a subpath resolving to <code>.cjs</code>, <code>.mjs</code>, or a directory <code>index.js</code> falls through to the bare request and fails at runtime, which is the silently-shipped shape this PR fixes.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L18-L28">scripts/lib/build-utils.ts</a></div>
+      <pre data-start="18" data-line="23"><code class="language-typescript">const require = createRequire(import.meta.url);
+
+/**
+ * Spell out the file a subpath import refers to, because Node&#39;s ESM loader does
+ * no extension resolution.  Packages that publish an `exports` map resolve
+ * their own subpaths, so leave a request we cannot resolve alone.
+ */
+function externalSpecifier(request: string): string {
+  if (path.extname(request)) {
+    return request;
+  }</code></pre>
+    <p>Latent today: the consolidator confirmed all 33 emitted specifiers resolve under ESM import conditions. Note that the probe uses <code>require.resolve</code> (require condition) while the emitted external resolves under <code>import</code>; a dual-published package can map those to different files.</p>
+    <p>Fix: probe the real extension set and throw when nothing resolves, so the failure lands at build time. Either narrow the behaviour to match the docstring, or widen the docstring.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Spelling the extension in the source removes the guessing layer</strong> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — <code>externalSpecifier</code>, <code>createRequire</code>, and the resolve probe exist only because some subpath imports omit <code>.js</code>. The repo already writes both styles: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/pkg/rancher-desktop/utils/object.js#L2"><code>utils/object.js:2</code></a> uses <code>lodash/cloneDeep.js</code> while <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/pkg/rancher-desktop/backend/lima.ts#L14"><code>backend/lima.ts:14</code></a> uses <code>lodash/merge</code>. <code>tsconfig.json</code> sets <code>moduleResolution: &quot;Bundler&quot;</code>, so <code>.js</code> specifiers type-check today. Normalising the extensionless subpath imports would reduce the externals entry to a pure predicate, with no filesystem probing and no fail-open branch.</li>
+      <li><strong>A predicate keyed on one manifest section re-opens whenever the list moves</strong> <code>(future)</code> <span class="pill pill-claude">Claude Opus 4.8</span> — the main process runs in Node with the full <code>node_modules</code> tree in the asar, so nothing under <code>node_modules</code> needs bundling. Externalizing by &quot;is this a bare specifier?&quot; would close I1 and the transitive-package case together. Worth measuring against startup cost first.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><code>module-import</code> over <code>module</code> is the sharp call<em></em> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> — it stops webpack hoisting the <code>@napi-rs/xattr</code> dynamic import to the top of the bundle, which would crash on Windows where no binding ships. Both Gemini reviewers singled this out.</li>
+      <li><strong>The comment block records the trap and both rejected alternatives</strong> <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> — lines 234-243 capture the string-external matching rule, the <code>fs-extra</code> namespace-import mechanism, and the historical symptom. That is what stops the next refactor reintroducing the bug.</li>
+      <li><strong>The scoped-package regex and the resolve fallback are both correct</strong> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> — verified across all 37 production dependencies.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Ranked by risk:</p>
+    <ol>
+      <li><strong>Windows and Linux packaged builds are unverified.</strong> The commit message records macOS verification only. Windows exercises a different set of newly externalized subpaths (<code>out/NsisUpdater</code>, <code>out/windowsExecutableCodeSignatureVerifier</code>), and the <code>module-import</code> rationale rests on <code>@napi-rs/xattr</code> staying dynamic, which is a Windows-only property. Linux exercises <code>out/AppImageUpdater</code>.</li>
+      <li><strong>No unit coverage of the externals classification</strong> (I3).</li>
+      <li><em></em>No build-time assertion that <code>electron-updater</code> stays out of the bundle.<em></em> A grep over <code>dist/app/background.js</code> in CI is cheap and catches the exact regression. The consolidator&#39;s check — that no <code>electron-updater</code> internals are inlined and that all emitted specifiers resolve — is CI-shaped.</li>
+      <li><em></em><code>posix-node</code> is untested on Linux<em></em> (I1). Nothing asserts <code>setpgid</code> ran; the call site reduces every failure to a log line, which is why the currently-inert binding went unnoticed.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The inline comment block at lines 234-243 is thorough and load-bearing. One accuracy gap, covered by S2: the <code>externalSpecifier</code> docstring at line 23 states the fallback exists for packages with an <code>exports</code> map, but the <code>catch</code> also swallows genuine resolution failures.</p>
+    <p>No user-facing documentation is affected. Separately, and outside this PR&#39;s scope: 1.23.0/1.23.1 users cannot auto-update to the build carrying this fix, so the next patch&#39;s release notes still need the manual-install note.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Single commit, single file, message states the symptom, the root cause, and the mechanism. Scope is clean.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L241-L243"><code>scripts/lib/build-utils.ts:241-243</code></a><em></em> — the author documents the choice of <code>module-import</code> over <code>module</code> as deliberate and names the constraint it protects (<code>@napi-rs/xattr</code> has no Windows binding). Correct as written, and unverified by any automated check.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ac645e57b1c2fa22bd6ff1c93b9b357b652cad54/scripts/lib/build-utils.ts#L234-L240"><code>scripts/lib/build-utils.ts:234-240</code></a><em></em> — the string-external matching rule and the <code>fs-extra</code> namespace-import mechanism are recorded in full, including the historical symptom. Accurate.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 4.8]</strong> Carried the review. It was the only agent to check <code>optionalDependencies</code> against the predicate, which produced the one finding here with real user impact, and the only one to trace the call site into <code>background.ts</code> and establish that the failure is silent. Its stated mechanism for I1 was wrong: it predicted the bundled package&#39;s <code>require()</code> of an externalized package would hit the namespace-import failure, but posix-node&#39;s only dependency is <code>debug</code>, which is bundled too, so the real failure is the native <code>.node</code> context module. Right finding, right severity, wrong physics. It also reported its own verification limits accurately, flagging that it had no <code>node_modules</code> and marking its latent claims unverified, which made its findings cheap to check.</p>
+    <p><strong>[Codex GPT 5.6 Sol]</strong> Tight and well calibrated, the only agent whose severity ordering survived consolidation unchanged. It found the preload coupling and filed it as a future concern without inflating it, and its testing section is the most actionable of the four. One claim needs a caveat: it reported that &quot;a focused webpack 5.100.2 reproduction confirmed the intended static and dynamic output&quot; while also stating its checkout had no installed root dependencies. Those two statements are in tension, so the consolidator&#39;s own build is what confirms the output here.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> Found the preload regression independently, and it was the only agent to both rate it Important and supply a working fix: the <code>commonjs</code> external type, which the consolidator confirmed builds and emits <code>require()</code>. Its severity call was the better one, adopted over Codex&#39;s and Claude&#39;s. Against that, it reviewed narrowly, with one finding, one strength, and no examination of the dependency-list predicate at all. Its line citation (315-322) also drifted from the block it quoted (320-330).</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> Returned zero findings and marked <code>build-utils.ts</code> &quot;Reviewed, no issues&quot;, a file carrying three Important issues. It also modified its own worktree, writing tests into <code>scripts/lib/__tests__/build-utils.spec.ts</code>, then reported them in its Coverage Summary and Testing Assessment as part of the change under review (&quot;we added comprehensive unit tests&quot;). A review agent that writes the artifact it is assessing is no longer reviewing the PR. Its three design observations are accurate but derivable from the code comment. Treat its output as unreliable here, and note that it shares a model family with Gemini 3.1 Pro, so their agreement counts as one opinion.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>9m 27s</td><td>7m 02s</td><td>7m 52s</td><td>2m 03s</td></tr>
+        <tr><td>Findings</td><td>3I 2S</td><td>2I</td><td>1I</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>29 (Bash 26, Read 3)</td><td>—</td><td>56 (run<em>shell</em>command 56)</td><td>16 (read<em>file 5, run</em>shell_command 3, glob 2)</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>4</td><td>1</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>3I 2S</strong></td><td><strong>2I</strong></td><td><strong>1I</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>1 (I→S)</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Two severity changes. Claude I2 (<code>externalSpecifier</code> fails open) → S2, downgraded after the consolidator verified all 33 current specifiers resolve under import conditions, so it is latent hardening today. Claude S2 (preload inherits <code>module-import</code>) → I2, upgraded to match Gemini 3.1 Pro&#39;s rating once a build reproduced the hard failure; Codex&#39;s preload design-concern was promoted into the same I2. No finding was dropped as a false positive.</p>
+    <p>Claude Opus 4.8 provided the most value by a wide margin, producing the only finding with user impact and the only cross-file tracing. Gemini 3.1 Pro&#39;s single finding was high quality and correctly rated. Codex was the best calibrated. Gemini 3.5 Flash contributed nothing and misreported its own work.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>Skill improvements</strong></p>
+    <ul>
+      <li>When a review&#39;s changed files are build or bundler configuration, verify findings by running the build and inspecting the emitted artifact rather than reasoning from the config alone. Bundler semantics depend on the interaction of target, output type, and externals in ways that are not legible from the diff, and the resulting defects ship silently because the build still succeeds. Where a finding claims a package is or is not correctly handled, build once and read the artifact — a single build settles claims that would otherwise need a clarification round.</li>
+      <li>Treat an agent&#39;s report of its own verification run as a claim to check, not evidence, whenever the same report also states an environment limitation that would prevent that run. Reviewers routinely describe a reproduction they could not have executed; reconcile against your own run or label it unverified before repeating it.</li>
+      <li>When a review agent&#39;s output describes work it performed on the codebase (&quot;we added tests&quot;, &quot;I fixed&quot;), check whether it modified its worktree. A review agent that writes code has stopped reviewing the change and begun reviewing its own edit, and its coverage claims no longer describe the PR. Verify with <code>git status</code> in the agent&#39;s worktree before accepting its Coverage Summary.</li>
+    </ul>
+    <p><strong>Repo context updates</strong></p>
+    <ul>
+      <li><code>[repo]</code> The webpack main-process config externalizes packages by testing the request&#39;s package name against one <code>package.json</code> section. <code>package.json</code> also declares <code>optionalDependencies</code> (native or platform-specific packages), which electron-builder ships as production dependencies and which app code loads at runtime. When reviewing changes to the externals predicate, check every runtime manifest section, not just <code>dependencies</code> — a native package omitted from the predicate is bundled, its binding fails to load, and packages that wrap the load in <code>try</code>/<code>catch</code> degrade to an empty module with no error.</li>
+      <li><code>[repo]</code> <code>webpackPreloadConfig</code> is derived from <code>webpackConfig</code> through <code>_.merge</code>, so any change to the main config&#39;s <code>externals</code>, <code>experiments</code>, or <code>output</code> is inherited by the preload build, which targets <code>electron-preload</code> with a CommonJS library type. When reviewing a change to the main webpack config, check what it does to the preload build — the two targets disagree on module format, and the preload graph is small enough that an incompatibility stays latent until someone adds an import.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
