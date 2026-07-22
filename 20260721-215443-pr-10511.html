@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260721-215443-pr-10511</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260721-215443-pr-10511</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-21 21:54</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/endemics">@endemics</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10511" class="gh-ref" data-title="Compose stop/delete" data-state="open" data-type="pr">#10511</a> — Compose stop/delete</td></tr>
+      <tr><td>Branch</td><td><code>compose-start-stop</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9ae8bd97e"><code>9ae8bd97e</code></a> feat(containers): add stop/delete buttons for compose project groups<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e3f10aae6"><code>e3f10aae6</code></a> test(containers): add e2e coverage for compose group stop/delete buttons<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/644fd8320"><code>644fd8320</code></a> fix(containers): unwrap SortableTable&#39;s row wrapper in group actions<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/91de91306"><code>91de91306</code></a> fix(containers): stop HTML-escaping group action tooltips and dialog text<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ffa0ff370"><code>ffa0ff370</code></a> fix(containers): use text labels for group action buttons<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/cd3f2f8b3"><code>cd3f2f8b3</code></a> fix(containers): remove unnecessary type assertion in e2e test<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/03430dae2"><code>03430dae2</code></a> fix(containers): vue/template-curly-spacing; ignore resources/rancher-dashboard<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735"><code>1ea648735</code></a> fix(containers): replace group action buttons with a group select checkbox</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735290a09249e85385a52895ea451c2316"><code>1ea648735290a09249e85385a52895ea451c2316</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default); Gemini 3.1 Pro (effort: default) produced no output — quota exhausted</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Rework</span> &mdash; the unit suite no longer runs, group deselect acts on the wrong containers, and the indeterminate state is invisible</td></tr>
+      <tr><td>Wall-clock time</td><td><code>18 min 3 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The direction is right and matches the maintainer&#39;s checkbox proposal, but four defects block merge. Importing <code>Checkbox</code> without updating the page&#39;s test mock breaks the existing unit suite outright: zero tests run. Group deselect routes through a shared helper that matches rows by a field this table does not set, so it deselects arbitrary containers and Stop/Delete then acts on them. The indeterminate state never renders, and a new <code>display: flex</code> stretches the group tab across the table.</p>
+    <p>Three reviewers produced output; Gemini 3.1 Pro hit a terminal quota error. I grouped the findings below into selection-model defects (C1, C2, I1, I3, I4), presentation (I2), and cleanup (S1 through S6).</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical" data-file="pkg/rancher-desktop/pages/__tests__/Containers.spec.ts">
+      <div class="finding-title" id="C1">
+        <span class="finding-num">C1.</span> <code>Checkbox</code> import breaks the existing unit suite <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 4.8</span><a href="#C1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts#L16-L29">pkg/rancher-desktop/pages/__tests__/Containers.spec.ts</a></div>
+      <pre data-start="16" data-line="21-24"><code class="language-ts">      send:           jest.fn(),
+      invoke:         jest.fn(),
+      removeListener: jest.fn(),
+    },
+  },
+  &#39;@rancher/components&#39;: {
+    BadgeState: componentStub,
+    Banner:     componentStub,
+  },
+  electron: { shell: { openExternal: jest.fn() } },
+});
+
+const { default: Containers } = await import(&#39;@pkg/pages/Containers.vue&#39;);
+const methods = (Containers as any).methods;</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L146"><code>Containers.vue:146</code></a> now imports <code>Checkbox</code> from <code>@rancher/components</code>, but <code>mockModules</code> builds the mocked module&#39;s named exports by spreading this object (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/utils/testUtils/mockModules.ts#L72-L76"><code>mockModules.ts:72-76</code></a>). ESM linking fails before any test body runs. I ran the suite against the review SHA and got <code>SyntaxError: The requested module &#39;@rancher/components&#39; does not provide an export named &#39;Checkbox&#39;</code>, with 1 suite failed and 0 tests total. Adding the stub below makes it 2 passed.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L141-L151">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="141" data-line="146"><code class="language-markup">    &lt;/SortableTable&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import { BadgeState, Banner, Checkbox } from &#39;@rancher/components&#39;;
+import dayjs from &#39;dayjs&#39;;
+import { shell } from &#39;electron&#39;;
+import merge from &#39;lodash/merge&#39;;
+import { defineComponent } from &#39;vue&#39;;
+import { mapGetters } from &#39;vuex&#39;;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/utils/testUtils/mockModules.ts#L67-L81">pkg/rancher-desktop/utils/testUtils/mockModules.ts</a></div>
+      <pre data-start="67" data-line="72-76"><code class="language-typescript">  const results: mockModuleReturnType&lt;T&gt; = {} as any;
+  for (let [name, exports] of Object.entries(modules)) {
+    if (exports === undefined &amp;&amp; name in defaultOverrides) {
+      exports = defaultOverrides[name as keyof typeof defaultOverrides];
+    }
+    jest.unstable_mockModule(name, () =&gt; ({
+      __esModule: true,
+      default:    exports,
+      ...exports,
+    }));
+    (results as any)[name] = exports;
+  }
+
+  return results;
+}</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">     BadgeState: componentStub,
+     Banner:     componentStub,
++    Checkbox:   componentStub,</code></pre>
+    </div>
+    <div class="card card-critical" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="C2">
+        <span class="finding-num">C2.</span> Unchecking a group deselects the wrong containers <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#C2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L578-L588">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="578" data-line="583"><code class="language-js">      const table = this.$refs.sortableTableRef;
+
+      if (selected) {
+        table.update(containers, []);
+      } else {
+        table.update([], containers);
+      }
+    },
+
+    clearError() {
+      this.execError = null;</code></pre>
+    <p><code>update()</code> locates each row to remove with <code>findIndex((r) =&gt; r._key === row._key)</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L444"><code>selection.js:444</code></a>). This table declares <code>key-field=&quot;id&quot;</code> (line 14) and its rows carry no <code>_key</code>, so every comparison is <code>undefined === undefined</code>, matching index 0. Removing N rows splices the first N entries instead. Select group A, then B, then uncheck B: A leaves the selection and B stays, and <code>applyTableAction</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L515"><code>selection.js:515</code></a>) runs Stop/Delete against B.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L439-L449">pkg/rancher-desktop/components/SortableTable/selection.js</a></div>
+      <pre data-start="439" data-line="444"><code class="language-javascript">      this.update(add, remove);
+    },
+
+    update(toAdd, toRemove) {
+      toRemove.forEach((row) =&gt; {
+        const index = this.selectedRows.findIndex((r) =&gt; r._key === row._key);
+
+        if (index !== -1) {
+          this.selectedRows.splice(index, 1);
+        }
+      });</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L510-L520">pkg/rancher-desktop/components/SortableTable/selection.js</a></div>
+      <pre data-start="510" data-line="515"><code class="language-javascript">
+        input.dispatchEvent(new Event(&#39;click&#39;));
+      });
+    },
+
+    applyTableAction(action, args, event) {
+      const opts = { alt: event &amp;&amp; isAlternate(event), event };
+
+      // Go through the table selection and filter out those actions that can&#39;t run the chosen action
+      const executableSelection = this.selectedRows.filter((row) =&gt; {
+        const matchingResourceAction = row.availableActions.find((a) =&gt; a.action === action.action);</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L9-L19">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="9" data-line="14"><code class="language-markup">    &lt;/banner&gt;
+    &lt;SortableTable
+      ref=&quot;sortableTableRef&quot;
+      class=&quot;containersTable&quot;
+      :headers=&quot;headers&quot;
+      key-field=&quot;id&quot;
+      :rows=&quot;rows&quot;
+      no-rows-key=&quot;containers.sortableTables.noRows&quot;
+      :row-actions=&quot;true&quot;
+      :paging=&quot;true&quot;
+      :rows-per-page=&quot;10&quot;</code></pre>
+    <p>This is <strong>pre-existing, not a regression</strong>: <code>selection.js</code>, <code>key-field=&quot;id&quot;</code>, and the absent <code>_key</code> all predate the merge-base, and individual row deselect already hits it. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Images.vue#L14"><code>Images.vue:14</code></a> passes <code>key-field=&quot;_key&quot;</code>, which is why it went unnoticed. This PR makes it the new feature&#39;s primary path, so it needs fixing here.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Images.vue#L9-L19">pkg/rancher-desktop/pages/Images.vue</a></div>
+      <pre data-start="9" data-line="14"><code class="language-markup">      :state=&quot;state&quot;
+      :show-all=&quot;settings.images.showAll&quot;
+      :selected-namespace=&quot;settings.images.namespace&quot;
+      :supports-namespaces=&quot;supportsNamespaces&quot;
+      :protected-images=&quot;protectedImages&quot;
+      @toggled-show-all=&quot;onShowAllImagesChanged&quot;
+      @switch-namespace=&quot;onChangeNamespace&quot;
+    /&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+    <p>Fix in the shared helper (<code>get</code> is already imported):</p>
+      <pre><code class="language-diff">-        const index = this.selectedRows.findIndex((r) =&gt; r._key === row._key);
++        const index = this.selectedRows.findIndex((r) =&gt; get(r, this.keyField) === get(row, this.keyField));</code></pre>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Indeterminate group state never renders<a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L116-L127">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="116" data-line="121-122"><code class="language-markup">          &lt;td :colspan=&quot;headers.length + 1&quot;&gt;
+            &lt;div class=&quot;group-tab&quot;&gt;
+              &lt;Checkbox
+                class=&quot;group-select-checkbox&quot;
+                data-testid=&quot;container-group-select&quot;
+                :value=&quot;isGroupSelected(group)&quot;
+                :indeterminate=&quot;isGroupIndeterminate(group)&quot;
+                @update:value=&quot;setGroupSelected(group, $event)&quot;
+                @click.stop
+              /&gt;
+              &lt;i
+                data-title=&quot;Toggle Expand&quot;</code></pre>
+    <p><code>@rancher/components</code> draws the indeterminate dash only via <code>.checkbox-container input:checked ~ .checkbox-custom.indeterminate:after</code>, and its <code>isChecked</code> computed is <code>value === valueWhenTrue</code>. <code>isGroupSelected</code> (all selected) and <code>isGroupIndeterminate</code> (some but not all) are mutually exclusive by construction, so <code>value</code> is always <code>false</code> exactly when <code>indeterminate</code> is <code>true</code>. The input is never checked, the rule never matches, and the base <code>:after</code> stays at <code>scale(0)</code> — a partially-selected group renders as a blank box, identical to nothing selected.</p>
+    <p>Fix: drive <code>value</code> from &quot;any selected&quot; so the component&#39;s CSS engages. Note this also flips the click semantics on a partial group from select-all to clear-all, which is the conventional behavior.</p>
+      <pre><code class="language-diff">-                :value=&quot;isGroupSelected(group)&quot;
++                :value=&quot;isGroupSelected(group) || isGroupIndeterminate(group)&quot;</code></pre>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> <code>display: flex</code> stretches the group tab across the table <span class="pill pill-claude">Claude Opus 4.8</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L610-L620">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="610" data-line="615"><code class="language-scss">    padding: 8px 5px;
+  }
+
+  .group-row {
+    .group-tab {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      &gt; .icon {
+        cursor: pointer;</code></pre>
+    <p>SortableTable styles <code>.group-tab</code> as a shrink-to-fit tab (<code>display: inline-block</code>, <code>padding: 0 10px</code>, <code>min-width</code>, plus a decorative skewed <code>:after</code> pinned at <code>right: -15px</code>) in an <strong>unscoped</strong> block at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/index.vue#L1847-L1876"><code>SortableTable/index.vue:1847-1876</code></a>. That compiles to <code>.sortable-table tbody tr.group-row .group-tab</code>, specificity (0,3,2). The new scoped rule adds a <code>[data-v-…]</code> attribute, reaching (0,4,0), so it wins. <code>display: flex</code> makes the box block-level, so the tab background and its skewed tail span the full <code>colspan</code> instead of hugging the label.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/index.vue#L1842-L1881">pkg/rancher-desktop/components/SortableTable/index.vue</a></div>
+      <pre data-start="1842" data-line="1847-1876"><code class="language-markup">          &amp;:first-of-type {
+            border-left: 1px solid var(--sortable-table-accent-bg);
+          }
+        }
+
+        .group-tab {
+          @include clearfix;
+          height: $group-row-height;
+          line-height: $group-row-height;
+          padding: 0 10px;
+          border-radius: 4px 4px 0px 0px;
+          background-color: var(--sortable-table-row-bg);
+          position: relative;
+          top: 1px;
+          display: inline-block;
+          z-index: z-index(&#39;tableGroup&#39;);
+          min-width: $group-row-height * 1.8;
+
+          &gt; SPAN {
+            color: var(--sortable-table-group-label);
+          }
+        }
+
+        .group-tab:after {
+          height: $group-row-height;
+          width: 70px;
+          border-radius: 5px 5px 0px 0px;
+          background-color: var(--sortable-table-row-bg);
+          content: &quot;&quot;;
+          position: absolute;
+          right: -15px;
+          top: 0px;
+          transform: skewX(40deg);
+          z-index: -1;
+        }
+      }
+    }
+  }
+
+  .for-inputs{</code></pre>
+    <p>This is the most likely subject of the still-open alignment comment (see Unresolved Feedback).</p>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-      display: flex;
++      display: inline-flex;</code></pre>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> Checking a partially-selected group double-adds its rows <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L576-L586">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="576" data-line="581"><code class="language-js">    setGroupSelected(group, selected) {
+      const containers = this.groupContainers(group);
+      const table = this.$refs.sortableTableRef;
+
+      if (selected) {
+        table.update(containers, []);
+      } else {
+        table.update([], containers);
+      }
+    },
+</code></pre>
+    <p><code>update()</code> appends unconditionally (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L451-L453"><code>selection.js:451-453</code></a>). Check one container&#39;s own row checkbox, then click its group checkbox: that container is pushed a second time. <code>howMuchSelected</code> then compares an inflated count against <code>pagedRows.length</code> and can report ALL while rows remain unselected, the bulk command repeats the id on the CLI, and a later group-uncheck removes only one of the two entries, stranding a row in the selection.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L446-L458">pkg/rancher-desktop/components/SortableTable/selection.js</a></div>
+      <pre data-start="446" data-line="451-453"><code class="language-javascript">        if (index !== -1) {
+          this.selectedRows.splice(index, 1);
+        }
+      });
+
+      if ( toAdd ) {
+        this.selectedRows.push(...toAdd);
+      }
+
+      // Uncheck and check the checkboxes of nodes that have been added/removed
+      if (toRemove.length) {
+        this.$nextTick(() =&gt; {
+          for ( let i = 0; i &lt; toRemove.length; i++ ) {</code></pre>
+    <p>Unlike C2, this instance is new: the group checkbox did not exist before.</p>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-        table.update(containers, []);
++        table.update(containers.filter(c =&gt; !this.selectedRows.includes(c)), []);</code></pre>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="I4">
+        <span class="finding-num">I4.</span> Group selection covers only the current page <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 4.8</span><a href="#I4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L13-L24">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="13" data-line="18-19"><code class="language-markup">      :headers=&quot;headers&quot;
+      key-field=&quot;id&quot;
+      :rows=&quot;rows&quot;
+      no-rows-key=&quot;containers.sortableTables.noRows&quot;
+      :row-actions=&quot;true&quot;
+      :paging=&quot;true&quot;
+      :rows-per-page=&quot;10&quot;
+      :has-advanced-filtering=&quot;false&quot;
+      :loading=&quot;containers === null&quot;
+      group-by=&quot;projectGroup&quot;
+      :group-sort=&quot;[&#39;projectGroup&#39;]&quot;
+      @selection=&quot;onSelectionChange&quot;</code></pre>
+    <p><code>groupedRows</code> is built from <code>pagedRows</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/grouping.js#L27"><code>grouping.js:27</code></a>), so a compose project with more than 10 containers renders a separate group header per page and <code>groupContainers(group)</code> returns only that page&#39;s slice. The checkbox reports fully-selected while off-page members are untouched, and Stop/Delete acts on a subset of the project the user believes they selected. Paging to the rest does not help: the <code>pagedRows</code> watcher (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L123-L136"><code>selection.js:123-136</code></a>) drops every row that leaves the page.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/grouping.js#L22-L32">pkg/rancher-desktop/components/SortableTable/grouping.js</a></div>
+      <pre data-start="22" data-line="27"><code class="language-javascript">      }
+
+      const out = [];
+      const map = {};
+
+      for ( const obj of this.pagedRows ) {
+        const key = get(obj, groupKey) || &#39;&#39;;
+        const ref = get(obj, refKey);
+        let entry = map[key];
+
+        if ( entry ) {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L118-L141">pkg/rancher-desktop/components/SortableTable/selection.js</a></div>
+      <pre data-start="118" data-line="123-136"><code class="language-javascript">    };
+  },
+
+  watch: {
+    // On page change
+    pagedRows() {
+      // When the table contents changes:
+      // - Remove items that are in the selection but no longer in the table.
+
+      const content = this.pagedRows;
+      const toRemove = [];
+
+      for (const node of this.selectedRows) {
+        if (!content.includes(node) ) {
+          toRemove.push(node);
+        }
+      }
+
+      this.update([], toRemove);
+    },
+  },
+
+  methods: {
+    onToggleAll(value) {</code></pre>
+    <p>Each page&#39;s header covers exactly the rows beneath it, so the display stays honest. But it defeats the PR&#39;s stated goal of acting on a whole compose project.</p>
+    <p>Fix: compare against the filtered set rather than the paged set in that watcher, or state the limitation in the PR description.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> <code>extraArgs</code> has no caller left <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L441-L451">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="441" data-line="446"><code class="language-js">     * Execute a command against some containers
+     * @param command {string} The command to run
+     * @param _ids {Container | Container[]} The containers to affect
+     * @param extraArgs {string[]} Extra CLI flags to insert before the container ids
+     */
+    async execCommand(command, _ids, extraArgs = []) {
+      try {
+        const ids = Array.isArray(_ids) ? _ids.map(c =&gt; c.id) : [_ids.id];
+        const options = { cwd: &#39;/&#39; };
+
+        console.info(`Executing command ${ command } on container ${ ids }`);</code></pre>
+    <p>The parameter existed to pass <code>rm -f</code> from the group Delete button that <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735"><code>1ea648735</code></a> removed. All four call sites (lines 257, 260, 263, 266) pass two arguments, and a repo-wide grep finds <code>extraArgs</code> only inside this function.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L252-L262">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="252" data-line="257"><code class="language-markup">        })
+        .map(container =&gt; merge({}, container, {
+          uptime:           container.started &amp;&amp; dayjs(container.started).toNow(true),
+          availableActions: this.getContainerActions(container),
+          stopContainer:    (args) =&gt; {
+            this.execCommand(&#39;stop&#39;, this.containerCommandTarget(container, args));
+          },
+          restartContainer:   (args) =&gt; {
+            this.execCommand(&#39;restart&#39;, this.containerCommandTarget(container, args));
+          },
+          startContainer:   (args) =&gt; {</code></pre>
+    <p>Fix: revert the signature, the spread at line 456, and the JSDoc line to the two-parameter form.</p>
+    </div>
+    <div class="card card-suggestion" data-file=".gitignore">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>.gitignore</code> entry for a directory nothing in the repo produces <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>/resources/rancher-dashboard/</code> has no producer or consumer in the tree — grepping the whole repo finds only <code>eslint.config.mts</code> rule <em>names</em> containing that string. It is unrelated to compose group actions.</p>
+    <p>Fix: drop it from this PR, or land it separately with the producing command named in the commit message.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>data-testid</code> is identical on every group checkbox <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/pages/Containers.vue#L115-L125">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="115" data-line="120"><code class="language-markup">        &gt;
+          &lt;td :colspan=&quot;headers.length + 1&quot;&gt;
+            &lt;div class=&quot;group-tab&quot;&gt;
+              &lt;Checkbox
+                class=&quot;group-select-checkbox&quot;
+                data-testid=&quot;container-group-select&quot;
+                :value=&quot;isGroupSelected(group)&quot;
+                :indeterminate=&quot;isGroupIndeterminate(group)&quot;
+                @update:value=&quot;setGroupSelected(group, $event)&quot;
+                @click.stop
+              /&gt;</code></pre>
+    <p>The value is constant, so it matches every group row on the page. The e2e suite does not use it — <code>getGroupCheckbox</code> locates by the <code>.group-select-checkbox</code> class instead.</p>
+    <p>Fix: drop the attribute, or make it identify the group and switch the page object to it.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Group checkbox has no accessible name <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+    <p>A screen reader announces an unlabeled checkbox on every group row with no indication of which project it controls; the group name is a sibling text node. The table&#39;s own select-all has the same gap, so this is consistency rather than a new defect. But this checkbox repeats per group, where the ambiguity actually bites.</p>
+    <p>Fix: add a translated <code>aria-label</code> taking the group name, keeping the tab layout unchanged.</p>
+    </div>
+    <div class="card card-suggestion" data-file="e2e/pages/containers-page.ts">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> e2e bulk-button helpers are position- and width-dependent <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/e2e/pages/containers-page.ts#L90-L102">e2e/pages/containers-page.ts</a></div>
+      <pre data-start="90" data-line="95-97"><code class="language-ts">
+    await checkbox.click();
+    await expect(this.getGroupRow(groupName).locator(&#39;input[type=&quot;checkbox&quot;]&#39;)).toBeChecked();
+  }
+
+  async clickBulkStop() {
+    await this.page.getByRole(&#39;button&#39;, { name: &#39;Stop&#39; }).first().click();
+  }
+
+  async clickBulkDelete() {
+    await this.page.getByRole(&#39;button&#39;, { name: &#39;Delete&#39; }).first().click();
+  }
+}</code></pre>
+    <p><code>SortableTable/actions.js</code> measures the header and moves overflowing bulk actions into a dropdown with <code>display: none</code>, so on a narrower window this target can be hidden and the click times out. <code>.first()</code> also relies on the bulk button preceding any row-level match in DOM order.</p>
+    <p>Fix: target the stable ids the component emits (<code>button#stopContainer</code>, <code>button#deleteContainer</code>), falling back through the overflow dropdown.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/__tests__/Containers.spec.ts">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> New selection logic has no unit coverage <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>groupContainers</code>, <code>isGroupSelected</code>, <code>isGroupIndeterminate</code>, and <code>setGroupSelected</code> are pure functions over a group object plus a stubbed <code>$refs.sortableTableRef</code>, the shape the existing tests already exercise via <code>methods.&lt;name&gt;.call(...)</code>. That is the cheapest place to pin C2, I1, and I3.</p>
+    <p>Fix: add a <code>describe(&#39;group selection&#39;)</code> block covering all-selected, indeterminate, and the select/deselect calls made on the table stub.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Bulk Delete silently skips running containers (in-scope)</strong> <span class="pill pill-claude">Claude Opus 4.8</span> — the issue asks to delete containers by compose group, and the superseded implementation used <code>rm -f</code>. A bulk action is enabled when <em>some</em> selected row supports it (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L100-L105"><code>selection.js:100-105</code></a>), then <code>applyTableAction</code> filters to only the enabled subset (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1ea648735290a09249e85385a52895ea451c2316/pkg/rancher-desktop/components/SortableTable/selection.js#L517-L521"><code>selection.js:517-521</code></a>). Delete is enabled only for stopped containers (<code>Containers.vue</code> <code>getContainerActions</code>), so selecting a running compose project either greys Delete out or, for a mixed project, deletes only the already-stopped members with no message. The new e2e suite encodes the workaround: test 2 stops the project before test 3 deletes it. This deserves an explicit decision. Either document &quot;stop first&quot;, or surface a count of skipped rows.</li>
+      <li><strong>Selection ownership leaks across the component boundary (in-scope)</strong> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> — the page mirrors the child&#39;s mutable selection, understands <code>displayRows</code> wrappers, and invokes an internal method through <code>$refs</code>. <code>SortableTable</code> should expose <code>selected</code>, <code>indeterminate</code>, and <code>setSelected</code> as group-slot properties keyed off its configured key field. That would centralize identity and pagination semantics in one place.</li>
+      <li><em></em><code>selectedRows</code> aliases the table&#39;s internal array (future)<em></em> <span class="pill pill-claude">Claude Opus 4.8</span> — <code>onSelectionChange</code> stores the emitted array by reference, which is the table&#39;s own reactive <code>selectedRows</code>. Any future mutation in the page would corrupt table state with no error; a <code>[...rows]</code> copy makes ownership one-way.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>Reuses the whole bulk-action machinery (in-scope)</strong> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 4.8</span> — replacing bespoke per-group buttons with a selection checkbox composes across groups, allows excluding individual containers, and applies generically to compose projects, Kubernetes pod groups, and standalone containers.</li>
+      <li><strong>Zero new user-facing strings (in-scope)</strong> <span class="pill pill-claude">Claude Opus 4.8</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735"><code>1ea648735</code></a> correctly removed the six <code>containers.group.*</code> keys the first commit added, so <code>en-us.yaml</code> is untouched in the net diff.</li>
+      <li><strong>Non-obvious coupling is documented (in-scope)</strong> <span class="pill pill-claude">Claude Opus 4.8</span> — <code>groupContainers</code> explains <em>why</em> the unwrap is needed, exactly the kind of comment that earns its place.</li>
+      <li><strong>Flexbox alignment of the group tab controls (in-scope)</strong> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — the intent is right even though the chosen <code>display</code> value regresses the tab shape (I2).</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The e2e block is a real integration test against a real docker daemon with no mocks, and simulating a compose project via the <code>com.docker.compose.project</code> label rather than shelling out to the compose plugin is the right call. <code>colorScheme</code> destructuring and empty <code>catch {}</code> blocks match established convention in the same file and are not findings.</p>
+    <p>Untested scenarios, highest risk first:</p>
+    <ol>
+      <li><strong>Deselecting a group</strong> — the path broken by C2 has no coverage; the suite only ever checks the box.</li>
+      <li><strong>Group checkbox with a pre-existing selection</strong> — I3 and the cross-group scramble in C2 both need a second group or a manually-checked row.</li>
+      <li><strong>Indeterminate state</strong> — never asserted, which is why I1 went unnoticed.</li>
+      <li><strong>Group spanning pages</strong> (I4) — needs 11+ containers in one project; the fixture uses two.</li>
+      <li><strong>Unit coverage for the four new methods</strong> — see S6.</li>
+      <li><strong>containerd/nerdctl engine</strong> — the block pins <code>ContainerEngine.MOBY</code>; grouping derives from labels for both engines, so risk is low.</li>
+      <li><em></em><code>selectGroup</code> toggles rather than ensures<em></em> — it clicks unconditionally then asserts checked, so it passes only because the intervening Stop recomputes <code>rows</code> and clears the selection.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No gaps. The new methods carry JSDoc consistent with the file&#39;s style, and no user-facing docs describe the containers table&#39;s selection model. The <code>extraArgs</code> docstring documents a parameter that should be deleted outright (S1).</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The history needs a rebase before merge. Six of the eight commits patch the two that carry real content:</p>
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735"><code>1ea648735</code></a> reverses the design of <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9ae8bd97e"><code>9ae8bd97e</code></a>, so bisecting into the middle of this branch lands on a UI that was never intended to ship.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/91de91306"><code>91de91306</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ffa0ff370"><code>ffa0ff370</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/644fd8320"><code>644fd8320</code></a> all fix <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9ae8bd97e"><code>9ae8bd97e</code></a>, and the first two touch code that <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735"><code>1ea648735</code></a> then deletes.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/cd3f2f8b3"><code>cd3f2f8b3</code></a> is a one-line fixup of <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/e3f10aae6"><code>e3f10aae6</code></a>.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/03430dae2"><code>03430dae2</code></a> bundles a lint fix with the unrelated <code>.gitignore</code> entry (S2).</li>
+    </ul>
+    <p>Suggested shape: one commit implementing the group select checkbox, one adding e2e coverage, and the <code>.gitignore</code> change dropped or split out. The <code>fix(containers):</code> prefixes also misrepresent the work, since nothing shipped was broken. These are iterations on unmerged code.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>PR description</strong> — &quot;The UI is really not polished at this stage or anything, it&#39;s really just to get early feedback and check if I am going in the right direction or not.&quot; The maintainer&#39;s checkbox proposal answered the direction question and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1ea648735"><code>1ea648735</code></a> implements it, so the PR has outgrown its draft framing. The polish caveat still stands for I2.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>@jandubois, &quot;Thanks! Is it possible to fix the alignment?&quot;</strong> — https://github.com/rancher-sandbox/rancher-desktop/pull/10511</li>
+    </ul>
+    <p>  Still actionable. The newest commit on the branch predates the comment, so nothing has landed since. See <strong>I2</strong>: the <code>display: flex</code> override wins on specificity over SortableTable&#39;s <code>inline-block</code> tab styling and stretches the group tab to the full table width. If the intent is to align the group checkbox with each row&#39;s checkbox, moving it out of <code>.group-tab</code> into a leading <code>&lt;td class=&quot;row-check&quot;&gt;</code> and reducing the label cell to <code>:colspan=&quot;headers.length&quot;</code> addresses the other half.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude-opus-4-8"><span class="pill pill-claude">Claude Opus 4.8</span> <a href="#claude-opus-4-8" class="pilcrow">&#182;</a></h3>
+    <p>The deepest reviewer by a wide margin, and the only one to read the SortableTable stylesheet. Its CSS specificity analysis (I2) is the single most valuable finding here: it computed (0,3,2) against (0,4,0), identified the unscoped style block, and connected the result to the maintainer&#39;s still-open alignment comment, which no other agent linked to any code. It also uniquely caught the constant <code>data-testid</code> (S3), the width-dependent e2e helpers (S5), and the design concern that bulk Delete silently skips running containers. Its one real miss was calibration: it found the incomplete test mock but rated it a suggestion and reasoned that <code>Checkbox</code> would merely &quot;register as <code>undefined</code>&quot;, misreading ESM named-export linking as a runtime lookup. Running the suite showed the module fails to link and no test executes, which makes it the PR&#39;s hardest blocker.</p>
+    <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
+    <p>Got the mock failure right where Claude did not, both the mechanism and a severity worth acting on, and it was the only agent to trace <code>mockModules</code>&#39;s export construction. It also raised the pagination boundary independently. Its fix suggestions ran hot: disabling paging outright for all container lists is a much larger change than the finding warrants. It tagged nearly every finding &quot;(regression)&quot;, including a brand-new checkbox missing an aria-label, so the type labels carry no signal. It marked <code>.gitignore</code> &quot;Trivial&quot; and the page object &quot;Reviewed, no issues&quot; where Claude found substance in both.</p>
+    <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
+    <p>Converged with the other two on the three findings that need no cross-file reading: the <code>_key</code> mismatch, the duplicate push, and the dead parameter. It contributed no unique finding and reviewed the least code, and its coverage summary marked three of four files clean where real findings sat. It also emitted the required sections at <code>####</code> rather than <code>##</code>, and mislabeled the <code>_key</code> bug a regression when the defect predates the merge-base. Reading it as a cheap third confirmation of the obvious defects is about right.</p>
+    <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
+    <p>Produced no output. It failed with <code>TerminalQuotaError</code> (<code>QUOTA_EXHAUSTED</code>, reset in roughly 17 hours), which persists across retries, so I dropped it rather than spending the retry budget. Flash hit the same quota ceiling on its first attempt and recovered on an automatic retry.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>11m 53s</td><td>9m 39s</td><td>8m 30s</td><td>4m 04s</td></tr>
+        <tr><td>Findings</td><td>2C 3I 6S</td><td>2C 2I 3S</td><td>—</td><td>1C 1I 2S</td></tr>
+        <tr><td>Tool calls</td><td>54 (Bash 47, Read 7)</td><td>—</td><td>43 (run<em>shell</em>command 43)</td><td>31 (grep<em>search 16, read</em>file 12, update_topic 2)</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>3</td><td>—</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>6</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>4</td><td>4</td><td>—</td><td>4</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>2</td><td>—</td><td>3</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2C 3I 6S</strong></td><td><strong>2C 2I 3S</strong></td><td><strong>none</strong></td><td><strong>1C 1I 2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Two findings changed severity. Claude&#39;s S3 (test mock) and Codex&#39;s I1 (same defect) both became <strong>C1</strong> after I ran the suite and confirmed it fails to link, which is a hard CI break. Flash&#39;s C1 and Codex&#39;s I2 (the <code>_key</code> deselect bug) merged into <strong>C2</strong>, keeping critical severity but relabelled from &quot;regression&quot; to pre-existing, because <code>selection.js</code>, <code>key-field=&quot;id&quot;</code>, and the missing <code>_key</code> all predate the merge-base. Codex&#39;s I3 and Claude&#39;s I4 (pagination) merged into <strong>I4</strong> at unchanged severity.</p>
+    <p>One finding came from no agent. <strong>I1</strong> (the indeterminate state never rendering) surfaced while I was verifying the <code>Checkbox</code> contract in <code>node_modules</code>: the component draws its dash only under <code>input:checked</code>, and the PR&#39;s two props are mutually exclusive by construction, so the state it computes can never be seen. All three agents read <code>isGroupIndeterminate</code>, accepted that it computes the right boolean, and none checked whether the component could display it.</p>
+    <p>No agent produced a false positive. Every finding raised survived verification against the worktree.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a finding turns on whether a third-party component supports a prop or renders a state, read the component&#39;s shipped implementation in <code>node_modules</code> (its compiled template, computed properties, and CSS) rather than trusting the prop name. A component may accept a prop, document it, and still render nothing for it when its own stylesheet gates the visual on a second condition the caller does not satisfy. Verify the render path, not the prop&#39;s existence.</li>
+      <li>When a page passes two mutually exclusive booleans to one child component, check whether the component&#39;s rendering treats them as independent. Props computed as &quot;all&quot; and &quot;some but not all&quot; can never both be true, so any styling that requires both is dead by construction.</li>
+      <li>Before reporting that a test file is merely incomplete, run it. Under ESM a mock that omits a named export the module under test imports fails at link time, so the suite reports zero tests rather than a wrong assertion. The difference between &quot;harmless today&quot; and &quot;CI is red&quot; is one command.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] <code>pkg/rancher-desktop/utils/testUtils/mockModules.ts</code> builds each mocked module&#39;s named exports by spreading the object it is given. Adding a named import from an already-mocked package (<code>@rancher/components</code> especially) requires adding a matching stub to every spec that mocks it, or the suite fails to link with <code>does not provide an export named &#39;X&#39;</code> and runs zero tests. Check this whenever a diff adds an import to a component that has a spec.</li>
+      <li>[repo] <code>SortableTable</code>&#39;s <code>update(toAdd, toRemove)</code> in <code>components/SortableTable/selection.js</code> matches rows to remove by a hard-coded <code>_key</code> field, ignoring the table&#39;s own <code>key-field</code> prop. Only <code>Images.vue</code> sets <code>key-field=&quot;_key&quot;</code>; the containers table uses <code>id</code>, so every removal comparison degenerates to <code>undefined === undefined</code> and splices index 0. Treat any new caller of <code>update()</code> from a table not keyed on <code>_key</code> as broken on the removal path.</li>
+      <li>[repo] <code>SortableTable</code> styles live in an unscoped block at the bottom of <code>components/SortableTable/index.vue</code>. A consuming page&#39;s <code>scoped</code> style block gains a <code>[data-v-…]</code> attribute and therefore outranks those rules at equal class count, so a one-line override in a page can silently restyle the shared component&#39;s layout. Check specificity whenever a page overrides a class the component also styles.</li>
+      <li>[repo] <code>SortableTable</code> groups and paginates in that order: <code>groupedRows</code> is computed from <code>pagedRows</code>. Group-level operations therefore see only the current page, and the <code>pagedRows</code> watcher drops selections when the page changes, so a selection cannot span pages. Any feature acting on &quot;the whole group&quot; needs to account for this.</li>
+      <li>[repo] Bulk actions enable when <em>any</em> selected row supports the action, then execute against only the subset where it is enabled (<code>selection.js</code>). A bulk Delete over a mixed running/stopped selection therefore deletes part of it and reports nothing. Flag new bulk-action surfaces that do not tell the user what was skipped.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
