@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260721-215250-pr-10613</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260721-215250-pr-10613</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-21 21:52</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>3 (of target)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10613" class="gh-ref" data-title="update: drive the updater through a simulated upgrade" data-state="open" data-type="pr">#10613</a> — update: drive the updater through a simulated upgrade</td></tr>
+      <tr><td>Branch</td><td><code>test-updater-simulated-upgrade</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9a859f929"><code>9a859f929</code></a> update: drive the updater through a simulated upgrade</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9a859f929e5d7f696372642b5ca8cbc6be7b5d42"><code>9a859f929e5d7f696372642b5ca8cbc6be7b5d42</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 4.8</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; no Critical or Important findings; the four Suggestions are optional polish</td></tr>
+      <tr><td>Wall-clock time</td><td><code>50 min 49 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Round 3 confirms that Round 2&#39;s fixes landed correctly: the production gate, the documentation, and the provenance comments all match the code. No Critical or Important findings. Four Suggestions remain, all from one reviewer, and all in test fixtures or a log message. One is a regression that the Round-2 cleanup fix introduced. The change is ready to merge.</p>
+    <p>Three of the four reviewers returned entirely clean. Every surviving finding came from Claude alone. I confirmed all four against the code, and every citation was accurate. The two Gemini reviewers share a model family, so their agreement counts as one opinion rather than two. Note that the round-context injection told agents a clean review was an expected outcome, which likely raised their threshold; see Review Process Notes.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Temp-directory cleanup removes a tree the process still holds open <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L41-L53">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="41" data-line="46-48"><code class="language-ts">const cacheDir = path.join(tmpDir, &#39;cache&#39;);
+const logsDir = path.join(tmpDir, &#39;logs&#39;);
+
+fs.mkdirSync(cacheDir, { recursive: true });
+
+afterAll(() =&gt; {
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+const modules = mockModules({
+  &#39;@pkg/utils/childProcess&#39;: { spawnFile: jest.fn&lt;typeof spawnFileType&gt;() },
+  &#39;@pkg/utils/osVersion&#39;:    { getMacOsVersion: jest.fn(() =&gt; new semver.SemVer(&#39;12.0.0&#39;)) },
+  &#39;@pkg/utils/paths&#39;:        { cache: cacheDir, logs: logsDir },</code></pre>
+    <p><code>logsDir</code> (line 42) reaches the real logging module through the <code>paths</code> mock at line 53, and <code>Log</code>&#39;s constructor calls <code>reopen()</code>, which opens a <code>WriteStream</code> on <code>logs/update.log</code> and never closes it.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L37-L58">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="37" data-line="42-53"><code class="language-typescript">// The provider caches update info under `paths.cache` at module load, and
+// logging creates `paths.logs` the same way, so point both somewhere disposable
+// rather than at the developer&#39;s own directories.
+const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), &#39;rd-longhorn-test-&#39;));
+const cacheDir = path.join(tmpDir, &#39;cache&#39;);
+const logsDir = path.join(tmpDir, &#39;logs&#39;);
+
+fs.mkdirSync(cacheDir, { recursive: true });
+
+afterAll(() =&gt; {
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+});
+
+const modules = mockModules({
+  &#39;@pkg/utils/childProcess&#39;: { spawnFile: jest.fn&lt;typeof spawnFileType&gt;() },
+  &#39;@pkg/utils/osVersion&#39;:    { getMacOsVersion: jest.fn(() =&gt; new semver.SemVer(&#39;12.0.0&#39;)) },
+  &#39;@pkg/utils/paths&#39;:        { cache: cacheDir, logs: logsDir },
+  &#39;@pkg/utils/wslVersion&#39;:   { default: jest.fn&lt;typeof getWSLVersionType&gt;() },
+  electron:                  {
+    // Older than any release the tests offer, so a staged update looks newer.
+    app: { getVersion: () =&gt; &#39;1.0.0&#39; },
+    net: {</code></pre>
+    <p>On POSIX the unlink succeeds against the open handle. On Windows the name lingers until the handle closes, so the enclosing <code>rmdir</code> can fail and <code>afterAll</code> throws, turning a passing spec into a failing one for a developer running <code>yarn test</code> locally. CI never sees it, because <code>yarn test</code> runs only in the <code>ubuntu-latest</code> job (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/.github/workflows/test.yaml#L22"><code>.github/workflows/test.yaml:22</code></a>) while the <code>windows-latest</code> matrix job lints without running jest. Round 2&#39;s S2 fix added this cleanup, so the risk arrived with the fix. The Windows failure is reasoned from handle semantics rather than reproduced.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/.github/workflows/test.yaml#L17-L27">.github/workflows/test.yaml</a></div>
+      <pre data-start="17" data-line="22"><code class="language-yaml">    - run: yarn build
+    - run: yarn lint:nofix
+    - name: Install shfmt
+      run: go install mvdan.cc/sh/v3/cmd/shfmt@latest
+    - run: make -C bats lint
+    - run: yarn test
+  lint:
+    strategy:
+      matrix:
+        # We run the Linux lint in the `test` flow, no need to repeat it.
+        runs-on: [windows-latest, macos-latest]</code></pre>
+    <p>Fix: make the cleanup best-effort instead of fatal.</p>
+      <pre><code class="language-diff"> afterAll(() =&gt; {
+-  fs.rmSync(tmpDir, { recursive: true, force: true });
++  // Logging holds `logs/update.log` open for the life of the process, which
++  // can block the directory removal on Windows.
++  try {
++    fs.rmSync(tmpDir, { recursive: true, force: true });
++  } catch {}
+ });</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/update/LonghornProvider.ts">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> The rejection log names the API even when the responder is what changed <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/LonghornProvider.ts#L207-L217">pkg/rancher-desktop/main/update/LonghornProvider.ts</a></div>
+      <pre data-start="207" data-line="212"><code class="language-ts">    }
+
+    // Every reader of the cache must agree on which releases count, or a test
+    // server&#39;s release stays queued for a launch that would refuse to fetch it.
+    if (!fromCurrentSources(cache)) {
+      console.log(`Ignoring update staged from ${ cache.apiURL ?? &#39;an unrecorded source&#39; }.`);
+
+      return false;
+    }
+
+    // The isInstallable flag isn&#39;t going to get clear _right_ after an update;</code></pre>
+    <p><code>fromCurrentSources</code> (line 197) rejects when either recorded source differs, but the message names only <code>apiURL</code>. A run that sets <code>RD_UPGRADE_RESPONDER_URL</code> without <code>RD_GITHUB_API_URL</code> writes <code>apiURL: &#39;https://api.github.com&#39;</code>, so a later official launch logs <code>Ignoring update staged from https://api.github.com.</code> That names the one source which does match, and the responder that actually differed goes unmentioned. <code>update.log</code> is the only record of why a staged update was dropped. The provenance-less wording added in Round 2 reads correctly; this is the mixed case.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/LonghornProvider.ts#L192-L202">pkg/rancher-desktop/main/update/LonghornProvider.ts</a></div>
+      <pre data-start="192" data-line="197"><code class="language-typescript"> * computes, so its cached release survives into one.
+ */
+function fromCurrentSources(cache: LonghornCache): boolean {
+  const sources = updateSources();
+
+  return cache.apiURL === sources.apiURL &amp;&amp; cache.upgradeServer === sources.upgradeServer;
+}
+
+export async function hasQueuedUpdate(): Promise&lt;boolean&gt; {
+  try {
+    const rawCache = await fs.promises.readFile(gCachePath, &#39;utf-8&#39;);</code></pre>
+    <p>Fix: report both recorded sources.</p>
+      <pre><code class="language-diff">-      console.log(`Ignoring update staged from ${ cache.apiURL ?? &#39;an unrecorded source&#39; }.`);
++      console.log(`Ignoring update staged from ${ cache.apiURL ?? &#39;an unrecorded source&#39; }` +
++        ` via ${ cache.upgradeServer || &#39;the configured responder&#39; }.`);</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/update/__tests__/index.spec.ts">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> The responder-gate test cannot distinguish &quot;ignored&quot; from &quot;never configured&quot; <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/index.spec.ts#L366-L373">pkg/rancher-desktop/main/update/__tests__/index.spec.ts</a></div>
+      <pre data-start="366" data-line="371"><code class="language-ts">  });
+
+  it(&#39;leaves the configured server alone unless updates are forced&#39;, async() =&gt; {
+    process.env.RD_UPGRADE_RESPONDER_URL = &#39;http://127.0.0.1:8314/v1/checkupgrade&#39;;
+
+    await expect(optionsFromFreshSetup()).resolves.not.toHaveProperty(&#39;upgradeServer&#39;);
+  });
+});</code></pre>
+    <p>The fixture at line 332 is <code>&#39;{}&#39;</code>, so the parsed options carry no <code>upgradeServer</code> at all. The assertion proves only that the override was not added, while the test&#39;s name describes a configured server surviving. A real configuration does carry one: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/dev-app-update.yml#L5"><code>dev-app-update.yml:5</code></a> names <code>https://desktop.version.rancher.io/v1/checkupgrade</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/dev-app-update.yml#L1-L6">dev-app-update.yml</a></div>
+      <pre data-start="1" data-line="5"><code class="language-yaml">owner: rancher-sandbox
+repo: rancher-desktop
+updaterCacheDirName: rancher-desktop
+provider: custom
+upgradeServer: https://desktop.version.rancher.io/v1/checkupgrade
+vPrefixedTagName: true</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/index.spec.ts#L327-L337">pkg/rancher-desktop/main/update/__tests__/index.spec.ts</a></div>
+      <pre data-start="327" data-line="332"><code class="language-typescript">  });
+});
+
+describe(&#39;the upgrade responder override&#39;, () =&gt; {
+  beforeAll(() =&gt; {
+    fs.writeFileSync(appUpdateConfigPath, &#39;{}&#39;);
+  });
+
+  afterAll(() =&gt; {
+    fs.rmSync(appUpdateConfigPath, { force: true });
+  });</code></pre>
+    <p>The gate itself stays covered, because removing the <code>RD_FORCE_UPDATES_ENABLED</code> check would add the property and fail this case. A <code>getUpdater</code> that dropped a configured server would keep the test green, and that is the mutation this fixture cannot catch. The sibling <code>LonghornProvider.spec.ts</code> passes a configured server into <code>makeProvider</code> (line 470).</p>
+    <p>Fix: give the fixture a server and assert it survives.</p>
+      <pre><code class="language-diff">-    fs.writeFileSync(appUpdateConfigPath, &#39;{}&#39;);
++    fs.writeFileSync(appUpdateConfigPath,
++      &#39;upgradeServer: https://responder.test/v1/checkupgrade\n&#39;);</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Three <code>hasQueuedUpdate</code> cases sit under a <code>checkForUpdates</code> describe <span class="pill pill-claude">Claude Opus 4.8</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L537-L548">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="537" data-line="542-543"><code class="language-ts">    }));
+
+    await expect(releaseLookupURL()).resolves.toBe(githubURL);
+  });
+
+  it(&#39;leaves no update queued from a release the run would refuse to fetch&#39;, async() =&gt; {
+    const { hasQueuedUpdate } = await import(&#39;../LonghornProvider&#39;);
+
+    // Written by a run with the test flag set; this run has neither variable.
+    fs.writeFileSync(cacheFile, JSON.stringify({
+      nextUpdateTime: Date.now() + 60_000,
+      apiURL:         serverURL,</code></pre>
+    <p>This case and the two at lines 558 and 603 drive <code>hasQueuedUpdate</code> rather than <code>checkForUpdates</code>, yet they sit inside <code>describe(&#39;LonghornProvider.checkForUpdates&#39;)</code> at line 416. The file&#39;s other suites take the name of the function under test (<code>queryUpgradeResponder</code> at line 65, <code>LonghornProvider.getSha512Sum</code> at line 359), so a failure here reports as <code>LonghornProvider.checkForUpdates › leaves no update queued…</code> and sends the reader to the wrong function. The three share the <code>cacheFile</code> fixture and its <code>afterEach</code> cleanup, which a nested describe would preserve.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L60-L70">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="60" data-line="65"><code class="language-typescript">      fetch: jest.fn&lt;(...args: Parameters&lt;typeof fetch&gt;) =&gt; Promise&lt;Partial&lt;Awaited&lt;ReturnType&lt;typeof fetch&gt;&gt;&gt;&gt;&gt;(),
+    },
+  },
+});
+
+describe(&#39;queryUpgradeResponder&#39;, () =&gt; {
+  let queryUpgradeResponder: typeof queryUpgradeResponderType;
+
+  beforeAll(async() =&gt; {
+    ({ queryUpgradeResponder } = await import(&#39;../LonghornProvider&#39;));
+  });</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L354-L364">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="354" data-line="359"><code class="language-typescript">
+    expect(body.extraInfo.wslVersion).toBe(undefined);
+  });
+});
+
+describe(&#39;LonghornProvider.getSha512Sum&#39;, () =&gt; {
+  let LonghornProviderClass: typeof import(&#39;../LonghornProvider&#39;).default;
+
+  beforeAll(async() =&gt; {
+    ({ default: LonghornProviderClass } = await import(&#39;../LonghornProvider&#39;));
+  });</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L411-L421">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="411" data-line="416"><code class="language-typescript">    await expect(makeProvider()[&#39;getSha512Sum&#39;](&#39;https://example.test/cs&#39;))
+      .rejects.toThrow(/sha512/i);
+  });
+});
+
+describe(&#39;LonghornProvider.checkForUpdates&#39;, () =&gt; {
+  const cacheFile = path.join(cacheDir, &#39;updater-longhorn.json&#39;);
+  const assetName = &#39;Rancher.Desktop.Setup.9.9.9.msi&#39;;
+  const githubURL = &#39;https://api.github.com/repos/rancher-sandbox/rancher-desktop/releases/tags/v9.9.9&#39;;
+  const serverURL = &#39;http://127.0.0.1:8314&#39;;
+  let LonghornProviderClass: typeof import(&#39;../LonghornProvider&#39;).default;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts#L553-L563">pkg/rancher-desktop/main/update/__tests__/LonghornProvider.spec.ts</a></div>
+      <pre data-start="553" data-line="558"><code class="language-typescript">    }));
+
+    await expect(hasQueuedUpdate()).resolves.toBe(false);
+  });
+
+  it(&#39;queues an update staged from the servers this run would ask&#39;, async() =&gt; {
+    const { hasQueuedUpdate } = await import(&#39;../LonghornProvider&#39;);
+
+    fs.writeFileSync(cacheFile, JSON.stringify({
+      nextUpdateTime: Date.now() + 60_000,
+      apiURL:         &#39;https://api.github.com&#39;,</code></pre>
+    <p>Fix: nest a <code>describe(&#39;hasQueuedUpdate&#39;)</code> around the three cases, keeping the shared fixture.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><code>setHasQueuedUpdate</code> round-trips the parsed cache (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/LonghornProvider.ts#L248-L252"><code>LonghornProvider.ts:248-252</code></a>), so <code>apiURL</code> and <code>upgradeServer</code> survive by construction rather than by contract. A future rewrite that composes a fresh object would strip them and silently reopen the hole this PR closes, with every current test still green. <span class="pill pill-claude">Claude Opus 4.8</span> (future)</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Gating both overrides on <code>RD_FORCE_UPDATES_ENABLED</code> does more than tidy the environment. That flag already suppresses the <code>update-apply</code> IPC (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/index.ts#L72"><code>index.ts:72</code></a>) and the queued-install branch (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/index.ts#L284"><code>index.ts:284</code></a>), so a run that can redirect a release is structurally a run that cannot install one. <span class="pill pill-claude">Claude Opus 4.8</span> (in-scope)</li>
+      <li>Serving the release from a local server, rather than mocking <code>net.fetch</code>, is what lets the suite catch the bundling class of failure that unit tests cannot see. The tiny checksum-backed asset keeps that honest without a large download. <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (in-scope)</li>
+      <li>The provenance guard is applied at both readers of the cache (<code>hasQueuedUpdate</code> at line 211, <code>checkForUpdates</code> at line 434), with a comment at line 209 stating why one-sided enforcement would not hold. <span class="pill pill-claude">Claude Opus 4.8</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (in-scope)</li>
+      <li>Centralizing source identity in <code>updateSources()</code> keeps cache writes and both readers on identical provenance rules. <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (in-scope)</li>
+      <li><code>delete_pending_update</code> is called from <code>factory_reset</code> rather than only from the new suite, so the leak it prevents is closed for every bats file. It deletes entries inside <code>$PATH_CACHE</code> without removing the directory, which keeps <code>factory-reset.bats</code>&#39;s <code>assert_exists &quot;$PATH_CACHE&quot;</code> intact. <span class="pill pill-claude">Claude Opus 4.8</span> (in-scope)</li>
+      <li>The update server uses Node&#39;s own <code>http</code> module, with no external dependency for the test harness to drift against. <span class="pill pill-gemini">Gemini 3.5 Flash</span> (in-scope)</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No reviewer could execute the jest suite: the review worktrees carry no <code>node_modules</code>. Codex and Claude both stated this limitation; the assessments below rest on reading, plus the checks Codex could run (ShellCheck, shfmt, Node syntax checking, live responder/release/asset probes against the mock server, and macOS LaunchServices environment propagation).</p>
+    <p>Untested scenarios, highest risk first:</p>
+    <ol>
+      <li><em></em><code>setHasQueuedUpdate</code> preserving provenance.<em></em> See the Design Concern above. A one-line assertion that the fields survive a <code>setHasQueuedUpdate(true)</code> would pin the contract.</li>
+      <li><em></em><code>getUpdater</code> with <code>RD_FORCE_UPDATES_ENABLED</code> set and no responder override<em></em>, confirming a configured server passes through untouched. S3&#39;s fixture change covers this.</li>
+      <li><strong>The Linux AppImage and Win32 download paths</strong>, skipped by design (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/bats/tests/updater/upgrade.bats#L22-L27"><code>upgrade.bats:22-27</code></a>). The <code>win32</code> arm of <code>assetName()</code> is consequently never exercised.</li>
+      <li><strong>Whether the update server was reached at all.</strong> The request trace is written to <code>$PATH_LOGS/update-server.txt</code> but never asserted. Failure stays attributable, because a missed override fails at <code>Found version v9.9.9</code>, so the trace is correctly diagnostic rather than an assertion.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>All four reviewers converged: <code>docs/development/env.md</code> is accurate against the code. The <code>RD_GITHUB_API_URL</code> entry matches <code>updateSources()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/LonghornProvider.ts#L180-L185"><code>LonghornProvider.ts:180-185</code></a>), and the amended <code>RD_UPGRADE_RESPONDER_URL</code> entry matches the gate at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/index.ts#L109"><code>index.ts:109</code></a>, closing Round 2&#39;s I1. Alphabetical ordering is preserved, and a reader pairing either override with <code>RD_FORCE_UPDATES_ENABLED</code> finds one entry up that updates are then &quot;checked and downloaded, but <strong>not</strong> installed&quot;, so the consequence of the new requirement is discoverable without a cross-reference.</p>
+    <p>The comment corrections in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/bats/tests/containers/factory-reset.bats#L168"><code>factory-reset.bats:168</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/bats/tests/containers/reset.bats#L217"><code>reset.bats:217</code></a> now name the path electron-updater actually uses on darwin, matching what <code>delete_pending_update</code> removes.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Provenance records the overrides, not the configuration actually used</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/LonghornProvider.ts#L188-L193"><code>LonghornProvider.ts:188-193</code></a>). Confirmed accurate this round: <code>updateSources()</code> never reads <code>this.configuration.upgradeServer</code>, so a fork&#39;s cache is indistinguishable from an official one. Reaching it requires a second build writing the same cache path.</li>
+      <li><strong>Caches predating the provenance fields are discarded</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/pkg/rancher-desktop/main/update/LonghornProvider.ts#L135-L140"><code>LonghornProvider.ts:135-140</code></a>). Every existing installation pays one extra Upgrade Responder query and forgoes one launch&#39;s install-on-startup the first time it runs this build, then self-heals within the same session. Both halves are covered by the tests at lines 603 and 617.</li>
+      <li><strong>macOS installs nothing after the download</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/bats/tests/updater/upgrade.bats#L86-L87"><code>upgrade.bats:86-87</code></a>). The Squirrel.Mac rejection is expected and leaves an error in <code>update.log</code> that no assertion covers.</li>
+      <li><strong>The suite runs on macOS only</strong> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/9a859f929e5d7f696372642b5ca8cbc6be7b5d42/bats/tests/updater/upgrade.bats#L22-L27"><code>upgrade.bats:22-27</code></a>), with per-platform reasons recorded for Linux (AppImage-only downloads) and Windows (bats runs in WSL).</li>
+    </ul>
+    <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
+    <p>Every finding from Rounds 1 and 2 carries a disposition, so none are outstanding. These were declined and stay declined; the surrounding code has not materially changed:</p>
+    <ul>
+      <li><strong>Installing the staged update</strong> — declined Round 1: it would replace the binary under test.</li>
+      <li><strong>A second consecutive run on one machine</strong> — declined Round 1: closed by the Round-1 I1 fix.</li>
+      <li><strong>macOS behaviour after the download</strong> — commented Round 1: the Squirrel.Mac rejection is expected and installs nothing.</li>
+      <li><strong>Checksum mismatch and missing-asset paths</strong> — declined Round 1: checksum failures have unit coverage, and asset discovery belongs with the separately tracked <code>checkForUpdates</code> work. The per-platform <code>assetFilter</code> and the two rejection branches remain pre-existing, out-of-scope logic this PR does not touch.</li>
+      <li><strong>Provenance records the environment overrides, not the configuration the request actually used</strong> — commented Round 2 (I3): the full fix restructures how <code>hasQueuedUpdate</code> obtains its configuration.</li>
+      <li><strong>The bundled configuration as part of provenance</strong> — commented Round 2: same scope limit.</li>
+      <li><strong>The asset name comes from the server&#39;s arch, not the app&#39;s</strong> — commented Round 2 (S7): reaching it requires a deliberately mismatched node.</li>
+      <li><em></em><code>upgradeServer</code> names two different things in one file<em></em> — skipped Round 2 (S8): naming polish, and the doc comment distinguishes the two meanings.</li>
+      <li><em></em><code>delete_pending_update</code> has no direct assertion<em></em> — skipped Round 2: asserting it needs a staged update, which only this suite produces.</li>
+      <li><em></em><code>rdctl reset --factory</code> misses the packaged updater cache on macOS and Linux<em></em> — tracked separately, untouched by this PR.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude-opus-4-8"><span class="pill pill-claude">Claude Opus 4.8</span> <a href="#claude-opus-4-8" class="pilcrow">&#182;</a></h3>
+    <p>The only reviewer to produce findings, and all four survived verification with accurate citations. Its first attempt hit the 900-second watchdog with the analysis already complete, dying while it verified two line-number citations; the retry at 1800 seconds finished in roughly 17 minutes, so the budget was the binding constraint rather than the model. S1 traced a three-hop mechanism from the <code>paths</code> mock through <code>Log</code>&#39;s constructor to an unclosed <code>WriteStream</code>, and it labelled the Windows consequence as reasoned rather than reproduced, which made the finding easy to accept at the right severity. It also spotted that Round 2&#39;s own cleanup fix introduced S1, which is precisely the residual-gap check the round-two-or-later protocol asks for.</p>
+    <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
+    <p>Clean, and the most rigorous about its own limits. It stated plainly that jest could not run because the checkout has no JavaScript dependencies, which matches the known worktree constraint exactly, and it compensated with what it could execute: ShellCheck, shfmt, Node syntax checks, live probes against the mock server, and a macOS environment-propagation check. That makes its clean verdict the best-supported of the three clean ones. It still missed all four findings, marking each of the three affected files &quot;Reviewed, no issues.&quot;</p>
+    <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
+    <p>Clean, with a complete coverage summary, but its Acknowledged Limitations section is close to a verbatim restatement of the declined-items list injected into the prompt. That is reflection rather than verification, and it is the clearest evidence this round that prior-round context can substitute for independent analysis instead of focusing it. It hit a 429 and recovered on backoff, producing the shortest review of the four.</p>
+    <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
+    <p>Clean, and the weakest of the four. It listed a &quot;Pre-existing Read-Modify-Write Race ... acknowledged in Round 2&quot; among its limitations, but Round 2&#39;s review contains no such acknowledgment; I dropped the attribution rather than propagate it. It also announced it would run the jest suite in a tree with no <code>node_modules</code>, then reported no result. Much of its prose was evaluative filler (&quot;beautifully addressed&quot;, &quot;exemplary&quot;, &quot;production-ready&quot;) carrying no reviewable content. Both Gemini reviewers converged on &quot;clean&quot;, but they share a model family, so that agreement counts as one opinion.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 4.8</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>17m 34s</td><td>9m 40s</td><td>2m 57s</td><td>2m 33s</td></tr>
+        <tr><td>Findings</td><td>4S</td><td>none</td><td>none</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>52 (Bash 38, Read 14)</td><td>—</td><td>12 (run<em>shell</em>command 12)</td><td>34 (read<em>file 21, grep</em>search 10, update_topic 2)</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>3</td><td>0</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Unique insights</td><td>4</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>11</td><td>11</td><td>11</td><td>11</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>3</td><td>3</td><td>3</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>4S</strong></td><td><strong>none</strong></td><td><strong>none</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Claude provided effectively all of this round&#39;s value, and it was also the one agent the harness nearly lost to a timeout. Codex earned the most trust per word by bounding its claims to what it had actually executed. The two Gemini reviewers added little beyond confirming that nothing obvious was wrong, and Flash actively cost verification time with a fabricated prior-round citation. For a late-round review of an already-swept diff, the pattern suggests weighting the deep reviewer heavily and treating family-siblings as a single vote.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Set the per-pass agent deadline from the reasoning effort and the assembled prompt length, not from diff size alone. A small diff reviewed at maximum effort against a long injected context routinely outruns a deadline chosen by byte count, and a watchdog kill costs a full retry. When retrying after a timeout, budget the retry above the deadline that just expired rather than repeating it.</li>
+      <li>When injecting prior-round context, state the declined findings and the reasons they were declined, but do not tell agents that a clean review is an expected outcome. Naming the expected result raises the reporting threshold for every reviewer at once, so a round in which most agents return clean then carries less information than it appears to.</li>
+      <li>Require each reviewer to mark every claimed verification as executed or reasoned, and to name what blocked any execution it could not perform. A review that announces a test run and then reports no result is indistinguishable from one that ran the tests and found nothing.</li>
+      <li>Anchor the polling gate&#39;s forbidden-path patterns to the review workdir&#39;s generated outputs rather than matching <code>review-*.md</code> anywhere in a command. The substring match denies legitimate reads of context files whose names embed the word, such as a repository-overview file passed in during setup.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] Reviewers cannot execute the jest suite from a review worktree, because the tree carries no <code>node_modules</code>. Running jest anyway fails with <code>Cannot find name &#39;it&#39;</code>-style errors that read as broken test files rather than a missing dependency. Treat any claimed green jest run from a review worktree as unverified.</li>
+      <li>[repo] <code>yarn test</code> runs only in the <code>ubuntu-latest</code> job of <code>.github/workflows/test.yaml</code>; the <code>windows-latest</code> and <code>macos-latest</code> matrix jobs run lint and license checks without running jest. A test failure mode specific to Windows or macOS therefore reaches local developers rather than CI, and should be severity-rated on that basis.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){var n=/[*&][^\s[\]{},]+/,r=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,t="(?:"+r.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+r.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,(function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"})),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var r="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\\]|\\}|(?:[\r\n]\\s*)?#))".replace(/<<prop>>/g,(function(){return t})).replace(/<<value>>/g,(function(){return e}));return RegExp(r,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)\\S[^\r\n]*(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,(function(){return t}))),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,(function(){return t})).replace(/<<key>>/g,(function(){return"(?:"+a+"|"+d+")"}))),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?(?:[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?))?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("false|true","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:r,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
