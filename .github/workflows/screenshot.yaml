@@ -128,7 +128,7 @@ jobs:
           if [[ $name =~ ^[0-9]+_ ]]; then
               name="${name#*_}"
           fi
-          if [[ name == "intro" ]]; then
+          if [[ "$name" == "intro.png" ]]; then
             continue
           fi
           out="out/${window}/${platform}_${name}"
