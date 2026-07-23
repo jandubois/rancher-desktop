@@ -219,6 +219,7 @@ h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1
     <div class="card card-neutral">
     <p>The download-wedge root cause is fixed correctly, and the suite is green (34/34, run first-party at the review SHA). The new <code>installStarted</code> latch, though, fails in two opposite ways: a cancelled quit leaves it stuck, so every later check is skipped (I1), and an unrelated check error clears it and re-enables a second install (I2). Separately, clicking the new Retry button after a download failure can hide the whole card (I3).</p>
     <p>This round re-reviews the amended commit that addressed every Round-1 finding; all Round-1 fixes are confirmed in the tree. Three of four reviewers found the cancelled-quit wedge independently, and Codex reproduced two of the three Important findings with runnable harnesses. Claude rated the wedge only a Suggestion because it checked the <code>before-quit</code> handler but missed the Preferences-window <code>close</code> path that actually cancels the quit.</p>
+    <p>&gt; <em></em>Addressed 2026-07-23 in commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/fa7d39869"><code>fa7d39869</code></a> (amended).<em></em> The findings below read as originally written, so the cited line numbers and code predate the fix. Each finding ends with its resolution, and the Resolution table at the end lists every outcome.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -321,6 +322,7 @@ Electron.app.on(&#39;window-all-closed&#39;, () =&gt; {
       }
     },</code></pre>
     <p>Fix: clear <code>installStarted</code> (and the renderer&#39;s <code>applying</code>) when a quit is cancelled, and set the latch only once the quit is irrevocable.</p>
+    <p><strong>Resolution: Fixed.</strong> The <code>!installStarted</code> gate was removed from <code>triggerUpdateCheck</code>, so a stuck latch no longer wedges checks.</p>
     </div>
     <div class="card card-important" data-file="pkg/rancher-desktop/main/update/index.ts">
       <div class="finding-title" id="I2">
@@ -366,6 +368,7 @@ Electron.app.on(&#39;window-all-closed&#39;, () =&gt; {
       }
     },</code></pre>
     <p>Fix: scope the clear to install-originated errors, or track the in-flight check so its failure does not release install state.</p>
+    <p><strong>Resolution: Fixed.</strong> A <code>checksInFlight</code> counter guards the latch release: the <code>error</code> handler clears <code>installStarted</code> only when no check is in flight, so a check failure cannot re-enable a second install. Accepted residual: a genuine install failure that coincides with an in-flight check leaves the latch set until a later error with no check running, or a restart.</p>
     </div>
     <div class="card card-important" data-file="pkg/rancher-desktop/main/update/index.ts">
       <div class="finding-title" id="I3">
@@ -422,6 +425,7 @@ Electron.app.on(&#39;window-all-closed&#39;, () =&gt; {
       updateState.available = true;
       setHasQueuedUpdate(true);</code></pre>
     <p>Fix: let <code>update-available</code>/<code>update-not-available</code> own <code>available</code>, and drop the <code>available = false</code> in <code>checking-for-update</code>, so a first offline check stays hidden while a download-failed → retry-fails sequence keeps the prior <code>true</code>.</p>
+    <p><strong>Resolution: Fixed.</strong> <code>checking-for-update</code> no longer clears <code>available</code>; the definitive events own it, so a failed retry keeps the card up.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -457,6 +461,7 @@ Electron.app.on(&#39;window-all-closed&#39;, () =&gt; {
       throw new Error(&#39;updater: event update-available: info is not of type LonghornUpdateInfo&#39;);
     }</code></pre>
     <p>Fix: serialize the queued-flag writes, or clear the flag only on <code>update-not-available</code> or a confirmed newer offer rather than on every check start.</p>
+    <p><strong>Resolution: Skipped.</strong> Pre-existing un-serialized cache race; the added write self-corrects on the next event or launch.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/__tests__/UpdateStatus.spec.ts">
       <div class="finding-title" id="S2">
@@ -479,6 +484,7 @@ Electron.app.on(&#39;window-all-closed&#39;, () =&gt; {
 </code></pre>
     <p>The main process never broadcasts <code>available: true</code> without <code>info</code>. <code>update-available</code> sets both, and the error restore requires <code>info.version === stagedVersion</code>. After the <code>errorChecking</code> removal, this fixture asserts empty text for a state production cannot produce, so it adds no real coverage. The nearby <code>offers to retry a download that failed</code> test sets <code>available: true</code> after a failed retry, the same assumption I3 shows the main process does not hold, so it gives false confidence there too.</p>
     <p>Fix: drop the impossible-state fixture; the &quot;no updates available&quot; test already covers the hidden card.</p>
+    <p><strong>Resolution: Fixed.</strong> The impossible-state fixture was removed.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
