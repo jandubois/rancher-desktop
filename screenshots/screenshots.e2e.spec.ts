@@ -628,31 +628,25 @@ test.describe.serial('Main App Test', () => {
 
   test('Intro Image', async({ colorScheme }) => {
     await navPage.navigateTo('General');
-    const bounds = await navPage.page.evaluate(() => {
-      window.resizeTo(1024, 768);
-
-      return {
-        top: window.screenTop, left: window.screenLeft, width: window.outerWidth, height: window.outerHeight,
-      };
-    });
+    const mainWindow = await electronApp.browserWindow(page);
+    const bounds = await mainWindow.evaluate(browserWindow => browserWindow.getBounds());
 
     await navPage.preferencesButton.click();
-    await electronApp.waitForEvent('window', page => /preferences/i.test(page.url()));
-    const preferencesPage = electronApp.windows()[1];
-
-    await preferencesPage.evaluate((bounds) => {
-      const {
-        top, left, width, height,
-      } = bounds;
-
-      window.moveTo(left + (width - window.outerWidth) / 2, top + (height - window.outerHeight) / 2);
-    }, bounds);
+    const preferencesPage = await electronApp.waitForEvent('window', page => /preferences/i.test(page.url()));
+    const preferencesWindow = await electronApp.browserWindow(preferencesPage);
 
     try {
       await preferencesPage.emulateMedia({ colorScheme });
+      await preferencesWindow.evaluate((browserWindow, bounds) => {
+        const { width, height } = browserWindow.getBounds();
+
+        browserWindow.setPosition(
+          Math.round(bounds.x + (bounds.width - width) / 2),
+          Math.round(bounds.y + (bounds.height - height) / 2));
+      }, bounds);
       await preferencesPage.waitForTimeout(250);
       await preferencesPage.bringToFront();
-      await screenshot.take('intro', true);
+      await screenshot.take('intro', bounds);
     } finally {
       preferencesPage.close({ runBeforeUnload: true });
     }

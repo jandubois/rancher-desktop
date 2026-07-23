@@ -12,6 +12,7 @@ import { spawnFile } from '@pkg/utils/childProcess';
 import { Log } from '@pkg/utils/logging';
 
 import type { Page } from '@playwright/test';
+import type { Rectangle } from 'electron';
 
 interface ScreenshotsOptions {
   directory: string;
@@ -51,19 +52,24 @@ export class Screenshots {
     );
   }
 
-  protected async screenshot(title: string, includeAll = false) {
+  /**
+   * @param bounds The screen region the window occupies.  When given, capture
+   *   the screen instead of the window, so that windows stacked on top of it
+   *   are included.
+   */
+  protected async screenshot(title: string, bounds?: Rectangle) {
     const outPath = this.buildPath(title);
 
     try {
       switch (process.platform) {
       case 'darwin':
-        await this.screenshotDarwin(outPath, includeAll);
+        await this.screenshotDarwin(outPath, bounds);
         break;
       case 'win32':
-        await this.screenshotWindows(outPath, includeAll);
+        await this.screenshotWindows(outPath, bounds);
         break;
       default:
-        await this.screenshotLinux(outPath, includeAll);
+        await this.screenshotLinux(outPath, bounds);
       }
     } catch (e) {
       console.error('Failed to take screenshot', { error: e });
@@ -71,28 +77,60 @@ export class Screenshots {
     }
   }
 
-  protected async screenshotDarwin(outPath: string, includeAll: boolean) {
+  protected async screenshotDarwin(outPath: string, bounds?: Rectangle) {
+    if (bounds) {
+      // `-l` composites the window contents, and the shadow we drop to keep the
+      // image window-sized is all that separates overlapping windows.
+      const { x, y, width, height } = bounds;
+
+      await spawnFile('screencapture', ['-R', `${ x },${ y },${ width },${ height }`, outPath], { stdio: this.log });
+
+      return;
+    }
+
     const { stdout: windowId, stderr } = await spawnFile('GetWindowID', [this.appBundleTitle, this.windowTitle], { stdio: 'pipe' });
 
     if (!windowId) {
       throw new Error(`Failed to find window ID for ${ this.windowTitle }: ${ stderr || '(no stderr)' }`);
     }
-    const args = [...(includeAll ? [] : ['-a']), '-o', '-l', windowId.trim(), outPath];
 
-    await spawnFile('screencapture', args, { stdio: this.log });
+    await spawnFile('screencapture', ['-a', '-o', '-l', windowId.trim(), outPath], { stdio: this.log });
   }
 
-  protected async screenshotWindows(outPath: string, includeAll: boolean) {
+  protected async screenshotWindows(outPath: string, bounds?: Rectangle) {
     const script = path.resolve(import.meta.dirname, 'screenshot.ps1');
     const args = ['-ExecutionPolicy', 'Bypass', script, '-FilePath', outPath, '-Title', `'${ this.windowTitle }'`];
 
-    if (!includeAll) {
+    // Raising the window would hide the windows stacked on top of it.
+    if (!bounds) {
       args.push('-Foreground');
     }
     await spawnFile('powershell.exe', args, { stdio: this.log });
   }
 
-  protected async screenshotLinux(outPath: string, includeAll: boolean) {
+  protected async screenshotLinux(outPath: string, bounds?: Rectangle) {
+    const args: string[] = [];
+
+    if (bounds) {
+      // A window capture would exclude windows stacked on top, so crop the root
+      // window to the region the window occupies.
+      const { x, y, width, height } = bounds;
+
+      args.push('-window', 'root', '-crop', `${ width }x${ height }+${ x }+${ y }`);
+    } else {
+      args.push('-window', await this.findLinuxWindowId());
+    }
+    args.push(outPath);
+
+    // If `gm` is available, use `gm import`; otherwise, use `import`.
+    if (await (which('gm', { nothrow: true }))) {
+      await spawnFile('gm', ['import', ...args], { stdio: this.log });
+    } else {
+      await spawnFile('import', args, { stdio: this.log });
+    }
+  }
+
+  protected async findLinuxWindowId(): Promise<string> {
     // Find the target window; note that this is a child window of the window
     // frame, so we can't use it directly.
     let windowId;
@@ -112,14 +150,8 @@ export class Screenshots {
     if (!windowId) {
       throw new Error(`Failed to find window ID for ${ this.windowTitle }`);
     }
-    // If `gm` is available, use `gm import`; otherwise, use `import`.
-    const args = ['-window', windowId, outPath];
 
-    if (await (which('gm', { nothrow: true }))) {
-      await spawnFile('gm', ['import', ...args], { stdio: this.log });
-    } else {
-      await spawnFile('import', args, { stdio: this.log });
-    }
+    return windowId;
   }
 }
 
@@ -129,23 +161,19 @@ export class MainWindowScreenshots extends Screenshots {
     this.windowTitle = 'Rancher Desktop';
   }
 
-  async take(tabName: Parameters<NavPage['navigateTo']>[0], navPage?: NavPage, timeout?: number, includeAll?: boolean): Promise<void>;
-  async take(screenshotName: string, includeAll?: boolean): Promise<void>;
-  async take(name: string, navPageOrIncludeAll?: NavPage | boolean, timeout = 200, includeAll = false) {
-    let navPage: NavPage | undefined;
+  async take(tabName: Parameters<NavPage['navigateTo']>[0], navPage?: NavPage, timeout?: number): Promise<void>;
+  async take(screenshotName: string, bounds?: Rectangle): Promise<void>;
+  async take(name: string, navPageOrBounds?: NavPage | Rectangle, timeout = 200) {
+    const navPage = navPageOrBounds instanceof NavPage ? navPageOrBounds : undefined;
+    const bounds = navPageOrBounds instanceof NavPage ? undefined : navPageOrBounds;
 
-    if (typeof navPageOrIncludeAll === 'boolean') {
-      includeAll = navPageOrIncludeAll;
-    } else {
-      navPage = navPageOrIncludeAll;
-    }
     if (navPage) {
       await navPage.navigateTo(name as Parameters<NavPage['navigateTo']>[0]);
       await this.page.waitForTimeout(timeout);
     }
 
     await this.createScreenshotsDirectory();
-    await this.screenshot(name, includeAll);
+    await this.screenshot(name, bounds);
   }
 }
 
