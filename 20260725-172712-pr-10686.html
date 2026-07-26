@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260725-172712-pr-10686</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Tables written directly in a section body. parseTable classes only the
+ * Retro and Summary tables, so every other one arrives unclassed. */
+table:not([class]) { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+table:not([class]) th, table:not([class]) td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+table:not([class]) th { background: #f3f4f6; font-weight: 600; }
+table:not([class]) tr:nth-child(even) { background: #f9fafb; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260725-172712-pr-10686</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-07-25 17:27</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of PR 10686)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/haidargit">@haidargit</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10686" class="gh-ref" data-title="Ignore net.fetch status-0 RangeError on network failure" data-state="open" data-type="pr">#10686</a> — Ignore net.fetch status-0 RangeError on network failure</td></tr>
+      <tr><td>Branch</td><td><code>haidargit/fix-electron-net-fetch-range-error</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a432a67db"><code>a432a67db</code></a> Ignore net.fetch status-0 RangeError on network failure</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a432a67dba8a97beeb32f349cd46cf61faf9e488"><code>a432a67dba8a97beeb32f349cd46cf61faf9e488</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the workaround is sound, but as written it also disables Electron&#39;s crash dialog for every other main-process exception</td></tr>
+      <tr><td>Wall-clock time</td><td><code>15 min 8 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR ignores the undici status-0 <code>RangeError</code> that Electron&#39;s <code>net.fetch</code> throws from its own <code>&#39;response&#39;</code> listener, a real defect no call-site <code>try</code>/<code>catch</code> can reach. But registering any <code>uncaughtException</code> listener makes Electron&#39;s built-in handler bail out, so the &quot;A JavaScript error occurred in the main process&quot; dialog disappears for every exception, including the one in the issue this PR cites. Suppressing the throw also leaves the originating fetch promise pending forever.</p>
+    <p>All four reviewers flagged the global side effect; three misdiagnosed its mechanism as a lost process exit. Findings below use the corrected mechanism, verified by probe.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical" data-file="background.ts">
+      <div class="finding-title" id="C1">
+        <span class="finding-num">C1.</span> The handler silences Electron&#39;s crash dialog for every uncaught exception <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#C1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L139-L149">background.ts</a></div>
+      <pre data-start="139" data-line="144"><code class="language-ts">  } else {
+    console.error(&#39;UnhandledRejectionWarning:&#39;, reason);
+  }
+});
+
+process.on(&#39;uncaughtException&#39;, (error: any) =&gt; {
+  if (error instanceof RangeError &amp;&amp;
+      error.message.includes(&#39;init[&quot;status&quot;] must be in the range of 200 to 599&#39;)) {
+    // net.fetch throws a synchronous RangeError when a request fails with status 0
+    // (e.g. network dropped), so a try/catch can&#39;t catch it. Ignore that case.
+    console.error(&#39;Ignoring net.fetch RangeError on network failure:&#39;, error);</code></pre>
+    <p>Electron 43.1.1 registers its own handler during <code>browser_init</code>, guarded by <code>process.listenerCount(&quot;uncaughtException&quot;)&gt;1||…dialog.showErrorBox(&quot;A JavaScript error occurred in the main process&quot;,…)</code>. Adding this listener makes the count 2, so no main-process exception raises that dialog again. Unmatched errors reach <code>console.error(&#39;UncaughtException:&#39;, error)</code> at line 154, which writes to <code>background.log</code> (line 70 shadows <code>console</code> with <code>Logging.background</code>) and returns.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L65-L75">background.ts</a></div>
+      <pre data-start="65" data-line="70"><code class="language-typescript">
+Electron.app.setPath(&#39;userData&#39;, path.join(paths.appHome, &#39;electron&#39;));
+Electron.app.setPath(&#39;cache&#39;, paths.cache);
+Electron.app.setAppLogsPath(paths.logs);
+
+const console = Logging.background;
+
+// Do an early check for debugging enabled via the environment variable so that
+// we can turn on extra logging to troubleshoot startup issues.
+if (settingsImpl.runInDebugMode(false)) {
+  setLogLevel(&#39;debug&#39;);</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L149-L159">background.ts</a></div>
+      <pre data-start="149" data-line="154"><code class="language-typescript">    console.error(&#39;Ignoring net.fetch RangeError on network failure:&#39;, error);
+
+    return;
+  }
+
+  console.error(&#39;UncaughtException:&#39;, error);
+});
+
+Electron.app.on(&#39;second-instance&#39;, async() =&gt; {
+  await protocolsRegistered;
+  console.warn(&#39;A second instance was started&#39;);</code></pre>
+    <p>The process keeps running either way. Electron&#39;s handler body contains only <code>showErrorBox</code>, and its presence already suppressed Node&#39;s default exit before this PR, so what the change costs is the user-visible signal. That includes <code>RangeError: Invalid string length</code>, the error in cited issue <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a>, which takes exactly this branch.</p>
+    <p>Fix: keep the dialog for unmatched errors via the existing helper (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L1252"><code>background.ts:1252</code></a>), which also honours <code>--no-modal-dialogs</code>:</p>
+      <pre><code class="language-diff">+  const stack = error?.stack ?? `${ error?.name }: ${ error?.message }`;
++
+   console.error(&#39;UncaughtException:&#39;, error);
++  showErrorDialog(&#39;A JavaScript error occurred in the main process&#39;, `Uncaught Exception:\n${ stack }`);</code></pre>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="background.ts">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Ignoring the exception leaves the <code>net.fetch</code> promise pending forever <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L146-L156">background.ts</a></div>
+      <pre data-start="146" data-line="151"><code class="language-ts">      error.message.includes(&#39;init[&quot;status&quot;] must be in the range of 200 to 599&#39;)) {
+    // net.fetch throws a synchronous RangeError when a request fails with status 0
+    // (e.g. network dropped), so a try/catch can&#39;t catch it. Ignore that case.
+    console.error(&#39;Ignoring net.fetch RangeError on network failure:&#39;, error);
+
+    return;
+  }
+
+  console.error(&#39;UncaughtException:&#39;, error);
+});
+</code></pre>
+    <p>In Electron 43.1.1&#39;s <code>net-fetch.ts</code> the <code>new Response(…, {status: resp.statusCode, …})</code> sits inside the <code>ClientRequest</code> <code>&#39;response&#39;</code> listener, outside any <code>try</code>, and the sibling <code>&#39;error&#39;</code> listener is the only rejection path. When the constructor throws, the deferred promise never settles, so every <code>await net.fetch(…)</code> on that request hangs. Ignoring the throw keeps the app alive; the caller learns nothing.</p>
+    <p><code>triggerUpdateCheck</code> never returns from <code>await autoUpdater.checkForUpdates()</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/pkg/rancher-desktop/main/update/index.ts#L346"><code>main/update/index.ts:346</code></a>), so neither its <code>catch</code> nor the timer rearm at line 378 runs, and auto-update stops for the session, the exact failure the comment at line 364 claims to prevent. On the cached-update path startup blocks at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L311"><code>background.ts:311</code></a>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/pkg/rancher-desktop/main/update/index.ts#L341-L351">pkg/rancher-desktop/main/update/index.ts</a></div>
+      <pre data-start="341" data-line="346"><code class="language-typescript"> * Trigger an update check, and set up the timer to re-check again later.
+ */
+async function triggerUpdateCheck() {
+  if (state !== State.DOWNLOADING) {
+    try {
+      const result = await autoUpdater.checkForUpdates();
+
+      if (!result) {
+        // App update is disabled.
+        return;
+      }</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L306-L316">background.ts</a></div>
+      <pre data-start="306" data-line="311"><code class="language-typescript">
+    mainEvents.emit(&#39;settings-update&#39;, cfg);
+
+    // Set up the updater; we may need to quit the app if an update is already
+    // queued.
+    if (await setupUpdate(cfg.application.updater.enabled, true)) {
+      gone = true;
+      // The update code will trigger a restart; don&#39;t do it here, as it may not
+      // be ready yet.
+      console.log(&#39;Will apply update; skipping startup.&#39;);
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L359-L383">background.ts</a></div>
+      <pre data-start="359" data-line="364-378"><code class="language-typescript">    const fileContents = await fs.promises.readFile(
+      path.join(paths.appHome, &#39;backend.lock&#39;),
+      &#39;utf-8&#39;,
+    );
+
+    return JSON.parse(fileContents);
+  } catch (ex: any) {
+    if (ex.code === &#39;ENOENT&#39;) {
+      return null;
+    } else {
+      throw ex;
+    }
+  }
+}
+
+/**
+ * Emits the &#39;backend-locked-update&#39; event.
+ */
+function updateBackendLockState(backendIsLocked: string, action?: string): void {
+  mainEvents.emit(&#39;backend-locked-update&#39;, backendIsLocked, action);
+}
+
+/**
+ * Checks for the existence of the &#39;backend.lock&#39; file and emits the
+ * &#39;backend-locked-update&#39; event to notify listeners about the current lock</code></pre>
+    <p>Fix: give these calls a deadline, as <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L837"><code>background.ts:837</code></a> already does, since the abort listener rejects the same promise. Every other main-process site lacks one, including <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/pkg/rancher-desktop/main/update/LonghornProvider.ts#L340"><code>LonghornProvider.ts:340</code></a>, <code>:398</code>, <code>:460</code>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/pkg/rancher-desktop/backend/k3sHelper.ts#L396"><code>k3sHelper.ts:396</code></a>, <code>:447</code>, <code>:809</code>, <code>steve.ts:228</code>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/pkg/rancher-desktop/main/extensions/manager.ts#L258"><code>manager.ts:258</code></a>.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="background.ts">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> The filter matches an unpinned Node-internal message, with no test <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L140-L151">background.ts</a></div>
+      <pre data-start="140" data-line="145-146"><code class="language-ts">    console.error(&#39;UnhandledRejectionWarning:&#39;, reason);
+  }
+});
+
+process.on(&#39;uncaughtException&#39;, (error: any) =&gt; {
+  if (error instanceof RangeError &amp;&amp;
+      error.message.includes(&#39;init[&quot;status&quot;] must be in the range of 200 to 599&#39;)) {
+    // net.fetch throws a synchronous RangeError when a request fails with status 0
+    // (e.g. network dropped), so a try/catch can&#39;t catch it. Ignore that case.
+    console.error(&#39;Ignoring net.fetch RangeError on network failure:&#39;, error);
+
+    return;</code></pre>
+    <p>The text comes from the undici copy bundled in Node, not from a stable API, and nothing in the repo pins it; an Electron bump can reword it and the workaround stops matching silently. The wording is correct today: it appears verbatim in the shipped Electron 43.1.1 binary and reproduces on Node v22.14.0 via <code>new Response(null, { status: 0 })</code>.</p>
+    <p>Fix: extract the predicate into <code>@pkg/utils/</code> and unit-test it against a real thrown error, so a wording change fails a test rather than a user&#39;s network drop:</p>
+      <pre><code class="language-ts">export function isNetFetchStatusZeroError(error: unknown): boolean {
+  return error instanceof RangeError &amp;&amp;
+    error.message.includes(&#39;init[&quot;status&quot;] must be in the range of 200 to 599&#39;);
+}</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="background.ts">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> The comment misstates who throws, and omits the consequence <span class="pill pill-claude">Claude Opus 5</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L142-L153">background.ts</a></div>
+      <pre data-start="142" data-line="147-148"><code class="language-ts">});
+
+process.on(&#39;uncaughtException&#39;, (error: any) =&gt; {
+  if (error instanceof RangeError &amp;&amp;
+      error.message.includes(&#39;init[&quot;status&quot;] must be in the range of 200 to 599&#39;)) {
+    // net.fetch throws a synchronous RangeError when a request fails with status 0
+    // (e.g. network dropped), so a try/catch can&#39;t catch it. Ignore that case.
+    console.error(&#39;Ignoring net.fetch RangeError on network failure:&#39;, error);
+
+    return;
+  }
+</code></pre>
+    <p><code>net.fetch</code> returns a promise and never throws. Electron&#39;s <code>&#39;response&#39;</code> listener constructs the undici <code>Response</code>, and that constructor throws, outside the promise chain. A reader of this comment concludes the caller gets a rejection, when in fact the promise never settles (I1). The comment is the only record of why the handler exists, so it carries the reasoning for whoever removes it.</p>
+    <p>Fix: name the thrower and the cost. Electron builds the <code>Response</code> inside the <code>&#39;response&#39;</code> listener; with <code>status: 0</code> undici&#39;s constructor throws there, so the promise never settles and no call-site <code>catch</code> can see it. Ignoring keeps the app alive, and the awaiting caller still needs its own timeout.</p>
+    </div>
+    <div class="card card-suggestion" data-file="">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> &quot;Relates to <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a>&quot; claims a connection the change does not have <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+    <p>Issue <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a>&#39;s dialog reads <code>RangeError: Invalid string length</code> at <code>Socket.&lt;anonymous&gt;</code>, a V8 string-length overflow while accumulating stream data, unrelated to undici&#39;s status validation. Two independent checks confirm it: the first <code>net.fetch</code> in this repo arrived in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/61eca6601"><code>61eca6601</code></a> (2023-11-14), four months after the issue was filed, and <code>v1.8.1</code> shipped Electron 20.3.8. The only connection the code creates is C1&#39;s, where <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a>&#39;s dialog stops appearing while its underlying breakage remains.</p>
+    <p>Fix: drop the reference, or state the real relationship (a second, distinct <code>RangeError</code> seen through the same dialog) and file a separate issue for the status-0 case.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>A global exception filter is the wrong layer for a per-call-site failure (in-scope)</strong> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. One library call cannot settle its promise, and the compensation is a process-wide switch in <code>background.ts</code> that knows nothing about which request failed. A shared <code>netFetch()</code> wrapper in <code>@pkg/utils/</code> that always attaches an <code>AbortSignal.timeout</code> would give every caller a rejection it can handle, and would shrink the global handler&#39;s job to &quot;don&#39;t show a dialog for this one known-benign escape.&quot;</li>
+      <li><strong>The workaround has no upstream anchor (in-scope)</strong> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. The real bug belongs to Electron: <code>net.fetch</code> should reject its promise instead of throwing out of its own event listener. A GitHub search turned up no matching electron/electron issue, so filing one and linking it from the comment would give this code a removal condition. Without that, it stays forever.</li>
+      <li><strong>Both rethrow-style fixes proposed by reviewers are worse than the current code (in-scope)</strong> [orchestrator]. Removing the listener and throwing from inside the handler kills the process: Node treats it as an internal handler failure and exits 7 (measured on v22.14.0). Removing the listener and rethrowing in a <code>queueMicrotask</code> does restore the dialog, but it also disarms the status-0 workaround permanently, since the listener is gone for the rest of the session. Calling <code>showErrorDialog</code> directly (C1) avoids both.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>The filter checks the error type and the distinctive undici message, so it does not swallow every <code>RangeError</code> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span>.</li>
+      <li>The ignored error still reaches <code>background.log</code>, preserving evidence of the network failure <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span>.</li>
+      <li>The handler mirrors the adjacent <code>unhandledRejection</code> handler at lines 136-142, so it reads consistently with the file <span class="pill pill-claude">Claude Opus 5</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>CI is green at this SHA: <code>lint</code> on macOS and Windows, <code>test</code>, both <code>e2e-tests</code> runs, and packaging for all four platforms. No test accompanies the change, and <code>background.ts</code> has no unit spec, so nothing exercises either branch of the new handler.</p>
+    <p>Untested scenarios, highest risk first:</p>
+    <ol>
+      <li><strong>An unrelated main-process exception still reaches the user.</strong> Nothing asserts that a deliberate throw produces any user-visible signal. C1 shipped precisely because this is unverified.</li>
+      <li><strong>The status-0 path itself.</strong> No test drives <code>net.fetch</code> to a status-0 response, so neither the handler nor the resulting hang (I1) is exercised. <code>main/update/__tests__/LonghornProvider.spec.ts</code> mocks <code>net.fetch</code> with resolved values only, which is why the hang is invisible to the suite.</li>
+      <li><strong>The message match (S1).</strong> Nothing fails when the undici wording changes; the filter degrades silently on the next Electron bump.</li>
+      <li><strong>Startup with a queued update while offline.</strong> This is the path where an unsettled fetch blocks startup at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L311"><code>background.ts:311</code></a>.</li>
+    </ol>
+    <p>The predicate extraction in S1 is the cheapest coverage available; the rest need e2e or a fake <code>net</code> module.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No user-facing documentation is needed for main-process behaviour with no settings surface. Two in-repo corrections stand: the inline comment describes the throw&#39;s origin wrongly (S2), and the commit body&#39;s issue reference is inaccurate (S3). The handler also deserves a sentence recording the <code>listenerCount &gt; 1</code> interaction, since that constraint is invisible from the code and any future edit must respect it.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Single commit, single concept, signed off, subject matching the diff. The body&#39;s &quot;Relates to <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a>&quot; is the one problem (S3).</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>Code comment</strong>, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/background.ts#L147-L148"><code>background.ts:147-148</code></a>: &quot;so a try/catch can&#39;t catch it.&quot; The author correctly acknowledges that call-site exception handling cannot intercept this throw, which is the stated reason for a global handler. The comment covers only the matched branch; the unmatched fallthrough (C1) and the unsettled promise (I1) remain unaddressed.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR has no review comments.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude-opus-5"><span class="pill pill-claude">Claude Opus 5</span> <a href="#claude-opus-5" class="pilcrow">&#182;</a></h3>
+    <p>Fetched Electron&#39;s <code>lib/browser/init.ts</code> and <code>lib/browser/api/net-fetch.ts</code> at the pinned tag and reproduced the <code>listenerCount &gt; 1</code> guard locally, which is why its C1 is the only version of that finding with the right mechanism. It stated plainly that the process never began exiting, contradicting the other three, and it was right. It also traced the unsettled promise to the update-check chain, caught both prose defects, and noticed that issue <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a>&#39;s own error takes the new silent branch. Its call-site enumeration included <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/a432a67dba8a97beeb32f349cd46cf61faf9e488/pkg/rancher-desktop/main/extensions/manager.ts#L258"><code>main/extensions/manager.ts:258</code></a>, which I doubted against an earlier truncated grep of my own and then confirmed.</p>
+    <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
+    <p>The only agent that ran runtime probes, and the probes were in the wrong runtime: plain Node, where an uncaught exception exits 1, rather than Electron, which registers its own listener and had already suppressed that exit. Its finding survived, but its stated mechanism did not, and its proposed <code>process.exit(1)</code> would have introduced the very regression the finding imagined. Its tracing of the updater call chain was accurate and matched Claude&#39;s independently. It also caught the <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/5158" class="gh-ref" data-title="Getting RangeError Exception when running dockerd containers for longer than 15min" data-state="open" data-type="issue">#5158</a> mismatch from the transcribed stack alone, filing it under Documentation rather than as a finding.</p>
+    <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
+    <p>Shortest review by a wide margin, one finding, correct target. The rationale is wrong in the same way as Codex&#39;s (&quot;shows a dialog and safely terminates the app&quot;), and its fix, removing the listener and rethrowing from a microtask, restores the dialog once and then leaves the status-0 workaround disarmed for the session. It skipped <code>git blame</code> as usual, which cost nothing on a one-commit PR.</p>
+    <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
+    <p>Reached the same finding with the same wrong exit premise, and its proposed fix is the one variant that actually breaks the app: throwing from inside the handler exits 7. Its suggestion that <code>error.message</code> might be undefined is ruled out by the <code>instanceof RangeError</code> guard on the preceding line, though the message-fragility half of that suggestion survived into S1. Its design observation on the pending promise named k3sHelper, the updater, and steve without being asked to trace them. The output also opens with 13 lines of first-person narration before the review proper, which the format does not ask for.</p>
+    <p>The two Gemini reviewers share a model family and converged on the same finding, the same wrong premise, and near-identical fixes, so their agreement counts as one opinion rather than two.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>7m 03s</td><td>6m 09s</td><td>3m 34s</td><td>8m 16s</td></tr>
+        <tr><td>Findings</td><td>1C 1I 3S</td><td>1C 1I 1S</td><td>1C</td><td>1C 1S</td></tr>
+        <tr><td>Tool calls</td><td>29 (Bash 16, Read 10, WebFetch 2)</td><td>15 (shell 15)</td><td>27 (run<em>shell</em>command 27)</td><td>14 (grep<em>search 4, glob 2, google</em>web_search 2)</td></tr>
+        <tr><td>Design observations</td><td>2</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Unique insights</td><td>4</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1C 1I 3S</strong></td><td><strong>1C 1I 1S</strong></td><td><strong>1C</strong></td><td><strong>1C 1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p>Claude was worth the other three combined on this PR: it alone got the mechanism right, and the mechanism is the whole finding. Codex added the strongest independent call-chain tracing and would have been co-equal had it probed Electron instead of Node. The Gemini pair contributed confirmation and two fixes that had to be rejected. A three-of-four majority on &quot;the app no longer exits&quot; would have shipped a wrong report without independent verification.</p>
+    <p><strong>Reconciliation.</strong> Codex I1 and Flash I1 were raised as important and consolidated into C1 as critical, with their shared premise (the PR removes a process exit) corrected. Gemini&#39;s C1 kept its severity, with the same premise corrected. Codex I2 became I1 unchanged. Flash&#39;s S1 was split: its optional-chaining claim was dropped as a false positive, and its message-fragility half merged into S1.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[ ] When a finding&#39;s mechanism depends on a runtime default (process exit on uncaught exception, signal handling, crash reporting, default dialogs), verify it in the runtime the product ships, not in whatever interpreter the worktree offers. Embedded runtimes routinely register their own handlers at startup and change the default before any application code runs, so a probe in the bare interpreter measures a different program.</li>
+      <li>[ ] Probe the fix you propose, not only the defect you found. A fix that changes global error handling, teardown, or listener registration can be worse than the code it replaces, and the cost of running it once is small compared to a reviewer acting on it.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[ ] Electron&#39;s main process shows its &quot;A JavaScript error occurred in the main process&quot; dialog only while the app registers no <code>uncaughtException</code> listener of its own; the built-in handler returns early once <code>process.listenerCount(&#39;uncaughtException&#39;) &gt; 1</code>. Any change adding such a listener therefore removes the crash dialog for every main-process error, whatever the listener itself does. Flag it unless the new handler re-shows the dialog for the cases it does not handle. The built-in handler only shows the dialog; it never exits, so a listener does not change whether the process survives.</li>
+      <li>[ ] <code>Electron.net.fetch</code> builds its <code>Response</code> inside the <code>ClientRequest</code> <code>&#39;response&#39;</code> listener, outside the promise chain, and rejects only from the sibling <code>&#39;error&#39;</code> listener. A response the <code>Response</code> constructor rejects (status 0 from a dropped connection) therefore leaves the promise pending forever, and only an <code>AbortSignal</code> on the request can settle it. When reviewing a main-process <code>net.fetch</code> call, check for a timeout signal; a call without one can hang its caller for the life of the process.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
