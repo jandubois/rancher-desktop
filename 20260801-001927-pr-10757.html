@@ -235,6 +235,12 @@ summary { cursor: pointer; font-weight: 600; }
     <p>Two reviewers found the regression independently, and a differential probe against both revisions reproduced it. The remaining eight suggestions are optional; four are pre-existing gaps in adjacent code.</p>
     </div>
     <hr>
+    <h2 id="status">Status <a href="#status" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Every finding below was addressed on 2026-08-01 and the PR commit was amended, so the cited line numbers and snippets describe the code as it stood at the Review SHA, not as it stands now. See the Resolution table at the end for the outcome of each item.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -315,6 +321,7 @@ summary { cursor: pointer; font-weight: 600; }
 	// Without this sweep, a transient port that fails to publish and</code></pre>
     <p>Fix: bound the delegation. Re-pend each delegated port after a fixed interval (~5 min), and keep the re-delegation log at Debug so the log-growth fix stands.</p>
     <p>I probed both revisions. Across 100 ticks after the owner loses its expose, HEAD calls <code>tracker.Add</code> once and never republishes; the merge-base scanner republishes on the next tick (<code>Add</code> twice, &quot;added port&quot; logged). Codex reached the same counts independently.</p>
+    <p><strong>Fixed.</strong> A delegation now expires after <code>ownershipRecheckInterval</code> (5 min, derived per-scanner from its scan interval) and the port goes back through the publish path.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -364,6 +371,7 @@ summary { cursor: pointer; font-weight: 600; }
 			}
 		}</code></pre>
     <p>Fix: classify the sentinel here too, or return <code>fmt.Errorf(&quot;%w: %d binding(s) for %s&quot;, ErrPortAlreadyExposed, alreadyExposed, containerID)</code> so unclassified sites keep their diagnostics.</p>
+    <p><strong>Fixed</strong> at all six unclassified call sites across the two engine handlers; docker&#39;s <code>initializeRunningContainers</code> now falls through to the loopback DNAT rules.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/tracker/tracker.go">
       <div class="finding-title" id="S2">
@@ -386,6 +394,7 @@ type Tracker interface {
 	// RemoveAll removes all the available portMappings in the storage.</code></pre>
     <p>All three updated callers hold a <code>tracker.Tracker</code>, not <code>*APITracker</code>, so the contract belongs on the interface. Only the concrete method documents it today.</p>
     <p>Fix: state on the interface that <code>Add</code> returns <code>ErrPortAlreadyExposed</code> when every port in the request was already exposed elsewhere and nothing else failed.</p>
+    <p><strong>Fixed.</strong></p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/tracker/apitracker.go">
       <div class="finding-title" id="S3">
@@ -405,6 +414,7 @@ const portAlreadyExposedSubstring = &quot;proxy already running&quot;
 // the Rancher Desktop networking is enabled and the privileged service is disabled.</code></pre>
     <p>Accurate today: <code>gvisor-tap-vsock@v0.8.9/pkg/services/forwarder/ports.go:74</code> is <code>errors.New(&quot;proxy already running&quot;)</code>, and the <code>/expose</code> handler passes it through verbatim. Upstream exports no sentinel for it, and the three new tests write the string themselves. So an upstream rewording reverts the fix with a green suite and no compile error.</p>
     <p>Fix: name the file and version in the comment so a dependency bump prompts a re-check.</p>
+    <p><strong>Fixed.</strong></p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux.go">
       <div class="finding-title" id="S4">
@@ -448,6 +458,7 @@ const portAlreadyExposedSubstring = &quot;proxy already running&quot;
 							event.portMapping,
 							event.UID,</code></pre>
     <p>Fix: raise <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fb8c2d09eea97f97bf462d3eb7f5d76c9901521a/src/go/guestagent/pkg/iptables/iptables.go#L128"><code>iptables.go:128</code></a> to Info and note on <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/fb8c2d09eea97f97bf462d3eb7f5d76c9901521a/src/go/guestagent/pkg/kube/watcher_linux.go#L182"><code>watcher_linux.go:182</code></a> why the kube path stays at Debug.</p>
+    <p><strong>Fixed.</strong></p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux.go">
       <div class="finding-title" id="S5">
@@ -470,6 +481,7 @@ dispatches only on the TCP and UDP Kinds and silently drops the
 TCP6 and UDP6 entries. A --network=host container that listens</code></pre>
     <p>The field comment and the <code>Tick</code> doc both say &quot;vanishes <strong>or changes binding shape</strong>&quot;, and <code>TestDelegatedPortReleasedOnBindingShapeChange</code> pins the omitted half.</p>
     <p>Fix: <code>... until their listener disappears or changes binding shape.</code></p>
+    <p><strong>Fixed</strong>, together with the age-out as a third release condition.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/tracker/apitracker.go">
       <div class="finding-title" id="S6">
@@ -508,6 +520,7 @@ func (a *APITracker) Add(containerID string, portMap nat.PortMap) error {
 			err = a.apiForwarder.Expose(
 				&amp;types.ExposeRequest{</code></pre>
     <p>Fix: narrow the wording to &quot;every port the API was called for&quot;.</p>
+    <p><strong>Fixed</strong> (wording only; the IPv6 behaviour is unchanged).</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/iptables/iptables.go">
       <div class="finding-title" id="S7">
@@ -530,6 +543,7 @@ func (a *APITracker) Add(containerID string, portMap nat.PortMap) error {
 			portMapKey, err := nat.NewPort(&quot;tcp&quot;, port)</code></pre>
     <p>Nothing clears <code>portMap</code> between iterations, so the i-th <code>Add</code> resubmits ports 1..i-1, a quadratic number of expose POSTs per scan. <code>portStorage</code> stays correct because the already-exposed rejection keeps duplicates out of <code>successfullyForwarded</code>, so <code>Remove</code> never over-unexposes. Pre-existing; this PR silences the Error line it used to produce.</p>
     <p>Fix: move <code>make(nat.PortMap)</code> inside the loop. That keeps <code>Add</code>/<code>Remove</code> symmetric on <code>utils.GenerateID(name)</code>, which one batched <code>Add</code> would not.</p>
+    <p><strong>Fixed.</strong> The now-dead duplicate-key guard went with it.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/iptables/iptables.go">
       <div class="finding-title" id="S8">
@@ -562,6 +576,7 @@ func (a *APITracker) Add(containerID string, portMap nat.PortMap) error {
 				log.Debugf(&quot;iptables scanner: portmap for %s already exposed elsewhere&quot;, name)
 			default:</code></pre>
     <p>Fix: record only successfully forwarded entries into the slice carried to the next tick.</p>
+    <p><strong>Skipped.</strong> Pre-existing bug whose fix changes untouched forwarding logic; belongs in its own change, not a PR about error classification.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
