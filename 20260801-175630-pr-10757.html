@@ -235,6 +235,13 @@ summary { cursor: pointer; font-weight: 600; }
     <p>Two reviewers found different failure modes in the same six-line function, and I reproduced both against a model of gvisor-tap-vsock v0.8.9&#39;s mux. The other two reviewers returned clean. Eight suggestions follow, most of them test gaps around the new recheck path.</p>
     </div>
     <hr>
+    <h2 id="status">Status <a href="#status" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Every finding was resolved on 2026-08-01 and the PR commit was amended, so the line numbers and snippets below describe the code at the Review SHA, not as it stands now.</p>
+    <p>I1 was closed by documenting it: <code>reassert</code> now carries a comment marking the re-assert best-effort and giving the reason a rollback is unsafe. A rollback was drafted, probed, and reverted after the probe showed it makes the gap worse rather than closing it. The eight suggestions were declined to keep the PR from growing further. See the Resolution table at the end for each outcome.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -266,6 +273,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
     <p>It triggers when a lost expose (a host-switch restart, or <code>RemoveAll</code> on an engine reconnect) coincides with a wsl-proxy hiccup, and those restarts correlate. This is a gap in the new recovery path; the merge-base failed the same way.</p>
     <p>Fix: let <code>Add</code> resend for an expose already in <code>portStorage</code>, and hold the recheck due until both sinks succeed.</p>
     <p>I reproduced it: the second <code>Add</code> returns the sentinel and sends nothing.</p>
+    <p><strong>Documented.</strong> A rollback in <code>reassert</code> was drafted and probed; it unexposed a live port on any <code>Expose</code> blip and reached the same stuck state, so it was reverted. <code>reassert</code>&#39;s doc comment now marks the re-assert best-effort and gives the reason.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -291,6 +299,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
     <p>The leak predates this PR. What is new is the comment&#39;s claim that the sentinel is the expected answer, which holds on the healthy path and not on the one <code>reassert</code> exists to repair.</p>
     <p>Fix: on the sentinel, check <code>tracker.Get(id)</code> and log at Error when it is empty.</p>
     <p>My probe drove <code>Add(udp)</code> → <code>RemoveAll</code> → <code>Add(udp)</code> → <code>Remove</code> against a model of the upstream mux: the proxy survived every step and the final <code>Remove</code> left it standing.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/tracker/apitracker.go">
       <div class="finding-title" id="S2">
@@ -310,6 +319,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 // bound. The string is the host-switch wire contract; matching it here</code></pre>
     <p>Classification substring-matches the response and performs no ownership lookup, and <code>reassert</code> relies on the same sentinel meaning the scanner&#39;s <em>own</em> proxy. The text and the docstring above it both assert something the code cannot know.</p>
     <p>Fix: drop the ownership claim here and in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/tracker/tracker.go#L30-L34"><code>tracker.go:30-34</code></a> — &quot;port already exposed&quot;, with the doc noting it does not identify the owner.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux.go">
       <div class="finding-title" id="S3">
@@ -333,6 +343,7 @@ func (p *ProcNetScanner) Tick(scanned nat.PortMap) {
 		// (container restart with a different bind). Unpublish so the</code></pre>
     <p>The counter resets before the attempt, so a failure costs another full interval. <code>reassert</code> reports through <code>logAddFailure</code>, which latches <code>addErrorLogged[port]</code>; the end-of-<code>Tick</code> sweep keeps that latch while the port stays in <code>published</code>, and only <code>publish</code> clears it, which never runs for a published port. A port left unexposed by a persistently failing host-switch therefore emits one Error line, ever.</p>
     <p>Fix: leave <code>recheckTicks</code> at the threshold on failure so the next tick retries, and clear the latch on a successful re-assert.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux.go">
       <div class="finding-title" id="S4">
@@ -355,6 +366,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 // resets when publish succeeds or when the sweep at the end of Tick</code></pre>
     <p>A nil return means the expose was absent and has just been recreated, since gvisor answers &quot;proxy already running&quot; whenever a proxy exists for <code>(protocol, local)</code>. That is exactly the event this mechanism exists to repair, and it is the one outcome <code>reassert</code> does not log. A user asking why a port stopped working for five minutes gets nothing.</p>
     <p>Fix: log Info on the nil return only. It fires solely on a real repair, so it adds no steady-state volume.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux_test.go">
       <div class="finding-title" id="S5">
@@ -377,6 +389,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 		t.Fatalf(&quot;forwarder.Add = %v, want the original bind untouched %v&quot;, got, want)</code></pre>
     <p>The test counts calls and stops there. Two mutations survive it, both run against the real Linux suite in the VM: giving <code>reassert</code> a different <code>utils.GenerateID</code> key than <code>publish</code> and <code>unpublish</code> use, which would strand a re-exposed port under a key <code>unpublish</code> never removes; and deleting reassert&#39;s <code>!errors.Is(err, ErrPortAlreadyExposed)</code> guard, which puts an Error line on the common path, since a healthy port answers with the sentinel at every recheck.</p>
     <p>Fix: assert <code>tr.added[0] == tr.added[1]</code>, and add a case that sets <code>tr.addErr</code> to the sentinel after the publish and asserts the recheck stays quiet.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/tracker/apitracker.go">
       <div class="finding-title" id="S6">
@@ -397,6 +410,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 		log.Debugf(&quot;forwarding to wsl-proxy to add port mapping: %+v&quot;, portMapping)</code></pre>
     <p><code>portStorage.add</code> replaces wholesale, so this guard is the only thing stopping a sentinel-only <code>Add</code> from wiping the entry <code>publish</code> created — the invariant <code>reassert</code> rests on. Every tracker test uses a fresh <code>containerID</code>, so none calls <code>Add</code> twice for the same one. I confirmed the behavior is correct today; nothing holds it there.</p>
     <p>Fix: extend <code>TestAddReturnsPortAlreadyExposedSentinel</code> to <code>Add</code> a port, then <code>Add</code> the same id against an already-exposed handler, and assert <code>Get</code> still returns the original binding.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux.go">
       <div class="finding-title" id="S7">
@@ -431,6 +445,7 @@ func newScanner(ctx context.Context, t tracker.Tracker, f loopbackController, bi
 		return procScanner.ForwardPorts()
 	})</code></pre>
     <p>Fix: guard the divisor rather than the quotient.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/iptables/iptables.go">
       <div class="finding-title" id="S8">
@@ -450,6 +465,7 @@ func newScanner(ctx context.Context, t tracker.Tracker, f loopbackController, bi
 </code></pre>
     <p>Only <code>fmt.Errorf</code> understands <code>%w</code>. This line predates the PR and sits in the function the diff edits, three lines above the loop this round rewrote, so it is a one-character fix if you want it. Declining it on the same scope grounds as round 1&#39;s S8 is equally consistent.</p>
     <p>Fix: <code>%s</code>.</p>
+    <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
