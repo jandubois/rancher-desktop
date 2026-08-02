@@ -219,7 +219,7 @@ summary { cursor: pointer; font-weight: 600; }
       <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10757" class="gh-ref" data-title="guestagent: treat &quot;proxy already running&quot; as delegation, not failure" data-state="open" data-type="pr">#10757</a> — guestagent: treat &quot;proxy already running&quot; as delegation, not failure</td></tr>
       <tr><td>Branch</td><td><code>guestagent-already-exposed-sentinel</code></td></tr>
       <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4f25dd6e4"><code>4f25dd6e4</code></a> guestagent: treat &quot;proxy already running&quot; as delegation, not failure</td></tr>
-      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4f25dd6e47f98e1c827cc1158f3e67c7979211f7"><code>4f25dd6e47f98e1c827cc1158f3e67c7979211f7</code></a></td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ea5527494f5457fa49f7edfb64e4500682a7296c"><code>ea5527494f5457fa49f7edfb64e4500682a7296c</code></a> (agents reviewed <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4f25dd6e4"><code>4f25dd6e4</code></a>; see Status)</td></tr>
       <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
       <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the recheck mechanism works, but <code>reassert</code> cannot finish a repair whose wsl-proxy notification fails</td></tr>
       <tr><td>Wall-clock time</td><td><code>24 min 23 s</code></td></tr>
@@ -238,7 +238,7 @@ summary { cursor: pointer; font-weight: 600; }
     <h2 id="status">Status <a href="#status" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
-    <p>Every finding was resolved on 2026-08-01 and the PR commit was amended, so the line numbers and snippets below describe the code at the Review SHA, not as it stands now.</p>
+    <p>The agents reviewed <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4f25dd6e4"><code>4f25dd6e4</code></a>. Every finding was resolved on 2026-08-01 and the commit was amended repeatedly since, so the citations and snippets below have been re-anchored to the current tip, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ea5527494"><code>ea5527494</code></a>. Read them as the code that stands today, not as the text the agents saw.</p>
     <p>I1 was closed by documenting it: <code>reassert</code> now carries a comment marking the re-assert best-effort and giving the reason a rollback is unsafe. A rollback was drafted, probed, and reverted after the probe showed it makes the gap worse rather than closing it. The eight suggestions were declined to keep the PR from growing further. See the Resolution table at the end for each outcome.</p>
     </div>
     <hr>
@@ -254,8 +254,8 @@ summary { cursor: pointer; font-weight: 600; }
       <div class="finding-title" id="I1">
         <span class="finding-num">I1.</span> A failed wsl-proxy notification during a re-assert can never be retried <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I1" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L367-L380">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
-      <pre data-start="367" data-line="372-375"><code class="language-go">// forwarder is the scanner&#39;s own and RemoveAll does not touch it.
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L350-L363">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="350" data-line="355-358"><code class="language-go">// later recheck then answers with the sentinel and hides the gap.
 func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 	id := utils.GenerateID(fmt.Sprintf(&quot;%s/%s&quot;, port.Proto(), port.Port()))
 	// The sentinel here is the scanner&#39;s own proxy still standing,
@@ -282,10 +282,10 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
       <div class="finding-title" id="S1">
         <span class="finding-num">S1.</span> A re-assert cannot restore the record when the sentinel comes back <span class="pill pill-claude">Claude Opus 5</span><a href="#S1" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L365-L376">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
-      <pre data-start="365" data-line="370-371"><code class="language-go">// published port can stop being forwarded with nothing to see in
-// /proc/net. Only the tracker entry needs restoring: the loopback
-// forwarder is the scanner&#39;s own and RemoveAll does not touch it.
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L348-L359">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="348" data-line="353-354"><code class="language-go">// unknown to wsl-proxy. Rolling back is unsafe, since Remove would
+// unexpose whatever an earlier publish left under this id. Every
+// later recheck then answers with the sentinel and hides the gap.
 func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 	id := utils.GenerateID(fmt.Sprintf(&quot;%s/%s&quot;, port.Proto(), port.Port()))
 	// The sentinel here is the scanner&#39;s own proxy still standing,
@@ -305,7 +305,7 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
       <div class="finding-title" id="S2">
         <span class="finding-num">S2.</span> The sentinel names an owner it cannot identify <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S2" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/tracker/apitracker.go#L41-L51">src/go/guestagent/pkg/tracker/apitracker.go</a></div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/tracker/apitracker.go#L41-L51">src/go/guestagent/pkg/tracker/apitracker.go</a></div>
       <pre data-start="41" data-line="46"><code class="language-go">	// ErrPortAlreadyExposed signals that Add was a no-op because another
 	// component had already exposed every port in the request. Callers
 	// that scan for ports another actor may own (kube watcher, iptables
@@ -316,18 +316,18 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 
 // portAlreadyExposedSubstring is the substring host-switch&#39;s
 // /services/forwarder/expose response carries when the port is already
-// bound. The string is the host-switch wire contract; matching it here</code></pre>
+// bound. Upstream exports no sentinel to match against.</code></pre>
     <p>Classification substring-matches the response and performs no ownership lookup, and <code>reassert</code> relies on the same sentinel meaning the scanner&#39;s <em>own</em> proxy. The text and the docstring above it both assert something the code cannot know.</p>
-    <p>Fix: drop the ownership claim here and in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/tracker/tracker.go#L30-L34"><code>tracker.go:30-34</code></a> — &quot;port already exposed&quot;, with the doc noting it does not identify the owner.</p>
+    <p>Fix: drop the ownership claim here and in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/tracker/tracker.go#L30-L34"><code>tracker.go:30-34</code></a> — &quot;port already exposed&quot;, with the doc noting it does not identify the owner.</p>
     <p><strong>Skipped.</strong> Left for a follow-up; nothing blocks the merge and the PR stops growing here.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/guestagent/pkg/procnet/scanner_linux.go">
       <div class="finding-title" id="S3">
         <span class="finding-num">S3.</span> A failed re-assert waits five minutes and logs once <span class="pill pill-claude">Claude Opus 5</span><a href="#S3" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L193-L207">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
-      <pre data-start="193" data-line="198-202"><code class="language-go">// until their listener vanishes, changes shape, or the delegation ages
-// out after ownershipRecheckInterval.
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L180-L194">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="180" data-line="185-189"><code class="language-go">// filters the transient OCI-hook reservation socket. Removals take
+// effect immediately: a vanished listener is unambiguous.
 func (p *ProcNetScanner) Tick(scanned nat.PortMap) {
 	for port, bindings := range p.published {
 		if newBindings, ok := scanned[port]; ok &amp;&amp; bindingsEqual(bindings, newBindings) {
@@ -349,8 +349,8 @@ func (p *ProcNetScanner) Tick(scanned nat.PortMap) {
       <div class="finding-title" id="S4">
         <span class="finding-num">S4.</span> A successful repair leaves no trace<a href="#S4" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L367-L380">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
-      <pre data-start="367" data-line="372-375"><code class="language-go">// forwarder is the scanner&#39;s own and RemoveAll does not touch it.
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L350-L363">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="350" data-line="355-358"><code class="language-go">// later recheck then answers with the sentinel and hides the gap.
 func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
 	id := utils.GenerateID(fmt.Sprintf(&quot;%s/%s&quot;, port.Proto(), port.Port()))
 	// The sentinel here is the scanner&#39;s own proxy still standing,
@@ -372,8 +372,8 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
       <div class="finding-title" id="S5">
         <span class="finding-num">S5.</span> The re-assert test pins neither the tracker id nor the sentinel guard <span class="pill pill-claude">Claude Opus 5</span><a href="#S5" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux_test.go#L501-L514">src/go/guestagent/pkg/procnet/scanner_linux_test.go</a></div>
-      <pre data-start="501" data-line="506-509"><code class="language-go">	}
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux_test.go#L499-L512">src/go/guestagent/pkg/procnet/scanner_linux_test.go</a></div>
+      <pre data-start="499" data-line="504-507"><code class="language-go">	}
 	if len(tr.added) != 1 {
 		t.Fatalf(&quot;tracker.Add = %v, want no re-assert before the recheck falls due&quot;, tr.added)
 	}
@@ -395,8 +395,8 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
       <div class="finding-title" id="S6">
         <span class="finding-num">S6.</span> Nothing pins that a repeat <code>Add</code> preserves the stored map <span class="pill pill-claude">Claude Opus 5</span><a href="#S6" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/tracker/apitracker.go#L145-L156">src/go/guestagent/pkg/tracker/apitracker.go</a></div>
-      <pre data-start="145" data-line="150-151"><code class="language-go">		if len(tmpPortBinding) != 0 {
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/tracker/apitracker.go#L142-L153">src/go/guestagent/pkg/tracker/apitracker.go</a></div>
+      <pre data-start="142" data-line="147-148"><code class="language-go">		if len(tmpPortBinding) != 0 {
 			successfullyForwarded[portProto] = tmpPortBinding
 		}
 	}
@@ -416,8 +416,8 @@ func (p *ProcNetScanner) reassert(port nat.Port, bindings []nat.PortBinding) {
       <div class="finding-title" id="S7">
         <span class="finding-num">S7.</span> <code>newScanner</code> divides by <code>scanInterval</code> before checking it <span class="pill pill-claude">Claude Opus 5</span><a href="#S7" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L138-L151">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
-      <pre data-start="138" data-line="143-146"><code class="language-go">func NewProcNetScanner(ctx context.Context, t tracker.Tracker, bindIP net.IP, scanInterval time.Duration) (*ProcNetScanner, error) {
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L128-L141">src/go/guestagent/pkg/procnet/scanner_linux.go</a></div>
+      <pre data-start="128" data-line="133-136"><code class="language-go">func NewProcNetScanner(ctx context.Context, t tracker.Tracker, bindIP net.IP, scanInterval time.Duration) (*ProcNetScanner, error) {
 	return newScanner(ctx, t, newLoopbackForwarder(bindIP), bindIP, scanInterval), nil
 }
 
@@ -431,8 +431,8 @@ func newScanner(ctx context.Context, t tracker.Tracker, f loopbackController, bi
 		ctx:            ctx,
 		tracker:        t,
 		forwarder:      f,</code></pre>
-    <p>A zero interval panics on the division, and the guard below it runs too late. No caller reaches this: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/main.go#L246"><code>main.go:246</code></a> is the only one and passes the <code>procNetScanInterval</code> constant. Reported because the exported <code>NewProcNetScanner</code> gained the panic in this round; decline it freely.</p>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/main.go#L241-L251">src/go/guestagent/main.go</a></div>
+    <p>A zero interval panics on the division, and the guard below it runs too late. No caller reaches this: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/main.go#L246"><code>main.go:246</code></a> is the only one and passes the <code>procNetScanInterval</code> constant. Reported because the exported <code>NewProcNetScanner</code> gained the panic in this round; decline it freely.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/main.go#L241-L251">src/go/guestagent/main.go</a></div>
       <pre data-start="241" data-line="246"><code class="language-go">			return nil
 		})
 	}
@@ -451,7 +451,7 @@ func newScanner(ctx context.Context, t tracker.Tracker, f loopbackController, bi
       <div class="finding-title" id="S8">
         <span class="finding-num">S8.</span> <code>log.Warnf</code> uses <code>%w</code>, which prints <code>%!w(...)</code> instead of the error<a href="#S8" class="pilcrow">&#182;</a>
       </div>
-      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/iptables/iptables.go#L92-L102">src/go/guestagent/pkg/iptables/iptables.go</a></div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/iptables/iptables.go#L92-L102">src/go/guestagent/pkg/iptables/iptables.go</a></div>
       <pre data-start="92" data-line="97"><code class="language-go">
 		// Remove old forwards
 		for _, p := range removed {
@@ -473,14 +473,14 @@ func newScanner(ctx context.Context, t tracker.Tracker, f loopbackController, bi
     <div class="card card-design">
     <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
     <ul>
-      <li><em></em><code>RemoveAll</code> unexposes every port as TCP<em></em> <em>(future, pre-existing)</em> <span class="pill pill-claude">Claude Opus 5</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/tracker/apitracker.go#L248-L251"><code>apitracker.go:248-251</code></a> builds <code>types.UnexposeRequest</code> without <code>Protocol</code>, while <code>Remove</code> sets it, and gvisor-tap-vsock v0.8.9 defaults an empty protocol to TCP on <code>/unexpose</code> (<code>ports.go:336-338</code>). Every engine reconnect therefore logs an unexpose error per UDP port, leaves the UDP proxy running, and clears <code>portStorage</code> regardless. Round 1 recorded this; this round supplies the consequence, since it is the mechanism behind S1. Fixing it here closes the class instead of patching <code>reassert</code>.</li>
+      <li><em></em><code>RemoveAll</code> unexposes every port as TCP<em></em> <em>(future, pre-existing)</em> <span class="pill pill-claude">Claude Opus 5</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/tracker/apitracker.go#L248-L251"><code>apitracker.go:248-251</code></a> builds <code>types.UnexposeRequest</code> without <code>Protocol</code>, while <code>Remove</code> sets it, and gvisor-tap-vsock v0.8.9 defaults an empty protocol to TCP on <code>/unexpose</code> (<code>ports.go:336-338</code>). Every engine reconnect therefore logs an unexpose error per UDP port, leaves the UDP proxy running, and clears <code>portStorage</code> regardless. Round 1 recorded this; this round supplies the consequence, since it is the mechanism behind S1. Fixing it here closes the class instead of patching <code>reassert</code>.</li>
       <li><strong>The sentinel is a whole-request aggregate</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 5</span> — <code>Add</code> returns it only when no binding was forwarded, so a port with one delegated and one fresh binding returns nil and lands in <code>published</code> with a partial record. The conservative choice is right and <code>unpublish</code> stays consistent, but nothing records the partial delegation.</li>
       <li><strong>Textual conflict detection carries no ownership lifecycle</strong> <em>(future)</em> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> — <code>Tracker.Add</code> folds expose, storage, and notification into one error value. A result describing each postcondition would let callers reconcile state instead of inferring it, and would close I1 at the contract rather than at the call site.</li>
     </ul>
     <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
     <ul>
       <li><strong>The state machine holds under tracing</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> — <code>published</code> and <code>delegated</code> stay disjoint, every exit from either loop deletes the matching <code>recheckTicks</code> entry, and an expired delegation that then hits a real publish error re-enters <code>pending</code> through the end-of-<code>Tick</code> rebuild, so it retries per tick as before.</li>
-      <li><strong>The recheck interval derives from the scan interval</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/main.go#L48"><code>main.go:48</code></a>&#39;s 3 s yields exactly 100 ticks, and <code>TestOwnershipRecheckDerivedFromScanInterval</code> pins the derivation rather than the number, so changing the cadence cannot silently turn the re-probe back into a per-tick retry.</li>
+      <li><strong>The recheck interval derives from the scan interval</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/main.go#L48"><code>main.go:48</code></a>&#39;s 3 s yields exactly 100 ticks, and <code>TestOwnershipRecheckDerivedFromScanInterval</code> pins the derivation rather than the number, so changing the cadence cannot silently turn the re-probe back into a per-tick retry.</li>
       <li><strong>All six engine conversions preserve their prior control flow</strong> <em>(in-scope)</em> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> — each <code>switch</code> keeps its <code>continue</code> on the real-error arm, and docker&#39;s <code>initializeRunningContainers</code> falls through to the loopback DNAT rules on the sentinel, which is the deliberate change its comment documents.</li>
     </ul>
     </div>
@@ -517,14 +517,14 @@ func newScanner(ctx context.Context, t tracker.Tracker, f loopbackController, bi
 
     <div class="card card-neutral">
     <ul>
-      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L63-L72"><code>scanner_linux.go:63-72</code></a>, the claim that the engines re-register their ports on reconnect while the kube watcher and iptables scanner do not. Verified against <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/main.go#L167-L211"><code>main.go:167-211</code></a>; both engine monitors run <code>initializeRunningContainers</code> on each pass.</li>
-      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L29-L38"><code>scanner_linux.go:29-38</code></a> (pre-existing), the IPv6 drop. Unchanged; a <code>[::1]</code>-only listener stays invisible.</li>
-      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/procnet/scanner_linux.go#L120-L126"><code>scanner_linux.go:120-126</code></a>, the <code>addErrorLogged</code> throttle. Deliberate and documented; S3 concerns its interaction with the new <code>reassert</code> path, not the throttle.</li>
-      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/kube/watcher_linux.go#L175-L177"><code>kube/watcher_linux.go:175-177</code></a>, the Debug rationale. I confirmed the &quot;once per port&quot; claim for both siblings: iptables sees a port in <code>added</code> only on the tick it appears, and procnet logs Info once per delegation with renewals at Debug.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L63-L72"><code>scanner_linux.go:63-72</code></a>, the claim that the engines re-register their ports on reconnect while the kube watcher and iptables scanner do not. Verified against <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/main.go#L167-L211"><code>main.go:167-211</code></a>; both engine monitors run <code>initializeRunningContainers</code> on each pass.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L29-L38"><code>scanner_linux.go:29-38</code></a> (pre-existing), the IPv6 drop. Unchanged; a <code>[::1]</code>-only listener stays invisible.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/procnet/scanner_linux.go#L120-L126"><code>scanner_linux.go:120-126</code></a>, the <code>addErrorLogged</code> throttle. Deliberate and documented; S3 concerns its interaction with the new <code>reassert</code> path, not the throttle.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/kube/watcher_linux.go#L175-L177"><code>kube/watcher_linux.go:175-177</code></a>, the Debug rationale. I confirmed the &quot;once per port&quot; claim for both siblings: iptables sees a port in <code>added</code> only on the tick it appears, and procnet logs Info once per delegation with renewals at Debug.</li>
     </ul>
     <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
     <ul>
-      <li>A real Expose failure drops the port permanently (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4f25dd6e47f98e1c827cc1158f3e67c7979211f7/src/go/guestagent/pkg/iptables/iptables.go#L91"><code>iptables.go:91</code></a>) — declined Round 1: pre-existing bug whose fix changes untouched forwarding logic; belongs in its own change. No agent re-raised it.</li>
+      <li>A real Expose failure drops the port permanently (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ea5527494f5457fa49f7edfb64e4500682a7296c/src/go/guestagent/pkg/iptables/iptables.go#L91"><code>iptables.go:91</code></a>) — declined Round 1: pre-existing bug whose fix changes untouched forwarding logic; belongs in its own change. No agent re-raised it.</li>
       <li>No test for the kube and iptables sentinel arms — declined Round 1: log-level-only, and a log-capture test needs global logger swapping in a goroutine-heavy suite. Re-raised only in part, for docker&#39;s behavioral arm (Testing Assessment 4).</li>
       <li>Nothing pins the upstream wire string — declined Round 1: the provenance comment is the proportionate mitigation.</li>
       <li><code>fakeTracker.addErr</code> is unconditional — declined Round 1: per-port maps are independent in <code>Tick</code>. Still true, and S5&#39;s proposed test needs no change to the fake.</li>
