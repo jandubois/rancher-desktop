@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260901-093532-pr-10900</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Tables written directly in a section body. parseTable classes only the
+ * Retro and Summary tables, so every other one arrives unclassed. */
+table:not([class]) { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+table:not([class]) th, table:not([class]) td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+table:not([class]) th { background: #f3f4f6; font-weight: 600; }
+table:not([class]) tr:nth-child(even) { background: #f9fafb; }
+/* A long path or job name offers no break of its own, so one cell can push
+ * the whole page into a horizontal scroll. Let those tokens wrap. */
+table:not([class]) code { overflow-wrap: anywhere; }
+
+/* Collapsible folds, for the bulk detail a report keeps out of the way */
+details { margin: 0.8rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+/* Reproducers — collapsed, so a long proof keeps the next finding on screen */
+details.repro { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+details.repro > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
+details.repro > summary:hover { background: #eef1f4; }
+details.repro[open] > summary { border-bottom: 1px solid #d0d7de; }
+details.repro pre { border-radius: 0 !important; }
+details.repro .code-file-header { margin-top: 0; border-radius: 0; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260901-093532-pr-10900</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-09-01 09:35</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of PR 10900)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10900" class="gh-ref" data-title="rddepman: pin extension tags the registry actually serves" data-state="open" data-type="pr">#10900</a> — rddepman: pin extension tags the registry actually serves</td></tr>
+      <tr><td>Branch</td><td><code>rddepman-extension-version-prefix</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1407d8fc7"><code>1407d8fc7</code></a> rddepman: strip the &quot;v&quot; prefix from extension release tags<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/140335f20"><code>140335f20</code></a> rddepman: keep one failed bump from stranding the rest<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66d43fd7c"><code>66d43fd7c</code></a> rddepman: resolve extension tags against the registry<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6386a4a53"><code>6386a4a53</code></a> Show extension versions without a &quot;v&quot; prefix</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec"><code>6386a4a53eae3c82c8e2ba3f96088d3664fd42ec</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the code is right and the design is justified; what is missing is a test that fails when the fix is removed</td></tr>
+      <tr><td>Wall-clock time</td><td><code>27 min 25 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Commit 1&#39;s unconditional <code>v</code> strip would have broken the pin for at least one extension: ghcr.io serves <code>rancher-desktop-rdx-open-webui:v0.0.8</code> but answers 404 for <code>0.0.8</code>. Commit 3&#39;s registry lookup fixes that, and I confirmed the whole 401-token-retry flow works against both Docker Hub and ghcr.io. All 11 new tests pass. Three findings survived: nothing asserts the resolved tag reaches the manifest, no test runs <code>imageTagExists</code>, and one dead image still fails every extension bump.</p>
+    <p>All four reviewers agreed on no Critical issues, and the two that dug hardest (Claude, Codex) converged on the same gap from opposite directions. I ran the suite in a real checkout rather than trusting inspection, mutated the fix to see whether the tests noticed, and probed both registries live. I3 is the one finding that contradicts the PR&#39;s own description, so it is the one to read first.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="scripts/lib/extension-data.ts">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Reverting the resolved tag leaves the whole suite green <span class="pill pill-claude">Claude Opus 5</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L86-L96">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="86" data-line="91"><code class="language-ts">  async updateManifest(newVersion: string, _newAssets: DependencyAsset[]): Promise&lt;Set&lt;string&gt;&gt; {
+    const newTag = await this.resolveTag(newVersion);
+    // We want to try to keep the YAML comments; so we do string replace instead.
+    const fileContents = await fs.promises.readFile(EXTENSION_PATH, &#39;utf-8&#39;);
+    const oldRef = `${ this.name }:${ await this.currentVersion }`;
+    const newRef = `${ this.name }:${ newTag }`;
+    const newContents = fileContents.replaceAll(oldRef, newRef);
+
+    await fs.promises.writeFile(EXTENSION_PATH, newContents, &#39;utf-8&#39;);
+    await generateExtensionMarketplaceData();
+</code></pre>
+    <p><code>resolveTag</code> is well tested on its own (<code>extension-data.spec.ts:37-55</code>), but nothing checks the line that applies it. Commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66d43fd7c"><code>66d43fd7c</code></a> exists to make <code>updateManifest</code> write the resolved tag, and that is the one behavior no test pins.</p>
+    <p>Reproducer: revert line 91 to <code>${ newVersion }</code>, reintroducing the exact bug, then run the suite.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// scripts/lib/extension-data.ts:91, mutated back to the pre-fix form
+const newRef = `${ this.name }:${ newVersion }`;</code></pre>
+      <pre><code class="language-text">$ node --experimental-vm-modules node_modules/jest/bin/jest.js scripts/
+Test Suites: 5 passed, 5 total
+Tests:       49 passed, 49 total</code></pre>
+      </details>
+    <p>The control comes out the other way: with line 91 restored the same 49 tests pass, so the suite is blind to this line in both directions.</p>
+    <p>Fix: extract the substitution so it can be tested without mocking <code>fs</code> and <code>child_process</code>, then assert that bumping <code>org/image:0.1.3</code> to <code>0.1.6</code> with only <code>org/image:v0.1.6</code> published yields <code>org/image:v0.1.6</code>.</p>
+    </div>
+    <div class="card card-important" data-file="scripts/lib/__tests__/registry.spec.ts">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> No test ever executes <code>imageTagExists</code> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+    <p>The new spec covers only <code>parseAuthChallenge</code>, which <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L20"><code>registry.ts:20</code></a> labels &quot;only exported for the test&quot;. The function the design rests on runs in no test at all.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L15-L25">scripts/lib/registry.ts</a></div>
+      <pre data-start="15" data-line="20"><code class="language-typescript">  &#39;application/vnd.docker.distribution.manifest.v2+json&#39;,
+].join(&#39;, &#39;);
+
+/**
+ * Pick the parameters out of a `WWW-Authenticate: Bearer realm=&quot;…&quot;, …` header.
+ * @note This is only exported for the test.
+ */
+export function parseAuthChallenge(header: string): Record&lt;string, string&gt; {
+  return Object.fromEntries(Array.from(header.matchAll(/(\w+)=&quot;([^&quot;]*)&quot;/g), m =&gt; [m[1], m[2]]));
+}
+</code></pre>
+    <p>Unproven: no mutation is needed, because the gap is visible by construction. The only test-side reference to the name is a mock:</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-text">$ grep -rn &quot;imageTagExists&quot; scripts pkg
+scripts/lib/registry.ts:58:export async function imageTagExists(reference: string): Promise&lt;boolean&gt; {
+scripts/lib/__tests__/extension-data.spec.ts:16:  imageTagExists: (reference: string) =&gt; Promise.resolve(publishedRefs.has(reference)),
+scripts/lib/extension-data.ts:13:import { imageTagExists } from &#39;./registry&#39;;
+scripts/lib/extension-data.ts:78:      if (await imageTagExists(`${ this.name }:${ tag }`)) {</code></pre>
+      </details>
+    <p><code>extension-data.spec.ts:15-17</code> replaces the module wholesale, so the 404 path, the 401-token-retry path, and the refusal to read a hiccup as a deletion (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L81-L82"><code>registry.ts:81-82</code></a>) all ship unexecuted. That last guard matters most: if a 429 ever returned <code>false</code>, <code>resolveTag</code> would fall through to the <code>v</code> candidate and then throw &quot;no image tagged&quot;, turning a rate limit into what looks like an upstream deletion.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L76-L83">scripts/lib/registry.ts</a></div>
+      <pre data-start="76" data-line="81-82"><code class="language-typescript">
+  if (response.ok || response.status === 404) {
+    return response.ok;
+  }
+
+  // A registry hiccup (a 5xx, a rate limit) must not read as a deleted tag.
+  throw new Error(`Could not check ${ reference }: registry returned ${ response.status }`);
+}</code></pre>
+    <p>Fix: stub <code>globalThis.fetch</code> and assert the three terminal outcomes. I ran such a spec against the unmodified tree and it passed, so the tests are cheap to add.</p>
+    </div>
+    <div class="card card-important" data-file="scripts/lib/extension-data.ts">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> One dead image still fails every extension bump, contrary to the commit&#39;s claim <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-claude">Claude Opus 5</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L90-L100">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="90" data-line="95"><code class="language-ts">    const oldRef = `${ this.name }:${ await this.currentVersion }`;
+    const newRef = `${ this.name }:${ newTag }`;
+    const newContents = fileContents.replaceAll(oldRef, newRef);
+
+    await fs.promises.writeFile(EXTENSION_PATH, newContents, &#39;utf-8&#39;);
+    await generateExtensionMarketplaceData();
+
+    return new Set([EXTENSION_PATH, EXTENSION_OUTPUT_PATH]);
+  }
+
+  async generateMarketplaceData() {</code></pre>
+    <p>Commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/140335f20"><code>140335f20</code></a> says &quot;A failed bump now loses only its own PR.&quot; That holds for global dependencies and for a <code>resolveTag</code> failure, a real gain. It does not hold for the case the same commit body cites as motivation. Every extension bump regenerates the whole marketplace file, which pulls all 14 images, so one deleted upstream tag fails all of them.</p>
+    <p>Reproducer: fail <code>docker inspect</code> for <code>prakhar1989/dive-in:0.0.8</code> only, then bump a different extension.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">const brokenImages = new Set([&#39;prakhar1989/dive-in:0.0.8&#39;]);
+// ... execFile stub rejects for those refs, succeeds otherwise ...
+const epinio = new Extension(&#39;splatform/epinio-docker-desktop:0.1.3&#39;, { github_repo: &#39;epinio/extension-docker-desktop&#39; });
+
+await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).rejects.toThrow(&#39;No such object: prakhar1989/dive-in:0.0.8&#39;);
+// Control: clear brokenImages and the same bump resolves.
+await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf(Set);</code></pre>
+      <pre><code class="language-text">Tests:       2 passed, 2 total</code></pre>
+      </details>
+    <p>Epinio&#39;s bump dies on dive-in&#39;s image, and the generated marketplace file is never written. The control case passes, so nothing but the other extension causes the failure. <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/8647" class="gh-ref" data-title="rddepman fails when it can&#39;t pull an extension image" data-state="closed" data-type="issue">#8647</a>&#39;s scenario stays open: the run reports N failures instead of aborting once.</p>
+    <p>Fix: correct the commit body to claim only what it delivers, or probe all 14 refs with <code>imageTagExists</code> before regenerating and skip it with a clear message when one is gone.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="scripts/lib/registry.ts">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> A <code>Basic</code> challenge escapes as a bare <code>TypeError</code> <span class="pill pill-claude">Claude Opus 5</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L29-L39">scripts/lib/registry.ts</a></div>
+      <pre data-start="29" data-line="34"><code class="language-ts">
+  if (!realm) {
+    return undefined;
+  }
+
+  const url = new URL(realm);
+
+  if (service) {
+    url.searchParams.set(&#39;service&#39;, service);
+  }
+  if (scope) {</code></pre>
+    <p><code>parseAuthChallenge</code> ignores the scheme, so <code>Basic realm=&quot;Registry Realm&quot;</code> yields <code>{ realm: &#39;Registry Realm&#39; }</code> and <code>new URL</code> rejects it. The existing test asserts only the bare string <code>&#39;Basic&#39;</code>, which has no parameters to match.</p>
+    <p>Reproducer: stub <code>fetch</code> to answer 401 with a Basic challenge.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-text">    TypeError: Invalid URL
+      at requestAuthToken (scripts/lib/registry.ts:34:15)
+      at imageTagExists (scripts/lib/registry.ts:70:25)</code></pre>
+      </details>
+    <p>A Bearer 401 whose token request fails gives the intended <code>registry returned 401</code>, so the scheme alone accounts for the difference. The in-tree parser at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/backend/containerClient/auth.ts#L188"><code>pkg/rancher-desktop/backend/containerClient/auth.ts:188</code></a> already handles schemes, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/backend/containerClient/auth.ts#L151"><code>auth.ts:151</code></a> reads <code>result.token || result.access_token</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/backend/containerClient/auth.ts#L183-L193">pkg/rancher-desktop/backend/containerClient/auth.ts</a></div>
+      <pre data-start="183" data-line="188"><code class="language-typescript">    };
+
+    return { Authorization: `Bearer ${ parsed.token }` };
+  }
+
+  protected parseAuthHeader(header: string): { scheme: string, parameters: Record&lt;string, string&gt; }[] {
+    // This header is a bit tricky (hence a separate method for testing):
+    // The header may contain multiple comma-separated challenge specifications,
+    // each of which consists of one word (&quot;scheme&quot;) plus zero or more comma-
+    // separated parameters for that scheme.  Parameters may have quoted values
+    // which may internally contain commas.</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/backend/containerClient/auth.ts#L146-L156">pkg/rancher-desktop/backend/containerClient/auth.ts</a></div>
+      <pre data-start="146" data-line="151"><code class="language-typescript">      (error as any).cause = ex;
+      throw error;
+    }
+
+    const parsed = {
+      token:      result.token || result.access_token,
+      issued_at:  result.issued_at ?? (new Date()).toISOString(),
+      expires_in: result.expires_in ?? 300,
+    };
+
+    type parsedKey = keyof typeof parsed;</code></pre>
+    <p>Fix: return <code>{}</code> unless the header starts with <code>Bearer</code>, and add the <code>access_token</code> fallback.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/lib/registry.ts">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> A renamed or deleted repository reports 401, not the intended message <span class="pill pill-claude">Claude Opus 5</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L40-L52">scripts/lib/registry.ts</a></div>
+      <pre data-start="40" data-line="45-47"><code class="language-ts">    url.searchParams.set(&#39;scope&#39;, scope);
+  }
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    return undefined;
+  }
+
+  return (await response.json()).token;
+}
+
+/**</code></pre>
+    <p><code>requestAuthToken</code> discards the token endpoint&#39;s status, so the error names the first request&#39;s 401. Docker Hub answers 401 rather than 404 for a repository that does not exist, even after a successful token exchange:</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-text">  nosuchorg-xyzzy/nosuchimage:1.0 -&gt; 401</code></pre>
+      </details>
+    <p>So an extension whose image repo is renamed or made private throws <code>registry returned 401</code> instead of the <code>has no image tagged X or vX</code> message <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L83"><code>extension-data.ts:83</code></a> was written for. The pin is never wrong, only the diagnosis.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L78-L88">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="78" data-line="83"><code class="language-typescript">      if (await imageTagExists(`${ this.name }:${ tag }`)) {
+        return tag;
+      }
+    }
+
+    throw new Error(`${ this.name } has no image tagged ${ candidates.join(&#39; or &#39;) }`);
+  }
+
+  async updateManifest(newVersion: string, _newAssets: DependencyAsset[]): Promise&lt;Set&lt;string&gt;&gt; {
+    const newTag = await this.resolveTag(newVersion);
+    // We want to try to keep the YAML comments; so we do string replace instead.</code></pre>
+    <p>Fix: log the token endpoint&#39;s status before returning <code>undefined</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> <code>resolveTag</code> prefers the unprefixed tag, losing the release identity <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L70-L80">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="70" data-line="75"><code class="language-ts">  /**
+   * The tag to pin for the given version.  Some upstreams publish a release
+   * only under a `v` prefix, so ask the registry which form it serves.
+   */
+  async resolveTag(version: string): Promise&lt;string&gt; {
+    const candidates = [version, `v${ version }`];
+
+    for (const tag of candidates) {
+      if (await imageTagExists(`${ this.name }:${ tag }`)) {
+        return tag;
+      }</code></pre>
+    <p>Normalization at line 62 discards whether the publisher tagged <code>v1.2.3</code> or <code>1.2.3</code>, and this ordering then always prefers the unprefixed image. If both exist with different digests, the bump pins something other than the release. The merge-base pinned the exact GitHub tag.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L57-L67">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="57" data-line="62"><code class="language-typescript">    const [owner, repo] = this.info.github_repo.split(&#39;/&#39;, 2);
+    const tags = await getPublishedReleaseTagNames(owner, repo);
+
+    // Some upstreams (e.g. epinio) prefix their release tags with `v`; strip
+    // it so a bump reads as a plain version.  resolveTag picks the tag to pin.
+    return tags.map(tag =&gt; tag.replace(/^v/, &#39;&#39;));
+  }
+
+  getAssets(): Promise&lt;DependencyAsset[]&gt; {
+    // Extensions are pulled via `docker pull`, not downloaded as files.
+    return Promise.resolve([]);</code></pre>
+    <p>No current exposure: I compared digests for both epinio releases that publish both forms, and they match (<code>0.1.6</code> and <code>v0.1.6</code> are both <code>sha256:b9812aeb…</code>). <code>rancher/application-collection-extension</code> publishes no <code>v</code> form at all.</p>
+    <p>Fix: keep the original release tag alongside the normalized version, try the exact tag first, and use the other spelling only as a fallback.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> The <code>v</code> strip is unanchored at all three sites <span class="pill pill-claude">Claude Opus 5</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L57-L67">scripts/lib/extension-data.ts</a></div>
+      <pre data-start="57" data-line="62"><code class="language-ts">    const [owner, repo] = this.info.github_repo.split(&#39;/&#39;, 2);
+    const tags = await getPublishedReleaseTagNames(owner, repo);
+
+    // Some upstreams (e.g. epinio) prefix their release tags with `v`; strip
+    // it so a bump reads as a plain version.  resolveTag picks the tag to pin.
+    return tags.map(tag =&gt; tag.replace(/^v/, &#39;&#39;));
+  }
+
+  getAssets(): Promise&lt;DependencyAsset[]&gt; {
+    // Extensions are pulled via `docker pull`, not downloaded as files.
+    return Promise.resolve([]);</code></pre>
+    <p><code>/^v/</code> strips a leading <code>v</code> from any string. A tag such as <code>vnext</code> renders on the card as <code>next</code>. Every current tag in the catalog and in the three tracked repos is <code>&lt;digit&gt;</code> or <code>v&lt;digit&gt;</code>, so nothing triggers it today.</p>
+    <p>Fix: <code>/^v(?=\d)/</code> here, at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/dependencies.ts#L704"><code>dependencies.ts:704</code></a>, and at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/components/MarketplaceCard.vue#L119"><code>MarketplaceCard.vue:119</code></a>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> The strip line is duplicated verbatim from its sibling <span class="pill pill-claude">Claude Opus 5</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+    <p>Line 62 is character-for-character <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/dependencies.ts#L704"><code>dependencies.ts:704</code></a>. The bug this PR fixes was the two classes disagreeing, and the fix leaves two copies free to disagree again; S4 would now need applying twice.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/dependencies.ts#L699-L709">scripts/lib/dependencies.ts</a></div>
+      <pre data-start="699" data-line="704"><code class="language-typescript">      throw new Error(&#39;class does not override getAvailableVersions()&#39;);
+    }
+
+    const tags = await getPublishedReleaseTagNames(this.githubOwner, this.githubRepo, this.releaseFilter);
+
+    return tags.map(tag =&gt; tag.replace(/^v/, &#39;&#39;));
+  }
+}
+
+export interface HasUnreleasedChangesResult { latestReleaseTag: string, hasUnreleasedChanges: boolean }
+</code></pre>
+    <p>Fix: export a shared helper from <code>dependencies.ts</code> and call it from both.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/rddepman.ts">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> &quot;Resolve assets before branching&quot; no longer holds for extensions <span class="pill pill-claude">Claude Opus 5</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L325-L336">scripts/rddepman.ts</a></div>
+      <pre data-start="325" data-line="330-331"><code class="language-ts">  for (const { dependency, currentVersion, latestVersion } of needToCreatePR) {
+    const branchName = getBranchName(dependency.name, currentVersion, latestVersion);
+    const commitMessage = `Bump ${ dependency.name } from ${ printable(currentVersion) } to ${ printable(latestVersion) }`;
+
+    try {
+      // Resolve assets before branching so that an upstream verification
+      // failure aborts the bump before any git state changes.
+      console.log(`Resolving assets for ${ dependency.name } ${ printable(latestVersion) }...`);
+      const newAssets = await dependency.getAssets(latestVersion);
+
+      git(&#39;checkout&#39;, &#39;-b&#39;, branchName, MAIN_BRANCH);
+      git(&#39;add&#39;, ...await dependency.updateManifest(latestVersion, newAssets));</code></pre>
+    <p><code>Extension.getAssets()</code> returns <code>[]</code> unconditionally, so an extension&#39;s only upstream check is now <code>resolveTag</code>, which runs inside <code>updateManifest</code> after <code>git checkout -b</code> at line 335. The catch block handles the consequence, but two comments a dozen lines apart now describe opposite orderings.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L330-L340">scripts/rddepman.ts</a></div>
+      <pre data-start="330" data-line="335"><code class="language-typescript">      // Resolve assets before branching so that an upstream verification
+      // failure aborts the bump before any git state changes.
+      console.log(`Resolving assets for ${ dependency.name } ${ printable(latestVersion) }...`);
+      const newAssets = await dependency.getAssets(latestVersion);
+
+      git(&#39;checkout&#39;, &#39;-b&#39;, branchName, MAIN_BRANCH);
+      git(&#39;add&#39;, ...await dependency.updateManifest(latestVersion, newAssets));
+      git(&#39;commit&#39;, &#39;--signoff&#39;, &#39;--message&#39;, commitMessage);
+      git(&#39;push&#39;, &#39;--force&#39;, `https://${ process.env.GITHUB_TOKEN }@github.com/${ GITHUB_OWNER }/${ GITHUB_REPO }`);
+      await createDependencyBumpPR(dependency, currentVersion, latestVersion);
+    } catch (ex) {</code></pre>
+    <p>Fix: say that extensions verify in <code>updateManifest</code> and the catch restores the tree.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/rddepman.ts">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> The recovery step can itself strand the run <span class="pill pill-claude">Claude Opus 5</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L340-L350">scripts/rddepman.ts</a></div>
+      <pre data-start="340" data-line="345"><code class="language-ts">    } catch (ex) {
+      console.error(`Failed to bump ${ dependency.name } to ${ printable(latestVersion) }:`, ex);
+      failed.push(dependency.name);
+      // A bump that throws after branching leaves its branch checked out with a
+      // modified manifest, which the next bump would carry onto its own branch.
+      git(&#39;checkout&#39;, &#39;--force&#39;, MAIN_BRANCH);
+    }
+  }
+
+  if (failed.length) {
+    throw new Error(`Failed to bump ${ failed.join(&#39;, &#39;) }.`);</code></pre>
+    <p><code>git()</code> throws on a non-zero exit (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L91-L93"><code>rddepman.ts:91-93</code></a>). If this checkout fails, the throw escapes the catch, aborts the loop, and skips the <code>failed</code> summary at lines 349-351, which is the stranding this commit exists to remove. The helper already has a non-throwing overload.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L86-L98">scripts/rddepman.ts</a></div>
+      <pre data-start="86" data-line="91-93"><code class="language-typescript">
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (returnOrArg !== true &amp;&amp; result.status) {
+    throw `git returned error code ${ result.status }`;
+  }
+
+  return result.status;
+}
+
+function printable(version: Version): string {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L344-L356">scripts/rddepman.ts</a></div>
+      <pre data-start="344" data-line="349-351"><code class="language-typescript">      // modified manifest, which the next bump would carry onto its own branch.
+      git(&#39;checkout&#39;, &#39;--force&#39;, MAIN_BRANCH);
+    }
+  }
+
+  if (failed.length) {
+    throw new Error(`Failed to bump ${ failed.join(&#39;, &#39;) }.`);
+  }
+}
+
+/**
+ * Re-resolves and rewrites the assets for every manifest dependency at its
+ * current version.  Migrates or refreshes a `dependencies.yaml` without a</code></pre>
+    <p>Fix: <code>git(true, &#39;checkout&#39;, &#39;--force&#39;, MAIN_BRANCH)</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/rddepman.ts">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> The local-changes path still strands on the first failure <span class="pill pill-claude">Claude Opus 5</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L274-L287">scripts/rddepman.ts</a></div>
+      <pre data-start="274" data-line="279-282"><code class="language-ts">  if (!process.env.CI) {
+    // When not running in CI, don&#39;t try to make pull requests.
+
+    if (SKIP_PULL_REQUESTS) {
+      console.log(&#39;Forcing local changes without pull requests&#39;);
+      for (const { dependency, latestVersion } of updatesAvailable) {
+        const newAssets = await dependency.getAssets(latestVersion);
+        await dependency.updateManifest(latestVersion, newAssets);
+      }
+    }
+    if (updatesAvailable.length) {
+      console.log(`Not running in CI, skipping creation of ${ updatesAvailable.length } pull requests.`);
+    }
+</code></pre>
+    <p><code>RD_DEPMAN_LOCAL_CHANGES</code> runs the same sequence with no <code>try</code>/<code>catch</code>, so the behavior commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/140335f20"><code>140335f20</code></a> fixed for CI is unchanged here. This is the documented way to rehearse the workflow locally, so it is where a developer meets the old behavior first.</p>
+    <p>Fix: share one loop body between both call sites.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/rddepman.ts">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> <code>git checkout -b</code> fails if the branch already exists <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+    <p>A bump that fails after branching leaves the local branch behind. <code>-B</code> resets it instead. This does not fire in CI today: <code>actions/checkout</code> creates no local branches beyond the checked-out ref, and each run starts from a fresh clone. It is a one-character hardening for the local path.</p>
+    <p>Fix: <code>git(&#39;checkout&#39;, &#39;-B&#39;, branchName, MAIN_BRANCH)</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="scripts/lib/registry.ts">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> No timeout on either registry fetch <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L38-L48">scripts/lib/registry.ts</a></div>
+      <pre data-start="38" data-line="43"><code class="language-ts">  }
+  if (scope) {
+    url.searchParams.set(&#39;scope&#39;, scope);
+  }
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    return undefined;
+  }
+</code></pre>
+    <p>Neither the token request nor the manifest HEAD passes an <code>AbortSignal</code>, so a hung registry stalls the daily run until the runner&#39;s own limit kills it.</p>
+    <p>Fix: pass <code>AbortSignal.timeout(10_000)</code> to both.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em><code>resolveTag</code> probes only the newest release<em></em> <code>(future)</code> <span class="pill pill-claude">Claude Opus 5</span>. <code>latestVersion</code> reduces to the maximum version, so <code>resolveTag</code> gets one version and two tags. Epinio published <code>v0.1.4</code> and <code>v0.1.5</code> with no image under either form; I confirmed both return 404 today. Had the daily run fired between those releases and <code>v0.1.6</code>, the bump would have failed every day until an image appeared. Falling back to the newest version the registry actually serves would fix it, but that re-opens what @mook-as objected to in <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/8647" class="gh-ref" data-title="rddepman fails when it can&#39;t pull an extension image" data-state="closed" data-type="issue">#8647</a>, so any fallback should log which version it skipped.</li>
+      <li><strong>The card label and the pinned tag diverge exactly where it matters</strong> <code>(future)</code> <span class="pill pill-claude">Claude Opus 5</span>. A <code>v</code> prefix reaches the manifest only when the publisher has no unprefixed image, which is precisely when the string on the card is a tag the registry does not serve. Nothing in the app consumes the label, but <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/assets/specs/command-api.yaml#L563"><code>command-api.yaml:563</code></a> documents <code>application.extensions.installed</code> as taking a tag, so an admin copying a version off the card into a deployment profile gets a reference that 404s.</li>
+      <li><strong>Extension bump PRs still carry an empty body</strong> <span class="pill pill-claude">Claude Opus 5</span>. <code>getBody()</code> returns <code>&#39;&#39;</code> for anything that is not a <code>GitHubDependency</code>, and <code>Extension</code> extends <code>VersionedDependency</code> directly. Pre-existing and out of scope, but the PR title will now say <code>0.1.6</code> while the diff pins whatever <code>resolveTag</code> chose, and a body is where that belongs.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><code>imageTagExists</code> fails closed on any status that is neither success nor 404, with the reason stated in a comment (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L81-L82"><code>registry.ts:81-82</code></a>) <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. That is the right default for a tool that writes pins, and it is the property most likely to be simplified away later.</li>
+      <li>The rationale for skipping <code>docker manifest inspect</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/registry.ts#L4-L5"><code>registry.ts:4-5</code></a>) is accurate <span class="pill pill-claude">Claude Opus 5</span>. I ran it against a public ghcr.io image and got <code>denied: denied</code>.</li>
+      <li><code>MarketplaceCard.spec.ts:35-37</code> asserts on <code>versionedExtension</code>, not just the label <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span>. It pins the half that must not change, which is the harder half to remember.</li>
+      <li>Each of the four commits carries its own test, and the commit bodies state facts I could check. I confirmed the shared-digest claim in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1407d8fc7"><code>1407d8fc7</code></a> and the open-webui tag history in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66d43fd7c"><code>66d43fd7c</code></a> against the live registry.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The suite is green and I ran it rather than inferring it: 3 suites, 11 tests for the new and changed specs, and 49 tests across <code>scripts/</code>. Output was clean.</p>
+    <p>Ranked by risk, what it does not cover:</p>
+    <ol>
+      <li>The application site of the fix (I1) — proven blind by mutation.</li>
+      <li>Every behavioral path in <code>imageTagExists</code> (I2).</li>
+      <li><code>checkDependencies</code>&#39; failure isolation. <code>scripts/rddepman.ts</code> has no spec, so nothing pins that a throwing bump leaves the rest to run, that the tree returns to <code>main</code>, or that the run still exits non-zero. Reaching it needs <code>git</code> and Octokit stubbed.</li>
+      <li><code>registry.spec.ts:28-30</code> is narrower than its name. &quot;yields no realm for a challenge it cannot read&quot; is asserted with a bare <code>&#39;Basic&#39;</code>; <code>&#39;Basic realm=&quot;…&quot;&#39;</code> is read, incorrectly (S1).</li>
+      <li><code>resolveTag</code>&#39;s reference construction. <code>extension-data.spec.ts:15-17</code> mocks <code>../registry</code> wholesale, so nothing checks that <code>${this.name}:${tag}</code> survives <code>parseImageReference</code> for a registry-qualified name or one with a port.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><code>scripts/lib/registry.ts</code> is documented well: module rationale, an <code>@note</code> on the test-only export matching <code>dockerUtils.ts</code>, and an <code>@throws</code> on <code>imageTagExists</code>. That <code>@throws</code> says &quot;anything but success or 404&quot;, which is true but reads as covering only exotic cases; per S2 a missing repository lands there routinely on Docker Hub, so naming it would help.</p>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L1-L17"><code>scripts/rddepman.ts:1-17</code></a> documents the modes but not the new failure semantics. One sentence belongs there, since a CI consumer now depends on it.</p>
+    <p>No user-facing documentation needs changing.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Clean. Four commits, each a single concept, each with its own test, ordered so the narrowest fix comes first and the two problems it exposed follow. No fixups and no cross-commit patching. The one correction needed is factual, not structural: see I3 on <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/140335f20"><code>140335f20</code></a>&#39;s body.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/components/MarketplaceCard.vue#L114-L117"><code>MarketplaceCard.vue:114-117</code></a> records that the label and the pull reference can diverge, and <code>MarketplaceCard.spec.ts:35-37</code> pins the invariant. Commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66d43fd7c"><code>66d43fd7c</code></a> makes the divergence more likely, since registry resolution is the only path that writes a prefixed tag.</li>
+      <li><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L343-L344"><code>rddepman.ts:343-344</code></a> explains why the forced checkout is there. I traced the four failure points inside the <code>try</code> and confirmed <code>git checkout --force main</code> restores index and working tree in each. S7 concerns only that step&#39;s own failure, which the comment does not claim to cover.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The PR has no review comments yet.</p>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 5]</strong> — Produced by far the deepest review. It symlinked <code>node_modules</code> to run the real suite, probed both registries live, and built a differential against the in-tree <code>auth.ts</code> parser that nobody else thought to look for. Its S1 is the only finding in the round that needed an input no real registry sends, and it survives: I reproduced the <code>TypeError</code> with a control case that comes out the other way. It also found the comment drift at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/rddepman.ts#L330"><code>rddepman.ts:330</code></a> that I had flagged independently before any review arrived. Two small imprecisions: it cited <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/dependencies.ts#L703"><code>dependencies.ts:703</code></a> for a line at 704, and called <code>MarketplaceCatalog.vue</code> free of version rendering when the file does define an unused <code>installedVersion</code> method.</p>
+    <p><strong>[Codex GPT 5.6 Sol]</strong> — The most disciplined about evidence. It said plainly that jest could not run in its worktree rather than implying otherwise, and its digest probes reached the same conclusion mine did without either of us seeing the other&#39;s work. Its S3 is the round&#39;s most interesting design point and the only one to question <code>resolveTag</code>&#39;s preference order rather than its mechanism. It labelled that finding &quot;(suggestion, regression)&quot;, which is the right pairing: the behavior does differ from the merge-base, and no current extension exposes it.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> — The shortest review by a wide margin, and the only one to spot the <code>-b</code>/<code>-B</code> hardening. Its calibration on the shared-regeneration problem beat Flash&#39;s: it filed the same observation as a <code>(future)</code> design concern rather than an Important, which is defensible even though the reproducer pushed me the other way. It skipped <code>git blame</code>, as expected for this agent. Its coverage summary marked five of seven files &quot;no issues&quot;, which reads thin next to what the other three found in those same files.</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> — Raised the shared-regeneration problem as its only Important and was right to treat it as the round&#39;s most consequential finding. But its per-suite test counts (3, 4, 3) do not match the suite: <code>extension-data.spec.ts</code> has five tests, not four, and the real total is 11, not 10. It did build a real <code>node_modules</code> in its worktree, so it had the means to run them, which makes the mismatch harder to explain rather than easier. Treat its execution claims as unverified. Its unquoted-auth-param suggestion pointed at the right function for the wrong reason.</p>
+    <p>The two Gemini reviewers share a model family, so their agreement on the shared-regeneration concern counts as one opinion, not two.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>18m 08s</td><td>9m 54s</td><td>7m 25s</td><td>4m 37s</td></tr>
+        <tr><td>Findings</td><td>3I 6S</td><td>1I 1S</td><td>1I 1S</td><td>1I 1S</td></tr>
+        <tr><td>Tool calls</td><td>79 (Bash 67, Write 8, Read 4)</td><td>—</td><td>30 (run<em>shell</em>command 29, write_file 1)</td><td>31 (read<em>file 14, run</em>shell<em>command 7, grep</em>search 6)</td></tr>
+        <tr><td>Design observations</td><td>7</td><td>4</td><td>3</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>8</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>7</td><td>7</td><td>7</td><td>7</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>3I 6S</strong></td><td><strong>1I 1S</strong></td><td><strong>1I 1S</strong></td><td><strong>1I 1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p>Claude gave the most value by a clear margin: it supplied six of the ten suggestions, both test-coverage Importants, and the only finding that needed a constructed input. Codex gave the best evidence-to-claim ratio and the single most interesting design observation. Flash found the most consequential problem but reported numbers it could not have observed, which cost it credibility on everything else it claimed to have run. Gemini Pro contributed one useful hardening and little else.</p>
+    <p><strong>Reconciliation.</strong> Flash&#39;s I1 (shared regeneration) was kept at Important and reworded to name the commit-message inaccuracy, which Flash did not raise. Gemini Pro filed the same problem as a <code>(future)</code> design concern; the reproducer raised it to I3. Codex&#39;s S2 (untested <code>imageTagExists</code>) merged into Claude&#39;s I1 as I2. Codex&#39;s S1 became S3, and its S3 (untested recovery path) moved to Testing Assessment item 3, where it reads better as a coverage gap than a numbered finding. Flash&#39;s S2 (unquoted auth parameters) was dropped in favour of S1, which identifies a demonstrable defect in the same function rather than a speculative one.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[ ] A review session launched inside a git worktree cannot write to the reviews directory in the main checkout, and cannot run the multi-statement shell forms the setup steps use. Before assembling any context, check whether the session is worktree-isolated. When it is, run every helper as a single command with fully-qualified paths rather than assigning shell variables, and settle where the report will be written before spending agent time, since the deliverable&#39;s home lies outside the isolation boundary.</li>
+      <li>[ ] Shell state does not persist between tool calls, so a step that imports variables by <code>eval</code>-ing a helper&#39;s output leaves every later step referring to unset names. Have the helper&#39;s output read once and substitute the values literally into each later command.</li>
+      <li>[ ] Confirming that a reviewer&#39;s environment <em>could</em> have produced a run result is not enough to repeat it. Compare the reported numbers against the suite&#39;s own output: an agent with a working toolchain can still report a per-suite breakdown that does not match what the runner prints. When the totals disagree, label every execution claim from that agent unverified, whatever its environment allowed.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[ ] <code>.gitignore</code> lists <code>/node_modules/</code> with a trailing slash, which matches directories only. An agent that symlinks the main checkout&#39;s <code>node_modules</code> into its worktree leaves an untracked entry visible in <code>git status</code>, while one that copies or installs a real directory leaves none. Read a clean <code>git status</code> in a review worktree as evidence about the agent&#39;s method, not as proof it modified nothing.</li>
+      <li>[ ] <code>getExtensions(true)</code> filters the extension catalog to entries carrying a <code>github_repo</code>, and that filtered list is what the dependency manager consumes. Extensions without one never reach <code>latestVersion</code>, so its <code>reduce</code> over an empty array cannot throw for them. Do not file that as a defect.</li>
+      <li>[ ] Docker Hub answers 401, not 404, for a repository that does not exist, even after a successful anonymous token exchange. Code that classifies registry responses by status will report a renamed, deleted, or private repository as an authentication failure. Check that distinction whenever a change reads registry status codes.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
