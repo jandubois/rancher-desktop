@@ -498,7 +498,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
     return Promise.resolve([]);</code></pre>
     <p><code>/^v/</code> strips a leading <code>v</code> from any string. A tag such as <code>vnext</code> renders on the card as <code>next</code>. Every current tag in the catalog and in the three tracked repos is <code>&lt;digit&gt;</code> or <code>v&lt;digit&gt;</code>, so nothing triggers it today.</p>
     <p>Fix: <code>/^v(?=\d)/</code> here, at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/dependencies.ts#L704"><code>dependencies.ts:704</code></a>, and at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/components/MarketplaceCard.vue#L119"><code>MarketplaceCard.vue:119</code></a>.</p>
-    <p><strong>Outcome:</strong> Fixed. <code>tagToVersion</code> uses <code>/^v(?=\d)/</code>, and the card strips only before a digit; both are pinned by a test.</p>
+    <p><strong>Outcome:</strong> Fixed in the renderer only. The card strips a <code>v</code> only before a digit. The two script-side strips are each half of a round trip with an unconditional <code>`v${...}`</code> reprefix (<code>versionToTagName</code>, and lima&#39;s three URL builders), so anchoring them breaks what it was meant to protect: <code>vNext</code> round-tripped correctly under <code>/^v/</code> and becomes <code>vvNext</code> under <code>/^v(?=\d)/</code>. They keep the unanchored form.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
       <div class="finding-title" id="S5">
@@ -518,7 +518,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
 export interface HasUnreleasedChangesResult { latestReleaseTag: string, hasUnreleasedChanges: boolean }
 </code></pre>
     <p>Fix: export a shared helper from <code>dependencies.ts</code> and call it from both.</p>
-    <p><strong>Outcome:</strong> Fixed. One exported <code>tagToVersion</code> in <code>dependencies.ts</code>, called from <code>GitHubDependency.getAvailableVersions</code> and from <code>lima.ts</code>. The renderer keeps its own copy, since it cannot import from <code>scripts/</code>.</p>
+    <p><strong>Outcome:</strong> Moot. The duplicate this finding named was <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/extension-data.ts#L62"><code>extension-data.ts:62</code></a>, which went with the dropped commits. The two strips left (<code>dependencies.ts</code>, <code>lima.ts</code>) never operate on the same value, so there is nothing to share.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/rddepman.ts">
       <div class="finding-title" id="S6">
