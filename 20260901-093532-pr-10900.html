@@ -241,6 +241,7 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
     <div class="card card-neutral">
     <p>Commit 1&#39;s unconditional <code>v</code> strip would have broken the pin for at least one extension: ghcr.io serves <code>rancher-desktop-rdx-open-webui:v0.0.8</code> but answers 404 for <code>0.0.8</code>. Commit 3&#39;s registry lookup fixes that, and I confirmed the whole 401-token-retry flow works against both Docker Hub and ghcr.io. All 11 new tests pass. Three findings survived: nothing asserts the resolved tag reaches the manifest, no test runs <code>imageTagExists</code>, and one dead image still fails every extension bump.</p>
     <p>All four reviewers agreed on no Critical issues, and the two that dug hardest (Claude, Codex) converged on the same gap from opposite directions. I ran the suite in a real checkout rather than trusting inspection, mutated the fix to see whether the tests noticed, and probed both registries live. I3 is the one finding that contradicts the PR&#39;s own description, so it is the one to read first.</p>
+    <p>&gt; <strong>The cited code has changed since this review ran.</strong> The PR was cut down to &gt; two commits after the review: the <code>v</code>-strip on release tags and the registry &gt; lookup that recovered from it were dropped as a round trip, taking &gt; <code>scripts/lib/registry.ts</code> and the extension <code>resolveTag</code> path with them. What &gt; remains is the card&#39;s display fix and one shared tag-strip helper. Most &gt; findings below point at code that is no longer in the branch; each says so.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -279,6 +280,7 @@ Tests:       49 passed, 49 total</code></pre>
       </details>
     <p>The control comes out the other way: with line 91 restored the same 49 tests pass, so the suite is blind to this line in both directions.</p>
     <p>Fix: extract the substitution so it can be tested without mocking <code>fs</code> and <code>child_process</code>, then assert that bumping <code>org/image:0.1.3</code> to <code>0.1.6</code> with only <code>org/image:v0.1.6</code> published yields <code>org/image:v0.1.6</code>.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-important" data-file="scripts/lib/__tests__/registry.spec.ts">
       <div class="finding-title" id="I2">
@@ -317,6 +319,7 @@ scripts/lib/extension-data.ts:78:      if (await imageTagExists(`${ this.name }:
   throw new Error(`Could not check ${ reference }: registry returned ${ response.status }`);
 }</code></pre>
     <p>Fix: stub <code>globalThis.fetch</code> and assert the three terminal outcomes. I ran such a spec against the unmodified tree and it passed, so the tests are cheap to add.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-important" data-file="scripts/lib/extension-data.ts">
       <div class="finding-title" id="I3">
@@ -403,6 +406,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
 
     type parsedKey = keyof typeof parsed;</code></pre>
     <p>Fix: return <code>{}</code> unless the header starts with <code>Bearer</code>, and add the <code>access_token</code> fallback.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/lib/registry.ts">
       <div class="finding-title" id="S2">
@@ -441,6 +445,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
     const newTag = await this.resolveTag(newVersion);
     // We want to try to keep the YAML comments; so we do string replace instead.</code></pre>
     <p>Fix: log the token endpoint&#39;s status before returning <code>undefined</code>.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
       <div class="finding-title" id="S3">
@@ -473,6 +478,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
     return Promise.resolve([]);</code></pre>
     <p>No current exposure: I compared digests for both epinio releases that publish both forms, and they match (<code>0.1.6</code> and <code>v0.1.6</code> are both <code>sha256:b9812aeb…</code>). <code>rancher/application-collection-extension</code> publishes no <code>v</code> form at all.</p>
     <p>Fix: keep the original release tag alongside the normalized version, try the exact tag first, and use the other spelling only as a fallback.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
       <div class="finding-title" id="S4">
@@ -492,6 +498,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
     return Promise.resolve([]);</code></pre>
     <p><code>/^v/</code> strips a leading <code>v</code> from any string. A tag such as <code>vnext</code> renders on the card as <code>next</code>. Every current tag in the catalog and in the three tracked repos is <code>&lt;digit&gt;</code> or <code>v&lt;digit&gt;</code>, so nothing triggers it today.</p>
     <p>Fix: <code>/^v(?=\d)/</code> here, at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/scripts/lib/dependencies.ts#L704"><code>dependencies.ts:704</code></a>, and at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/6386a4a53eae3c82c8e2ba3f96088d3664fd42ec/pkg/rancher-desktop/components/MarketplaceCard.vue#L119"><code>MarketplaceCard.vue:119</code></a>.</p>
+    <p><strong>Outcome:</strong> Fixed. <code>tagToVersion</code> uses <code>/^v(?=\d)/</code>, and the card strips only before a digit; both are pinned by a test.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/lib/extension-data.ts">
       <div class="finding-title" id="S5">
@@ -511,6 +518,7 @@ await expect(epinio.updateManifest(&#39;0.1.6&#39;, [])).resolves.toBeInstanceOf
 export interface HasUnreleasedChangesResult { latestReleaseTag: string, hasUnreleasedChanges: boolean }
 </code></pre>
     <p>Fix: export a shared helper from <code>dependencies.ts</code> and call it from both.</p>
+    <p><strong>Outcome:</strong> Fixed. One exported <code>tagToVersion</code> in <code>dependencies.ts</code>, called from <code>GitHubDependency.getAvailableVersions</code> and from <code>lima.ts</code>. The renderer keeps its own copy, since it cannot import from <code>scripts/</code>.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/rddepman.ts">
       <div class="finding-title" id="S6">
@@ -543,6 +551,7 @@ export interface HasUnreleasedChangesResult { latestReleaseTag: string, hasUnrel
       await createDependencyBumpPR(dependency, currentVersion, latestVersion);
     } catch (ex) {</code></pre>
     <p>Fix: say that extensions verify in <code>updateManifest</code> and the catch restores the tree.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/rddepman.ts">
       <div class="finding-title" id="S7">
@@ -590,6 +599,7 @@ function printable(version: Version): string {</code></pre>
  * Re-resolves and rewrites the assets for every manifest dependency at its
  * current version.  Migrates or refreshes a `dependencies.yaml` without a</code></pre>
     <p>Fix: <code>git(true, &#39;checkout&#39;, &#39;--force&#39;, MAIN_BRANCH)</code>.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/rddepman.ts">
       <div class="finding-title" id="S8">
@@ -612,6 +622,7 @@ function printable(version: Version): string {</code></pre>
 </code></pre>
     <p><code>RD_DEPMAN_LOCAL_CHANGES</code> runs the same sequence with no <code>try</code>/<code>catch</code>, so the behavior commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/140335f20"><code>140335f20</code></a> fixed for CI is unchanged here. This is the documented way to rehearse the workflow locally, so it is where a developer meets the old behavior first.</p>
     <p>Fix: share one loop body between both call sites.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/rddepman.ts">
       <div class="finding-title" id="S9">
@@ -619,6 +630,7 @@ function printable(version: Version): string {</code></pre>
       </div>
     <p>A bump that fails after branching leaves the local branch behind. <code>-B</code> resets it instead. This does not fire in CI today: <code>actions/checkout</code> creates no local branches beyond the checked-out ref, and each run starts from a fresh clone. It is a one-character hardening for the local path.</p>
     <p>Fix: <code>git(&#39;checkout&#39;, &#39;-B&#39;, branchName, MAIN_BRANCH)</code>.</p>
+    <p><strong>Outcome:</strong> Moot. The commit this finding sits on was dropped from the PR; only the display fix and the shared tag-strip helper remain.</p>
     </div>
     <div class="card card-suggestion" data-file="scripts/lib/registry.ts">
       <div class="finding-title" id="S10">
