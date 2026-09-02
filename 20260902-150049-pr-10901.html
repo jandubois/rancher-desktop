@@ -229,7 +229,7 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
       <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/904975e52"><code>904975e52</code></a> Skip loading airgap images that are already present</td></tr>
       <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1"><code>904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1</code></a></td></tr>
       <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
-      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; a failed <code>docker image inspect</code> silently re-imports an image that is present, restoring the record the change exists to prevent</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge as-is</span> &mdash; no Critical or Important finding survives; every remaining suggestion is optional</td></tr>
       <tr><td>Wall-clock time</td><td><code>28 min 16 s</code></td></tr>
     </table>
 
@@ -239,8 +239,8 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
     <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
-    <p>Round 2 changed only the BATS suite and two lines of the loader. Every Round-1 fix holds up: <code>pipefail</code> runs on both guests, the log assertion fails loudly on either platform, and the rewritten blob comment matches containerd&#39;s importer. One new defect survives verification. An inspect that fails for any reason other than &quot;absent&quot; puts a present image back into the load set, and nothing reaches the log.</p>
-    <p>Four reviewers ran the same prompt. The Important finding is Codex&#39;s alone; Claude supplied four of the five suggestions. Findings from the two Gemini models did not survive verification against the live VM. The consolidator ran the loader end to end against the real k3s v1.36.4 archive with a stub docker, and checked every archive digest against the running moby daemon.</p>
+    <p>Round 2 changed only the BATS suite and two lines of the loader, and it is the round that converged. Every Round-1 fix holds up: <code>pipefail</code> runs on both guests, the log assertion fails loudly on either platform, and the rewritten blob comment matches containerd&#39;s importer. No Critical or Important finding survives, so the six suggestions below are optional. The closest call is an inspect failure that re-imports a present image, whose worst outcome is the merge-base behaviour.</p>
+    <p>Four reviewers ran the same prompt. The sharpest suggestion is Codex&#39;s alone; Claude supplied four of the other five. Findings from the two Gemini models did not survive verification against the live VM. The consolidator ran the loader end to end against the real k3s v1.36.4 archive with a stub docker, and checked every archive digest against the running moby daemon.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -251,9 +251,15 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
     <hr>
     <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
 
-    <div class="card card-important" data-file="pkg/rancher-desktop/assets/scripts/docker-load-airgap-images">
-      <div class="finding-title" id="I1">
-        <span class="finding-num">I1.</span> A failed <code>docker image inspect</code> re-imports an image that is present, restoring the dangling record <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I1" class="pilcrow">&#182;</a>
+    <div class="card card-important">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/scripts/docker-load-airgap-images">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> A failed <code>docker image inspect</code> re-imports an image that is present, with nothing in the log <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S1" class="pilcrow">&#182;</a>
       </div>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L98-L108">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
       <pre data-start="98" data-line="103"><code class="language-sh">
@@ -267,7 +273,7 @@ while read -r digest name; do
 done &lt;&quot;$WORK/archive-images&quot;
 wanted=$(wc -l &lt;&quot;$WORK/wanted&quot;)
 </code></pre>
-    <p><code>2&gt;/dev/null || true</code> maps every inspect failure to the empty string, which never equals a digest, so the image joins <code>wanted</code>. A daemon hiccup that clears before line 124 re-imports a tag already pointing at the same target, so <code>ensureDanglingImage</code> fires and the record is permanent. Nothing records why. The error text is discarded, and the run prints <code>loading 1 of 8</code>, indistinguishable from the fast path working.</p>
+    <p><code>2&gt;/dev/null || true</code> maps every inspect failure to the empty string, so the image joins <code>wanted</code>. If the failure clears before line 124, the script re-imports a tag already pointing at the same target, <code>ensureDanglingImage</code> fires, and the record is permanent.</p>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L119-L124">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
       <pre data-start="119" data-line="124"><code class="language-plaintext">echo &quot;airgap images: loading $wanted of $total&quot;
 mkdir -p &quot;$WORK/archive&quot;
@@ -275,7 +281,7 @@ decompress | tar -xf - -C &quot;$WORK/archive&quot;
 awk -v mode=filter -f &quot;$WORK/index.awk&quot; &quot;$WORK/wanted&quot; &quot;$WORK/archive/index.json&quot; &gt;&quot;$WORK/index.filtered&quot;
 mv &quot;$WORK/index.filtered&quot; &quot;$WORK/archive/index.json&quot;
 tar -cf - -C &quot;$WORK/archive&quot; . | docker load</code></pre>
-    <p>The ceiling is merge-base behaviour for one image, so the mechanism belongs to the fail-open class the author accepted in Round 1. What is new is that this one degrades invisibly.</p>
+    <p>The outcome is capped at merge-base behaviour for that one image, and a persistent failure produces the same record on every start, which the merge-base did anyway. The window is small. <code>cri-dockerd</code> declares <code>need docker</code> and k3s declares <code>need cri-dockerd</code>, so dockerd is up before <code>start_pre</code> runs, and the loop takes about 150 ms per start. What remains is the missing diagnostic. The run prints <code>loading 1 of 8</code> and looks correct.</p>
       <details class="repro">
         <summary>Reproducer</summary>
       <pre><code class="language-sh"># Synthetic OCI archive built from the real k3s v1.36.4 index.json (8 manifests),
@@ -291,14 +297,11 @@ airgap images: all 8 already present, nothing to load     &lt;- docker load neve
 airgap images: loading 1 of 8
 [&#39;docker.io/rancher/mirrored-pause:3.10.2&#39;]               &lt;- the present tag is re-imported</code></pre>
       </details>
-    <p>Fix: stop discarding the error. Sending inspect&#39;s stderr to the k3s log makes the mis-classification diagnosable without changing the fail-open contract. Codex instead proposed keying on Docker&#39;s <code>No such image</code> text and exiting 1 otherwise; a wording change upstream would then leave <code>start_pre</code> failing and k3s unable to start.</p>
+    <p>Fix: send inspect&#39;s stderr to the k3s log instead of <code>/dev/null</code>. Codex proposed keying on Docker&#39;s <code>No such image</code> text and exiting 1 otherwise; an upstream rewording would then leave k3s unable to start.</p>
     </div>
-    <hr>
-    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
-
     <div class="card card-suggestion" data-file="bats/tests/k8s/airgap-image-load.bats">
-      <div class="finding-title" id="S1">
-        <span class="finding-num">S1.</span> A BATS dispatch with default inputs skips every assertion the PR adds <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span><a href="#S1" class="pilcrow">&#182;</a>
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> A BATS dispatch with default inputs skips every assertion the PR adds <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span><a href="#S2" class="pilcrow">&#182;</a>
       </div>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/bats/tests/k8s/airgap-image-load.bats#L27-L39">bats/tests/k8s/airgap-image-load.bats</a></div>
       <pre data-start="27" data-line="32-34"><code class="language-bash">        members=$(tar -tf &quot;$archive&quot;)
@@ -338,8 +341,8 @@ windows-latest  moby  1.22.7</code></pre>
     <p>Fix: raise the workflow default, or add a moby matrix entry pinned to an OCI release. Both agents proposed <code>RD_KUBERNETES_VERSION=1.32.7</code> in the file instead; note that <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/bats/tests/helpers/defaults.bash#L193"><code>defaults.bash:193</code></a> only assigns when unset, so a plain assignment after <code>load</code> would also override an explicit dispatch input.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/k8s/airgap-image-load.bats">
-      <div class="finding-title" id="S2">
-        <span class="finding-num">S2.</span> The removal loop depends on exactly one airgap image having no container <span class="pill pill-claude">Claude Opus 5</span><a href="#S2" class="pilcrow">&#182;</a>
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> The removal loop depends on exactly one airgap image having no container <span class="pill pill-claude">Claude Opus 5</span><a href="#S3" class="pilcrow">&#182;</a>
       </div>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/bats/tests/k8s/airgap-image-load.bats#L86-L98">bats/tests/k8s/airgap-image-load.bats</a></div>
       <pre data-start="86" data-line="91-93"><code class="language-bash">
@@ -366,8 +369,8 @@ $ docker images --format &#39;{{.ID}} {{.Repository}}&#39; | grep 101b4afd7673
     <p>Fix: restrict the candidates to the archive&#39;s own namespace, so a fixture change fails where it happens: <code>[[ ${image} == rancher/* ]] || continue</code>.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/k8s/airgap-image-load.bats">
-      <div class="finding-title" id="S3">
-        <span class="finding-num">S3.</span> The probe matches <code>index.json</code> more strictly than the loader does <span class="pill pill-claude">Claude Opus 5</span><a href="#S3" class="pilcrow">&#182;</a>
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> The probe matches <code>index.json</code> more strictly than the loader does <span class="pill pill-claude">Claude Opus 5</span><a href="#S4" class="pilcrow">&#182;</a>
       </div>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/bats/tests/k8s/airgap-image-load.bats#L23-L33">bats/tests/k8s/airgap-image-load.bats</a></div>
       <pre data-start="23" data-line="28"><code class="language-bash">        for archive in /var/lib/rancher/k3s/agent/images/k3s-airgap-images-*.tar.zst \
@@ -397,8 +400,8 @@ $ docker images --format &#39;{{.ID}} {{.Repository}}&#39; | grep 101b4afd7673
     <p>Fix: accept both spellings, <code>grep -c &quot;^\(\./\)\?index\.json$&quot;</code>.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/scripts/docker-load-airgap-images">
-      <div class="finding-title" id="S4">
-        <span class="finding-num">S4.</span> &quot;no index.json in the archive&quot; is printed for every archive-read failure <span class="pill pill-claude">Claude Opus 5</span><a href="#S4" class="pilcrow">&#182;</a>
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> &quot;no index.json in the archive&quot; is printed for every archive-read failure <span class="pill pill-claude">Claude Opus 5</span><a href="#S5" class="pilcrow">&#182;</a>
       </div>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L27-L38">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
       <pre data-start="27" data-line="32-33"><code class="language-sh">}
@@ -417,8 +420,8 @@ function value_of(entry, pattern,   v) {
     <p>Fix: drop <code>2&gt;/dev/null</code> so tar&#39;s own diagnosis reaches the log, or test tar&#39;s status separately and log <code>cannot read the archive</code> for it.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/k8s/airgap-image-load.bats">
-      <div class="finding-title" id="S5">
-        <span class="finding-num">S5.</span> The skip message asserts the classic image store for any non-<code>overlayfs</code> driver <span class="pill pill-claude">Claude Opus 5</span><a href="#S5" class="pilcrow">&#182;</a>
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> The skip message asserts the classic image store for any non-<code>overlayfs</code> driver <span class="pill pill-claude">Claude Opus 5</span><a href="#S6" class="pilcrow">&#182;</a>
       </div>
       <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/904975e52a53b3ffd8e098e7c32fbe91e0c0f6d1/bats/tests/k8s/airgap-image-load.bats#L8-L21">bats/tests/k8s/airgap-image-load.bats</a></div>
       <pre data-start="8" data-line="13-16"><code class="language-bash">
@@ -444,7 +447,7 @@ skip_unless_loader_can_filter() {
     <div class="card card-design">
     <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
     <ul>
-      <li><strong>The partial path is the only one nothing verifies automatically</strong> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. Round 2 adds the test that covers it, and S1 is why it does not run by default. The awk program remains reachable only through a full VM start; a fixture-driven check (an <code>index.json</code>, a stub <code>docker</code> on <code>PATH</code>, and an assertion that the filtered output parses) runs in milliseconds and is what both the consolidator and two agents built by hand to review this PR.</li>
+      <li><strong>The partial path is the only one nothing verifies automatically</strong> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. Round 2 adds the test that covers it, and S2 is why it does not run by default. The awk program remains reachable only through a full VM start; a fixture-driven check (an <code>index.json</code>, a stub <code>docker</code> on <code>PATH</code>, and an assertion that the filtered output parses) runs in milliseconds and is what both the consolidator and two agents built by hand to review this PR.</li>
       <li><strong>Records from earlier sessions outlive the fix</strong> <code>(future)</code> [Claude Opus 5, Codex GPT 5.6 Sol, Consolidator]. Raised in Round 1, and both agents raised it again, Claude at Important. The change stops creating records and removes none, so an upgrading user keeps the warnings for the images their pods inspect. Claude proposed <code>docker image rm &quot;moby-dangling@$digest&quot;</code>; that does not work. On the live VM <code>docker image inspect &#39;moby-dangling@sha256:d986…&#39;</code> answers <code>No such image</code>, because the CLI normalises a bare name to <code>docker.io/library/…</code> and the record&#39;s literal name is not a valid reference. <code>docker images -a</code> and <code>--filter dangling=true</code> do not list them either. Any cleanup would have to go through containerd&#39;s <code>moby</code> namespace, which is a larger change than this PR. Release notes saying the fix is preventive would cost nothing.</li>
       <li><strong>The dangling warning is emitted on inspect, not on load</strong> <code>(in-scope)</code> [Consolidator]. On the live VM all 60 warnings fall in a 50-second window right after the k3s start, none in the 14.5 hours since, and neither <code>docker images</code> nor <code>docker image inspect</code> produces one. So <code>assert_no_dangling_records</code> depends on a workload having inspected the affected image. It holds for the seven images pods use, which is where the regression would appear; a record on an image nothing runs would go unseen. Given that no CLI lists these records at all, asserting on the log is the only check available.</li>
     </ul>
@@ -462,7 +465,7 @@ skip_unless_loader_can_filter() {
     <div class="card card-neutral">
     <ul>
       <li><strong>CI on the review SHA</strong>: lint on macOS and Windows, unit tests, CodeQL (go and js/ts), <code>check-paths</code>, and the Linux package all pass (<a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/33688137824">run 33688137824</a>); e2e and the mac/win packages were still running. <code>make -C bats lint</code> runs inside the <code>test</code> job, which passed.</li>
-      <li><strong>What the consolidator executed</strong>: the repo&#39;s own bats gate on the new file (<code>bats-lint.pl</code>, <code>shellcheck -s bats</code>, <code>shfmt --diff</code>, all clean); the awk filter against the real v1.36.4 index for all 8 single-image selections and a 3-image non-adjacent set, every result valid JSON with exactly the wanted entries; the loader end to end with a stub docker (I1); the guest probe verbatim through <code>rdctl shell sudo sh -c</code>; <code>set -o pipefail</code> in the guest; every archive digest against the live daemon; <code>get-tests.py</code> with the workflow defaults; and the v1.22.7 and v1.32.7 archive layouts by streaming both.</li>
+      <li><strong>What the consolidator executed</strong>: the repo&#39;s own bats gate on the new file (<code>bats-lint.pl</code>, <code>shellcheck -s bats</code>, <code>shfmt --diff</code>, all clean); the awk filter against the real v1.36.4 index for all 8 single-image selections and a 3-image non-adjacent set, every result valid JSON with exactly the wanted entries; the loader end to end with a stub docker (S1); the guest probe verbatim through <code>rdctl shell sudo sh -c</code>; <code>set -o pipefail</code> in the guest; every archive digest against the live daemon; <code>get-tests.py</code> with the workflow defaults; and the v1.22.7 and v1.32.7 archive layouts by streaming both.</li>
       <li><strong>Gaps</strong>: the consolidator did not run the BATS file itself (it opens with a factory reset of the author&#39;s live VM), and nothing Windows-specific ran anywhere. The <code>total == 0</code> and <code>wanted == total</code> fallbacks are silent, so no assertion distinguishes &quot;the fast path worked&quot; from &quot;it bailed out&quot; <span class="pill pill-claude">Claude Opus 5</span>. No test starts with pre-existing <code>moby-dangling@</code> records <span class="pill pill-codex">Codex GPT 5.6 Sol</span>.</li>
       <li><strong>Cost</strong>: unchanged from Round 1, a factory reset plus a Kubernetes start, now with a third restart for the partial-load test.</li>
     </ul>
@@ -495,7 +498,7 @@ skip_unless_loader_can_filter() {
     <h3 id="claude-opus-5"><span class="pill pill-claude">Claude Opus 5</span> <a href="#claude-opus-5" class="pilcrow">&#182;</a></h3>
     <p>Supplied four of the five suggestions and the only structured verdict table on the Round-1 delta, tracing each fix to the file that settles it. It read <code>bats-file</code> at its pinned submodule SHA to check <code>assert_file_not_contains</code>, and found <code>install-containerd-shims</code> as a second <code>pipefail</code> precedent Round 1 had missed. Both of its Important findings failed verification: the temp-space claim reopened the tmpfs question Round 1 dropped, and its own report called that unsettled and never measured it, while the dangling-record cleanup rests on a <code>docker image rm</code> that cannot address the ref. Its CI-version finding was right and well evidenced but rated one level above what a dispatch-only workflow supports, the same calibration slip it made in Round 1 on the same surface. It was the only reviewer to check whether the &quot;GNU tar&quot; comment was supported, and correct that the repo does not support it.</p>
     <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
-    <p>Found the only defect that survived, the inspect-failure path, which no other reviewer approached. It arrived with a working reproducer, and the consolidator&#39;s independent rebuild against the real index reproduced it exactly. Its CI finding had the strongest evidence in the round, the matrix generator&#39;s actual output beside a streamed listing of both archives. Its proposed fix for the inspect path is the weak part. Matching Docker&#39;s English error text turns a rare silent record into a k3s that will not start if upstream rewords the message. Two findings, both real, no false positives, and its coverage summary named exactly what it could not run and why.</p>
+    <p>Found the inspect-failure path, which no other reviewer approached, and arrived with a working reproducer that the consolidator&#39;s independent rebuild against the real index reproduced exactly. Both of its findings are real and neither is a false positive, but it rated both Important without bounding either. The inspect path degrades no further than the merge-base did, and the CI gap sits behind a dispatch-only workflow. Its CI finding had the strongest evidence in the round, the matrix generator&#39;s actual output beside a streamed listing of both archives. Its proposed fix for the inspect path is the weak part. Matching Docker&#39;s English error text turns a rare silent record into a k3s that will not start if upstream rewords the message.</p>
     <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
     <p>One finding, stated with high confidence and wrong: that <code>docker rmi</code> without <code>--force</code> refuses every airgap image, so the new test aborts unconditionally. On the live moby VM one of the eight images has no container referencing it, which is all the loop needs. The claim was checkable in a single command against a running daemon, and the review reports no attempt to check it. Everything else was empty (no suggestions, no design observations), and its Acknowledged Limitations restated the injected decline list item for item, which is the pattern the prompt warns produces agreement without measurement.</p>
     <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
@@ -505,20 +508,20 @@ skip_unless_loader_can_filter() {
       <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
       <tbody>
         <tr><td>Duration</td><td>14m 22s</td><td>16m 33s</td><td>9m 22s</td><td>4m 07s</td></tr>
-        <tr><td>Findings</td><td>5S</td><td>1I 1S</td><td>none</td><td>none</td></tr>
+        <tr><td>Findings</td><td>5S</td><td>2S</td><td>none</td><td>none</td></tr>
         <tr><td>Tool calls</td><td>53 (Bash 47, Read 6)</td><td>—</td><td>44 (run<em>shell</em>command 42, write_file 2)</td><td>37 (grep<em>search 20, read</em>file 9, glob 4)</td></tr>
         <tr><td>Design observations</td><td>4</td><td>3</td><td>0</td><td>2</td></tr>
         <tr><td>False positives</td><td>2</td><td>0</td><td>1</td><td>1</td></tr>
         <tr><td>Unique insights</td><td>3</td><td>1</td><td>0</td><td>0</td></tr>
         <tr><td>Files reviewed</td><td>5</td><td>5</td><td>5</td><td>5</td></tr>
         <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-        <tr><td><strong>Totals</strong></td><td><strong>5S</strong></td><td><strong>1I 1S</strong></td><td><strong>none</strong></td><td><strong>none</strong></td></tr>
-        <tr><td>Downgraded</td><td>2 (I→S)</td><td>1 (I→S)</td><td>0</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>5S</strong></td><td><strong>2S</strong></td><td><strong>none</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>2 (I→S)</td><td>2 (I→S)</td><td>0</td><td>0</td></tr>
         <tr><td>Dropped</td><td>1</td><td>0</td><td>1</td><td>4</td></tr>
       </tbody>
     </table>
-    <p><strong>Reconciliation.</strong> Codex I2 (inspect failures) kept as I1. Codex I1 and Claude I2 (CI defaults) merged and downgraded: important → suggestion S1, because the BATS workflow is <code>workflow_dispatch</code> only, which is how Round 1 rated the same finding. Claude I1 (temp space under <code>mktemp -d</code>): dropped, refuted. <code>/tmp</code> in the Lima VM is <code>/dev/vda1</code> ext4 with 91.1 GB free, the WSL distro processes no fstab so <code>/tmp</code> is on its VHD, and the archive is 176 MB uncompressed. Claude I3 (existing records persist): moved to Design Observations as the Round-1 <code>(future)</code> item it repeats, with its proposed fix refuted. Claude S4 kept as S2, with Gemini 3.1 Pro I1 noted there as refuted. Claude&#39;s &quot;GNU tar unsupported&quot; documentation gap: dropped, the claim is true on both guests. Gemini 3.1 Pro I1 (<code>rmi</code> needs <code>--force</code>): dropped, false positive. Gemini 3.5 Flash I1 and I2 (missing log, missing archive): dropped, both are the documented design. Flash I3 (tmpfs): dropped, Round 1&#39;s false positive on unchanged code. Flash S1 (<code>$1</code> under <code>nounset</code>): dropped, the script has exactly one caller.</p>
-    <p>Codex provided the most value this round on a single finding that no one else reached and that survived an independent rebuild. Claude provided the most breadth and every suggestion that stands, but spent both of its Important slots on claims a measurement it did not take would have refuted.</p>
+    <p><strong>Reconciliation.</strong> Codex I2 (inspect failures): important → suggestion S1. The reproducer holds, but the outcome is capped at merge-base behaviour for one image in both the transient and the persistent case, and OpenRC has dockerd up before <code>start_pre</code> runs, so the exposure is a ~150 ms window per start. Codex I1 and Claude I2 (CI defaults) merged and downgraded: important → suggestion S2, because the BATS workflow is <code>workflow_dispatch</code> only, which is how Round 1 rated the same finding. Claude I1 (temp space under <code>mktemp -d</code>): dropped, refuted. <code>/tmp</code> in the Lima VM is <code>/dev/vda1</code> ext4 with 91.1 GB free, the WSL distro processes no fstab so <code>/tmp</code> is on its VHD, and the archive is 176 MB uncompressed. Claude I3 (existing records persist): moved to Design Observations as the Round-1 <code>(future)</code> item it repeats, with its proposed fix refuted. Claude S4 kept as S3, with Gemini 3.1 Pro I1 noted there as refuted. Claude&#39;s &quot;GNU tar unsupported&quot; documentation gap: dropped, the claim is true on both guests. Gemini 3.1 Pro I1 (<code>rmi</code> needs <code>--force</code>): dropped, false positive. Gemini 3.5 Flash I1 and I2 (missing log, missing archive): dropped, both are the documented design. Flash I3 (tmpfs): dropped, Round 1&#39;s false positive on unchanged code. Flash S1 (<code>$1</code> under <code>nounset</code>): dropped, the script has exactly one caller.</p>
+    <p>Codex provided the most value this round on a single finding that no one else reached and that survived an independent rebuild, though it over-rated the severity of both its findings. Claude provided the most breadth and every suggestion that stands, but spent both of its Important slots on claims a measurement it did not take would have refuted.</p>
     </div>
     <hr>
     <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
