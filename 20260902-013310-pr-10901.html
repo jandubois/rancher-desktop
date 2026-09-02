@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260902-013310-pr-10901</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Tables written directly in a section body. parseTable classes only the
+ * Retro and Summary tables, so every other one arrives unclassed. */
+table:not([class]) { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+table:not([class]) th, table:not([class]) td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+table:not([class]) th { background: #f3f4f6; font-weight: 600; }
+table:not([class]) tr:nth-child(even) { background: #f9fafb; }
+/* A long path or job name offers no break of its own, so one cell can push
+ * the whole page into a horizontal scroll. Let those tokens wrap. */
+table:not([class]) code { overflow-wrap: anywhere; }
+
+/* Collapsible folds, for the bulk detail a report keeps out of the way */
+details { margin: 0.8rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+/* Reproducers — collapsed, so a long proof keeps the next finding on screen */
+details.repro { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+details.repro > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
+details.repro > summary:hover { background: #eef1f4; }
+details.repro[open] > summary { border-bottom: 1px solid #d0d7de; }
+details.repro pre { border-radius: 0 !important; }
+details.repro .code-file-header { margin-top: 0; border-radius: 0; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260902-013310-pr-10901</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-09-02 01:33</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10901" class="gh-ref" data-title="Skip loading airgap images that are already present" data-state="open" data-type="pr">#10901</a> — Skip loading airgap images that are already present</td></tr>
+      <tr><td>Branch</td><td><code>skip-redundant-airgap-image-load</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4c8a4551a"><code>4c8a4551a</code></a> Skip loading airgap images that are already present</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532"><code>4c8a4551a1a5ea6ea562dda606aeda40ed0ad532</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the new BATS test cannot pass on Windows; the awk parser&#39;s format assumptions deserve a guard but are not blocking</td></tr>
+      <tr><td>Wall-clock time</td><td><code>33 min 33 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>This PR is a workaround for a moby regression: <code>LoadImage</code> keeps a <code>moby-dangling@</code> record for every re-imported image whose tag already points at the same target, and every later inspect logs it. The helper&#39;s digest comparison and its fallbacks behave as documented against the real k3s archive under busybox awk. The one Important finding: the new BATS assertion reads a Lima-only log path, so the test fails on Windows. The awk parser&#39;s format assumptions are the main design risk.</p>
+    <p>Four reviewers ran on the same prompt. All three tool-using reviewers found the Windows log path; Codex, Gemini 3.1 Pro, and Claude each found a different shape of <code>index.json</code> that the awk parser mishandles, and the consolidator probed eight shapes with busybox awk in the running VM to settle them. The author reports the change as verified end to end in another session, and treats it as a stopgap: the upstream moby report is in progress. Findings below are limited to the script, the test, and the deployment glue.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="bats/tests/k8s/airgap-image-load.bats">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> The dangling-record assertion reads a log path that exists only on Lima <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/k8s/airgap-image-load.bats#L36-L43">bats/tests/k8s/airgap-image-load.bats</a></div>
+      <pre data-start="36" data-line="41-42"><code class="language-bash">@test &#39;no image has a dangling duplicate&#39; {
+    run -0 ctrctl info --format &#39;{{.Driver}}&#39;
+    if [[ ${output} != &quot;overlayfs&quot; ]]; then
+        skip &quot;the classic image store (${output}) has no dangling records&quot;
+    fi
+    run rdsudo grep &#39;still dangling&#39; /var/log/docker.log
+    refute_output
+}</code></pre>
+    <p>On Lima the docker conf carries no <code>LOG_DIR</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/backend/lima.ts#L2014"><code>pkg/rancher-desktop/backend/lima.ts:2014</code></a>), so the init script&#39;s default of <code>/var/log/docker.log</code> applies, and the file exists in the running VM.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/backend/lima.ts#L2009-L2019">pkg/rancher-desktop/backend/lima.ts</a></div>
+      <pre data-start="2009" data-line="2014"><code class="language-typescript">          }
+          break;
+        case ContainerEngine.MOBY:
+          // The string is for shell expansion, not a JS template string.
+          // eslint-disable-next-line no-template-curly-in-string
+          await this.writeConf(&#39;docker&#39;, { DOCKER_OPTS: &#39;--host=unix:///var/run/docker.sock --host=unix:///var/run/docker.sock.raw ${DOCKER_OPTS:-}&#39; });
+          await this.startService(&#39;docker&#39;);
+          break;
+        case ContainerEngine.NONE:
+          throw new Error(&#39;No container engine is set&#39;);
+        }</code></pre>
+    <p>On WSL, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/backend/wsl.ts#L1356-L1359"><code>pkg/rancher-desktop/backend/wsl.ts:1356-1359</code></a> writes <code>LOG_DIR</code> into the docker conf, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/service-wsl-dockerd.initd#L18"><code>pkg/rancher-desktop/assets/scripts/service-wsl-dockerd.initd:18</code></a> derives the log path from it, so dockerd logs to <code>docker.log</code> in the host log directory and the VM path is absent. bats <code>run</code> folds grep&#39;s stderr into <code>$output</code>, so <code>refute_output</code> fails on the error text. <code>local_setup</code> skips only the containerd engine, so the Windows moby arm reaches this test. Gemini rated this Critical; a test that cannot pass on one platform is Important.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/backend/wsl.ts#L1351-L1364">pkg/rancher-desktop/backend/wsl.ts</a></div>
+      <pre data-start="1351" data-line="1356-1359"><code class="language-typescript">                this.progressTracker.action(t(&#39;progress.containerEngineComponents&#39;), 50, async() =&gt; {
+                  await BackendHelper.configureContainerEngine(this, configureWASM, mobyStorageDriver);
+                  await this.writeConf(&#39;containerd&#39;, { log_owner: &#39;root&#39; });
+                  await this.writeFile(&#39;/usr/local/bin/nerdctl&#39;, NERDCTL, 0o755);
+                  await this.writeFile(&#39;/etc/init.d/docker&#39;, SERVICE_SCRIPT_DOCKERD, 0o755);
+                  await this.writeConf(&#39;docker&#39;, {
+                    WSL_HELPER_BINARY: await this.getWSLHelperPath(),
+                    LOG_DIR:           logPath,
+                  });
+                  await this.writeFile(`/etc/init.d/buildkitd`, SERVICE_BUILDKITD_INIT, 0o755);
+                  await this.writeFile(`/etc/conf.d/buildkitd`,
+                    `${ SERVICE_BUILDKITD_CONF }\nlog_file=${ logPath }/buildkitd.log\n`);
+                }),
+                this.progressTracker.action(t(&#39;progress.proxyConfigSetup&#39;), 50, async() =&gt; {</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/service-wsl-dockerd.initd#L13-L23">pkg/rancher-desktop/assets/scripts/service-wsl-dockerd.initd</a></div>
+      <pre data-start="13" data-line="18"><code class="language-plaintext">  supervise_daemon_args=&quot;-e HTTPS_PROXY=http://127.0.0.1:3128&quot;
+fi
+command=&quot;&#39;${WSL_HELPER_BINARY:-/usr/local/bin/wsl-helper}&#39;&quot;
+command_args=&quot;docker-proxy start&quot;
+
+DOCKER_LOGFILE=&quot;${DOCKER_LOGFILE:-${LOG_DIR:-/var/log}/${RC_SVCNAME}.log}&quot;
+output_log=&quot;&#39;${DOCKER_LOGFILE}&#39;&quot;
+error_log=&quot;&#39;${DOCKER_LOGFILE}&#39;&quot;
+
+rc_ulimit=&quot;${DOCKER_ULIMIT:--c unlimited -n 1048576 -u unlimited}&quot;
+</code></pre>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash">load &#39;/Users/jan/git/rancher-desktop/bats/bats-support/load&#39;
+load &#39;/Users/jan/git/rancher-desktop/bats/bats-assert/load&#39;
+
+# WSL: dockerd logs to $LOG_DIR/docker.log on the host, so this path is absent
+@test &#39;grep on the absent VM path&#39; {
+    run grep &#39;still dangling&#39; /var/log/docker.log
+    refute_output
+}
+
+# Lima: the file exists; no warnings means grep exits 1 with empty output
+@test &#39;grep on an existing log with no warnings&#39; {
+    run grep &#39;still dangling&#39; empty-docker.log
+    refute_output
+}</code></pre>
+      <pre><code class="language-text">$ sh -c &#39;RC_SVCNAME=docker LOG_DIR=/mnt/c/Users/jan/AppData/Local/rancher-desktop/logs; echo &quot;${DOCKER_LOGFILE:-${LOG_DIR:-/var/log}/${RC_SVCNAME}.log}&quot;&#39;
+/mnt/c/Users/jan/AppData/Local/rancher-desktop/logs/docker.log
+$ bats missing-log.bats
+1..2
+not ok 1 grep on the absent VM path
+#   `refute_output&#39; failed
+# -- output non-empty, but expected no output --
+# output : grep: /var/log/docker.log: No such file or directory
+ok 2 grep on an existing log with no warnings</code></pre>
+      </details>
+    <p>Fix: branch on the platform. <code>is_windows</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/helpers/os.bash#L42"><code>bats/tests/helpers/os.bash:42</code></a>) and <code>refute_file_contains</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/helpers/utils.bash#L83"><code>bats/tests/helpers/utils.bash:83</code></a>) already exist. A single <code>refute_file_contains &quot;$PATH_LOGS/docker.log&quot;</code> would fail on Lima, where the host log directory has no <code>docker.log</code>.</p>
+      <pre><code class="language-diff">-    run rdsudo grep &#39;still dangling&#39; /var/log/docker.log
+-    refute_output
++    if is_windows; then
++        refute_file_contains &quot;$PATH_LOGS/docker.log&quot; &#39;still dangling&#39;
++    else
++        run rdsudo grep &#39;still dangling&#39; /var/log/docker.log
++        refute_output
++    fi</code></pre>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/scripts/docker-load-airgap-images">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> The awk fast path trusts three properties of <code>index.json</code> that no producer promises <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-claude">Claude Opus 5</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L48-L63">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
+      <pre data-start="48" data-line="53-58"><code class="language-awk">function entry_digest(entry) {
+    return value_of(entry, &quot;\&quot;digest\&quot;:\&quot;[^\&quot;]*\&quot;&quot;)
+}
+# Split the manifests array into ENTRIES, dropping the delimiters between
+# them; restore() puts them back.
+function split_manifests(line,   body) {
+    body = line
+    sub(/^.*&quot;manifests&quot;:\[/, &quot;&quot;, body)
+    sub(/\][^]]*$/, &quot;&quot;, body)
+    return split(body, ENTRIES, /\},\{&quot;mediaType&quot;/)
+}
+function restore(i, n,   entry) {
+    entry = ENTRIES[i]
+    if (i &gt; 1) entry = &quot;{\&quot;mediaType\&quot;&quot; entry
+    if (i &lt; n) entry = entry &quot;}&quot;
+    return entry</code></pre>
+    <p>The parser assumes one record, <code>&quot;mediaType&quot;</code> first in every entry, and <code>]}</code> after the array. Reordered keys under-count silently: with the first image present, nothing else loads. One entry per line, or a <code>]</code> in a value after the array, passes the census and hands <code>docker load</code> invalid JSON, which fails the k3s <code>start_pre</code>. Other shapes (pretty-printed, <code>urls</code>, <code>platform</code>, index-level annotations) parse or fall back; an unnamed entry is dropped <span class="pill pill-claude">Claude Opus 5</span>, costing only a dangling image. Every producer in use marshals from Go structs, so none trips these today, which caps this at Suggestion; Gemini rated the trailing-value case Important.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-sh"># index.json is the real one from the k3s v1.36.4 arm64 airgap archive (8 manifests).
+sed -n &quot;/^cat &gt;\&quot;\$WORK\/index.awk\&quot; &lt;&lt;&#39;AWK&#39;\$/,/^AWK\$/p&quot; docker-load-airgap-images | sed &#39;1d;$d&#39; &gt; index.awk
+python3 - &lt;&lt;&#39;PY&#39;
+import json, collections
+d = json.load(open(&#39;index.json&#39;), object_pairs_hook=collections.OrderedDict)
+def compact(o): return json.dumps(o, separators=(&#39;,&#39;, &#39;:&#39;))
+r = collections.OrderedDict(d)   # entry keys reordered: digest before mediaType
+r[&#39;manifests&#39;] = [collections.OrderedDict([(&#39;digest&#39;, m[&#39;digest&#39;])] + list(m.items())) for m in d[&#39;manifests&#39;]]
+open(&#39;reordered.json&#39;, &#39;w&#39;).write(compact(r))
+m = &#39;{&quot;schemaVersion&quot;:2,&quot;mediaType&quot;:&quot;%s&quot;,&quot;manifests&quot;:[\n&#39; % d[&#39;mediaType&#39;]   # one entry per line
+open(&#39;multiline.json&#39;, &#39;w&#39;).write(m + &#39;,\n&#39;.join(compact(e) for e in d[&#39;manifests&#39;]) + &#39;\n]}\n&#39;)
+t = collections.OrderedDict(d); t[&#39;annotations&#39;] = {&#39;note&#39;: &#39;built [ci]&#39;}   # a ] after the array
+open(&#39;trailing.json&#39;, &#39;w&#39;).write(compact(t))
+PY
+printf &#39;docker.io/rancher/mirrored-pause:3.10.2\n&#39; &gt; wanted
+for f in index reordered multiline trailing; do
+    printf &#39;%-10s list=%s &#39; $f &quot;$(awk -v mode=list -f index.awk $f.json | wc -l | tr -d &#39; &#39;)&quot;
+    awk -v mode=filter -f index.awk wanted $f.json |
+        python3 -c &#39;import json,sys; print(&quot;filter=valid(%d)&quot; % len(json.load(sys.stdin)[&quot;manifests&quot;]))&#39; 2&gt;/dev/null || echo filter=INVALID
+done</code></pre>
+      <pre><code class="language-text">index      list=8 filter=valid(1)
+reordered  list=1 filter=valid(0)
+multiline  list=8 filter=INVALID
+trailing   list=8 filter=INVALID
+# identical under busybox awk 1.37.0 in the VM and BWK awk 20200816 on macOS,
+# and for five more shapes (pretty-printed, urls/platform, dup name, ] in an entry, trailing keys)</code></pre>
+      </details>
+    <p>Fix: fail closed, with <code>|| load_everything</code> on both awk calls (lines 94, 121) so <code>set -e</code> does not fail the k3s start. All nine shapes tested: the real index and three benign variants pass, five bad ones fall back.</p>
+      <pre><code class="language-diff"> {
++    if (FNR &gt; 1 || $0 !~ /\]\}$/) exit 1
+     n = split_manifests($0)
++    if (gsub(/&quot;io\.containerd\.image\.name&quot;:/, &quot;&amp;&quot;) != n) exit 1</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/scripts/docker-load-airgap-images">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>set -eu</code> diverges from the sibling script and leaves pipefail off <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L5-L15">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
+      <pre data-start="5" data-line="10"><code class="language-sh"># Re-importing an image whose tag already points at the same target leaves a
+# moby-dangling@&lt;digest&gt; record that nothing removes, and every later inspect
+# then logs &quot;multiple images have the same target, but one of them is still
+# dangling&quot;.
+
+set -eu
+
+TARBALL=&quot;$1&quot;
+WORK=&quot;$(mktemp -d)&quot;
+trap &#39;rm -rf &quot;$WORK&quot;&#39; EXIT
+</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/install-k3s#L3"><code>pkg/rancher-desktop/assets/scripts/install-k3s:3</code></a>, the other <code>#!/bin/sh</code> helper deployed to the same VM, uses <code>set -o errexit -o nounset -o pipefail</code>, and the repo prefers long options in checked-in scripts. With pipefail, a <code>zstd</code> failure sets the status of <code>decompress | docker load</code> (line 25) and of the repack at line 123 directly, instead of relying on <code>docker load</code> rejecting truncated input, which it does. Line 32 already guards its pipeline with <code>|| true</code>. Busybox ash accepts the option, and <code>install-k3s</code> proves it in production.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/install-k3s#L1-L8">pkg/rancher-desktop/assets/scripts/install-k3s</a></div>
+      <pre data-start="1" data-line="3"><code class="language-plaintext">#!/bin/sh
+
+set -o errexit -o nounset -o pipefail
+
+if [ -n &quot;${XTRACE:-}&quot; ]; then
+    set -o xtrace
+fi
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L20-L30">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
+      <pre data-start="20" data-line="25"><code class="language-plaintext">    esac
+}
+
+load_everything() { # &lt;message&gt;
+    echo &quot;airgap images: $1&quot;
+    decompress | docker load
+    exit 0
+}
+
+# The archive includes an oci-layout file, so containerd reads index.json and
+# ignores the docker-style manifest.json beside it. An archive in any other</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L118-L123">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
+      <pre data-start="118" data-line="123"><code class="language-plaintext">echo &quot;airgap images: loading $wanted of $total&quot;
+mkdir -p &quot;$WORK/archive&quot;
+decompress | tar -xf - -C &quot;$WORK/archive&quot;
+awk -v mode=filter -f &quot;$WORK/index.awk&quot; &quot;$WORK/wanted&quot; &quot;$WORK/archive/index.json&quot; &gt;&quot;$WORK/index.filtered&quot;
+mv &quot;$WORK/index.filtered&quot; &quot;$WORK/archive/index.json&quot;
+tar -cf - -C &quot;$WORK/archive&quot; . | docker load</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-set -eu
++set -o errexit -o nounset -o pipefail</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/scripts/docker-load-airgap-images">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> The comment overstates what the filtered archive saves <span class="pill pill-claude">Claude Opus 5</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/pkg/rancher-desktop/assets/scripts/docker-load-airgap-images#L111-L122">pkg/rancher-desktop/assets/scripts/docker-load-airgap-images</a></div>
+      <pre data-start="111" data-line="116-117"><code class="language-sh">    exit 0
+fi
+
+[ &quot;$wanted&quot; -lt &quot;$total&quot; ] || load_everything &quot;loading all $total&quot;
+
+# Load only the missing images by dropping the rest from index.json; the
+# blobs all stay, since docker ignores any that no kept manifest references.
+echo &quot;airgap images: loading $wanted of $total&quot;
+mkdir -p &quot;$WORK/archive&quot;
+decompress | tar -xf - -C &quot;$WORK/archive&quot;
+awk -v mode=filter -f &quot;$WORK/index.awk&quot; &quot;$WORK/wanted&quot; &quot;$WORK/archive/index.json&quot; &gt;&quot;$WORK/index.filtered&quot;
+mv &quot;$WORK/index.filtered&quot; &quot;$WORK/archive/index.json&quot;</code></pre>
+    <p>containerd&#39;s importer ingests every <code>blobs/</code> member through <code>onUntarBlob</code> (<code>core/images/archive/importer.go</code>, the <code>default:</code> arm of the member switch) before it reads the index; blobs no manifest references end up unnamed and eligible for garbage collection. Here the dropped entries belong to images already in the store, so their blobs deduplicate on ingest, and the partial path still streams the whole archive through <code>docker load</code>. What it saves is the re-tag that creates the dangling record, and the comment should say so.</p>
+    <p>Fix: &quot;the blobs all stay; docker ingests them and leaves any that no kept manifest references unnamed.&quot;</p>
+    </div>
+    <div class="card card-suggestion" data-file="bats/tests/k8s/airgap-image-load.bats">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> A daemon warning on stderr silently skips the only regression assertion <span class="pill pill-claude">Claude Opus 5</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/k8s/airgap-image-load.bats#L32-L43">bats/tests/k8s/airgap-image-load.bats</a></div>
+      <pre data-start="32" data-line="37-38"><code class="language-bash">
+# A redundant load leaves a moby-dangling@&lt;digest&gt; record beside the tag it
+# duplicates, which dockerd logs on every inspect. The classic store keeps no
+# such records, so there the assertion would hold with or without the fix.
+@test &#39;no image has a dangling duplicate&#39; {
+    run -0 ctrctl info --format &#39;{{.Driver}}&#39;
+    if [[ ${output} != &quot;overlayfs&quot; ]]; then
+        skip &quot;the classic image store (${output}) has no dangling records&quot;
+    fi
+    run rdsudo grep &#39;still dangling&#39; /var/log/docker.log
+    refute_output
+}</code></pre>
+    <p><code>run</code> merges stderr into <code>$output</code>, and <code>docker info</code> prints daemon warnings such as <code>No swap limit support</code> there on kernels without that cgroup controller. Any such line makes the comparison fail and the test skips, which a green run never shows. The VM here printed a bare <code>overlayfs</code>, so this is defensive. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/containers/platform.bats#L27"><code>bats/tests/containers/platform.bats:27</code></a> already uses <code>run --separate-stderr</code> for the same reason.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/containers/platform.bats#L22-L32">bats/tests/containers/platform.bats</a></div>
+      <pre data-start="22" data-line="27"><code class="language-bash">    # BUG BUG BUG
+    # Use --separate-stderr because nerdctl leaks a spurious
+    # `forward signal child exited error=context canceled` line on stderr
+    # after the container exits (upstream signal-forwarder race in
+    # pkg/signalutil/signals.go — SIGCHLD is not filtered).
+    run --separate-stderr ctrctl run -i --platform &quot;$platform&quot; &quot;$IMAGE_BUSYBOX&quot; uname -m
+    if is_true &quot;${assert_success:-true}&quot;; then
+        assert_success
+        assert_output &quot;$cpu&quot;
+    fi
+}</code></pre>
+    <p>Fix:</p>
+      <pre><code class="language-diff">-    run -0 ctrctl info --format &#39;{{.Driver}}&#39;
++    run -0 --separate-stderr ctrctl info --format &#39;{{.Driver}}&#39;</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file="bats/tests/k8s/airgap-image-load.bats">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> The BATS workflow&#39;s default Kubernetes version ships a legacy archive, so a dispatched run exercises only the fallback <span class="pill pill-claude">Claude Opus 5</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/k8s/airgap-image-load.bats#L1-L12">bats/tests/k8s/airgap-image-load.bats</a></div>
+      <pre data-start="1" data-line="3-7"><code class="language-bash">load &#39;../helpers/load&#39;
+
+local_setup() {
+    if ! using_docker; then
+        skip &quot;dangling image records only occur in the moby containerd image store&quot;
+    fi
+}
+
+@test &#39;factory reset&#39; {
+    factory_reset
+}
+</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/.github/workflows/bats.yaml#L96"><code>.github/workflows/bats.yaml:96</code></a> defaults <code>KUBERNETES_VERSION</code> to 1.22.7, and <code>.github/workflows/bats/get-tests.py</code> hands that version to the moby arm. Range requests today show the k3s v1.22.7 and v1.32.5 archives in the docker-save layout (<code>&lt;id&gt;/json</code>, <code>&lt;id&gt;/layer.tar</code>) and v1.32.7 as the first OCI layout. With a legacy archive the script loads everything, moby recreates the dangling records, and the last assertion fails. The local default is 1.32.7 (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/helpers/defaults.bash#L193"><code>bats/tests/helpers/defaults.bash:193</code></a>), so manual runs pass. The workflow is <code>workflow_dispatch</code> only in this repo, so the exposure is a dispatched run with the default input; Claude rated it Important. Later patch releases of older minors may also carry the new layout; only the 1.32 boundary was checked.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/.github/workflows/bats.yaml#L91-L101">.github/workflows/bats.yaml</a></div>
+      <pre data-start="91" data-line="96"><code class="language-yaml">      run: python3 ${{ github.workspace }}/.github/workflows/bats/get-tests.py
+      env:
+        TESTS:                  ${{ inputs.tests }}
+        PLATFORMS:              ${{ inputs.platforms }}
+        ENGINES:                ${{ inputs.engines }}
+        KUBERNETES_VERSION:     ${{ inputs.kubernetes-version || &#39;1.22.7&#39; }}
+        # rancher/rancher helm chart 2.8.5 supports up to 1.28.*
+        KUBERNETES_ALT_VERSION: ${{ inputs.kubernetes-alt-version || &#39;1.28.11&#39; }}
+      working-directory: bats/tests
+    outputs:
+      repo: ${{ steps.repo.outputs.repo }}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/helpers/defaults.bash#L188-L198">bats/tests/helpers/defaults.bash</a></div>
+      <pre data-start="188" data-line="193"><code class="language-bash">
+########################################################################
+# Kubernetes versions
+
+# The main Kubernetes version to test.
+: &quot;${RD_KUBERNETES_VERSION:=1.32.7}&quot;
+
+# A secondary Kubernetes version; this is used for testing upgrades.
+: &quot;${RD_KUBERNETES_ALT_VERSION:=1.31.3}&quot;
+
+# RD_K3S_VERSIONS specifies a list of k3s versions. foreach_k3s_version()</code></pre>
+    <p>Fix: skip when the archive predates the layout, or raise the workflow default.</p>
+      <pre><code class="language-bash">    if semver_gt 1.32.7 &quot;$(semver &quot;$RD_KUBERNETES_VERSION&quot;)&quot;; then
+        skip &quot;k3s airgap archives before v1.32.7 have no index.json&quot;
+    fi</code></pre>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>The partial-load path is most of the script and is where every parser assumption applies</strong> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 5</span>. <code>split_manifests</code>, <code>restore</code>, filter mode, and the extract-and-repack at lines 118-123 (about 60 of 123 lines) run only when some images are present. Dropping them (census, compare, load everything when anything is missing) keeps the two common cases identical and returns the partial case to today&#39;s behaviour, at the cost of recreating dangling records for unchanged images on every k3s upgrade. How long this workaround has to outlive the upstream fix decides the trade.</li>
+      <li><strong>A real JSON parser is one binary away on Lima and two on WSL</strong> <code>(future)</code> [Consolidator]. <code>lima-guestagent yq</code> is mikefarah yq v4.53.2 and handles every shape in S1; the census and the filter are one expression each. WSL has no equivalent: <code>wsl-helper</code> embeds no yq, and neither guest image ships jq or python3 (the Lima VM has 141 apk packages, busybox only; Alpine&#39;s jq package is 151 KB and would need releases of alpine-lima and the WSL distro). Embedding yq in <code>wsl-helper</code> the way Lima&#39;s guest agent does would let one parser-free script serve both backends.</li>
+      <li><strong>Records from earlier sessions outlive the fix</strong> <code>(future)</code> [Consolidator]. <code>docker image prune</code> keeps a dangling record whose digest belongs to any container (<code>daemon/containerd/image_prune.go</code>, <code>filterImagesUsedByContainers</code>), so a user upgrading with records already present keeps the warnings for the images their pods use until a reset with image deletion or the upstream fix. The author treats the change as a stopgap with an upstream report in progress.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><em></em>Every parse failure funnels into <code>load_everything</code><em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>. Lines 33, 97, and 114 catch a missing index, an empty census, and an all-missing store; pretty-printed JSON, an un-annotated index, and a legacy archive all take the fallback.</li>
+      <li><strong>The digest comparison distinguishes a present image from a tag whose content changed</strong> <code>(in-scope)</code> <span class="pill pill-codex">Codex GPT 5.6 Sol</span>. A tag that moved gets re-imported; only a tag at the same target is skipped.</li>
+      <li><strong>Both backends write the helper in the same action as the k3s init script</strong> <code>(in-scope)</code> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span>. The pair cannot drift, and <code>/usr/local/bin</code> is on the init script&#39;s PATH, as the existing unqualified <code>nerdctl</code> call shows.</li>
+      <li><strong>The header comment states the mechanism as moby implements it</strong> <code>(in-scope)</code> [Claude Opus 5, Consolidator]. <code>LoadImage</code> runs <code>ensureDanglingImage</code> for every archive image whose name exists (<code>daemon/containerd/image_exporter.go:273-277</code>), and <code>collectRepoTagsAndDigests</code> logs the warning on every inspect (<code>daemon/containerd/image_inspect.go:156</code>).</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>CI on the review SHA is green</strong>: lint on three platforms, unit tests, <code>make -C bats lint</code>, e2e on two platforms, and packaging on four targets (<a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/33575725683">test run</a>). BATS itself does not run in this repo&#39;s CI.</li>
+      <li><strong>What the consolidator executed</strong>: the script&#39;s awk against the real archive in the VM (8 of 8 entries, every digest matching <code>docker image inspect</code>) and against eight reshaped copies (S1); the bats-assert reproducer for I1; the proposed S1 guard against all nine shapes. The BATS file was not run, since it opens with a factory reset of the author&#39;s VM. The partial-load path was not run here; the author reports it by hand in the PR.</li>
+      <li><strong>Gaps</strong>: the restart test leaves every image present, so only <code>wanted == 0</code> runs; nothing covers <code>wanted &lt; total</code> (the filtered index, the repack, the single re-tag) or the no-index fallback <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span>. The classic-store <code>.Descriptor.Digest</code> behaviour at lines 99-100 is asserted by comment only <span class="pill pill-claude">Claude Opus 5</span>. Without S5 the test&#39;s meaning depends on the k3s version it runs with.</li>
+      <li><strong>Cost</strong>: the file adds a factory reset plus a full Kubernetes start and restart, and sorts first in the k8s directory <span class="pill pill-claude">Claude Opus 5</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No user-facing documentation is needed. The script&#39;s header comment explains the failure mode and the store distinction well; S3 fixes its one inaccuracy. The bats comment at lines 33-35 records why the classic store makes the assertion vacuous; it should gain the archive-format precondition once S5 is addressed <span class="pill pill-claude">Claude Opus 5</span>.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>PR description</strong>: &quot;this has not run on Windows&quot; and &quot;The BATS test has not been executed either&quot;. I1 and S5 are the consequences; the script itself uses only tools both backends deploy.</li>
+      <li><em></em>Code comment, <code>docker-load-airgap-images:29-31</code><em></em> (&quot;containerd reads index.json and ignores the docker-style manifest.json beside it&quot;): verified against <code>core/images/archive/importer.go</code>, which returns the index descriptor when <code>ociLayout.Version</code> is set and never consults <code>manifest.json</code> <span class="pill pill-claude">Claude Opus 5</span>.</li>
+      <li><em></em>Code comment, <code>docker-load-airgap-images:99-100</code><em></em> (the classic store loads the whole archive): accurate, and that store creates no dangling records <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span>.</li>
+      <li><em></em>Code comment, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/4c8a4551a1a5ea6ea562dda606aeda40ed0ad532/bats/tests/k8s/airgap-image-load.bats#L33-L35"><code>airgap-image-load.bats:33-35</code></a><em></em>: the assertion is vacuous on the classic store, and the skip at lines 38-40 enforces it <span class="pill pill-claude">Claude Opus 5</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude-opus-5"><span class="pill pill-claude">Claude Opus 5</span> <a href="#claude-opus-5" class="pilcrow">&#182;</a></h3>
+    <p>Found the Windows log path, ran the script end to end under busybox and macOS toolchains, and was the only reviewer to check which k3s version the BATS workflow feeds the moby arm, tracing it to the archive-format switch at v1.32.7 by downloading release assets. Its <code>--separate-stderr</code> and comment-accuracy suggestions came from reading sibling tests and containerd&#39;s importer. It rated the CI-version gap Important without checking that the workflow is dispatch-only; the consolidator lowered it. Its &quot;keep unnamed entries&quot; suggestion is correct but has no practical effect, since an unnamed entry only yields a dangling image.</p>
+    <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
+    <p>Found the Windows log path with a runnable reproducer and was the only reviewer to demonstrate the multi-line JSON corruption, using jq in its worktree to prove the filtered index invalid. Its one-line fix for I1 would break Lima, where the host log directory has no <code>docker.log</code>; the platform split in the report comes from Claude. Its refusal to offer an awk patch &quot;because the target guests do not guarantee a real JSON parser&quot; was well judged. Its testing assessment named the untested partial path first, which is the right priority.</p>
+    <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
+    <p>Found the Windows log path first but rated it Critical, and found the <code>]</code>-after-the-array corruption that no other reviewer reached, rated Important; the consolidator lowered both, the second because no producer emits that shape. Its tmpfs finding was wrong on both counts: the VM mounts <code>/tmp</code> from the ext4 data disk, and the archive is 176 MB uncompressed, not over 1 GB. It proposed Python as the fix without checking that the guest has none.</p>
+    <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
+    <p>Produced no findings beyond a quoting nit that contradicts the file&#39;s own style and a pipefail suggestion Claude also made. It called the BATS test &quot;highly thorough&quot; and marked the file clean while three reviewers found the Windows defect there. Its executive summary is promotional (&quot;exceptionally robust&quot;, &quot;elegant&quot;), the calibration problem the Flash trial predicted. The two Gemini models share a family, so their agreement counts once.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>21m 49s</td><td>20m 57s</td><td>13m 13s</td><td>3m 40s</td></tr>
+        <tr><td>Findings</td><td>1I 5S</td><td>1I 1S</td><td>1I 1S</td><td>1S</td></tr>
+        <tr><td>Tool calls</td><td>62 (Bash 57, Read 5)</td><td>—</td><td>67 (run<em>shell</em>command 67)</td><td>18 (grep<em>search 6, read</em>file 6, glob 4)</td></tr>
+        <tr><td>Design observations</td><td>5</td><td>4</td><td>0</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>4</td><td>1</td><td>1</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>5</td><td>5</td><td>5</td><td>5</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1I 5S</strong></td><td><strong>1I 1S</strong></td><td><strong>1I 1S</strong></td><td><strong>1S</strong></td></tr>
+        <tr><td>Downgraded</td><td>1 (I→S)</td><td>0</td><td>2 (I→S)</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Gemini 3.1 Pro C1 (Windows log path): critical → important I1. Gemini 3.1 Pro I1 (fields after the array and a <code>]</code> inside them): important → suggestion S1. Gemini 3.1 Pro S1 (tmpfs memory): dropped, false positive. Claude Opus 5 I2 (CI k3s version): important → suggestion S5. Claude Opus 5 S1 (unnamed entries): merged into S1. Gemini 3.5 Flash S1 (quote <code>${IMAGEPATH}</code>): dropped, the style contradicts the file. Gemini 3.5 Flash S2 (pipefail): merged into S2. Codex S1 (multi-line JSON): merged into S1.</p>
+    <p>Claude and Codex provided the most value: Claude for breadth (the CI version, sibling-test idioms, containerd source) and Codex for a proven reproducer per finding and a well-judged fix scope. Gemini 3.1 Pro found one real mechanism nobody else did but wrapped it in inflated severities and a false positive. Flash added nothing.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Where a test finding&#39;s severity turns on a CI workflow&#39;s default input, read the workflow&#39;s <code>on:</code> block before rating it: a defect reached only through a dispatch-only workflow&#39;s default is latent, while the same defect in a scheduled or pull-request workflow breaks every run.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] dockerd logs to <code>/var/log/docker.log</code> inside the Lima VM but to <code>docker.log</code> in the host log directory on WSL: <code>service-wsl-dockerd.initd</code> derives its log path from the <code>LOG_DIR</code> that <code>wsl.ts</code> writes into the docker conf, and <code>lima.ts</code> writes no <code>LOG_DIR</code>. A BATS assertion on the docker log needs a platform split: <code>is_windows</code> reads <code>$PATH_LOGS/docker.log</code> on the host, other platforms grep inside the VM.</li>
+      <li>[repo] The guest images ship busybox only: the Lima VM has no jq, python3, or gawk, and <code>lima-guestagent yq</code> (mikefarah yq v4) is its only JSON parser; WSL has none, since <code>wsl-helper</code> embeds no yq. A guest-side script that parses JSON must use busybox awk or sed and fall back to the full operation on any shape it does not recognise.</li>
+      <li>[repo] The BATS workflow is <code>workflow_dispatch</code> only and defaults <code>KUBERNETES_VERSION</code> to 1.22.7 for the moby arm, while the local BATS default is 1.32.7. k3s airgap archives switched from the docker-save layout to the OCI layout (<code>index.json</code>, <code>oci-layout</code>, <code>blobs/</code>) at v1.32.7, so a test that depends on the archive format needs a version guard.</li>
+      <li>[repo] With moby&#39;s containerd image store, <code>docker load</code> of an image whose tag already exists creates a <code>moby-dangling@&lt;digest&gt;</code> record (<code>LoadImage</code> calls <code>ensureDanglingImage</code>); when the target is unchanged the record stays, and every inspect logs &quot;multiple images have the same target, but one of them is still dangling&quot;. <code>docker image prune</code> keeps such a record while any container uses that digest.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){var t="\\b(?:BASH|BASHOPTS|BASH_ALIASES|BASH_ARGC|BASH_ARGV|BASH_CMDS|BASH_COMPLETION_COMPAT_DIR|BASH_LINENO|BASH_REMATCH|BASH_SOURCE|BASH_VERSINFO|BASH_VERSION|COLORTERM|COLUMNS|COMP_WORDBREAKS|DBUS_SESSION_BUS_ADDRESS|DEFAULTS_PATH|DESKTOP_SESSION|DIRSTACK|DISPLAY|EUID|GDMSESSION|GDM_LANG|GNOME_KEYRING_CONTROL|GNOME_KEYRING_PID|GPG_AGENT_INFO|GROUPS|HISTCONTROL|HISTFILE|HISTFILESIZE|HISTSIZE|HOME|HOSTNAME|HOSTTYPE|IFS|INSTANCE|JOB|LANG|LANGUAGE|LC_ADDRESS|LC_ALL|LC_IDENTIFICATION|LC_MEASUREMENT|LC_MONETARY|LC_NAME|LC_NUMERIC|LC_PAPER|LC_TELEPHONE|LC_TIME|LESSCLOSE|LESSOPEN|LINES|LOGNAME|LS_COLORS|MACHTYPE|MAILCHECK|MANDATORY_PATH|NO_AT_BRIDGE|OLDPWD|OPTERR|OPTIND|ORBIT_SOCKETDIR|OSTYPE|PAPERSIZE|PATH|PIPESTATUS|PPID|PS1|PS2|PS3|PS4|PWD|RANDOM|REPLY|SECONDS|SELINUX_INIT|SESSION|SESSIONTYPE|SESSION_MANAGER|SHELL|SHELLOPTS|SHLVL|SSH_AUTH_SOCK|TERM|UID|UPSTART_EVENTS|UPSTART_INSTANCE|UPSTART_JOB|UPSTART_SESSION|USER|WINDOWID|XAUTHORITY|XDG_CONFIG_DIRS|XDG_CURRENT_DESKTOP|XDG_DATA_DIRS|XDG_GREETER_DATA_DIR|XDG_MENU_PREFIX|XDG_RUNTIME_DIR|XDG_SEAT|XDG_SEAT_PATH|XDG_SESSION_DESKTOP|XDG_SESSION_ID|XDG_SESSION_PATH|XDG_SESSION_TYPE|XDG_VTNR|XMODIFIERS)\\b",a={pattern:/(^(["']?)\w+\2)[ \t]+\S.*/,lookbehind:!0,alias:"punctuation",inside:null},n={bash:a,environment:{pattern:RegExp("\\$"+t),alias:"constant"},variable:[{pattern:/\$?\(\([\s\S]+?\)\)/,greedy:!0,inside:{variable:[{pattern:/(^\$\(\([\s\S]+)\)\)/,lookbehind:!0},/^\$\(\(/],number:/\b0x[\dA-Fa-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:[Ee]-?\d+)?/,operator:/--|\+\+|\*\*=?|<<=?|>>=?|&&|\|\||[=!+\-*/%<>^&|]=?|[?~:]/,punctuation:/\(\(?|\)\)?|,|;/}},{pattern:/\$\((?:\([^)]+\)|[^()])+\)|`[^`]+`/,greedy:!0,inside:{variable:/^\$\(|^`|\)$|`$/}},{pattern:/\$\{[^}]+\}/,greedy:!0,inside:{operator:/:[-=?+]?|[!\/]|##?|%%?|\^\^?|,,?/,punctuation:/[\[\]]/,environment:{pattern:RegExp("(\\{)"+t),lookbehind:!0,alias:"constant"}}},/\$(?:\w+|[#?*!@$])/],entity:/\\(?:[abceEfnrtv\\"]|O?[0-7]{1,3}|U[0-9a-fA-F]{8}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{1,2})/};e.languages.bash={shebang:{pattern:/^#!\s*\/.*/,alias:"important"},comment:{pattern:/(^|[^"{\\$])#.*/,lookbehind:!0},"function-name":[{pattern:/(\bfunction\s+)[\w-]+(?=(?:\s*\(?:\s*\))?\s*\{)/,lookbehind:!0,alias:"function"},{pattern:/\b[\w-]+(?=\s*\(\s*\)\s*\{)/,alias:"function"}],"for-or-select":{pattern:/(\b(?:for|select)\s+)\w+(?=\s+in\s)/,alias:"variable",lookbehind:!0},"assign-left":{pattern:/(^|[\s;|&]|[<>]\()\w+(?:\.\w+)*(?=\+?=)/,inside:{environment:{pattern:RegExp("(^|[\\s;|&]|[<>]\\()"+t),lookbehind:!0,alias:"constant"}},alias:"variable",lookbehind:!0},parameter:{pattern:/(^|\s)-{1,2}(?:\w+:[+-]?)?\w+(?:\.\w+)*(?=[=\s]|$)/,alias:"variable",lookbehind:!0},string:[{pattern:/((?:^|[^<])<<-?\s*)(\w+)\s[\s\S]*?(?:\r?\n|\r)\2/,lookbehind:!0,greedy:!0,inside:n},{pattern:/((?:^|[^<])<<-?\s*)(["'])(\w+)\2\s[\s\S]*?(?:\r?\n|\r)\3/,lookbehind:!0,greedy:!0,inside:{bash:a}},{pattern:/(^|[^\\](?:\\\\)*)"(?:\\[\s\S]|\$\([^)]+\)|\$(?!\()|`[^`]+`|[^"\\`$])*"/,lookbehind:!0,greedy:!0,inside:n},{pattern:/(^|[^$\\])'[^']*'/,lookbehind:!0,greedy:!0},{pattern:/\$'(?:[^'\\]|\\[\s\S])*'/,greedy:!0,inside:{entity:n.entity}}],environment:{pattern:RegExp("\\$?"+t),alias:"constant"},variable:n.variable,function:{pattern:/(^|[\s;|&]|[<>]\()(?:add|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|bzip2|cal|cargo|cat|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|column|comm|composer|cp|cron|crontab|csplit|curl|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|docker|docker-compose|du|egrep|eject|env|ethtool|expand|expect|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|head|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|java|jobs|join|kill|killall|less|link|ln|locate|logname|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|node|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|podman|podman-compose|popd|pr|printcap|printenv|ps|pushd|pv|quota|quotacheck|quotactl|ram|rar|rcp|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|sh|shellcheck|shuf|shutdown|sleep|slocate|sort|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|sysctl|tac|tail|tar|tee|time|timeout|top|touch|tr|traceroute|tsort|tty|umount|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|v|vcpkg|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zenity|zip|zsh|zypper)(?=$|[)\s;|&])/,lookbehind:!0},keyword:{pattern:/(^|[\s;|&]|[<>]\()(?:case|do|done|elif|else|esac|fi|for|function|if|in|select|then|until|while)(?=$|[)\s;|&])/,lookbehind:!0},builtin:{pattern:/(^|[\s;|&]|[<>]\()(?:\.|:|alias|bind|break|builtin|caller|cd|command|continue|declare|echo|enable|eval|exec|exit|export|getopts|hash|help|let|local|logout|mapfile|printf|pwd|read|readarray|readonly|return|set|shift|shopt|source|test|times|trap|type|typeset|ulimit|umask|unalias|unset)(?=$|[)\s;|&])/,lookbehind:!0,alias:"class-name"},boolean:{pattern:/(^|[\s;|&]|[<>]\()(?:false|true)(?=$|[)\s;|&])/,lookbehind:!0},"file-descriptor":{pattern:/\B&\d\b/,alias:"important"},operator:{pattern:/\d?<>|>\||\+=|=[=~]?|!=?|<<[<-]?|[&\d]?>>|\d[<>]&?|[<>][&=]?|&[>&]?|\|[&|]?/,inside:{"file-descriptor":{pattern:/^\d/,alias:"important"}}},punctuation:/\$?\(\(?|\)\)?|\.\.|[{}[\];\\]/,number:{pattern:/(^|\s)(?:[1-9]\d*|0)(?:[.,]\d+)?\b/,lookbehind:!0}},a.inside=e.languages.bash;for(var s=["comment","function-name","for-or-select","assign-left","parameter","string","environment","function","keyword","builtin","boolean","file-descriptor","operator","punctuation","number"],o=n.variable[1].inside,i=0;i<s.length;i++)o[s[i]]=e.languages.bash[s[i]];e.languages.sh=e.languages.bash,e.languages.shell=e.languages.bash}(Prism);
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){var n=/[*&][^\s[\]{},]+/,r=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,t="(?:"+r.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+r.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,(function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"})),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var r="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\\]|\\}|(?:[\r\n]\\s*)?#))".replace(/<<prop>>/g,(function(){return t})).replace(/<<value>>/g,(function(){return e}));return RegExp(r,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)\\S[^\r\n]*(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,(function(){return t}))),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,(function(){return t})).replace(/<<key>>/g,(function(){return"(?:"+a+"|"+d+")"}))),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?(?:[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?))?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("false|true","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:r,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
