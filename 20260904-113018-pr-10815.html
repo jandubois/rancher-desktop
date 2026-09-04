@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260904-113018-pr-10815</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Tables written directly in a section body. parseTable classes only the
+ * Retro and Summary tables, so every other one arrives unclassed. */
+table:not([class]) { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+table:not([class]) th, table:not([class]) td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+table:not([class]) th { background: #f3f4f6; font-weight: 600; }
+table:not([class]) tr:nth-child(even) { background: #f9fafb; }
+/* A long path or job name offers no break of its own, so one cell can push
+ * the whole page into a horizontal scroll. Let those tokens wrap. */
+table:not([class]) code { overflow-wrap: anywhere; }
+
+/* Collapsible folds, for the bulk detail a report keeps out of the way */
+details { margin: 0.8rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+/* Reproducers — collapsed, so a long proof keeps the next finding on screen */
+details.repro { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+details.repro > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
+details.repro > summary:hover { background: #eef1f4; }
+details.repro[open] > summary { border-bottom: 1px solid #d0d7de; }
+details.repro pre { border-radius: 0 !important; }
+details.repro .code-file-header { margin-top: 0; border-radius: 0; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260904-113018-pr-10815</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-09-04 11:30</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of PR 10815)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/endemics">@endemics</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10815" class="gh-ref" data-title="Filesystem viewer - first cut" data-state="open" data-type="pr">#10815</a> — Filesystem viewer - first cut</td></tr>
+      <tr><td>Branch</td><td><code>filesystem-viewer</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/77ef09d11"><code>77ef09d11</code></a> feat(containers): add container file system viewer (Files tab)<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/074c1c0ee"><code>074c1c0ee</code></a> fix(containers): stopped-container file listing and breadcrumb rendering<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4fd2e7070"><code>4fd2e7070</code></a> test(containers): cover file-viewer dispatch, errors, download, truncation<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1658e8742"><code>1658e8742</code></a> test(containers): add e2e coverage for the Files tab</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1658e87420494512b8ae3cd0df0e72a3b30092dc"><code>1658e87420494512b8ae3cd0df0e72a3b30092dc</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the design is right and the abstractions are sound; seven reproduced defects need addressing first, one of which corrupts a host file</td></tr>
+      <tr><td>Wall-clock time</td><td><code>41 min 36 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The Files tab is a well-shaped first cut. The <code>ls</code>/<code>cp</code> split is the right design, <code>withCpStream</code> is a good abstraction, and the unit suite is real. But all seven defects below reproduce. The worst truncates a host file on a failed download and tells the user nothing. The rest misreport what is in the container. Previews of files well past the 1 MiB cap error out, listings drop entries, and a preview can show the wrong file.</p>
+    <p>All four reviewers converged on the &gt;1 MiB preview failure, and three of the four on the <code>ls</code> parser. I reproduced every Critical and Important finding below against the review SHA, each with a control case showing where the defect does <em>not</em> fire, and the reproducers and their output are inline with the findings.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="C1">
+        <span class="finding-num">C1.</span> Failed download replaces the chosen host file with a fragment and reports nothing <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#C1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L429-L446">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="429" data-line="434-441"><code class="language-ts">
+        // Extract the single file entry from the archive to `destination`.
+        const extract = tar.extract();
+        let wrote = false;
+
+        extract.on(&#39;entry&#39;, (header, stream, next) =&gt; {
+          if (!wrote &amp;&amp; header.type === &#39;file&#39;) {
+            wrote = true;
+            const out = fs.createWriteStream(destination);
+
+            out.on(&#39;error&#39;, reject);
+            stream.pipe(out);
+            out.on(&#39;finish&#39;, next);
+
+            return;
+          }
+          stream.on(&#39;end&#39;, next);
+          stream.resume();</code></pre>
+    <p><code>createWriteStream</code> truncates the destination the moment the first entry arrives, before the copy is known to have succeeded. When <code>cp</code> dies mid-archive, <code>withCpStream</code> rejects, and the renderer&#39;s only handler is <code>console.error</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L333"><code>ContainerFiles.vue:333</code></a>), so nothing reaches the UI. The user, who chose an existing file in the save dialog, is left with a truncated fragment. Retrying a download after a failure therefore destroys the good copy from the previous attempt. The directory branch at line 421 opens the destination the same way.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L328-L338">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="328" data-line="333"><code class="language-markup">    return;
+  }
+  downloading.value = true;
+  try {
+    await ipcRenderer.invoke(&#39;container-files/download&#39;, props.containerId, selectedPath.value, false, ipcOptions());
+  } catch (ex) {
+    console.error(&#39;Download failed:&#39;, ex);
+  } finally {
+    downloading.value = false;
+  }
+}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L416-L426">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="416" data-line="421"><code class="language-typescript">
+    await this.withCpStream(containerId, normalized, options.namespace, (proc) =&gt; {
+      return new Promise&lt;void&gt;((resolve, reject) =&gt; {
+        if (isDirectory) {
+          // Save the tar archive verbatim.
+          const out = fs.createWriteStream(destination);
+
+          out.on(&#39;error&#39;, reject);
+          out.on(&#39;finish&#39;, resolve);
+          proc.stdout.pipe(out);
+</code></pre>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Real handler; the fake cp delivers a tar header plus half of a 40,000-byte
+// body, then exits 1, as if the container were removed mid-copy.
+fs.writeFileSync(dest, &#39;ORIGINAL HOST CONTENT&#39;);
+showSaveDialog.mockResolvedValue({ canceled: false, filePath: dest });
+try {
+  outcome = `RESOLVED ${ JSON.stringify(await handler.download({ sender: {} }, &#39;abc&#39;, &#39;/f&#39;, false, {})) }`;
+} catch (ex) {
+  outcome = `REJECTED ${ ex.message }`;
+}
+console.log(`${ outcome } | now ${ fs.readFileSync(dest).length } bytes`);</code></pre>
+      <pre><code class="language-text">PROBE-CLOBBER: REJECTED Unexpected end of data | host file was 21 bytes
+  &quot;ORIGINAL HOST CONTENT&quot;, now 20000 bytes starting &quot;aaaaaaaaaaaa&quot;
+
+control (same handler, archive delivered in full):
+PROBE-FILE-DOWNLOAD: result={&quot;canceled&quot;:false,&quot;path&quot;:&quot;…/f&quot;} fileExists=true</code></pre>
+      </details>
+    <p>Fix: stream into an adjacent temporary file, <code>rename</code> it over the destination only after both the tar stream and the child process finish successfully, and unlink it on failure. Add a <code>containerFiles.errors.download</code> key and render it, so a failed download says so.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> Previewing a large file fails instead of showing the truncated prefix <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L339-L358">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="339" data-line="344-353"><code class="language-ts">
+          stream.on(&#39;data&#39;, (chunk: Buffer) =&gt; {
+            total += chunk.length;
+            if (total &lt;= MAX_PREVIEW_BYTES) {
+              chunks.push(chunk);
+            } else if (!truncated) {
+              truncated = true;
+              const keep = MAX_PREVIEW_BYTES - (total - chunk.length);
+
+              if (keep &gt; 0) {
+                chunks.push(chunk.subarray(0, keep));
+              }
+              // Stop pulling more of this file from the container.
+              stop();
+            }
+          });
+          stream.on(&#39;end&#39;, () =&gt; {
+            if (settled) {
+              return;
+            }</code></pre>
+    <p><code>stop()</code> kills the <code>cp</code> child, closing its stdout mid-entry, so the entry stream never emits <code>end</code> and the resolve at lines 355-371 never runs. <code>tar-stream</code> instead raises <code>Unexpected end of data</code>, which <code>extract.on(&#39;error&#39;, fail)</code> turns into a rejection, so the renderer shows an error banner and <code>containerFiles.truncated</code> is unreachable text. Log files are exactly what this feature is for. The unit test at <code>containerFiles.spec.ts:254</code> passes because <code>makeCpProcess</code>&#39;s <code>kill</code> is a no-op <code>jest.fn()</code>, and because its 1 MiB + 4 KiB fixture is small enough that the remainder is already buffered.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L350-L376">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="350" data-line="355-371"><code class="language-typescript">              }
+              // Stop pulling more of this file from the container.
+              stop();
+            }
+          });
+          stream.on(&#39;end&#39;, () =&gt; {
+            if (settled) {
+              return;
+            }
+            settled = true;
+
+            const buffer = Buffer.concat(chunks);
+            const isBinary = buffer.includes(0);
+
+            resolve({
+              content:  isBinary ? buffer.toString(&#39;base64&#39;) : buffer.toString(&#39;utf-8&#39;),
+              encoding: isBinary ? &#39;base64&#39; : &#39;utf-8&#39;,
+              size:     buffer.length,
+              truncated,
+            });
+            next();
+          });
+          stream.on(&#39;error&#39;, fail);
+        });
+
+        extract.on(&#39;finish&#39;, () =&gt; {
+          if (!settled) {</code></pre>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Real handler; runClient spawns a node child that packs a tar of `size` bytes.
+for (const size of [1024 * 1024 + 4096, 2 * 1024 * 1024, 8 * 1024 * 1024]) {
+  const handler = new ContainerFilesHandler({ runClient: fastProducer(size) });
+  try {
+    const r = await handler.readFile(&#39;abc&#39;, &#39;/big.log&#39;, {});
+    log(`RESOLVED truncated=${ r.truncated } size=${ r.size }`);
+  } catch (ex) {
+    log(`REJECTED ${ ex.message }`);
+  }
+}</code></pre>
+      <pre><code class="language-text">PROBE-SIZE [1 MiB + 4 KiB (fast)]: RESOLVED truncated=true size=1048576   &lt;- the unit test&#39;s size
+PROBE-SIZE [2 MiB (fast)]:         REJECTED Unexpected end of data
+PROBE-SIZE [8 MiB (fast)]:         REJECTED Unexpected end of data
+PROBE-TRUNCATE-KILLED (4 MiB, slow producer, real kill): REJECTED Unexpected end of data
+PROBE-NO-KILL (5-byte file, never killed):  RESOLVED truncated=false size=5 content=&quot;hello&quot;</code></pre>
+      </details>
+    <p>Fix: resolve as soon as the cap is reached rather than waiting for <code>end</code>. <code>withCpStream</code> already treats the post-<code>stop()</code> exit as success, and <code>fail</code>&#39;s <code>settled</code> guard then swallows the expected extractor error. Change the test fake&#39;s <code>kill()</code> to destroy stdout so the suite can see this.</p>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> The <code>ls</code> parser corrupts device nodes and silently returns an empty directory for some <code>ls</code> configurations <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L167-L180">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="167" data-line="172-175"><code class="language-ts">        continue;
+      }
+
+      const tokens = line.split(/\s+/);
+
+      // perms links uid gid size mon day time name...  =&gt; at least 9 tokens.
+      if (tokens.length &lt; 9) {
+        continue;
+      }
+
+      const perms = tokens[0];
+
+      // Skip the leading &quot;total N&quot; summary line and anything that is not a
+      // recognizable long-format entry.</code></pre>
+    <p>The parser assumes the size is one field and the timestamp is three. Neither holds universally. Block and character devices print <code>major, minor</code> in place of the size, which is two fields, so <code>/dev</code> entries take the major number as their size and the timestamp as part of their name. A container whose environment sets <code>TIME_STYLE=long-iso</code> or <code>iso</code> emits an eight-token line, so every entry is skipped; <code>listViaExec</code> then returns an empty listing <em>successfully</em>, and <code>list()</code> never falls back to <code>cp</code>, so the directory renders as empty.</p>
+    <p>Both shapes verified against real GNU coreutils 9.11 output.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Lines copied verbatim from `gls -lnA` / `TIME_STYLE=long-iso gls -lnA`.
+log(handler.parseLsOutput(&#39;drwxr-xr-x 1173 0 0 37536 Aug 12 19:51 man1&#39;));
+log(handler.parseLsOutput(&#39;drwxr-xr-x 1173 0 0 37536 2026-08-12 19:51 man1&#39;));
+log(handler.parseLsOutput(&#39;crw-rw-rw- 1 0 0 3, 2 Sep  4 11:56 /dev/null&#39;));
+// dispatch: exec succeeds with long-iso output; cp throws if reached.
+log(await handler.list(&#39;abc&#39;, &#39;/usr/share/man&#39;, { running: true }));</code></pre>
+      <pre><code class="language-text">PROBE-LS-DEFAULT:  [{&quot;name&quot;:&quot;man1&quot;,&quot;type&quot;:&quot;directory&quot;,&quot;size&quot;:37536,&quot;modeString&quot;:&quot;rwxr-xr-x&quot;}]
+PROBE-LS-LONGISO:  []
+PROBE-LS (device): [{&quot;name&quot;:&quot;11:56 /dev/null&quot;,&quot;type&quot;:&quot;other&quot;,&quot;size&quot;:3,…}]
+PROBE-LS-DISPATCH: RESOLVED {&quot;entries&quot;:[],&quot;truncated&quot;:false}   &lt;- no cp fallback</code></pre>
+      </details>
+    <p>Fix: match the whole line with an anchored regex that makes the <code>, minor</code> group optional, and treat &quot;the command succeeded but nothing parsed&quot; as a listing failure so <code>list()</code> falls back to <code>cp</code>. Pinning <code>LC_ALL=C</code> and <code>TIME_STYLE=long-iso</code> through <code>exec env …</code> narrows the input but does not remove the device-node case.</p>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> A stopped container&#39;s root listing silently drops top-level entries once the entry cap is hit <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L248-L263">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="248" data-line="253-258"><code class="language-ts">            stream.resume();
+
+            return;
+          }
+
+          if (++scanned &gt; MAX_LIST_ENTRIES) {
+            truncated = true;
+            // We have scanned enough; stop the copy and return what we have.
+            stop();
+            finish();
+            stream.resume();
+
+            return;
+          }
+
+          // Split the entry path into segments and locate the child of</code></pre>
+    <p><code>MAX_LIST_ENTRIES</code> counts tar entries across the whole subtree, but <code>cp</code> archives depth-first, so a directory holding more than 20 000 files spends the cap before its siblings are reached. Listing <code>/</code> on a stopped container then returns only the top-level entries archived up to that point.</p>
+    <p>The main process does mark the result, but <code>loadChildren</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L246"><code>ContainerFiles.vue:246</code></a>) returns only <code>result.entries</code> and drops <code>truncated</code>, and no <code>en-us.yaml</code> key exists for it, so the tree renders a one-entry root that is indistinguishable from a real one.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L241-L251">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="241" data-line="246"><code class="language-markup">
+async function loadChildren(parentPath: string): Promise&lt;TreeNode[]&gt; {
+  const result = await ipcRenderer.invoke(&#39;container-files/list&#39;, props.containerId, parentPath, ipcOptions());
+  const depth = parentPath === &#39;/&#39; ? 0 : parentPath.split(&#39;/&#39;).length - 1;
+
+  return sortEntries(result.entries).map(entry =&gt; makeNode(entry, parentPath, depth));
+}
+
+async function loadRoot() {
+  rootLoading.value = true;
+  rootError.value = null;</code></pre>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Real handler against a spawned producer emitting a depth-first `./`-rooted
+// archive: /usr holds `count` files, then bin, etc and var follow.
+for (const count of [1_000, 25_000]) {
+  const handler = new ContainerFilesHandler({ runClient: () =&gt; spawn(node, [SCRIPT, count]) });
+  const r = await handler.listViaCp(&#39;abc&#39;, &#39;/&#39;, undefined);
+  log(`truncated=${ r.truncated } topLevel=${ JSON.stringify(r.entries.map(e =&gt; e.name)) }`);
+}
+// renderer: mount the component with a list result carrying truncated: true
+log(`UI mentions truncation? ${ /truncat/i.test(wrapper.text()) }`);</code></pre>
+      <pre><code class="language-text">PROBE-ROOT [under the cap: 1,000 files under /usr]:  truncated=false topLevel=[&quot;usr&quot;,&quot;bin&quot;,&quot;etc&quot;,&quot;var&quot;]
+PROBE-ROOT [over the cap: 25,000 files under /usr]:  truncated=true  topLevel=[&quot;usr&quot;]
+PROBE-TRUNCATED-UI: listing reported truncated=true; rendered text mentions truncation? false</code></pre>
+      </details>
+    <p>Fix: return <code>{ entries, truncated }</code> from <code>loadChildren</code>, keep the flag per node, and render a warning behind a new key. Counting only entries at the requested depth, and capping bytes rather than entries, would make the cap match what the user is being shown.</p>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="I4">
+        <span class="finding-num">I4.</span> Out-of-order preview responses show one file&#39;s contents under another file&#39;s path <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span><a href="#I4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L301-L319">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="301" data-line="306-314"><code class="language-ts">async function loadPreview(filePath: string) {
+  preview.value = {
+    loading: true, error: null, content: &#39;&#39;, encoding: &#39;utf-8&#39;, truncated: false,
+  };
+  try {
+    const result = await ipcRenderer.invoke(&#39;container-files/read&#39;, props.containerId, filePath, ipcOptions());
+
+    preview.value = {
+      loading:   false,
+      error:     null,
+      content:   result.content,
+      encoding:  result.encoding,
+      truncated: result.truncated,
+    };
+  } catch (ex: any) {
+    preview.value = {
+      loading:   false,
+      error:     ex?.message ? String(ex.message) : t(&#39;containerFiles.errors.read&#39;),
+      content:   &#39;&#39;,</code></pre>
+    <p>Rows stay clickable while the read is in flight, and nothing checks that <code>filePath</code> is still the selection before writing to the shared <code>preview</code> ref. Clicking a large file and then a small one, an ordinary way to browse, resolves the small read first and the large one second, leaving the pane showing the large file&#39;s bytes under the small file&#39;s path in both the header (line 115) and the download button. A subsequent download then saves something other than what is displayed. <code>loadRoot</code> has the same last-completion-wins shape, so two <code>refresh()</code> clicks can leave the older listing in place.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L110-L120">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="110" data-line="115"><code class="language-markup">        class=&quot;preview-pane&quot;
+        data-testid=&quot;files-preview&quot;
+      &gt;
+        &lt;template v-if=&quot;selectedPath&quot;&gt;
+          &lt;div class=&quot;preview-header&quot;&gt;
+            &lt;span class=&quot;preview-path&quot;&gt;{{ selectedPath }}&lt;/span&gt;
+            &lt;button
+              class=&quot;btn role-secondary btn-sm&quot;
+              data-testid=&quot;files-download&quot;
+              :disabled=&quot;downloading&quot;
+              type=&quot;button&quot;</code></pre>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Mounted component, ipcRenderer mocked with two deferred reads.
+rows[0].trigger(&#39;click&#39;);   // /a.txt (slow)
+rows[1].trigger(&#39;click&#39;);   // /b.txt (fast)
+fastB.resolve({ content: &#39;CONTENT-B&#39;, encoding: &#39;utf-8&#39;, size: 9, truncated: false });
+await flushPromises();
+slowA.resolve({ content: &#39;CONTENT-A&#39;, encoding: &#39;utf-8&#39;, size: 9, truncated: false });
+await flushPromises();
+log(`selected=${ previewPath } content=${ contentPane }`);</code></pre>
+      <pre><code class="language-text">PROBE-RACE (as shipped):        selected=/b.txt afterB=CONTENT-B afterLateA=CONTENT-A
+PROBE-RACE (with the fix below): selected=/b.txt afterB=CONTENT-B afterLateA=CONTENT-B</code></pre>
+      </details>
+    <p>Fix: after the await, discard the response when the selection has moved on.</p>
+      <pre><code class="language-diff">     const result = await ipcRenderer.invoke(&#39;container-files/read&#39;, props.containerId, filePath, ipcOptions());
+ 
++    if (selectedPath.value !== filePath) {
++      return;
++    }
+     preview.value = {</code></pre>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="I5">
+        <span class="finding-num">I5.</span> Downloading a symlink reports success and writes nothing <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#I5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L429-L440">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="429" data-line="434-435"><code class="language-ts">
+        // Extract the single file entry from the archive to `destination`.
+        const extract = tar.extract();
+        let wrote = false;
+
+        extract.on(&#39;entry&#39;, (header, stream, next) =&gt; {
+          if (!wrote &amp;&amp; header.type === &#39;file&#39;) {
+            wrote = true;
+            const out = fs.createWriteStream(destination);
+
+            out.on(&#39;error&#39;, reject);
+            stream.pipe(out);</code></pre>
+    <p>Symlinks are clickable leaves by design, so the Download button is offered for them. <code>cp</code> is invoked without <code>-L/--follow-link</code>, which <code>docker cp --help</code> confirms is off by default, so the archive contains a <code>symlink</code> entry with no body. No branch matches it, <code>extract</code> reaches <code>finish</code>, and <code>download</code> returns <code>{ canceled: false, path }</code>. That is a success, with no file on disk and no message in the UI. Preview fails the same way, for the same reason (S5). On Debian-derived images <code>/bin</code>, <code>/lib</code> and <code>/sbin</code> are all symlinks, so this is the first thing many users will click.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Real handler; archive contains one symlink entry, save dialog pre-answered.
+const r = await handler.download({ sender: {} }, &#39;abc&#39;, &#39;/bin/sh&#39;, false, {});
+log(`result=${ JSON.stringify(r) } fileExists=${ fs.existsSync(dest) }`);
+log(`preview=${ JSON.stringify(await handler.readFile(&#39;abc&#39;, &#39;/bin/sh&#39;, {})) }`);</code></pre>
+      <pre><code class="language-text">PROBE-SYMLINK-DOWNLOAD: result={&quot;canceled&quot;:false,&quot;path&quot;:&quot;…/sh&quot;} fileExists=false
+PROBE-SYMLINK-PREVIEW:  {&quot;content&quot;:&quot;&quot;,&quot;encoding&quot;:&quot;utf-8&quot;,&quot;size&quot;:0,&quot;truncated&quot;:false}
+
+control (regular file entry, same handler):
+PROBE-FILE-DOWNLOAD:    result={&quot;canceled&quot;:false,&quot;path&quot;:&quot;…/f&quot;}  fileExists=true</code></pre>
+      </details>
+    <p>Fix: reject with a descriptive error when nothing was written, and tell the renderer the entry was not a regular file so preview can say so. Following the link (<code>cp -L</code>) is a product decision that cuts across the stated v1 limitation; failing loudly does not.</p>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="I6">
+        <span class="finding-num">I6.</span> The file tree cannot be operated with a keyboard, while the breadcrumbs above it can <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-claude">Claude Opus 5</span><a href="#I6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L67-L85">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="67" data-line="72-80"><code class="language-html">        &lt;/div&gt;
+        &lt;ul
+          v-else
+          class=&quot;tree&quot;
+        &gt;
+          &lt;li
+            v-for=&quot;node in visibleNodes&quot;
+            :key=&quot;node.path&quot;
+            class=&quot;tree-row&quot;
+            :class=&quot;{ selected: node.path === selectedPath }&quot;
+            :style=&quot;{ paddingLeft: `${node.depth * 14 + 4}px` }&quot;
+            :data-testid=&quot;`files-node-${node.path}`&quot;
+            @click=&quot;onNodeClick(node)&quot;
+          &gt;
+            &lt;span
+              class=&quot;twisty&quot;
+              :class=&quot;{ invisible: node.type !== &#39;directory&#39; }&quot;
+            &gt;
+              &lt;i</code></pre>
+    <p>Expanding a directory and opening a file, the whole feature, hang off a <code>@click</code> on a non-focusable <code>&lt;li&gt;</code> with no <code>tabindex</code>, <code>role</code>, keyboard handler or expansion state. Focus skips the tree and a screen reader announces plain list items. The breadcrumbs in the same component got <code>role=&quot;button&quot;</code>, <code>tabindex=&quot;0&quot;</code> and <code>@keydown.enter.space.prevent</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/074c1c0ee"><code>074c1c0ee</code></a>. Claude rated it a Suggestion because other Rancher Desktop tables share the gap; I kept it Important because this control is new and its sibling in the same file is already handled.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-ts">// Mounted component; compare a tree row against a breadcrumb in the same tree.
+const row = wrapper.find(&#39;.tree-row&#39;).element;
+const crumb = wrapper.find(&#39;.crumb&#39;).element;
+log(`row   tabIndex=${ row.tabIndex } role=${ row.getAttribute(&#39;role&#39;) }`);
+log(`crumb tabIndex=${ crumb.tabIndex } role=${ crumb.getAttribute(&#39;role&#39;) }`);</code></pre>
+      <pre><code class="language-text">PROBE-A11Y-ROW:   tabIndex=-1 role=null ariaExpanded=null
+PROBE-A11Y-CRUMB: tabIndex=0  role=button</code></pre>
+      </details>
+    <p>Fix: give each row <code>tabindex=&quot;0&quot;</code>, <code>role=&quot;treeitem&quot;</code>, <code>:aria-expanded</code> for directories and the same <code>@keydown.enter.space.prevent</code> handler the crumbs use, with <code>role=&quot;tree&quot;</code> on the <code>&lt;ul&gt;</code>.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> The directory-download path has no caller <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L327-L337">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="327" data-line="332"><code class="language-ts">  if (!selectedPath.value) {
+    return;
+  }
+  downloading.value = true;
+  try {
+    await ipcRenderer.invoke(&#39;container-files/download&#39;, props.containerId, selectedPath.value, false, ipcOptions());
+  } catch (ex) {
+    console.error(&#39;Download failed:&#39;, ex);
+  } finally {
+    downloading.value = false;
+  }</code></pre>
+    <p><code>isDirectory</code> is hard-coded <code>false</code>, and <code>selectedPath</code> is only ever set for non-directory nodes, so the <code>.tar</code> branch at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L419"><code>containerFiles.ts:419</code></a>, the <code>.tar</code> default filename at line 403, and the directory test at <code>containerFiles.spec.ts:369</code> all cover unreachable code.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L414-L424">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="414" data-line="419"><code class="language-typescript">
+    const destination = result.filePath;
+
+    await this.withCpStream(containerId, normalized, options.namespace, (proc) =&gt; {
+      return new Promise&lt;void&gt;((resolve, reject) =&gt; {
+        if (isDirectory) {
+          // Save the tar archive verbatim.
+          const out = fs.createWriteStream(destination);
+
+          out.on(&#39;error&#39;, reject);
+          out.on(&#39;finish&#39;, resolve);</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L398-L408">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="398" data-line="403"><code class="language-markup">});
+
+// Everything after the leading &quot;/&quot; crumb, which is rendered separately.
+const segmentCrumbs = computed(() =&gt; breadcrumbs.value.slice(1));
+
+function iconFor(node: TreeNode): string {
+  switch (node.type) {
+  case &#39;directory&#39;:
+    return node.expanded ? &#39;icon-folder-open&#39; : &#39;icon-folder&#39;;
+  case &#39;symlink&#39;:
+    return &#39;icon-external-link&#39;;</code></pre>
+    <p>Fix: wire a download action onto directory rows (&quot;I forgot to mount that output directory&quot; is the PR&#39;s own motivating story, and the tar path already works), or drop the parameter until there is a caller.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> Any terminating signal counts as a successful copy <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L489-L501">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="489" data-line="494-496"><code class="language-ts">      stderr += data.toString(&#39;utf-8&#39;);
+    });
+
+    const exited = new Promise&lt;void&gt;((resolve, reject) =&gt; {
+      proc.on(&#39;error&#39;, reject);
+      proc.on(&#39;exit&#39;, (code, signal) =&gt; {
+        if (stoppedEarly || code === 0 || signal) {
+          resolve();
+        } else {
+          reject(new Error(stderr.trim() || `container cp exited with code ${ code }`));
+        }
+      });
+    });</code></pre>
+    <p><code>stoppedEarly</code> already identifies the intentional stop, so the extra <code>|| signal</code> accepts an external <code>SIGKILL</code> (an OOM kill, say) as success. A half-written directory archive is then reported as downloaded.</p>
+    <p>Fix: resolve only for <code>stoppedEarly || (code === 0 &amp;&amp; signal === null)</code>, and reject naming the signal otherwise.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> The module docstring says listing does not read file contents; it only avoids keeping them <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L6-L17">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="6" data-line="11-12"><code class="language-ts"> * Two mechanisms are used:
+ *  - For running containers we `exec ... ls` to list a single directory level,
+ *    which is cheap and does not transfer file contents.
+ *  - For stopped containers (or when `ls` is unavailable, e.g. distroless
+ *    images) we fall back to `&lt;engine&gt; cp &lt;id&gt;:&lt;path&gt; -`, which streams a tar
+ *    archive of the path.  We parse only the tar headers, so no file contents
+ *    are read while listing.
+ *
+ * Reading and downloading always go through the tar (`cp`) path so they work
+ * regardless of whether the container is running and without depending on any
+ * particular in-container tooling.
+ */</code></pre>
+    <p><code>tar-stream</code> must drain each entry body to reach the next header (<code>stream.resume()</code>, line 296), so every byte still crosses the pipe. Listing a stopped container with a 3 GB layer transfers 3 GB. A reader of this comment will conclude listing is cheap.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L291-L301">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="291" data-line="296"><code class="language-typescript">              children.set(childName, { name: childName, type: &#39;directory&#39;, size: 0 });
+            }
+          }
+
+          stream.on(&#39;end&#39;, next);
+          stream.resume();
+        });
+
+        extract.on(&#39;finish&#39;, finish);
+        extract.on(&#39;error&#39;, (err) =&gt; {
+          if (!settled) {</code></pre>
+    <p>Fix: say the bodies are discarded as they stream past, but the archive is still transferred in full, so listing costs time proportional to the subtree&#39;s on-disk size.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Raw Electron IPC wrappers reach the user, and the translated fallbacks never do <span class="pill pill-claude">Claude Opus 5</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L252-L262">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="252" data-line="257"><code class="language-ts">  rootChildren.value = [];
+  selectedPath.value = null;
+  try {
+    rootChildren.value = await loadChildren(&#39;/&#39;);
+  } catch (ex: any) {
+    rootError.value = ex?.message ? String(ex.message) : t(&#39;containerFiles.errors.list&#39;);
+  } finally {
+    rootLoading.value = false;
+  }
+}
+</code></pre>
+    <p><code>ipcRenderer.invoke</code> rejections always include a message, of the form <code>Error invoking remote method &#39;container-files/list&#39;: …</code>. The <code>errors.list</code> and <code>errors.read</code> keys are therefore dead, and what users see is untranslated and leaks the channel name.</p>
+    <p>Fix: strip the wrapper prefix before display, or lead with the translated string and put the raw text in a secondary line.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> Non-regular files preview as an empty pane <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L370-L385">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="370" data-line="375-380"><code class="language-ts">            next();
+          });
+          stream.on(&#39;error&#39;, fail);
+        });
+
+        extract.on(&#39;finish&#39;, () =&gt; {
+          if (!settled) {
+            settled = true;
+            resolve({
+              content: &#39;&#39;, encoding: &#39;utf-8&#39;, size: 0, truncated: false,
+            });
+          }
+        });
+        extract.on(&#39;error&#39;, fail);
+
+        proc.stdout.pipe(extract);</code></pre>
+    <p>Sockets, fifos and device nodes all fall under <code>type: &#39;other&#39;</code> and remain clickable, so selecting one is indistinguishable from opening an empty file. This is the same root as I5&#39;s preview half; fixing it once covers both.</p>
+    <p>Fix: return the entry type alongside the content and render a notice in the same form as the existing <code>files-binary</code> message.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> New help text uses the low-contrast <code>--muted</code> token <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L624-L634">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="624" data-line="629-630"><code class="language-scss">  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  gap: 0.5rem;
+
+  &amp;.muted {
+    color: var(--muted);
+    font-size: 13px;
+  }
+}
+&lt;/style&gt;</code></pre>
+    <p><code>--muted</code> reaches 2.0:1 on light and 3.3:1 on dark, below WCAG AA; <code>--input-label</code> reaches 4.77:1 and 9.14:1. Six declarations in the new stylesheet use it (lines 491, 543, 556, 566, 573, 630). Roughly ten existing components use <code>--muted</code> the same way, so this is a house-wide consistency item, not an isolated defect. The code here is new, though, so it is cheap to fix now.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L486-L496">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="486" data-line="491"><code class="language-markup">    outline-offset: 1px;
+  }
+}
+
+.crumb-sep {
+  color: var(--muted);
+  user-select: none;
+}
+
+.btn-sm {
+  padding: 0.15rem 0.5rem;</code></pre>
+    <p>Fix: use <code>--input-label</code> for the new small text.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> The root breadcrumb is styled and focusable as a link but does nothing <span class="pill pill-claude">Claude Opus 5</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L339-L352">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="339" data-line="344-347"><code class="language-ts">
+/**
+ * Expand the tree down to (and including) the given directory path, loading
+ * intermediate levels as needed.
+ */
+async function revealPath(target: string) {
+  if (target === &#39;/&#39;) {
+    return;
+  }
+  const segments = target.split(&#39;/&#39;).filter(Boolean);
+  let list = rootChildren.value;
+  let current = &#39;&#39;;
+
+  for (const segment of segments) {</code></pre>
+    <p><code>crumb-current</code> is applied to the <code>/</code> span only when nothing is selected, so once a file is open the root crumb takes <code>var(--link)</code>, accepts focus and answers Enter with no effect. Users will read it as &quot;go to root&quot;.</p>
+    <p>Fix: either collapse the tree and clear the selection on <code>revealPath(&#39;/&#39;)</code>, or render the root crumb as inert text without <code>role</code>/<code>tabindex</code> when it is not actionable.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/main/containerFiles.ts">
+      <div class="finding-title" id="S8">
+        <span class="finding-num">S8.</span> A child sharing its parent directory&#39;s name is dropped from an unwrapped archive <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S8" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L264-L274">pkg/rancher-desktop/main/containerFiles.ts</a></div>
+      <pre data-start="264" data-line="269"><code class="language-ts">          // `dirPath`, skipping the optional archive-root wrapper segment.
+          const segments = header.name.split(&#39;/&#39;).filter(Boolean);
+          let childName: string | undefined;
+          let isImmediate: boolean;
+
+          if (segments.length &gt; 0 &amp;&amp; (segments[0] === base || segments[0] === &#39;.&#39;)) {
+            // Entry is wrapped: &lt;base&gt;/&lt;child&gt;/...
+            childName = segments[1];
+            isImmediate = segments.length === 2;
+          } else {
+            // Entry is not wrapped: &lt;child&gt;/...</code></pre>
+    <p>The wrapper heuristic tests each entry independently, so in the unwrapped shape the code claims to tolerate, an entry whose own name equals <code>base</code> is mistaken for the wrapper and discarded. Reproduced: listing <code>/etc/ssl</code> from an unwrapped archive containing <code>ssl/</code> and <code>certs/</code> returns <code>[&quot;certs&quot;]</code>.</p>
+    <p>Fix: decide wrapped-vs-unwrapped once from the first entry and apply that decision to the rest, rather than re-deciding per entry.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S9">
+        <span class="finding-num">S9.</span> Repeated clicks on a loading directory issue duplicate listings <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S9" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L258-L271">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="258" data-line="263-266"><code class="language-ts">  } finally {
+    rootLoading.value = false;
+  }
+}
+
+async function toggle(node: TreeNode) {
+  if (node.type !== &#39;directory&#39;) {
+    return;
+  }
+  if (node.expanded) {
+    node.expanded = false;
+
+    return;
+  }</code></pre>
+    <p><code>node.loading</code> is set and rendered but never consulted, so clicking a slow directory twice starts a second full <code>cp</code> stream alongside the first.</p>
+    <p>Fix: <code>if (node.type !== &#39;directory&#39; || node.loading) { return; }</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="e2e/pages/container-files-page.ts">
+      <div class="finding-title" id="S10">
+        <span class="finding-num">S10.</span> The e2e page object advertises coverage that does not exist <span class="pill pill-claude">Claude Opus 5</span><a href="#S10" class="pilcrow">&#182;</a>
+      </div>
+    <p><code>binaryNotice</code>, <code>downloadButton</code>, <code>refreshButton</code> and <code>errorBanner</code> are declared and never used. Those are the four behaviours with the least unit coverage. Separately, <code>containers.e2e.spec.ts</code> waits for the stopped container with a fixed 2-second sleep instead of <code>docker wait</code>, which can flake on a loaded runner.</p>
+    <p>Fix: add the scenarios (a <code>/bin/busybox</code> preview exercises the binary notice without touching a dialog; a removed container id exercises the error banner), or drop the unused locators. Replace the sleep with <code>docker wait</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S11">
+        <span class="finding-num">S11.</span> <code>revealPath</code> accumulates a path it never reads <span class="pill pill-claude">Claude Opus 5</span><a href="#S11" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L345-L358">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="345" data-line="350-353"><code class="language-ts">  if (target === &#39;/&#39;) {
+    return;
+  }
+  const segments = target.split(&#39;/&#39;).filter(Boolean);
+  let list = rootChildren.value;
+  let current = &#39;&#39;;
+
+  for (const segment of segments) {
+    current += `/${ segment }`;
+    const node = list.find(n =&gt; n.name === segment);
+
+    if (node?.type !== &#39;directory&#39;) {
+      break;
+    }</code></pre>
+    <p>The loop navigates by <code>node.children</code>; <code>current</code> is left over from the pre-<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/074c1c0ee"><code>074c1c0ee</code></a> breadcrumb code. The identical accumulator in <code>breadcrumbs</code> (line 389) is used, which makes this one look like it is needed too.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L384-L394">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="384" data-line="389"><code class="language-markup">const breadcrumbs = computed(() =&gt; {
+  const crumbs = [{ label: &#39;/&#39;, path: &#39;/&#39; }];
+
+  if (selectedPath.value) {
+    const segments = selectedPath.value.split(&#39;/&#39;).filter(Boolean);
+    let current = &#39;&#39;;
+
+    for (const segment of segments) {
+      current += `/${ segment }`;
+      crumbs.push({ label: segment, path: current });
+    }</code></pre>
+    <p>Fix: delete the declaration and the assignment.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/ContainerFiles.vue">
+      <div class="finding-title" id="S12">
+        <span class="finding-num">S12.</span> Byte sizes are formatted with hard-coded English units and a locale-blind separator <span class="pill pill-claude">Claude Opus 5</span><a href="#S12" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L409-L421">pkg/rancher-desktop/components/ContainerFiles.vue</a></div>
+      <pre data-start="409" data-line="414-416"><code class="language-ts">  default:
+    return &#39;icon-file&#39;;
+  }
+}
+
+function formatBytes(b: number): string {
+  if (b &gt;= 1024 ** 3) {
+    return `${ (b / 1024 ** 3).toFixed(1) } GiB`;
+  }
+  if (b &gt;= 1024 ** 2) {
+    return `${ (b / 1024 ** 2).toFixed(1) } MiB`;
+  }
+  if (b &gt;= 1024) {</code></pre>
+    <p><code>toFixed</code> always emits <code>.</code>, so a French or German user sees <code>1.5 GiB</code> beside otherwise translated text. <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10688" class="gh-ref" data-title="Localize numbers, dates, and times" data-state="open" data-type="issue">#10688</a> tracks this app-wide, but the code here is fresh and the fix is one call.</p>
+    <p>Fix: <code>Intl.NumberFormat</code> with the app locale, or at minimum move the unit suffixes into <code>en-us.yaml</code>.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>The tar stream already holds the whole subtree, and the code throws it away and re-fetches it on every expansion</strong> <code>(future)</code> <span class="pill pill-claude">Claude Opus 5</span>. <code>listViaCp</code> streams <code>cp &lt;id&gt;:&lt;dir&gt; -</code> in full but keeps only immediate children, so expanding <code>/</code>, then <code>/usr</code>, then <code>/usr/lib</code> transfers <code>/usr/lib</code> three times. Building the full node tree from one stream, bounded by the same cap, and caching it per container for the life of the tab would make the stopped-container path one transfer per session, and would delete the &quot;infer the intermediate directory&quot; branch. The PR description already anticipates revisiting this against the v2 backend.</li>
+      <li><strong>Nothing cancels an abandoned copy</strong> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 5</span>. Switching tabs destroys the component but leaves the <code>cp</code> child running; <code>updateClient</code> swaps the client without killing outstanding children, where the sibling handlers tear down explicitly (<code>ContainerStatsHandler.stopAll</code>, <code>ContainerExecHandler.killAll</code>). <code>runClient</code> already accepts an <code>AbortSignal</code>. Claude rated this Important; I moved it here because I did not reproduce a user-visible failure from it, only the missing teardown.</li>
+      <li><em></em>Two divergent <code>ls -l</code> parsers now exist in the tree<em></em> <code>(in-scope)</code> <span class="pill pill-claude">Claude Opus 5</span>. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/pages/volumes/files/_name.vue#L341"><code>pages/volumes/files/_name.vue:341</code></a> already parses <code>ls</code> output for the volume browser using an anchored regex over <code>ls -la --full-time</code>; this adds a second, positional parser that accepts strictly more input and mangles some of it (I2). One exported helper with one test suite would give the edge cases a single home.</li>
+      <li><strong>Handlers register from the constructor, which only runs once the backend starts</strong> <code>(future)</code> <span class="pill pill-claude">Claude Opus 5</span>. Until then <code>container-files/*</code> rejects with Electron&#39;s &quot;No handler registered&quot;, and unlike Shell the Files tab is never disabled, so a user reaching it during startup sees that raw message (compounded by S4). The <code>containerExec</code> and <code>containerStats</code> handlers share the shape, so this is a class issue rather than a regression.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>The dual mechanism is well chosen <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span>: <code>ls</code> for the cheap common case, <code>cp</code>/tar as a universal fallback needing nothing inside the image. Reads and downloads always take the tar path, so they behave identically whether or not the container is running.</li>
+      <li><code>withCpStream</code> is a good abstraction <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span>: one place owns the child&#39;s lifetime, stderr capture, the &quot;stopped early means success&quot; rule, and the ordering that surfaces a copy failure even when the tar parsed without error, a detail the error tests pin.</li>
+      <li>Engine arguments are passed as arrays rather than through a shell, so container paths and names cannot inject commands <span class="pill pill-codex">Codex GPT 5.6 Sol</span>.</li>
+      <li>File contents, names and symlink targets render through <code>{{ }}</code> interpolation, never <code>v-html</code> <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span>, which matters in this Node-enabled renderer.</li>
+      <li>The IPC surface is fully typed and documented per channel in <code>electron-ipc.d.ts</code>, and the component imports the result types with <code>import type</code> <span class="pill pill-claude">Claude Opus 5</span>.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The unit suite is real and passes. I ran <code>node --experimental-vm-modules node_modules/jest/bin/jest.js pkg/rancher-desktop/main/__tests__/containerFiles.spec.ts</code> from the main checkout at the review SHA: 23 passed. <code>npx eslint</code> on all six changed TypeScript/Vue files reports nothing. The e2e additions follow the file&#39;s existing per-describe conventions and assert behaviour (tab order, real alpine paths, <code>/etc/hosts</code> content) rather than mere presence.</p>
+    <p>The gaps, highest risk first:</p>
+    <ol>
+      <li><em></em>Early termination of the <code>cp</code> child is never modelled.<em></em> <code>makeCpProcess</code>&#39;s <code>kill</code> is <code>jest.fn()</code>, so no test observes what <code>stop()</code> actually does. This is what hides I1, and it equally hides the <code>MAX_LIST_ENTRIES</code> path behind I3. A fake whose <code>kill()</code> destroys stdout covers both. Note that the cap path also returns from the entry handler without calling <code>next()</code>, so it depends on the kill actually taking effect to make progress.</li>
+      <li><em></em><code>parseLsOutput</code> sees only three happy-path lines.<em></em> Device nodes, alternative <code>TIME_STYLE</code> settings, sockets and fifos are all unexercised (I2).</li>
+      <li><strong>Downloads have no e2e coverage and no failure-path coverage.</strong> The unit tests drive <code>handler.download</code> directly with a clean archive, so neither the renderer wiring nor the mid-stream failure that costs a host file (C1) is tested.</li>
+      <li><em></em>No test issues two overlapping <code>list</code>/<code>read</code> calls<em></em>, so I4 and the <code>refresh()</code> race are invisible to the suite.</li>
+      <li><strong>The containerd/nerdctl engine is untested.</strong> Both new e2e describes pin <code>ContainerEngine.MOBY</code>; <code>nerdctl cp</code> reaches stopped containers by mounting the snapshot rather than entering a task namespace, and its archive layout is exactly the input the wrapper heuristic guesses at.</li>
+      <li><strong>Component tests are not currently possible.</strong> The repo&#39;s Vue jest transform (<code>pkg/rancher-desktop/utils/testUtils/vue-jest.js</code>) handles only <code>descriptor.script</code>, so any <code>&lt;script setup&gt;</code> SFC fails with <code>ReferenceError: __default__ is not defined</code>. This affects <code>ContainerFiles</code>, <code>ContainerStats</code>, <code>ContainerShell</code> and <code>ContainerLogs</code> alike, and it is why the renderer half of this feature is e2e-only. The reproducers for I4 and I6 above ran under a scratch transform built on <code>compileScript</code>, which suggests the fix is small and would unlock component coverage for all four.</li>
+    </ol>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Every exported symbol in <code>containerFiles.ts</code> has a doc comment and every IPC channel in <code>electron-ipc.d.ts</code> is documented; the module docstring explains <em>why</em> two mechanisms exist, which is the part that is hardest to recover later. Its cost claim is wrong (S3).</p>
+    <p><code>containerFiles:</code> is inserted between <code>containerInfo:</code> and <code>containerInspect:</code> in <code>en-us.yaml</code>, and <code>files: Files</code> is appended after <code>stats:</code> inside <code>containerInfo:</code>. Both break the alphabetical ordering the neighbouring keys follow. Nothing enforces it.</p>
+    <p>The nine new keys are English-only, so <code>i18n-report check --locale=all --strict</code> reports them missing from all eight non-English locales. That is the normal state for a feature PR here (translations come through the separate sweep), and <code>--strict</code> is not run in CI, so it blocks nothing. Queue them before the release that ships this.</p>
+    <p>The Files tab is a new user-visible feature with no documentation entry. Whether that belongs here or in docs.rancherdesktop.io is a maintainer call, but &quot;download only, no editing&quot; and &quot;symlinks are not followed&quot; are exactly what users will file issues about.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/074c1c0ee"><code>074c1c0ee</code></a> repairs two defects introduced by <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/77ef09d11"><code>77ef09d11</code></a> on the same branch (the archive-wrapper logic that collapsed every root entry into a single <code>.</code> node, and the breadcrumb markup), and its own message says they were &quot;found in testing&quot;. Nothing outside this branch saw the broken state, and bisecting through a commit where stopped containers cannot be browsed at all has no value, so it should be folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/77ef09d11"><code>77ef09d11</code></a>. The two test commits are defensible as separate units. Scope is otherwise clean, and every changed file serves the one feature.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L294"><code>ContainerFiles.vue:294</code></a><em></em>: symlinks are treated as previewable leaves rather than followed, with dir-symlink browsing tracked as follow-up. Consistent with the PR description. I5 does not dispute the decision; it reports that the resulting click does nothing and reports nothing to the user.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L186"><code>containerFiles.ts:186</code></a><em></em>: &quot;runs of whitespace inside names… rare and non-critical here&quot;. Accurate for the case it names (a name with repeated spaces collapses, and the derived path then fails to resolve). I2 is a different failure of the same parser. The <em>field count</em> varies, which the comment does not cover.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/main/containerFiles.ts#L36"><code>containerFiles.ts:36</code></a><em></em>: the <code>MAX_LIST_ENTRIES</code> comment states the result is &quot;marked as truncated instead&quot;. The main process does exactly that; I3 is about what the cap counts and about the renderer discarding the mark.</li>
+      <li><strong>PR description</strong>: &quot;not particularly fast as it is explored only on demand&quot;; the v2 backend may allow a different approach. The re-streaming design observation is tagged <code>(future)</code> on that basis.</li>
+      <li><strong>PR description</strong>: read-only, download but no edit. That is the right MVP scope.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude-opus-5"><span class="pill pill-claude">Claude Opus 5</span> <a href="#claude-opus-5" class="pilcrow">&#182;</a></h3>
+    <p>Much the deepest pass, and the only one that read <code>tar-stream</code>&#39;s <code>extract.js</code> and <code>@vue/runtime-dom</code> to settle the mechanisms it reported. It found the entry-cap semantics (I3) and eight of the twelve suggestions, five of which nobody else saw. It also ran the PR&#39;s unit suite after symlinking <code>node_modules</code> into its worktree, and said so in its verification list, including the two things it did not run. I downgraded its C1 (the &gt;1 MiB preview) to Important, because the failure is loud and confined to one feature path; Critical I reserved for the finding that damages a file outside the app.</p>
+    <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
+    <p>The most consequential single contribution: it alone saw that the download opens the destination before the copy is known to succeed, which is what makes C1 critical rather than merely silent, and it alone found the <code>TIME_STYLE</code> half of I2, the case where a listing fails <em>closed</em>, returning an empty directory with no error and no fallback. Its severity calibration came closest to where consolidation ended up. Its reproducers are illustrative sketches rather than runs against the handler, so each still needed proving here; its verification section says that jest could not start in its worktree, which is the right way to report that.</p>
+    <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
+    <p>Compact and accurate: 144 lines, five findings, four of which held up. It was the only agent to name the actual mechanism behind the symlink failure (<code>docker cp</code> without <code>-L</code>), which converted a plausible claim into a checkable one. It also identified the defective test mock independently. One citation was wrong (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/1658e87420494512b8ae3cd0df0e72a3b30092dc/pkg/rancher-desktop/components/ContainerFiles.vue#L597-L600"><code>ContainerFiles.vue:597-600</code></a> for a rule that lives at 629-630), and its coverage summary marked both e2e files clean, though S10 and two of the testing gaps below cite them.</p>
+    <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
+    <p>Punched above its weight: it was first to the preview race (I4) and the only agent to find the wrapper heuristic&#39;s same-name blind spot (S8) and the missing in-flight guard (S9). Against that, its <code>repro</code>/<code>repro-output</code> blocks are fabricated. The output it prints for the truncation bug (<code>Error: unexpected eof</code>) is not a string the code can produce (<code>Unexpected end of data</code>). Its proposed symlink fix, admitting <code>header.type === &#39;symlink&#39;</code> into the write branch, would produce an empty file rather than a link. It labelled three net-new-code findings &quot;regression&quot;, which the term cannot mean here.</p>
+    <p>The two Gemini models share a family, so treat their agreement on the <code>--muted</code> contrast item as a single opinion.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>15m 12s</td><td>18m 16s</td><td>7m 28s</td><td>2m 46s</td></tr>
+        <tr><td>Findings</td><td>1C 5I 8S</td><td>1C 5I 3S</td><td>1C 3I 1S</td><td>3I 3S</td></tr>
+        <tr><td>Tool calls</td><td>52 (Bash 45, Read 3, WebFetch 3)</td><td>—</td><td>38 (run<em>shell</em>command 22, read<em>file 7, write</em>file 6)</td><td>14 (read<em>file 7, grep</em>search 5, run<em>shell</em>command 1)</td></tr>
+        <tr><td>Design observations</td><td>7</td><td>3</td><td>2</td><td>2</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>5</td><td>2</td><td>1</td><td>2</td></tr>
+        <tr><td>Files reviewed</td><td>9</td><td>9</td><td>9</td><td>9</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>1</td><td>2</td><td>1</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>1C 5I 8S</strong></td><td><strong>1C 5I 3S</strong></td><td><strong>1C 3I 1S</strong></td><td><strong>3I 3S</strong></td></tr>
+        <tr><td>Downgraded</td><td>2 (I→S)</td><td>0</td><td>1 (I→S)</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Claude P1 preview truncation: critical → important I1. Claude P1 &quot;no cancellation&quot;: important → design observation. Claude P1 keyboard access: suggestion → important I6 (siding with Codex). Codex P1 failed-download file damage: important → critical C1. Gemini 3.1 Pro P1 silent download failure: important → merged into C1. Gemini 3.1 Pro P1 symlink handling: important → split, download half kept at I5, preview half → suggestion S5. Gemini 3.5 Flash P1 <code>LC_ALL</code> pinning: suggestion → merged into I2 as a partial fix.</p>
+    <p>Claude, Codex and Gemini 3.1 Pro each ran the numbers on <code>--muted</code> or cited the repo-context entry for it and rated it a Suggestion. The inlined context did its job.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a test suite exercises a code path that ends in terminating a child process, closing a socket, or cancelling a stream, check what the test double does for that terminating call. A double that records the call without performing it lets the test follow the uninterrupted path, so the suite is green where production is not. Report the gap against the test, and prove the production behaviour with a double that actually severs the stream.</li>
+      <li>When a reproducer&#39;s output is quoted in a finding, treat it as a claim to verify rather than as evidence. Re-run it, or compare the quoted output against strings the code can emit. A message that appears nowhere in the implementation or its dependencies means the block was written, not executed, and the finding then rests on nothing but the reading behind it.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><code>[repo]</code> The Vue jest transform at <code>pkg/rancher-desktop/utils/testUtils/vue-jest.js</code> compiles only a plain <code>&lt;script&gt;</code> block (<code>descriptor.script</code>); it ignores <code>&lt;script setup&gt;</code>, so mounting any <code>&lt;script setup&gt;</code> SFC under jest fails with <code>ReferenceError: __default__ is not defined</code>. Several container components are written that way and consequently have no unit tests at all, only Playwright coverage. When a review needs to reproduce renderer behaviour in one of them, supply a scratch transform built on <code>compileScript(descriptor, { inlineTemplate: true })</code> and point jest at it with <code>--config</code>; do not report the absence of component tests as an oversight by the change&#39;s author without noting this constraint.</li>
+      <li><code>[repo]</code> <code>docker cp</code> and <code>nerdctl cp</code> do not follow symlinks unless <code>-L/--follow-link</code> is passed, so a tar streamed from <code>cp &lt;id&gt;:&lt;path&gt; -</code> contains a <code>symlink</code> entry with no body whenever the final path element is a link. Code that filters tar entries to <code>type === &#39;file&#39;</code> silently produces nothing for such a path. On Debian-derived images <code>/bin</code>, <code>/lib</code> and <code>/sbin</code> are symlinks, so this is a common path.</li>
+      <li><code>[repo]</code> The repo has two <code>ls -l</code> output parsers. One is in <code>pages/volumes/files/_name.vue</code>, an anchored regex over <code>ls -la --full-time</code>; the other is in <code>main/containerFiles.ts</code>, a positional split over <code>ls -lnA</code>. When reviewing either, check the other for the same input class. Device nodes print <code>major, minor</code> in place of the size, and <code>TIME_STYLE=long-iso</code>/<code>iso</code> collapse the timestamp to two fields; both shift the positional offsets.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
