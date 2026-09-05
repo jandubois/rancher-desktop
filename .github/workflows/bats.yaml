@@ -53,6 +53,9 @@ env:
 jobs:
   get-tests:
     name: Calculate tests to run
+    # A fork that enables this workflow wants the runs it dispatches, not a
+    # nightly 75-job matrix against a build it never made.
+    if: github.event_name != 'schedule' || !github.event.repository.fork
     runs-on: ubuntu-latest
     steps:
     - name: Fetch install script
