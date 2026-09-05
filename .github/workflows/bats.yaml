@@ -209,6 +209,25 @@ jobs:
         openssl
         util-linux
 
+    - name: "Windows: Wait for WSL interop"
+      if: runner.os == 'Windows'
+      shell: bash
+      # paths.bash resolves every Windows path by running powershell.exe from
+      # inside the distro.  When the binfmt_misc handler for Windows binaries
+      # is missing, that fails with "Exec format error", every path comes back
+      # empty, and the suite dies claiming it cannot find Rancher Desktop.
+      run: |
+        for i in $(seq 1 15); do
+          if wsl.exe --distribution openSUSE --exec powershell.exe -NoProfile -Command 'exit 0'; then
+            echo "WSL interop ready after $i attempt(s)"
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "::error::WSL interop never came up; Windows paths cannot be resolved"
+        wsl.exe --distribution openSUSE --exec ls -l /proc/sys/fs/binfmt_misc/ || true
+        exit 1
+
     - name: "Windows: Enable experimental WSL settings"
       if: runner.os == 'Windows' && inputs.experimental
       shell: pwsh
