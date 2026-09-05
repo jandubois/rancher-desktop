@@ -259,6 +259,9 @@ jobs:
         'tests/${{ steps.normalize.outputs.test }}'
       env:
         BATS_COMMAND:              ${{ env.BATS_COMMAND }}
+        # Longer than any single test should need; RD_KUBELET_TIMEOUT alone is
+        # 10 minutes.  Without it a wedged pull takes the whole job with it.
+        BATS_TEST_TIMEOUT:         "1200"
         GITHUB_TOKEN:              ${{ github.token }}
         LOGS_DIR:                  ${{ env.LOGS_DIR }}
         RD_CAPTURE_LOGS:           "true"
@@ -271,6 +274,7 @@ jobs:
         RD_USE_RAMDISK:            "true"
         RD_USE_WINDOWS_EXE:        "${{ runner.os == 'Windows' }}"
         WSLENV: "\
+          BATS_TEST_TIMEOUT:\
           GITHUB_TOKEN:\
           RD_CAPTURE_LOGS:\
           RD_CONTAINER_ENGINE:\
