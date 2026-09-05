@@ -182,6 +182,7 @@ jobs:
         zypper --non-interactive install
         curl
         netcat-openbsd
+        openssl
         util-linux
 
     - name: "Windows: Enable experimental WSL settings"
