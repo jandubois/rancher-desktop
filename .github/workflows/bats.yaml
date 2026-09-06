@@ -374,6 +374,20 @@ jobs:
       env:
         BATS_COMMAND: wsl.exe --distribution openSUSE --exec
 
+    - name: "Windows: Wait for WSL interop"
+      if: runner.os == 'Windows'
+      shell: pwsh
+      # Without a binfmt_misc handler for PE binaries, paths.bash cannot run
+      # powershell.exe, the Windows paths resolve to empty strings, and the
+      # suite exits before its first test.  Runs 33990197140 and 34052653517
+      # died that way.  The listing records what was registered when the wait
+      # times out, and pid 1 tells us whether to expect WSLInterop (WSL's own
+      # init) or WSLInterop-late (systemd).
+      run: >-
+        wsl.exe --distribution openSUSE --user root --exec /bin/sh -c
+        'i=0; while [ $i -lt 30 ] && ! ls /proc/sys/fs/binfmt_misc/WSLInterop* >/dev/null 2>&1; do i=$((i+1)); sleep 1; done; echo "waited ${i}s"; ls -la /proc/sys/fs/binfmt_misc/; echo "pid 1 is $(ps -p 1 -o comm=)"'
+      continue-on-error: true
+
     - name: Run BATS
       # We use ${{ env.BATS_COMMAND }} instead of ${BATS_COMMAND} to let the
       # shell parse the command, instead of doing it via expansion which is then
