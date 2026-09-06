@@ -63,7 +63,7 @@ assert_kube_deployment_available() {
 
 wait_for_kube_deployment_available() {
     trace "waiting for deployment $*"
-    try assert_kube_deployment_available "$@"
+    try --scale assert_kube_deployment_available "$@"
 }
 
 assert_pod_containers_are_running() {
@@ -108,7 +108,8 @@ traefik_hostname() {
 }
 
 wait_for_traefik() {
-    try traefik_ip
+    trace "waiting for the traefik service to get an IP address"
+    try --scale traefik_ip
 }
 
 get_k3s_versions() {

@@ -547,6 +547,12 @@ get_json_test_data() {
     fi
 }
 
+@test 'try --scale multiplies max by RD_WAIT_FACTOR' {
+    RD_WAIT_FACTOR=3 run try --scale --max 2 --delay 0 inc_counter
+    assert_failure
+    assert_counter_is 6
+}
+
 @test 'try will return after max retries' {
     run try --max 3 --delay 3 inc_counter
     assert_failure

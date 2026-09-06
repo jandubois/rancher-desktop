@@ -246,12 +246,17 @@ trace() {
 # try runs the specified command until it either succeeds, or --max attempts
 # have been made (with a --delay seconds sleep in between).
 #
+# --scale multiplies --max by RD_WAIT_FACTOR.  Use it when the command waits
+# for Rancher Desktop to come up, so that a slow machine gets more attempts.
+# Leave it off when the loop is expected to run out.
+#
 # Right now the command is **always** run with --separate-stderr, and stderr
 # is output after all of stdout. This is subject to change, if we can figure
 # out a way to detect if the caller used `run --separate-stderr try …` or not.
 try() {
     local max=24
     local delay=5
+    local scale=1
 
     while [[ $# -gt 0 ]] && [[ $1 == -* ]]; do
         case "$1" in
@@ -262,6 +267,9 @@ try() {
         --delay)
             delay=$2
             shift
+            ;;
+        --scale)
+            scale=$RD_WAIT_FACTOR
             ;;
         --)
             shift
@@ -274,6 +282,8 @@ try() {
         esac
         shift
     done
+
+    max=$((max * scale))
 
     local count=0
     while true; do
@@ -329,7 +339,7 @@ update_allowed_patterns() {
 EOF
     # Wait for container engine (and Kubernetes) to be ready again
     if [[ -n ${pid:-} ]]; then
-        try --max 15 --delay 5 refute_service_pid "$CONTAINER_ENGINE_SERVICE" "$pid"
+        try --scale --max 15 --delay 5 refute_service_pid "$CONTAINER_ENGINE_SERVICE" "$pid"
         wait_for_container_engine
         if [[ $(get_setting .kubernetes.enabled) == "true" ]]; then
             wait_for_kubelet

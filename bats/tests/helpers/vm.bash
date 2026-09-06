@@ -1,18 +1,18 @@
 wait_for_shell() {
     if is_windows; then
-        try --max 48 --delay 5 rdctl shell grep ID= /etc/os-release
+        try --scale --max 48 --delay 5 rdctl shell grep ID= /etc/os-release
         if using_systemd; then
-            try --max 24 --delay 5 rdctl shell test -f /var/run/lima-boot-done
-            try --max 24 --delay 5 rdctl shell systemctl is-active rancher-desktop.target
-            try --max 48 --delay 5 rdctl shell sudo systemctl is-system-running --wait
+            try --scale --max 24 --delay 5 rdctl shell test -f /var/run/lima-boot-done
+            try --scale --max 24 --delay 5 rdctl shell systemctl is-active rancher-desktop.target
+            try --scale --max 48 --delay 5 rdctl shell sudo systemctl is-system-running --wait
         fi
     else
         # Be at the root directory to avoid issues with limactl automatic
         # changing to the current directory, which might not exist.
         pushd /
-        try --max 24 --delay 5 rdctl shell test -f /var/run/lima-boot-done
+        try --scale --max 24 --delay 5 rdctl shell test -f /var/run/lima-boot-done
         # wait until sshfs mounts are done
-        try --max 12 --delay 5 rdctl shell test -d "$HOME/.rd"
+        try --scale --max 12 --delay 5 rdctl shell test -d "$HOME/.rd"
         popd || :
     fi
 }
@@ -447,7 +447,7 @@ wait_for_service_status() {
     wait_for_shell
 
     trace "waiting for ${service_name} to be ${expect}"
-    try --max 30 --delay 5 assert_service_status "$service_name" "$expect"
+    try --scale --max 30 --delay 5 assert_service_status "$service_name" "$expect"
 }
 
 wait_for_container_engine() {
@@ -455,25 +455,25 @@ wait_for_container_engine() {
     CALLER=$(this_function)
 
     trace "waiting for api /settings to be callable"
-    RD_TIMEOUT=10s try --max 30 --delay 5 rdctl api /settings
+    RD_TIMEOUT=10s try --scale --max 30 --delay 5 rdctl api /settings
 
     if using_docker; then
         wait_for_service_status docker started
         trace "waiting for docker context to exist"
-        try --max 30 --delay 10 docker_context_exists
+        try --scale --max 30 --delay 10 docker_context_exists
     else
         wait_for_service_status buildkitd started
     fi
 
     trace "waiting for container engine info to be available"
-    try --max 12 --delay 10 get_container_engine_info
+    try --scale --max 12 --delay 10 get_container_engine_info
 }
 
 # Wait fot the extension manager to be initialized.
 wait_for_extension_manager() {
     trace "waiting for extension manager to be ready"
     # We want to match specific error strings, so we can't use try() directly.
-    local count=0 max=30 message
+    local count=0 max=$((30 * RD_WAIT_FACTOR)) message
     while true; do
         run --separate-stderr rdctl api /extensions
         if ((status == 0 || ++count >= max)); then
@@ -503,5 +503,5 @@ assert_backend_available() {
 
 wait_for_backend() {
     trace "waiting for backend to be available"
-    try --max 60 --delay 10 assert_backend_available
+    try --scale --max 60 --delay 10 assert_backend_available
 }

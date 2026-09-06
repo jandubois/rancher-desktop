@@ -172,14 +172,16 @@ using_ramdisk() {
 : "${RD_VM_CPUS:=2}"
 
 ########################################################################
+# RD_WAIT_FACTOR multiplies how many attempts the startup waits make.  Waits
+# sized for a developer machine run out on a slow one.  wait_for_kubelet took
+# 8m19s to 15m28s on the macOS CI runners, against 62s on Linux.  CI sizes the
+# factor per runner; see .github/workflows/bats.yaml.
+: "${RD_WAIT_FACTOR:=1}"
+
+########################################################################
 # RD_KUBELET_TIMEOUT specifies the number of minutes wait_for_kubelet()
-# waits before it times out.  Without nested virtualization QEMU emulates the
-# whole VM, and a wait that succeeded on the macOS CI runners took 8m14s
-# against 62s on Linux, so 10 minutes there leaves too little headroom.
-if is_macos && ! using_vz_emulation; then
-    : "${RD_KUBELET_TIMEOUT:=20}"
-fi
-: "${RD_KUBELET_TIMEOUT:=10}"
+# waits before it times out.
+: "${RD_KUBELET_TIMEOUT:=$((10 * RD_WAIT_FACTOR))}"
 
 ########################################################################
 # RD_LOCATION specifies the location where Rancher Desktop is installed
