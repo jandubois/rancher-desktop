@@ -166,6 +166,7 @@ jobs:
           scripts/install-latest-ci.sh
           /.github/actions/
           .github/workflows/bats/sanitize-artifact-name.sh
+          .github/workflows/bats/collect-logs.sh
 
     - name: Fetch tests from this checkout
       if: inputs.tests-from == 'checkout'
@@ -490,11 +491,16 @@ jobs:
     - name: Consolidate logs
       if: ${{ !cancelled() }}
       run: |
+        # Collect first, so that a failure further down cannot skip it.
+        .github/workflows/bats/collect-logs.sh logs/_collected
         # bats/logs may not exist if the workflow is being tested with e.g. tests/helpers/utils.bats
         if [ -d "bats/logs" ]; then
             cp -R "bats/logs/" logs
         fi
-        cp "bats/report.tap" logs
+        # A step that failed before Run BATS leaves no report.tap.
+        if [ -f "bats/report.tap" ]; then
+            cp "bats/report.tap" logs
+        fi
         # The samplers write outside logs/ because bats requires that
         # directory to be empty when it starts.
         if [ -d diag ]; then
@@ -505,7 +511,10 @@ jobs:
         echo "$OS" > logs/os.txt
         echo "$ENGINE" > logs/engine.txt
         echo "$LOG_NAME" > logs/log-name.txt
-        mv version.txt logs/
+        # version.txt appears only once the download succeeds.
+        if [ -f version.txt ]; then
+            mv version.txt logs/
+        fi
       shell: bash
       env:
         NAME: ${{ matrix.name }}
