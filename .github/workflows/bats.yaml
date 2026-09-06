@@ -96,7 +96,9 @@ jobs:
       with:
         persist-credentials: false
         sparse-checkout-cone-mode: false
-        sparse-checkout: /bats/tests/
+        sparse-checkout: |
+          /.gitattributes
+          /bats/tests/
         path: checkout
 
     - id: repo
@@ -167,7 +169,9 @@ jobs:
       with:
         persist-credentials: false
         sparse-checkout-cone-mode: false
-        sparse-checkout: /bats/tests/
+        sparse-checkout: |
+          /.gitattributes
+          /bats/tests/
         path: checkout
 
     - name: Install latest CI build
