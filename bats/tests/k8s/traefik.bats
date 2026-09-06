@@ -69,7 +69,7 @@ assert_traefik_on_localhost() {
         # BUG BUG BUG not yet implemented
         skip "Test does not yet work from inside a WSL distro"
     fi
-    try --max 30 --delay 10 assert_traefik localhost
+    try --scale --max 30 --delay 10 assert_traefik localhost
 }
 
 @test 'factory reset' {
@@ -83,7 +83,7 @@ assert_traefik_on_localhost() {
 
 @test 'disable traefik' {
     # First check whether the traefik pods are up from the first launch
-    try --max 30 --delay 10 assert_traefik_pods_are_up
+    try --scale --max 30 --delay 10 assert_traefik_pods_are_up
 
     local k3s_pid
     k3s_pid=$(get_service_pid k3s)
@@ -92,20 +92,20 @@ assert_traefik_on_localhost() {
     rdctl set --kubernetes.options.traefik=false
 
     trace "Wait until k3s has restarted"
-    try --max 30 --delay 5 refute_service_pid k3s "${k3s_pid}"
+    try --scale --max 30 --delay 5 refute_service_pid k3s "${k3s_pid}"
     wait_for_kubelet
 
     trace "Check if the traefik pods go down"
-    try --max 30 --delay 10 assert_traefik_pods_are_down
+    try --scale --max 30 --delay 10 assert_traefik_pods_are_down
 }
 
 @test 'no connection on localhost' {
-    try --max 10 refute_traefik localhost
+    try --scale --max 10 refute_traefik localhost
 }
 
 @test 'no connection on host-ip' {
     skip_unless_host_ip
-    try --max 10 refute_traefik "$HOST_IP"
+    try --scale --max 10 refute_traefik "$HOST_IP"
 }
 
 @test 'enable traefik' {
@@ -116,11 +116,11 @@ assert_traefik_on_localhost() {
     rdctl set --kubernetes.options.traefik
 
     trace "Wait until k3s has restarted"
-    try --max 30 --delay 5 refute_service_pid k3s "${k3s_pid}"
+    try --scale --max 30 --delay 5 refute_service_pid k3s "${k3s_pid}"
     wait_for_kubelet
 
     trace "Check if the traefik pods come up"
-    try --max 30 --delay 10 assert_traefik_pods_are_up
+    try --scale --max 30 --delay 10 assert_traefik_pods_are_up
 }
 
 @test 'curl traefik via localhost' {
@@ -129,7 +129,7 @@ assert_traefik_on_localhost() {
 
 @test 'curl traefik via host-ip while kubernetes.ingress.localhost-only is false' {
     skip_unless_host_ip
-    try --max 30 --delay 10 assert_traefik "$HOST_IP"
+    try --scale --max 30 --delay 10 assert_traefik "$HOST_IP"
 }
 
 @test 'set kubernetes.ingress.localhost-only to true' {
@@ -140,7 +140,7 @@ assert_traefik_on_localhost() {
     rdctl set --kubernetes.options.traefik --kubernetes.ingress.localhost-only
     wait_for_kubelet
     # Check if the traefik pods come up
-    try --max 30 --delay 10 assert_traefik_pods_are_up
+    try --scale --max 30 --delay 10 assert_traefik_pods_are_up
 }
 
 @test 'curl traefik via localhost while kubernetes.ingress.localhost-only is true' {
@@ -157,5 +157,5 @@ assert_traefik_on_localhost() {
     skip_unless_host_ip
 
     # traefik should not be accessible on other interface
-    try --max 10 refute_traefik "$HOST_IP"
+    try --scale --max 10 refute_traefik "$HOST_IP"
 }
