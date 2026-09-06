@@ -162,6 +162,7 @@ jobs:
           scripts/install-latest-ci.sh
           /.github/actions/
           .github/workflows/bats/sanitize-artifact-name.sh
+          .github/workflows/bats/collect-logs.sh
 
     - name: Fetch tests from this checkout
       if: inputs.tests-from == 'checkout'
@@ -313,7 +314,7 @@ jobs:
       if: runner.os == 'Windows'
       uses: ./.github/actions/windows-machine-info
       with:
-        output-path: logs/_diag/machine-info.txt
+        output-path: diag/machine-info.txt
       continue-on-error: true
 
     - name: "Windows: Start typeperf sampler"
@@ -321,7 +322,7 @@ jobs:
       uses: ./.github/actions/windows-typeperf-sampler
       with:
         command: start
-        output-dir: logs/_diag
+        output-dir: diag
       continue-on-error: true
 
     - name: "macOS: Start host telemetry sampler"
@@ -329,7 +330,7 @@ jobs:
       uses: ./.github/actions/macos-telemetry-sampler
       with:
         command: start
-        output-dir: logs/_diag
+        output-dir: diag
       continue-on-error: true
 
     - name: Normalize test name
@@ -412,7 +413,7 @@ jobs:
       uses: ./.github/actions/windows-typeperf-sampler
       with:
         command: stop
-        output-dir: logs/_diag
+        output-dir: diag
       continue-on-error: true
 
     - name: "macOS: Stop host telemetry sampler"
@@ -420,7 +421,7 @@ jobs:
       uses: ./.github/actions/macos-telemetry-sampler
       with:
         command: stop
-        output-dir: logs/_diag
+        output-dir: diag
       continue-on-error: true
 
     - name: Calculate log name
@@ -444,6 +445,12 @@ jobs:
             cp -R "bats/logs/" logs
         fi
         cp "bats/report.tap" logs
+        # The samplers write outside logs/ because bats requires that
+        # directory to be empty when it starts.
+        if [ -d diag ]; then
+            cp -R diag logs/_diag
+        fi
+        .github/workflows/bats/collect-logs.sh logs/_collected
         .github/workflows/bats/sanitize-artifact-name.sh logs
         echo "$NAME" > logs/name.txt
         echo "$OS" > logs/os.txt
