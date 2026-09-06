@@ -167,7 +167,12 @@ using_ramdisk() {
 
 ########################################################################
 # RD_KUBELET_TIMEOUT specifies the number of minutes wait_for_kubelet()
-# waits before it times out.
+# waits before it times out.  Without nested virtualization QEMU emulates the
+# whole VM, and a wait that succeeded on the macOS CI runners took 8m14s
+# against 62s on Linux, so 10 minutes there leaves too little headroom.
+if is_macos && ! using_vz_emulation; then
+    : "${RD_KUBELET_TIMEOUT:=20}"
+fi
 : "${RD_KUBELET_TIMEOUT:=10}"
 
 ########################################################################
