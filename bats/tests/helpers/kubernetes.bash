@@ -61,6 +61,51 @@ assert_kube_deployment_available() {
     assert_output "True"
 }
 
+# Save the cluster state next to a failing test's logs.  k3s.log holds only
+# the kubelet's view of an unhealthy pod ("back-off 5m0s restarting failed
+# container"), never what the container printed before it died.
+capture_kubernetes_state() {
+    local logdir="$1/kubernetes"
+    local namespace pod container previous
+
+    # Many suites run with Kubernetes turned off, and a wedged apiserver must
+    # not hold up the capture, so ask once with a short timeout.
+    if ! kubectl --request-timeout=10s get --raw /readyz &>/dev/null; then
+        return
+    fi
+
+    mkdir -p "$logdir"
+    kubectl --request-timeout=30s get pods --all-namespaces --output wide \
+        >"$logdir/pods.txt" 2>&1 || :
+    kubectl --request-timeout=30s get events --all-namespaces \
+        --sort-by=.metadata.creationTimestamp \
+        >"$logdir/events.txt" 2>&1 || :
+    kubectl --request-timeout=30s get pods --all-namespaces --output json \
+        >"$logdir/pods.json" 2>&1 || :
+
+    # Only the containers that are unhealthy, so a healthy cluster writes
+    # nothing beyond the three summaries above.  A finished Job container is
+    # also "not ready", hence the exit code test.
+    while read -r namespace pod container; do
+        kubectl --request-timeout=30s logs --namespace "$namespace" "$pod" \
+            --container "$container" --tail=200 \
+            >"$logdir/${namespace}_${pod}_${container}.log" 2>&1 || :
+        # A container that has never restarted has no previous instance, and
+        # the error kubectl prints for that is not worth keeping.
+        previous="$logdir/${namespace}_${pod}_${container}.previous.log"
+        if ! kubectl --request-timeout=30s logs --namespace "$namespace" "$pod" \
+            --container "$container" --tail=200 --previous >"$previous" 2>&1; then
+            rm -f "$previous"
+        fi
+    done < <(jq --raw-output '
+        .items[] | . as $pod
+        | ($pod.status.containerStatuses // [])[]
+        | select(.ready | not)
+        | select((.state.terminated.exitCode // 1) != 0)
+        | "\($pod.metadata.namespace) \($pod.metadata.name) \(.name)"
+    ' "$logdir/pods.json" 2>/dev/null)
+}
+
 wait_for_kube_deployment_available() {
     trace "waiting for deployment $*"
     try --scale assert_kube_deployment_available "$@"
