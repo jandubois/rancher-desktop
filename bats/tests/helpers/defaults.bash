@@ -166,6 +166,12 @@ using_ramdisk() {
 : "${RD_PROTECTED_DOT:=·}"
 
 ########################################################################
+# RD_VM_CPUS is the number of CPUs given to the virtual machine, matching
+# Rancher Desktop's own default.  CI sizes it per runner instead; see
+# .github/workflows/bats.yaml.
+: "${RD_VM_CPUS:=2}"
+
+########################################################################
 # RD_KUBELET_TIMEOUT specifies the number of minutes wait_for_kubelet()
 # waits before it times out.  Without nested virtualization QEMU emulates the
 # whole VM, and a wait that succeeded on the macOS CI runners took 8m14s
