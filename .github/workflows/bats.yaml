@@ -160,7 +160,7 @@ jobs:
         sparse-checkout-cone-mode: false
         sparse-checkout: |
           scripts/install-latest-ci.sh
-          .github/actions/setup-environment/action.yaml
+          /.github/actions/
           .github/workflows/bats/sanitize-artifact-name.sh
 
     - name: Fetch tests from this checkout
@@ -264,6 +264,18 @@ jobs:
         openssl
         util-linux
 
+    - name: "Windows: Disable Compatibility Telemetry"
+      if: runner.os == 'Windows'
+      uses: ./.github/actions/disable-compat-telemetry
+
+    - name: "Windows: WSL debugging"
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        wsl --list --verbose
+        wsl --status
+      continue-on-error: true
+
     - name: "Windows: Enable experimental WSL settings"
       if: runner.os == 'Windows' && inputs.experimental
       shell: pwsh
@@ -296,6 +308,29 @@ jobs:
         wsl.exe --distribution openSUSE -- echo 'LOGS_DIR=$(pwd)'
         | Out-File -Encoding ASCII -Append "$ENV:GITHUB_ENV"
       working-directory: logs
+
+    - name: "Windows: Capture machine info"
+      if: runner.os == 'Windows'
+      uses: ./.github/actions/windows-machine-info
+      with:
+        output-path: logs/_diag/machine-info.txt
+      continue-on-error: true
+
+    - name: "Windows: Start typeperf sampler"
+      if: runner.os == 'Windows'
+      uses: ./.github/actions/windows-typeperf-sampler
+      with:
+        command: start
+        output-dir: logs/_diag
+      continue-on-error: true
+
+    - name: "macOS: Start host telemetry sampler"
+      if: runner.os == 'macOS'
+      uses: ./.github/actions/macos-telemetry-sampler
+      with:
+        command: start
+        output-dir: logs/_diag
+      continue-on-error: true
 
     - name: Normalize test name
       id: normalize
@@ -371,6 +406,22 @@ jobs:
           "
       working-directory: bats
       timeout-minutes: 120
+
+    - name: "Windows: Stop typeperf sampler"
+      if: always() && runner.os == 'Windows'
+      uses: ./.github/actions/windows-typeperf-sampler
+      with:
+        command: stop
+        output-dir: logs/_diag
+      continue-on-error: true
+
+    - name: "macOS: Stop host telemetry sampler"
+      if: always() && runner.os == 'macOS'
+      uses: ./.github/actions/macos-telemetry-sampler
+      with:
+        command: stop
+        output-dir: logs/_diag
+      continue-on-error: true
 
     - name: Calculate log name
       id: log_name
