@@ -1,0 +1,154 @@
+name: Guest stress
+# Boot one Rancher Desktop VM on a hosted runner and stress the guest with the
+# work that crashed there during BATS runs on macos-15-intel, each load for a
+# fixed time.  The job reports a failure count per load, so a change to the VM
+# (vCPU count, memory, hypervisor, runner label) can be compared by rate.
+on:
+  # A workflow file that exists only on a non-default branch cannot be
+  # dispatched until it has run once, so pushes to the investigation branch
+  # run it too, with the defaults below.
+  push:
+    branches: [ guest-corruption ]
+    paths:
+    - .github/workflows/guest-stress.yaml
+    - .github/workflows/guest-stress/**
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: Runner label
+        default: macos-15-intel
+        type: choice
+        options: [ macos-15-intel, macos-15 ]
+      branch:
+        description: Branch whose latest package build to install
+        default: bats-ci-repair
+        type: string
+      package-id:
+        description: Package run ID override; leave empty to use latest.
+        default: ''
+        type: string
+      engine:
+        description: Container engine
+        default: moby
+        type: choice
+        options: [ moby, containerd ]
+      cpus:
+        description: Number of vCPUs for the VM
+        default: '4'
+        type: string
+      memory:
+        description: VM memory in GB
+        default: '6'
+        type: string
+      vz:
+        description: Use the Virtualization framework rather than QEMU
+        default: 'true'
+        type: choice
+        options: [ 'true', 'false' ]
+      loads:
+        description: Loads to run, in order; any of tar, stress, go
+        default: 'tar stress go'
+        type: string
+      duration:
+        description: Seconds to run each load
+        default: '600'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  stress:
+    # A push carries no inputs, so every setting falls back to its default here.
+    strategy:
+      matrix:
+        include:
+        - runner:     ${{ inputs.runner || 'macos-15-intel' }}
+          branch:     ${{ inputs.branch || 'bats-ci-repair' }}
+          package-id: ${{ inputs.package-id || '' }}
+          engine:     ${{ inputs.engine || 'moby' }}
+          cpus:       ${{ inputs.cpus || '4' }}
+          memory:     ${{ inputs.memory || '6' }}
+          vz:         ${{ inputs.vz || 'true' }}
+          loads:      ${{ inputs.loads || 'tar stress go' }}
+          duration:   ${{ inputs.duration || '600' }}
+    name: ${{ matrix.runner }} ${{ matrix.engine }} ${{ matrix.vz == 'true' && 'vz' || 'qemu' }} ${{ matrix.cpus }}cpu ${{ matrix.memory }}gb
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 180
+    env:
+      ARTIFACT: guest-stress-${{ matrix.runner }}-${{ matrix.engine }}-${{ matrix.vz == 'true' && 'vz' || 'qemu' }}-${{ matrix.cpus }}cpu-${{ matrix.memory }}gb
+    steps:
+    - name: Fetch scripts
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          scripts/install-latest-ci.sh
+          /.github/actions/
+          .github/workflows/bats/collect-logs.sh
+          /.github/workflows/guest-stress/
+
+    - name: Install latest CI build
+      shell: bash
+      run: |
+        export OWNER=$GITHUB_REPOSITORY_OWNER REPO=${GITHUB_REPOSITORY#*/}
+        scripts/install-latest-ci.sh
+      env:
+        GH_TOKEN:     ${{ github.token }}
+        BRANCH:       ${{ matrix.branch }}
+        ID:           ${{ matrix.package-id }}
+        BATS_DIR:     ${{ runner.temp }}/bats
+        INSTALL_MODE: zip
+        RD_LOCATION:  system
+
+    - name: Install prerequisites
+      shell: bash
+      run: brew install --force coreutils
+
+    - name: Disable Spotlight indexing
+      shell: bash
+      # Spotlight took more than two of the runner's four cores during a BATS
+      # run; see bats.yaml.
+      run: sudo mdutil -a -i off
+
+    - name: Start host telemetry sampler
+      uses: ./.github/actions/macos-telemetry-sampler
+      with:
+        command: start
+        output-dir: logs/_diag
+      continue-on-error: true
+
+    - name: Run the loads
+      shell: bash
+      run: .github/workflows/guest-stress/run.sh
+      env:
+        LOGS_DIR:            ${{ github.workspace }}/logs
+        RD_CONTAINER_ENGINE: ${{ matrix.engine }}
+        RD_VM_CPUS:          ${{ matrix.cpus }}
+        RD_VM_MEMORY:        ${{ matrix.memory }}
+        RD_USE_VZ:           ${{ matrix.vz }}
+        LOADS:               ${{ matrix.loads }}
+        DURATION:            ${{ matrix.duration }}
+      timeout-minutes: 150
+
+    - name: Stop host telemetry sampler
+      if: always()
+      uses: ./.github/actions/macos-telemetry-sampler
+      with:
+        command: stop
+        output-dir: logs/_diag
+      continue-on-error: true
+
+    - name: Collect logs
+      if: always()
+      shell: bash
+      run: .github/workflows/bats/collect-logs.sh logs/_collected
+
+    - name: Upload logs
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: ${{ env.ARTIFACT }}
+        path: logs/
+        if-no-files-found: error
