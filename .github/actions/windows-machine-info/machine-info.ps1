@@ -147,6 +147,9 @@ try {
                       ScanAvgCPULoadFactor, ExclusionPath, ExclusionProcess |
         Format-List
 
+    # wsl.exe emits UTF-16LE with a BOM unless this is set, and this section
+    # came out empty without it.
+    $env:WSL_UTF8 = 1
     Write-Output "=== WSL ==="
     & wsl.exe --status
     Write-Output ''
