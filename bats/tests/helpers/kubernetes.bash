@@ -82,6 +82,15 @@ capture_kubernetes_state() {
         >"$logdir/events.txt" 2>&1 || :
     kubectl --request-timeout=30s get pods --all-namespaces --output json \
         >"$logdir/pods.json" 2>&1 || :
+    kubectl --request-timeout=30s get all --all-namespaces \
+        >"$logdir/all.txt" 2>&1 || :
+    # helm keeps every release as a secret labelled with its name and status,
+    # which says whether an uninstall ran at all.  k3s deletes the Job that
+    # would have logged it as soon as the chart is gone, so by the time a test
+    # gives up there is often nothing else left to ask.
+    kubectl --request-timeout=30s get secrets --all-namespaces \
+        --selector owner=helm --show-labels \
+        >"$logdir/helm-releases.txt" 2>&1 || :
 
     # Only the containers that are unhealthy, so a healthy cluster writes
     # nothing beyond the three summaries above.  A finished Job container is
