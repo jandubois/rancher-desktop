@@ -133,13 +133,23 @@ dump_memory_pressure() {
 }
 
 dump_sockets() {
-    if command -v ss >/dev/null; then
-        echo "=== Open sockets (ss) ==="
-        with_timeout 30 ss --tcp --udp --processes --numeric
-    elif command -v lsof >/dev/null; then
-        echo "=== Open sockets (lsof) ==="
-        with_timeout 30 lsof -i -P
-    fi
+    case "$platform" in
+    win32)
+        # Git Bash has neither ss nor lsof, and Windows netstat has no long
+        # options.
+        echo "=== Open sockets (netstat) ==="
+        with_timeout 30 netstat.exe -ano
+        ;;
+    *)
+        if command -v ss >/dev/null; then
+            echo "=== Open sockets (ss) ==="
+            with_timeout 30 ss --tcp --udp --processes --numeric
+        elif command -v lsof >/dev/null; then
+            echo "=== Open sockets (lsof) ==="
+            with_timeout 30 lsof -i -P
+        fi
+        ;;
+    esac
 }
 
 # Snapshot what Rancher Desktop thinks its own state is.  Probe unconditionally
