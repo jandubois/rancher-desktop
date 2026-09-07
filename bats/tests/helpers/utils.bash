@@ -424,6 +424,22 @@ capture_host_sockets() {
     "$@" >"$logdir/sockets.txt" 2>&1 || :
 }
 
+# Rancher Desktop only symlinks the lima logs into its own log directory once
+# `limactl start` returns, so a VM that hangs while booting leaves the capture
+# without serialv.log, the one file that shows a guest-side crash.  The `lima.`
+# prefix is the name the symlink would have had.
+capture_lima_logs() {
+    local logdir=$1
+    local file
+    if [[ -d ${LIMA_HOME:-}/0 ]]; then
+        for file in "$LIMA_HOME"/0/*.log; do
+            if [[ -f $file ]]; then
+                cp "$file" "${logdir}/lima.$(basename "$file")"
+            fi
+        done
+    fi
+}
+
 # capture_logs [--kubernetes]
 #
 # --kubernetes also saves the cluster state, which costs several kubectl
@@ -445,6 +461,7 @@ capture_logs() {
             -exec rm -f -- '{}' ';' \
             -exec echo 'Removed dangling symlink:' '{}' ';'
         cp -LR "${PATH_LOGS}/" "$logdir"
+        capture_lima_logs "$logdir"
         echo "${BATS_TEST_DESCRIPTION:-teardown}" >"${logdir}/test_description"
         # Capture settings.json
         cp "$PATH_CONFIG_FILE" "$logdir"
