@@ -85,7 +85,9 @@ capture_kubernetes_state() {
 
     # Only the containers that are unhealthy, so a healthy cluster writes
     # nothing beyond the three summaries above.  A finished Job container is
-    # also "not ready", hence the exit code test.
+    # also "not ready", hence the exit code test.  helm-* pods are the
+    # exception: the Job exits 0 even when the chart's workload outlives the
+    # uninstall, and only its log says what helm did.
     while read -r namespace pod container; do
         kubectl --request-timeout=30s logs --namespace "$namespace" "$pod" \
             --container "$container" --tail=200 \
@@ -101,7 +103,8 @@ capture_kubernetes_state() {
         .items[] | . as $pod
         | ($pod.status.containerStatuses // [])[]
         | select(.ready | not)
-        | select((.state.terminated.exitCode // 1) != 0)
+        | select(($pod.metadata.name | startswith("helm-"))
+                 or ((.state.terminated.exitCode // 1) != 0))
         | "\($pod.metadata.namespace) \($pod.metadata.name) \(.name)"
     ' "$logdir/pods.json" 2>/dev/null)
 }
