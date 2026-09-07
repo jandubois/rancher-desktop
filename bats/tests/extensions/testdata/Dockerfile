@@ -1,13 +1,13 @@
 FROM registry.suse.com/bci/golang:latest AS builder
 WORKDIR /usr/src/app
 COPY bin/dummy.go .
-ENV GOOS=windows
+ENV GOOS=windows GOFLAGS=-p=1
 RUN go build -o /dummy.exe -ldflags '-s -w' dummy.go
 
 FROM registry.suse.com/bci/golang:latest AS server-builder
 WORKDIR /usr/src/app
 COPY bin/server.go .
-ENV GOOS=linux
+ENV GOOS=linux GOFLAGS=-p=1
 RUN go build -o /server -ldflags '-s -w' server.go
 
 FROM registry.suse.com/bci/bci-minimal:16.0
