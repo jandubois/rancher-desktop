@@ -396,16 +396,34 @@ unique_filename() {
 # Desktop has shut down, so it cannot show whether a published port was bound.
 capture_host_sockets() {
     local logdir=$1
+    local timeout_cmd=
+
+    # lsof walks every mount, so it can hang on the sshfs mounts the VM
+    # holds open, and this runs in teardown where a hang costs the whole
+    # step.  macOS ships no timeout(1); collect-logs.sh probes the same way.
+    for candidate in timeout gtimeout; do
+        if command -v "$candidate" >/dev/null; then
+            timeout_cmd=$candidate
+            break
+        fi
+    done
 
     if using_windows_exe; then
         # Git Bash carries neither ss nor lsof, and Windows netstat has no
         # long options.
-        netstat.exe -ano >"$logdir/sockets.txt" 2>&1 || :
+        set -- netstat.exe -ano
     elif command -v ss >/dev/null; then
-        ss --tcp --udp --processes --numeric >"$logdir/sockets.txt" 2>&1 || :
+        set -- ss --tcp --udp --processes --numeric
     elif command -v lsof >/dev/null; then
-        lsof -i -P >"$logdir/sockets.txt" 2>&1 || :
+        set -- lsof -i -P
+    else
+        return
     fi
+
+    if [[ -n $timeout_cmd ]]; then
+        set -- "$timeout_cmd" --kill-after=1 30 "$@"
+    fi
+    "$@" >"$logdir/sockets.txt" 2>&1 || :
 }
 
 # capture_logs [--kubernetes]
