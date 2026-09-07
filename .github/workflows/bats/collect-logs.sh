@@ -128,13 +128,24 @@ dump_memory_pressure() {
 }
 
 dump_sockets() {
-    if command -v ss >/dev/null; then
-        echo "=== Open sockets (ss) ==="
-        ss --tcp --udp --processes --numeric 2>&1
-    elif command -v lsof >/dev/null; then
-        echo "=== Open sockets (lsof) ==="
-        lsof -i -P 2>&1
-    fi
+    case "$platform" in
+    win32)
+        # Git Bash carries neither ss nor lsof, so the one platform whose
+        # tests publish container ports collected nothing here.  Windows
+        # netstat has no long options.
+        echo "=== Open sockets (netstat) ==="
+        netstat.exe -ano 2>&1
+        ;;
+    *)
+        if command -v ss >/dev/null; then
+            echo "=== Open sockets (ss) ==="
+            ss --tcp --udp --processes --numeric 2>&1
+        elif command -v lsof >/dev/null; then
+            echo "=== Open sockets (lsof) ==="
+            lsof -i -P 2>&1
+        fi
+        ;;
+    esac
 }
 
 # Snapshot what Rancher Desktop thinks its own state is.  Probe unconditionally
