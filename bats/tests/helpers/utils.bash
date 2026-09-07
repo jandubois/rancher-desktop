@@ -392,6 +392,22 @@ unique_filename() {
     done
 }
 
+# collect-logs.sh dumps the same tables at the end of the job, after Rancher
+# Desktop has shut down, so it cannot show whether a published port was bound.
+capture_host_sockets() {
+    local logdir=$1
+
+    if using_windows_exe; then
+        # Git Bash carries neither ss nor lsof, and Windows netstat has no
+        # long options.
+        netstat.exe -ano >"$logdir/sockets.txt" 2>&1 || :
+    elif command -v ss >/dev/null; then
+        ss --tcp --udp --processes --numeric >"$logdir/sockets.txt" 2>&1 || :
+    elif command -v lsof >/dev/null; then
+        lsof -i -P >"$logdir/sockets.txt" 2>&1 || :
+    fi
+}
+
 # capture_logs [--kubernetes]
 #
 # --kubernetes also saves the cluster state, which costs several kubectl
@@ -417,6 +433,7 @@ capture_logs() {
         # Capture settings.json
         cp "$PATH_CONFIG_FILE" "$logdir"
         foreach_profile export_profile "$logdir"
+        capture_host_sockets "$logdir"
         if "$with_kubernetes"; then
             capture_kubernetes_state "$logdir"
         fi
