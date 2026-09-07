@@ -1,12 +1,12 @@
 # Build one Go package at a time.  Letting go build fork one compile process
 # per CPU corrupts the compiler inside the macOS CI guest.
-FROM registry.suse.com/bci/golang:latest AS builder
+FROM registry.suse.com/bci/golang:1.27 AS builder
 WORKDIR /usr/src/app
 COPY bin/dummy.go .
 ENV GOOS=windows GOFLAGS=-p=1
 RUN go build -o /dummy.exe -ldflags '-s -w' dummy.go
 
-FROM registry.suse.com/bci/golang:latest AS server-builder
+FROM registry.suse.com/bci/golang:1.27 AS server-builder
 WORKDIR /usr/src/app
 COPY bin/server.go .
 ENV GOOS=linux GOFLAGS=-p=1
