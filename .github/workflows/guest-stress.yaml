@@ -45,6 +45,10 @@ on:
         default: 'true'
         type: choice
         options: [ 'true', 'false' ]
+      cpu_type:
+        description: 'QEMU -cpu model to pin (e.g. Haswell-v4); empty uses the default. Ignored under VZ.'
+        default: ''
+        type: string
       loads:
         description: Loads to run, in order; any of tar, stress, go
         default: 'tar stress go'
@@ -72,11 +76,12 @@ jobs:
           vz:         ${{ inputs.vz || 'true' }}
           loads:      ${{ inputs.loads || 'tar stress go' }}
           duration:   ${{ inputs.duration || '600' }}
-    name: ${{ matrix.runner }} ${{ matrix.engine }} ${{ matrix.vz == 'true' && 'vz' || 'qemu' }} ${{ matrix.cpus }}cpu ${{ matrix.memory }}gb
+          cpu_type:   ${{ inputs.cpu_type || '' }}
+    name: ${{ matrix.runner }} ${{ matrix.engine }} ${{ matrix.vz == 'true' && 'vz' || 'qemu' }} ${{ matrix.cpus }}cpu ${{ matrix.memory }}gb${{ matrix.cpu_type && format(' {0}', matrix.cpu_type) || '' }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 180
     env:
-      ARTIFACT: guest-stress-${{ matrix.runner }}-${{ matrix.engine }}-${{ matrix.vz == 'true' && 'vz' || 'qemu' }}-${{ matrix.cpus }}cpu-${{ matrix.memory }}gb
+      ARTIFACT: guest-stress-${{ matrix.runner }}-${{ matrix.engine }}-${{ matrix.vz == 'true' && 'vz' || 'qemu' }}-${{ matrix.cpus }}cpu-${{ matrix.memory }}gb${{ matrix.cpu_type && format('-{0}', matrix.cpu_type) || '' }}
     steps:
     - name: Fetch scripts
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -147,6 +152,7 @@ jobs:
         RD_VM_CPUS:          ${{ matrix.cpus }}
         RD_VM_MEMORY:        ${{ matrix.memory }}
         RD_USE_VZ:           ${{ matrix.vz }}
+        RD_CPU_TYPE:         ${{ matrix.cpu_type }}
         LOADS:               ${{ matrix.loads }}
         DURATION:            ${{ matrix.duration }}
       timeout-minutes: 150

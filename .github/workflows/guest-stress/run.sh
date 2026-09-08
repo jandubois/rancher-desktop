@@ -139,6 +139,7 @@ start_rancher_desktop() {
             args+=(--virtual-machine.type qemu)
         fi
     fi
+    write_cpu_override
     log "rdctl start ${args[*]}"
     "$bin/rdctl" start "${args[@]}" &
 
@@ -150,6 +151,29 @@ start_rancher_desktop() {
     log "waiting for the container engine"
     retry 600 10 ctrctl info >/dev/null
     log "Rancher Desktop is up"
+}
+
+# Pin the guest's emulated CPU model through lima's override config, to test
+# the Lima FAQ workaround for HVF-on-Intel guest corruption.  QEMU only: VZ
+# has no CPU-model control.  RD launches its app with `open -a`, which drops
+# the caller's environment, so QEMU_SYSTEM_X86_64 set here would never reach
+# qemu; a config file does not depend on env inheritance, and lima applies
+# _config/override.yaml on top of RD's generated instance config.
+write_cpu_override() {
+    [[ -n ${RD_CPU_TYPE:-} ]] || return 0
+    if [[ $RD_USE_VZ == true ]]; then
+        echo "RD_CPU_TYPE=$RD_CPU_TYPE ignored under VZ; dispatch with vz=false" >&2
+        return 0
+    fi
+    mkdir -p "$lima_home/_config"
+    cat > "$lima_home/_config/override.yaml" <<EOF
+vmOpts:
+  qemu:
+    cpuType:
+      x86_64: $RD_CPU_TYPE
+EOF
+    log "cpuType override written:"
+    cat "$lima_home/_config/override.yaml"
 }
 
 # A crash should leave registers and a stack behind, not one line.  /tmp is
@@ -177,7 +201,12 @@ record_info() {
     {
         echo "runner: ${ImageOS:-?} ${ImageVersion:-?}, $(uname -m)"
         host_info
-        echo "vm: engine=$RD_CONTAINER_ENGINE vz=$RD_USE_VZ cpus=$RD_VM_CPUS memory=${RD_VM_MEMORY}GB"
+        echo "vm: engine=$RD_CONTAINER_ENGINE vz=$RD_USE_VZ cpus=$RD_VM_CPUS memory=${RD_VM_MEMORY}GB cpu_type=${RD_CPU_TYPE:-<default>}"
+        # The definitive check that the -cpu override took effect: lima's host
+        # agent logs the actual qemu command line here.
+        if [[ $RD_USE_VZ != true ]]; then
+            echo "qemu -cpu from ha.stderr.log: $(grep -oE -- '-cpu [^ ]+' "$lima_home/0/ha.stderr.log" 2>/dev/null | head -n1 || echo '<not found>')"
+        fi
         echo "guest: $(rdctl shell uname -a)"
         rdctl shell nproc
         rdctl shell free -m
