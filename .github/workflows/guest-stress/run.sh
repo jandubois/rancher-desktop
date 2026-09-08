@@ -163,6 +163,11 @@ prepare_guest() {
 host_info() {
     if [[ $platform == darwin ]]; then
         echo "host: $(sysctl -n machdep.cpu.brand_string), $(sysctl -n hw.ncpu) CPUs, $(( $(sysctl -n hw.memsize) / 1024 / 1024 )) MB"
+        # Is macOS itself a guest, and are its "CPUs" cores or threads?  A VM
+        # may present vCPUs as plain cores, so hv_vmm_present is the reliable
+        # half; the topology numbers are a bonus if Apple passes them through.
+        echo "host virtualized (kern.hv_vmm_present): $(sysctl -n kern.hv_vmm_present 2>/dev/null || echo '?')"
+        echo "host cpu topology: physicalcpu=$(sysctl -n hw.physicalcpu) logicalcpu=$(sysctl -n hw.logicalcpu) packages=$(sysctl -n hw.packages) physicalcpu_max=$(sysctl -n hw.physicalcpu_max) logicalcpu_max=$(sysctl -n hw.logicalcpu_max)"
     else
         echo "host:$(grep -m1 'model name' /proc/cpuinfo | cut -d : -f 2-), $(nproc) CPUs, $(free -m | awk '/^Mem:/ { print $2 }') MB"
     fi
