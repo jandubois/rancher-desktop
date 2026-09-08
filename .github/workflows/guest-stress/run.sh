@@ -234,8 +234,11 @@ load_stress() {
 load_go() {
     local image=registry.suse.com/bci/golang:1.27
     local packages='net/http crypto/tls go/types encoding/json/v2 html/template os/user'
-    local end n=0 crashed=0 rc
-    retry 180 10 ctrctl pull --quiet "$image"
+    local end n=0 crashed=0 rc out
+    if ! retry 180 10 ctrctl pull --quiet "$image"; then
+        echo "go: image pull failed, guest engine unreachable"
+        return
+    fi
     end=$(( $(date +%s) + DURATION ))
     while (( $(date +%s) < end )); do
         n=$(( n + 1 ))
@@ -244,14 +247,25 @@ load_go() {
         # GOTRACEBACK=crash re-raises the fatal signal under SIG_DFL after the
         # traceback, so a corrupted compiler dumps core; the ulimit and the
         # mount let it land where collect-cores.sh finds it.
-        "$timeout_cmd" --kill-after=5 $(( DURATION + 600 )) \
+        out=$("$timeout_cmd" --kill-after=5 $(( DURATION + 600 )) \
             "${engine[@]}" run --rm --env CGO_ENABLED=0 --env GOTRACEBACK=crash \
             --ulimit core=-1 --volume /tmp/cores:/tmp/cores "$image" \
-            sh -c "ulimit -c unlimited; go build -a $packages" || rc=$?
+            sh -c "ulimit -c unlimited; go build -a $packages" 2>&1) || rc=$?
+        printf '%s\n' "$out"
         log "build $n exited $rc"
-        (( rc == 0 )) || crashed=$(( crashed + 1 ))
+        if (( rc != 0 )); then
+            # A crash marker is a corrupted compiler; anything else (a lost
+            # daemon socket, a wedged guest) is not a build result, so stop
+            # rather than spin thousands of instant failures.
+            if printf '%s' "$out" | grep -qE "$go_signatures"; then
+                crashed=$(( crashed + 1 ))
+            else
+                echo "go: build $n failed with no crash marker, guest likely wedged; stopping"
+                break
+            fi
+        fi
     done
-    echo "go: $n builds, $crashed nonzero"
+    echo "go: $n builds, $crashed crashed"
 }
 
 run_load() {
