@@ -8,7 +8,14 @@
 
 duration=$1
 workers=$2
-archive=/media/sda/alpine.apkovl.tar.gz
+# The boot medium is /media/sda under VZ but a different device under QEMU,
+# so find the apkovl rather than assume the path.
+# shellcheck disable=SC2012 # the name is fixed and alphanumeric
+archive=$(ls /media/*/alpine.apkovl.tar.gz 2>/dev/null | head -n 1)
+if [ -z "$archive" ]; then
+    echo "apkovl archive not found under /media" >&2
+    exit 1
+fi
 end=$(( $(date +%s) + duration ))
 # shellcheck disable=SC3045 # busybox ash has it
 ulimit -c unlimited
