@@ -15,10 +15,10 @@ on:
   workflow_dispatch:
     inputs:
       runner:
-        description: Runner label
+        description: Runner label (ubuntu-latest runs the same guest under KVM, as a control)
         default: macos-15-intel
         type: choice
-        options: [ macos-15-intel, macos-15 ]
+        options: [ macos-15-intel, macos-15, ubuntu-latest ]
       branch:
         description: Branch whose latest package build to install
         default: bats-ci-repair
@@ -102,11 +102,28 @@ jobs:
         INSTALL_MODE: zip
         RD_LOCATION:  system
 
-    - name: Install prerequisites
+    - name: "Linux: Identify the user that runs the loads"
+      if: runner.os == 'Linux'
+      shell: bash
+      run: echo "TEST_USER=$(id --user --name)" >> "$GITHUB_ENV"
+
+    - name: Set up environment
+      uses: ./.github/actions/setup-environment
+      with:
+        user: ${{ env.TEST_USER }}
+
+    - name: "Linux: Run under a virtual display"
+      if: runner.os == 'Linux'
+      shell: bash
+      run: echo "RUN_PREFIX=xvfb-run --auto-servernum --server-args='-screen 0 1280x960x24'" >> "$GITHUB_ENV"
+
+    - name: "macOS: Install prerequisites"
+      if: runner.os == 'macOS'
       shell: bash
       run: brew install --force coreutils
 
-    - name: Disable Spotlight indexing
+    - name: "macOS: Disable Spotlight indexing"
+      if: runner.os == 'macOS'
       shell: bash
       # Spotlight took more than two of the runner's four cores during a BATS
       # run; see bats.yaml.
@@ -121,7 +138,9 @@ jobs:
 
     - name: Run the loads
       shell: bash
-      run: .github/workflows/guest-stress/run.sh
+      # The env.* form lets the shell parse the quoted --server-args; see
+      # bats.yaml for why.
+      run: ${{ env.RUN_PREFIX }} .github/workflows/guest-stress/run.sh
       env:
         LOGS_DIR:            ${{ github.workspace }}/logs
         RD_CONTAINER_ENGINE: ${{ matrix.engine }}

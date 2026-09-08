@@ -38,8 +38,22 @@ set -o errexit -o nounset -o pipefail
 : "${RD_USE_VZ:=true}"
 
 here=$(cd "$(dirname "$0")" && pwd)
-bin="/Applications/Rancher Desktop.app/Contents/Resources/resources/darwin/bin"
-lima_home="$HOME/Library/Application Support/rancher-desktop/lima"
+case "$(uname -s)" in
+Darwin)
+    platform=darwin
+    bin="/Applications/Rancher Desktop.app/Contents/Resources/resources/darwin/bin"
+    lima_home="$HOME/Library/Application Support/rancher-desktop/lima"
+    ;;
+Linux)
+    platform=linux
+    bin="/opt/rancher-desktop/resources/resources/linux/bin"
+    lima_home="$HOME/.local/share/rancher-desktop/lima"
+    ;;
+*)
+    echo "Unsupported platform: $(uname -s)" >&2
+    exit 1
+    ;;
+esac
 summary="$LOGS_DIR/summary.md"
 signatures='segfault|general protection|traps:|Oops|BUG:|Call Trace|fatal signal'
 go_signatures='internal compiler error|split stack overflow|signal: segmentation fault|fatal error|unexpected signal|bad g in signal handler'
@@ -118,10 +132,12 @@ start_rancher_desktop() {
         --virtual-machine.number-cpus="$RD_VM_CPUS"
         --no-modal-dialogs
     )
-    if [[ $RD_USE_VZ == true ]]; then
-        args+=(--virtual-machine.type vz)
-    else
-        args+=(--virtual-machine.type qemu)
+    if [[ $platform == darwin ]]; then
+        if [[ $RD_USE_VZ == true ]]; then
+            args+=(--virtual-machine.type vz)
+        else
+            args+=(--virtual-machine.type qemu)
+        fi
     fi
     log "rdctl start ${args[*]}"
     "$bin/rdctl" start "${args[@]}" &
@@ -144,10 +160,18 @@ prepare_guest() {
     guest sysctl -w kernel.core_pattern=/tmp/cores/core.%e.%p
 }
 
+host_info() {
+    if [[ $platform == darwin ]]; then
+        echo "host: $(sysctl -n machdep.cpu.brand_string), $(sysctl -n hw.ncpu) CPUs, $(( $(sysctl -n hw.memsize) / 1024 / 1024 )) MB"
+    else
+        echo "host:$(grep -m1 'model name' /proc/cpuinfo | cut -d : -f 2-), $(nproc) CPUs, $(free -m | awk '/^Mem:/ { print $2 }') MB"
+    fi
+}
+
 record_info() {
     {
-        echo "runner: ${ImageOS:-?} ${ImageVersion:-?}, $(uname -m), $(sysctl -n machdep.cpu.brand_string)"
-        echo "host: $(sysctl -n hw.ncpu) CPUs, $(( $(sysctl -n hw.memsize) / 1024 / 1024 )) MB"
+        echo "runner: ${ImageOS:-?} ${ImageVersion:-?}, $(uname -m)"
+        host_info
         echo "vm: engine=$RD_CONTAINER_ENGINE vz=$RD_USE_VZ cpus=$RD_VM_CPUS memory=${RD_VM_MEMORY}GB"
         echo "guest: $(rdctl shell uname -a)"
         rdctl shell nproc
@@ -275,7 +299,7 @@ result_lines() {
 
 write_summary() {
     local hypervisor=qemu serial="$lima_home/0/serial.log"
-    if [[ $RD_USE_VZ == true ]]; then
+    if [[ $platform == darwin && $RD_USE_VZ == true ]]; then
         hypervisor=vz
         serial="$lima_home/0/serialv.log"
     fi
