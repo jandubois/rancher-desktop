@@ -1,0 +1,129 @@
+name: Lima clock
+# Boot one plain Lima VM on a hosted runner and measure its clock alongside the
+# guest corruption that macos-15-intel produces, so a kernel parameter that
+# fixes the clock can be tested against the crash rate.
+# See .github/workflows/lima-clock/run.sh.
+on:
+  # A workflow file that exists only on a non-default branch cannot be
+  # dispatched until it has run once, so pushes to the investigation branch
+  # run it too, with the defaults below.
+  push:
+    branches: [ guest-corruption ]
+    paths:
+    - .github/workflows/lima-clock.yaml
+    - .github/workflows/lima-clock/**
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: Runner label (ubuntu-latest runs the same guest under KVM, as a control)
+        default: macos-15-intel
+        type: choice
+        options: [ macos-15-intel, macos-15, ubuntu-latest ]
+      vm_type:
+        description: Hypervisor
+        default: vz
+        type: choice
+        options: [ vz, qemu ]
+      cmdline:
+        description: 'Extra kernel parameters, e.g. "tsc_early_khz=auto tsc=reliable"; auto becomes the host TSC frequency. Empty boots the image unchanged.'
+        default: ''
+        type: string
+      cpu_type:
+        description: 'QEMU -cpu model, e.g. max; empty uses lima''s default. Ignored under vz.'
+        default: ''
+        type: string
+      cpus:
+        description: Number of vCPUs for the VM
+        default: '4'
+        type: string
+      memory:
+        description: VM memory in GB
+        default: '6'
+        type: string
+      loads:
+        description: Loads to run, in order; any of clock, stress, go
+        default: 'clock stress go'
+        type: string
+      duration:
+        description: Seconds to run each load
+        default: '600'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  clock:
+    # A push carries no inputs, so every setting falls back to its default here.
+    strategy:
+      matrix:
+        include:
+        - runner:   ${{ inputs.runner || 'macos-15-intel' }}
+          vm_type:  ${{ inputs.vm_type || 'vz' }}
+          cmdline:  ${{ inputs.cmdline || '' }}
+          cpu_type: ${{ inputs.cpu_type || '' }}
+          cpus:     ${{ inputs.cpus || '4' }}
+          memory:   ${{ inputs.memory || '6' }}
+          loads:    ${{ inputs.loads || 'clock stress go' }}
+          duration: ${{ inputs.duration || '600' }}
+    name: ${{ matrix.runner }} ${{ matrix.vm_type }} ${{ matrix.cpus }}cpu ${{ matrix.memory }}gb ${{ matrix.cmdline || 'stock' }}${{ matrix.cpu_type && format(' cpu={0}', matrix.cpu_type) || '' }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    env:
+      # Artifact names may not contain spaces or "=".
+      ARTIFACT: lima-clock-${{ matrix.runner }}-${{ matrix.vm_type }}-${{ matrix.cpus }}cpu-${{ matrix.memory }}gb-${{ matrix.cmdline && 'tuned' || 'stock' }}
+    steps:
+    - name: Fetch scripts
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        persist-credentials: false
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          /.github/workflows/lima-clock/
+          .github/workflows/guest-stress/vdso-probe.go
+
+    - name: "macOS: Disable Spotlight indexing"
+      if: runner.os == 'macOS'
+      shell: bash
+      # Spotlight took more than two of the runner's four cores during a BATS
+      # run; see bats.yaml.
+      run: sudo mdutil -a -i off
+
+    - name: "macOS: Install prerequisites"
+      if: runner.os == 'macOS'
+      shell: bash
+      run: brew install --force coreutils lima ${{ matrix.vm_type == 'qemu' && 'qemu' || '' }}
+
+    - name: "Linux: Install prerequisites"
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes --no-install-recommends qemu-system-x86 qemu-utils
+        curl --fail --location --silent --show-error \
+          "https://github.com/lima-vm/lima/releases/download/v${LIMA_VERSION}/lima-${LIMA_VERSION}-$(uname -s)-$(uname -m).tar.gz" \
+          | sudo tar Cxzf /usr/local -
+      env:
+        LIMA_VERSION: 2.1.0
+
+    - name: Run the loads
+      shell: bash
+      run: .github/workflows/lima-clock/run.sh
+      env:
+        LOGS_DIR: ${{ github.workspace }}/logs
+        VM_TYPE:  ${{ matrix.vm_type }}
+        CMDLINE:  ${{ matrix.cmdline }}
+        CPU_TYPE: ${{ matrix.cpu_type }}
+        CPUS:     ${{ matrix.cpus }}
+        MEMORY:   ${{ matrix.memory }}
+        LOADS:    ${{ matrix.loads }}
+        DURATION: ${{ matrix.duration }}
+      timeout-minutes: 110
+
+    - name: Upload logs
+      if: always()
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      with:
+        name: ${{ env.ARTIFACT }}
+        path: logs/
+        if-no-files-found: error
