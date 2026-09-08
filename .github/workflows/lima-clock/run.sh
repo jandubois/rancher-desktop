@@ -44,7 +44,7 @@ instance=clock
 summary="$LOGS_DIR/summary.md"
 clocksource_dir=/sys/devices/system/clocksource/clocksource0
 signatures='segfault|general protection|traps:|Oops|BUG:|Call Trace|fatal signal'
-go_signatures='internal compiler error|split stack overflow|signal: segmentation fault|fatal error|unexpected signal|bad g in signal handler'
+go_signatures='internal compiler error|split stack overflow|signal: segmentation fault|fatal error|unexpected signal|bad g in signal handler|SIGSEGV: segmentation violation|SIGBUS: |SIGILL: |panic: runtime error|unexpected fault address'
 
 # Ubuntu boots EFI through its own GRUB, so a kernel parameter is one snippet
 # in /etc/default/grub.d plus a reboot.  Lima's Alpine ISO and Rancher
