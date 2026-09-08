@@ -133,10 +133,13 @@ start_rancher_desktop() {
         --no-modal-dialogs
     )
     if [[ $platform == darwin ]]; then
+        # The mount type must match the hypervisor, or RD rejects the whole
+        # start payload and silently falls back to its VZ default: virtiofs
+        # needs VZ, so forcing qemu without changing it drops every setting.
         if [[ $RD_USE_VZ == true ]]; then
-            args+=(--virtual-machine.type vz)
+            args+=(--virtual-machine.type vz --virtual-machine.mount.type virtiofs)
         else
-            args+=(--virtual-machine.type qemu)
+            args+=(--virtual-machine.type qemu --virtual-machine.mount.type reverse-sshfs)
         fi
     fi
     write_cpu_override
@@ -204,8 +207,11 @@ record_info() {
         echo "vm: engine=$RD_CONTAINER_ENGINE vz=$RD_USE_VZ cpus=$RD_VM_CPUS memory=${RD_VM_MEMORY}GB cpu_type=${RD_CPU_TYPE:-<default>}"
         # The definitive check that the -cpu override took effect: lima's host
         # agent logs the actual qemu command line here.
+        # ha.stderr.log holds lima's real qemu argv; this confirms QEMU is
+        # actually running (accel=hvf, not a VZ fallback) and which -cpu.
         if [[ $RD_USE_VZ != true ]]; then
-            echo "qemu -cpu from ha.stderr.log: $(grep -oE -- '-cpu [^ ]+' "$lima_home/0/ha.stderr.log" 2>/dev/null | head -n1 || echo '<not found>')"
+            echo "qemu args from ha.stderr.log:"
+            grep -oE -- '-(accel|cpu|smp|m) [^ ]+' "$lima_home/0/ha.stderr.log" 2>/dev/null | sort -u || echo '<none found>'
         fi
         echo "guest: $(rdctl shell uname -a)"
         rdctl shell nproc
