@@ -205,7 +205,8 @@ load_stress() {
     local vm=$(( RD_VM_CPUS / 2 ))
     local cpu=$(( RD_VM_CPUS - vm ))
     local vm_pid cpu_pid rc=0
-    guest apk add --no-progress stress-ng
+    # The runners' DNS drops packages, so one apk lookup often fails.
+    retry 180 10 guest apk add --no-progress stress-ng
     RD_TIMEOUT=$(( DURATION + 300 )) guest sh -c 'ulimit -c 524288; exec "$@"' -- \
         stress-ng --vm "$vm" --vm-bytes 20% --vm-method all --verify \
         --timeout "${DURATION}s" --timestamp --metrics-brief \
@@ -228,21 +229,24 @@ load_stress() {
 load_go() {
     local image=registry.suse.com/bci/golang:1.27
     local packages='net/http crypto/tls go/types encoding/json/v2 html/template os/user'
-    local end n=0 failed=0 rc
-    ctrctl pull --quiet "$image"
+    local end n=0 crashed=0 rc
+    retry 180 10 ctrctl pull --quiet "$image"
     end=$(( $(date +%s) + DURATION ))
     while (( $(date +%s) < end )); do
         n=$(( n + 1 ))
         log "go build -a $packages, build $n"
         rc=0
+        # GOTRACEBACK=crash re-raises the fatal signal under SIG_DFL after the
+        # traceback, so a corrupted compiler dumps core; the ulimit and the
+        # mount let it land where collect-cores.sh finds it.
         "$timeout_cmd" --kill-after=5 $(( DURATION + 600 )) \
-            "${engine[@]}" run --rm --env CGO_ENABLED=0 --ulimit core=-1 \
-            --volume /tmp/cores:/tmp/cores "$image" \
+            "${engine[@]}" run --rm --env CGO_ENABLED=0 --env GOTRACEBACK=crash \
+            --ulimit core=-1 --volume /tmp/cores:/tmp/cores "$image" \
             sh -c "ulimit -c unlimited; go build -a $packages" || rc=$?
         log "build $n exited $rc"
-        (( rc == 0 )) || failed=$(( failed + 1 ))
+        (( rc == 0 )) || crashed=$(( crashed + 1 ))
     done
-    echo "go: $n builds, $failed failed"
+    echo "go: $n builds, $crashed nonzero"
 }
 
 run_load() {
