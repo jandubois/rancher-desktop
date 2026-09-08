@@ -10,6 +10,8 @@ duration=$1
 workers=$2
 archive=/media/sda/alpine.apkovl.tar.gz
 end=$(( $(date +%s) + duration ))
+# shellcheck disable=SC3045 # busybox ash has it
+ulimit -c unlimited
 
 worker() {
     dir=/var/tmp/tar-loop/$1

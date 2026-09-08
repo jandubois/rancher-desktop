@@ -7,13 +7,16 @@
 #           which is what segfaulted at boot on GitHub's macos-15-intel runners
 #   stress  stress-ng memory and CPU stressors with --verify, which report
 #           corruption themselves
-#   go      go build -a std in a container, which is what died in the
-#           extensions suite on the same runners
+#   go      go build -a of the packages the extension images compile, in a
+#           container, which is what died in the extensions suite on the same
+#           runners
 #
 # Each load counts its own failures.  The kernel logs a line for any process
-# that segfaults, so the guest's dmesg covers every load, and collect-logs.sh
-# copies the serial console out afterwards.  A summary goes to
-# $LOGS_DIR/summary.md and to the step summary.
+# that segfaults, plus a register dump for every fatal signal, so the guest's
+# dmesg covers every load; core dumps land in /tmp/cores and are bundled
+# with the binaries; collect-logs.sh copies the serial console out
+# afterwards.  A summary goes to $LOGS_DIR/summary.md and to the step
+# summary.
 #
 # Environment:
 #   LOGS_DIR             directory for the logs (required)
@@ -38,7 +41,7 @@ here=$(cd "$(dirname "$0")" && pwd)
 bin="/Applications/Rancher Desktop.app/Contents/Resources/resources/darwin/bin"
 lima_home="$HOME/Library/Application Support/rancher-desktop/lima"
 summary="$LOGS_DIR/summary.md"
-signatures='segfault|general protection|traps:|Oops|BUG:|Call Trace'
+signatures='segfault|general protection|traps:|Oops|BUG:|Call Trace|fatal signal'
 go_signatures='internal compiler error|split stack overflow|signal: segmentation fault|fatal error|unexpected signal|bad g in signal handler'
 mkdir -p "$LOGS_DIR"
 
@@ -133,6 +136,14 @@ start_rancher_desktop() {
     log "Rancher Desktop is up"
 }
 
+# A crash should leave registers and a stack behind, not one line.  /tmp is
+# on the data disk; the root filesystem is tmpfs.
+prepare_guest() {
+    guest sysctl -w kernel.print-fatal-signals=1
+    guest mkdir -p /tmp/cores
+    guest sysctl -w kernel.core_pattern=/tmp/cores/core.%e.%p
+}
+
 record_info() {
     {
         echo "runner: ${ImageOS:-?} ${ImageVersion:-?}, $(uname -m), $(sysctl -n machdep.cpu.brand_string)"
@@ -151,33 +162,59 @@ guest_uptime() {
     rdctl shell cut -d ' ' -f 1 /proc/uptime 2>/dev/null || echo '?'
 }
 
-load_tar() {
-    # The workspace is inside the home directory, which the guest mounts.
-    rdctl shell cp "$here/tar-loop.sh" /tmp/tar-loop.sh
-    RD_TIMEOUT=$(( DURATION + 300 )) guest sh /tmp/tar-loop.sh "$DURATION" "$RD_VM_CPUS"
+# Copy a script from the workspace, which is inside the home directory the
+# guest mounts, to somewhere the guest can run it without the mount.
+guest_script() {
+    rdctl shell cp "$here/$1" "/tmp/$1"
+    echo "/tmp/$1"
 }
 
+load_tar() {
+    local script
+    script=$(guest_script tar-loop.sh)
+    RD_TIMEOUT=$(( DURATION + 300 )) guest sh "$script" "$DURATION" "$RD_VM_CPUS"
+}
+
+# Two stress-ng invocations, so a stressor dying in one does not end the
+# other.  A vm worker's core would be its whole mapping, so cap that one.
 load_stress() {
     local vm=$(( RD_VM_CPUS / 2 ))
     local cpu=$(( RD_VM_CPUS - vm ))
+    local vm_pid cpu_pid rc=0
     guest apk add --no-progress stress-ng
-    RD_TIMEOUT=$(( DURATION + 300 )) guest stress-ng \
-        --vm "$vm" --vm-bytes 20% --vm-method all \
-        --cpu "$cpu" --cpu-method all \
-        --verify --timeout "${DURATION}s" --metrics-brief
+    RD_TIMEOUT=$(( DURATION + 300 )) guest sh -c 'ulimit -c 524288; exec "$@"' -- \
+        stress-ng --vm "$vm" --vm-bytes 20% --vm-method all --verify \
+        --timeout "${DURATION}s" --timestamp --metrics-brief \
+        > "$LOGS_DIR/stress-vm.log" 2>&1 &
+    vm_pid=$!
+    RD_TIMEOUT=$(( DURATION + 300 )) guest sh -c 'ulimit -c unlimited; exec "$@"' -- \
+        stress-ng --cpu "$cpu" --cpu-method all --verify \
+        --timeout "${DURATION}s" --timestamp --metrics-brief \
+        > "$LOGS_DIR/stress-cpu.log" 2>&1 &
+    cpu_pid=$!
+    wait "$vm_pid" || rc=$?
+    wait "$cpu_pid" || rc=$?
+    cat "$LOGS_DIR/stress-vm.log" "$LOGS_DIR/stress-cpu.log"
+    return "$rc"
 }
 
+# "std" matches nothing in this image because the SUSE package ships
+# GOROOT/src without its go.mod, so name the roots instead; their closure is
+# 216 packages and holds everything the extension images compile.
 load_go() {
     local image=registry.suse.com/bci/golang:1.27
+    local packages='net/http crypto/tls go/types encoding/json/v2 html/template os/user'
     local end n=0 failed=0 rc
     ctrctl pull --quiet "$image"
     end=$(( $(date +%s) + DURATION ))
     while (( $(date +%s) < end )); do
         n=$(( n + 1 ))
-        log "go build -a std, build $n"
+        log "go build -a $packages, build $n"
         rc=0
         "$timeout_cmd" --kill-after=5 $(( DURATION + 600 )) \
-            "${engine[@]}" run --rm --env CGO_ENABLED=0 "$image" go build -a std || rc=$?
+            "${engine[@]}" run --rm --env CGO_ENABLED=0 --ulimit core=-1 \
+            --volume /tmp/cores:/tmp/cores "$image" \
+            sh -c "ulimit -c unlimited; go build -a $packages" || rc=$?
         log "build $n exited $rc"
         (( rc == 0 )) || failed=$(( failed + 1 ))
     done
@@ -199,6 +236,15 @@ run_load() {
     printf '%s %s %s %s\n' "$name" "$rc" "$start" "$end" >> "$LOGS_DIR/loads.txt"
 }
 
+collect_cores() {
+    local script
+    script=$(guest_script collect-cores.sh)
+    RD_TIMEOUT=300 guest sh "$script" > "$LOGS_DIR/cores.tar.gz" 2> "$LOGS_DIR/cores.txt" || true
+    if [[ ! -s $LOGS_DIR/cores.tar.gz ]]; then
+        rm -f "$LOGS_DIR/cores.tar.gz"
+    fi
+}
+
 # The host sampler writes to $LOGS_DIR/_diag when the workflow runs it.
 host_idle() {
     local probe="$LOGS_DIR/_diag/host-probe.log"
@@ -216,7 +262,8 @@ result_lines() {
         grep -E '^worker ' "$LOGS_DIR/tar.log" || true
         ;;
     stress)
-        grep -E 'stress-ng: (fail|error):|(passed|failed|skipped): ' "$LOGS_DIR/stress.log" || true
+        grep -E 'stress-ng: (fail|error):|unexpected signal|(passed|failed|skipped): ' \
+            "$LOGS_DIR/stress-vm.log" "$LOGS_DIR/stress-cpu.log" || true
         ;;
     go)
         grep -E '^go: ' "$LOGS_DIR/go.log" || true
@@ -253,9 +300,17 @@ write_summary() {
         echo "### Kernel messages matching \`$signatures\`"
         echo
         echo '```'
-        grep -E "$signatures" "$LOGS_DIR/dmesg.log" || echo "none in dmesg"
+        grep -E -A12 "$signatures" "$LOGS_DIR/dmesg.log" || echo "none in dmesg"
         grep -E "$signatures" "$serial" 2>/dev/null || echo "none in ${serial##*/}"
         echo '```'
+        if [[ -f $LOGS_DIR/cores.txt ]]; then
+            echo
+            echo "### Core dumps"
+            echo
+            echo '```'
+            cat "$LOGS_DIR/cores.txt"
+            echo '```'
+        fi
     } > "$summary"
     cat "$summary"
     if [[ -n ${GITHUB_STEP_SUMMARY:-} ]]; then
@@ -265,8 +320,10 @@ write_summary() {
 
 trap write_summary EXIT
 start_rancher_desktop
+prepare_guest
 record_info
 log "segfaults in dmesg after boot: $(guest dmesg | grep -c segfault || true)"
 for load in $LOADS; do
     run_load "$load"
 done
+collect_cores
