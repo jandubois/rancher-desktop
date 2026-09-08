@@ -187,6 +187,30 @@ prepare_guest() {
     guest sysctl -w kernel.core_pattern=/tmp/cores/core.%e.%p
 }
 
+# The nested guest cannot calibrate the TSC and falls back to HPET, an MMIO
+# clocksource that traps to the hypervisor on every read.  Switch to the
+# first requested source that the kernel actually offers, to test whether a
+# non-HPET clock removes the slowness and the corruption.
+CLOCKSOURCE_PATH=/sys/devices/system/clocksource/clocksource0
+switch_clocksource() {
+    local want avail cur
+    avail=$(rdctl shell cat "$CLOCKSOURCE_PATH/available_clocksource" 2>/dev/null | tr -d '\r')
+    cur=$(rdctl shell cat "$CLOCKSOURCE_PATH/current_clocksource" 2>/dev/null | tr -d '\r')
+    log "clocksource available: [$avail], current: $cur"
+    [[ -n ${RD_CLOCKSOURCE:-} ]] || return 0
+    for want in $RD_CLOCKSOURCE; do
+        if [[ " $avail " == *" $want "* ]]; then
+            if guest sh -c "echo $want > $CLOCKSOURCE_PATH/current_clocksource"; then
+                cur=$(rdctl shell cat "$CLOCKSOURCE_PATH/current_clocksource" 2>/dev/null | tr -d '\r')
+                log "switched clocksource to $want (current now: $cur)"
+                return 0
+            fi
+            log "clocksource: switch to $want failed"
+        fi
+    done
+    log "clocksource: none of [$RD_CLOCKSOURCE] available (have [$avail]); staying on $cur"
+}
+
 host_info() {
     if [[ $platform == darwin ]]; then
         echo "host: $(sysctl -n machdep.cpu.brand_string), $(sysctl -n hw.ncpu) CPUs, $(( $(sysctl -n hw.memsize) / 1024 / 1024 )) MB"
@@ -214,6 +238,8 @@ record_info() {
             grep -oE -- '-(accel|cpu|smp|m) [^ ]+' "$lima_home/0/ha.stderr.log" 2>/dev/null | sort -u || echo '<none found>'
         fi
         echo "guest: $(rdctl shell uname -a)"
+        echo "clocksource available: $(rdctl shell cat "$CLOCKSOURCE_PATH/available_clocksource" 2>/dev/null)"
+        echo "clocksource current: $(rdctl shell cat "$CLOCKSOURCE_PATH/current_clocksource" 2>/dev/null)"
         rdctl shell nproc
         rdctl shell free -m
         rdctl shell grep -m1 'model name' /proc/cpuinfo
@@ -441,6 +467,7 @@ write_summary() {
 trap write_summary EXIT
 start_rancher_desktop
 prepare_guest
+switch_clocksource
 record_info
 log "segfaults in dmesg after boot: $(guest dmesg | grep -c segfault || true)"
 for load in $LOADS; do
