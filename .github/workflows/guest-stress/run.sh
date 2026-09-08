@@ -190,10 +190,23 @@ run_load() {
         echo "Unknown load: $name" >&2
         exit 1
     fi
+    local start end
+    start=$(date -u +%FT%TZ)
     log "=== $name: start (guest uptime $(guest_uptime)s)"
     "load_$name" 2>&1 | tee "$LOGS_DIR/$name.log" || rc=$?
+    end=$(date -u +%FT%TZ)
     log "=== $name: exit $rc (guest uptime $(guest_uptime)s)"
-    printf '%s %s\n' "$name" "$rc" >> "$LOGS_DIR/loads.txt"
+    printf '%s %s %s %s\n' "$name" "$rc" "$start" "$end" >> "$LOGS_DIR/loads.txt"
+}
+
+# The host sampler writes to $LOGS_DIR/_diag when the workflow runs it.
+host_idle() {
+    local probe="$LOGS_DIR/_diag/host-probe.log"
+    if [[ -f $probe ]]; then
+        "$here/host-idle.sh" "$probe" "$1" "$2"
+    else
+        echo "no host sampler log"
+    fi
 }
 
 # The lines from a load's log that say how it went.
@@ -224,11 +237,12 @@ write_summary() {
         echo "## Guest stress: ${ImageOS:-?} $(uname -m), $RD_CONTAINER_ENGINE, $hypervisor, $RD_VM_CPUS vCPUs, ${RD_VM_MEMORY} GB, ${DURATION}s per load"
         echo
         if [[ -f $LOGS_DIR/loads.txt ]]; then
-            while read -r name rc; do
-                echo "### $name (exit $rc)"
+            while read -r name rc start end; do
+                echo "### $name (exit $rc, $start to $end)"
                 echo
                 echo '```'
                 result_lines "$name"
+                echo "host: $(host_idle "$start" "$end")"
                 echo '```'
                 echo
             done < "$LOGS_DIR/loads.txt"
