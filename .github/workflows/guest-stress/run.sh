@@ -303,6 +303,39 @@ load_go() {
     echo "go: $n builds, $crashed crashed"
 }
 
+# Test whether the vDSO clock path is corrupted. Build vdso-probe once (the
+# build is itself a compiler run that may fault, so retry for a binary), then
+# run a clock-hammering loop and a clock-free control loop in the guest. A
+# clock-mode crash or anomaly with a clean noclock run points the corruption
+# at the vDSO time page. The static binary runs in the guest directly, the
+# way the real faulting processes do, not in a container.
+load_vdso() {
+    local image=registry.suse.com/bci/golang:1.27
+    local half=$(( DURATION / 2 )) attempt built='' mode rc
+    rdctl shell cp "$here/vdso-probe.go" /tmp/vdso-probe.go
+    retry 180 10 ctrctl pull --quiet "$image"
+    for attempt in 1 2 3 4 5; do
+        if "${engine[@]}" run --rm --env CGO_ENABLED=0 \
+            --volume /tmp:/out --volume /tmp/vdso-probe.go:/vdso-probe.go \
+            "$image" go build -o /out/vdso-probe /vdso-probe.go; then
+            built=yes
+            break
+        fi
+        log "vdso-probe build attempt $attempt failed (compiler may have faulted)"
+    done
+    if [[ -z $built ]]; then
+        echo "vdso: could not build the probe after 5 attempts"
+        return
+    fi
+    for mode in clock noclock; do
+        log "vdso-probe mode=$mode for ${half}s"
+        rc=0
+        RD_TIMEOUT=$(( half + 120 )) rdctl shell sh -c \
+            "ulimit -c unlimited; GOTRACEBACK=crash /tmp/vdso-probe -mode $mode -seconds $half" || rc=$?
+        log "vdso-probe mode=$mode exited $rc"
+    done
+}
+
 run_load() {
     local name=$1 rc=0
     if ! declare -F "load_$name" >/dev/null; then
@@ -351,6 +384,11 @@ result_lines() {
         grep -E '^go: ' "$LOGS_DIR/go.log" || true
         echo "crash markers: $(grep -cE "$go_signatures" "$LOGS_DIR/go.log" || true)"
         grep -E "$go_signatures" "$LOGS_DIR/go.log" || true
+        ;;
+    vdso)
+        grep -E '^mode=|^anomaly:|could not build' "$LOGS_DIR/vdso.log" || true
+        echo "crash markers: $(grep -cE "$go_signatures" "$LOGS_DIR/vdso.log" || true)"
+        grep -E "$go_signatures" "$LOGS_DIR/vdso.log" || true
         ;;
     esac
 }
