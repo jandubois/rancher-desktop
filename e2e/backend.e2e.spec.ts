@@ -75,7 +75,8 @@ test.describe.serial('KubernetesBackend', () => {
       return await result.json();
     }
 
-    async function put(requestPath: string, body: any) {
+    /** PUT the given body, returning the response body as text. */
+    async function putText(requestPath: string, body: any): Promise<string> {
       const auth = Buffer.from(`${ serverState.user }:${ serverState.password }`).toString('base64');
       const result = await fetch(`http://127.0.0.1:${ serverState.port }/${ requestPath.replace(/^\//, '') }`, {
         body:    JSON.stringify(body),
@@ -83,6 +84,14 @@ test.describe.serial('KubernetesBackend', () => {
         method:  'PUT',
       });
       const text = await result.text();
+
+      expect(result).toEqual(expect.objectContaining({ ok: true }));
+
+      return text;
+    }
+
+    async function put(requestPath: string, body: any) {
+      const text = await putText(requestPath, body);
 
       try {
         return JSON.parse(text);
@@ -102,7 +111,8 @@ test.describe.serial('KubernetesBackend', () => {
           version:    10 as Settings['version'],
         };
 
-        await expect(put('/v1/settings', updatedSettings)).resolves.toBeDefined();
+        // updateSettings replies with a plain text status line, not JSON.
+        await expect(putText('/v1/settings', updatedSettings)).resolves.toBeTruthy();
       }
 
       const newSettings: RecursivePartial<Settings> = {
