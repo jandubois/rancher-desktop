@@ -159,12 +159,14 @@ test.describe.serial('Main App Test', () => {
     } else {
       await expect(virtualMachine.vz).not.toBeDisabled();
       await virtualMachine.vz.click({ position: { x: 10, y: 10 } });
-      await expect(virtualMachine.useRosetta).toBeVisible();
 
       if (os.arch() === 'arm64') {
+        await expect(virtualMachine.useRosetta).toBeVisible();
         await expect(virtualMachine.useRosetta).not.toBeDisabled();
       } else {
-        await expect(virtualMachine.useRosetta).toBeDisabled();
+        // Rosetta translates x86 for arm64 guests, so the fieldset is hidden
+        // on Intel rather than disabled.
+        await expect(virtualMachine.useRosetta).toBeHidden();
       }
     }
   });
