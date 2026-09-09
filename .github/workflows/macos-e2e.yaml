@@ -39,7 +39,11 @@ jobs:
         if: always()
         with:
           name: failure-reports.zip
-          path: ./e2e/reports/*
+          # test-results carries the error-context.md that says what a failing
+          # assertion actually received, which the reports directory does not.
+          path: |
+            ./e2e/reports/*
+            ./e2e/e2e/test-results/*
       - name: Clean up test environment
         run: |
           rm -f "$HOME/Library/Preferences/io.rancherdesktop.profile.defaults.plist"
