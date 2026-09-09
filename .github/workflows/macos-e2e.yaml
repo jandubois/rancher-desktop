@@ -33,7 +33,10 @@ jobs:
         env:
           RD_DEBUG_ENABLED: '1'
           CI: true
-        timeout-minutes: 150
+        # Below the job's own cap, so that a wedged suite loses this step
+        # while the upload below still runs.  Playwright's globalTimeout is
+        # 120 minutes and should end a healthy run well before either.
+        timeout-minutes: 130
       - name: Upload failure reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()

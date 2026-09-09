@@ -101,21 +101,23 @@ test.describe.serial('KubernetesBackend', () => {
     }
 
     test('should detect changes', async() => {
-      let currentSettings = (await get('/v1/settings')) as Settings;
+      const currentSettings = (await get('/v1/settings')) as Settings;
 
       if (!currentSettings.kubernetes.version) {
         // The Kubernetes version could be empty if it's previously disabled.
         // Set something.
+        const version = '1.29.4';
         const updatedSettings: RecursivePartial<Settings> = {
-          kubernetes: { version: '1.29.4' },
+          kubernetes: { version },
           version:    10 as Settings['version'],
         };
 
         // updateSettings replies with a plain text status line, not JSON.
         await expect(putText('/v1/settings', updatedSettings)).resolves.toBeTruthy();
-        // Re-read, or the semver comparison below still sees the empty version
-        // and throws.
-        currentSettings = (await get('/v1/settings')) as Settings;
+        // Track what we stored: the semver comparison below throws on the
+        // empty string, and re-reading would race the restart this PUT can
+        // trigger.
+        currentSettings.kubernetes.version = version;
       }
 
       const newSettings: RecursivePartial<Settings> = {
