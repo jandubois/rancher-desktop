@@ -20,6 +20,13 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/yarn-install
+      - name: Give the guest a calibrated TSC
+        # The runner is itself a VM, so the nested guest cannot calibrate its
+        # TSC and falls back to HPET, where every clock read is an MMIO trap.
+        # The BATS lane measured 1.5x on k3s startup and 1.8x on a test file.
+        run: >-
+          RD_RESOURCES_DIR="$PWD/resources/darwin"
+          scripts/patch-guest-iso.sh tsc_early_khz=auto tsc=reliable
       - name: Run e2e Tests
         continue-on-error: false
         run: yarn test:e2e
