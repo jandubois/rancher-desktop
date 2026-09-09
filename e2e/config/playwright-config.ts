@@ -13,6 +13,9 @@ const config = defineConfig({
   outputDir,
   timeout:       10 * 60 * 1000 * timeScale,
   globalTimeout: 30 * 60 * 1000 * timeScale,
+  // Assertions keep Playwright's 5 s default unless we scale them too, which
+  // is far too short for a UI waiting on the backend under CI.
+  expect:        { timeout: 5 * 1000 * timeScale },
   workers:       1,
   reporter:      'list',
   retries:       ci ? 2 : 0,
