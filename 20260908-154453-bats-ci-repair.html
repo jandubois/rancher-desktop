@@ -227,9 +227,9 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
       <tr><td>Branch</td><td><code>bats-ci-repair</code></td></tr>
       <tr><td>Commits</td><td>51, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/5268253"><code>5268253</code></a>..<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/214f3e338"><code>214f3e338</code></a> — 31 <code>CI:</code>, 15 <code>BATS:</code>, 5 product</td></tr>
       <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/214f3e33834ea30f8890fcb4c9592ea0c8976a2a"><code>214f3e33834ea30f8890fcb4c9592ea0c8976a2a</code></a></td></tr>
-      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh, no output), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
-      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; three pieces of new code do not reach the case they were written for</td></tr>
-      <tr><td>Wall-clock time</td><td><code>1 h 32 min 58 s</code></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh, no review file; findings recovered from its session log), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; five pieces of new code do not reach the case they were written for</td></tr>
+      <tr><td>Wall-clock time</td><td><code>2 h 1 min 42 s</code></td></tr>
     </table>
 
     <hr>
@@ -238,8 +238,8 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
     <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
-    <p>The branch repairs the BATS CI lane: it scales startup waits for slow runners, sizes VM CPUs per host, adds diagnostics and a support bundle, switches Windows to a zip install, and carries five product fixes. Three Important findings survive, all the same kind: new code that misses the case it was written for. The wait scaling stops at the helper library, the support bundle is skipped when the job dies early, and the new firewall test cannot fail.</p>
-    <p>Claude found all three. Gemini 3.1 Pro raised a Critical and an Important; both were fabricated and are dropped, with the evidence in the retro. Gemini 3.5 Flash raised one Important that is pre-existing and documented by the branch&#39;s own new comment. Codex produced nothing in two attempts. Verified here by execution: the full Jest suite at the review SHA (57 suites, 846 tests, exit 0), <code>make lint</code> in <code>bats/</code> (exit 0), all 116 BATS helper self-tests, and the new updater test, which fails with <code>ENOENT</code> when the fix is reverted.</p>
+    <p>The branch repairs the BATS CI lane: it scales startup waits, sizes VM CPUs per runner, adds diagnostics and a support bundle, switches Windows to a zip install, and carries five product fixes. Five Important findings survive, all the same kind: new code that misses the case it was written for. The wait scaling stops early, two diagnostics skip themselves when things are unhealthy, the new firewall test cannot fail, and the fork guard turns a skipped nightly red.</p>
+    <p>Claude found three; the other two were recovered from Codex&#39;s session log after its second attempt was killed, and are attributed to it. Gemini 3.1 Pro raised a Critical and an Important; both were fabricated and are dropped, with the evidence in the retro. Gemini 3.5 Flash raised one Important that is pre-existing and documented by the branch&#39;s own new comment. Verified here by execution: the full Jest suite at the review SHA (57 suites, 846 tests, exit 0), <code>make lint</code> in <code>bats/</code> (exit 0), all 116 BATS helper self-tests, and the new updater test, which fails with <code>ENOENT</code> when the fix is reverted.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -579,6 +579,153 @@ Install mode CI uses by default:
       </details>
     <p>The <code>main.wxs</code> change itself is correct. WiX 3 applies its TCP default only inside <code>if (!String.IsNullOrEmpty(port))</code> (<code>FirewallCompiler.cs:288-293</code>), and the custom action calls <code>put_Protocol</code> only when the row is set (<code>firewall.cpp:300-302</code>), so a <code>Program</code> exception with no <code>Port</code> is protocol-agnostic.</p>
     <p>Fix: run the assertion only when <code>INSTALL_MODE=installer</code>, or have <code>configure_admin_install</code> read the protocol out of <code>main.wxs</code> so the zip mirrors what the product ships.</p>
+    </div>
+    <div class="card card-important" data-file="bats/tests/helpers/kubernetes.bash">
+      <div class="finding-title" id="I4">
+        <span class="finding-num">I4.</span> The Kubernetes capture gates on readiness, so it collects nothing when the cluster is unhealthy <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/214f3e33834ea30f8890fcb4c9592ea0c8976a2a/bats/tests/helpers/kubernetes.bash#L68-L78">bats/tests/helpers/kubernetes.bash</a></div>
+      <pre data-start="68" data-line="73"><code class="language-bash">    local logdir=&quot;$1/kubernetes&quot;
+    local namespace pod container previous
+
+    # Many suites run with Kubernetes turned off, and a wedged apiserver must
+    # not hold up the capture, so ask once with a short timeout.
+    if ! kubectl --request-timeout=10s get --raw /readyz &amp;&gt;/dev/null; then
+        return
+    fi
+
+    mkdir -p &quot;$logdir&quot;
+    kubectl --request-timeout=30s get pods --all-namespaces --output wide \</code></pre>
+    <p><code>/readyz</code> is the apiserver&#39;s readiness aggregate: it answers 500 as soon as any registered check fails. A Kubernetes test fails precisely when something in the cluster is unhealthy, so the guard skips the capture in a large part of the case it was written for. The comment above it gives two reasons, &quot;Kubernetes turned off&quot; and &quot;a wedged apiserver must not hold up the capture&quot;, and both are reachability questions rather than readiness ones. Every <code>kubectl</code> call inside already carries <code>--request-timeout=30s</code> and <code>|| :</code>, so the hold-up concern is handled per call.</p>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash"># Save as probe-readyz.sh anywhere; run: bash probe-readyz.sh   (needs kubectl, python3)
+set -o errexit -o nounset
+
+port_file=$(mktemp)
+python3 - &quot;$port_file&quot; &lt;&lt;&#39;PY&#39; &amp;
+import http.server, socketserver, sys
+class H(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path.startswith(&quot;/readyz&quot;):      # a component is not ready
+            body, code = b&#39;[-]poststarthook/rbac/bootstrap-roles failed\nreadyz check failed\n&#39;, 500
+        else:                                     # apiserver itself is alive
+            body, code = b&quot;ok&quot;, 200
+        self.send_response(code); self.send_header(&quot;Content-Type&quot;, &quot;text/plain&quot;)
+        self.send_header(&quot;Content-Length&quot;, str(len(body))); self.end_headers()
+        self.wfile.write(body)
+    def log_message(self, *a): pass
+with socketserver.TCPServer((&quot;127.0.0.1&quot;, 0), H) as srv:
+    open(sys.argv[1], &quot;w&quot;).write(str(srv.server_address[1]))
+    srv.serve_forever()
+PY
+stub=$!
+trap &#39;kill $stub 2&gt;/dev/null; rm -f &quot;$port_file&quot;&#39; EXIT
+until [[ -s $port_file ]]; do sleep 0.1; done
+kube=(kubectl --server &quot;http://127.0.0.1:$(cat &quot;$port_file&quot;)&quot;)
+
+for endpoint in /readyz /livez; do
+    printf &#39;guard probing %-8s -&gt; &#39; &quot;$endpoint&quot;
+    if &quot;${kube[@]}&quot; --request-timeout=10s get --raw &quot;$endpoint&quot; &amp;&gt;/dev/null; then
+        echo &quot;succeeds; capture_kubernetes_state proceeds&quot;
+    else
+        echo &quot;fails; capture_kubernetes_state returns early, capturing nothing&quot;
+    fi
+done</code></pre>
+      <pre><code class="language-text">$ bash probe-readyz.sh
+guard probing /readyz  -&gt; fails; capture_kubernetes_state returns early, capturing nothing
+guard probing /livez   -&gt; succeeds; capture_kubernetes_state proceeds</code></pre>
+      </details>
+    <p>Fix: probe reachability instead, with <code>/livez</code> or <code>kubectl version</code>, and let the per-call timeouts handle a slow apiserver.</p>
+    </div>
+    <div class="card card-important" data-file=".github/workflows/bats.yaml">
+      <div class="finding-title" id="I5">
+        <span class="finding-num">I5.</span> Skipping the fork nightly leaves the summary job to run and fail <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/214f3e33834ea30f8890fcb4c9592ea0c8976a2a/.github/workflows/bats.yaml#L524-L534">.github/workflows/bats.yaml</a></div>
+      <pre data-start="524" data-line="529"><code class="language-yaml">        if-no-files-found: error
+
+  summarize:
+    name: Summarize output
+    needs: [ get-tests, bats ]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Fetch summarizer script
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/de28552ab"><code>de28552ab</code></a> adds <code>if: github.event_name != &#39;schedule&#39; || !github.event.repository.fork</code> to <code>get-tests</code>, so a fork&#39;s nightly run skips it and skips <code>bats</code> with it. <code>summarize</code> carries its own <code>if:</code>, which overrides the default skip propagation, so it still runs. It then reads <code>EXPECTED_TESTS</code> from the skipped job&#39;s outputs, gets an empty string, and throws at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/214f3e33834ea30f8890fcb4c9592ea0c8976a2a/.github/workflows/bats/summarize.mjs#L249"><code>summarize.mjs:249</code></a>. The commit that stops a fork burning a 126-job matrix leaves it a red nightly run instead.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/214f3e33834ea30f8890fcb4c9592ea0c8976a2a/.github/workflows/bats/summarize.mjs#L244-L254">.github/workflows/bats/summarize.mjs</a></div>
+      <pre data-start="244" data-line="249"><code class="language-javascript"> * @param {Run[]} runs The runs collected
+ * @param {OutputMethod} output Function to output a line
+ */
+async function printResults(runs, output) {
+  if (!process.env.EXPECTED_TESTS) {
+    throw new Error(&#39;EXPECTED_TESTS was not set&#39;);
+  }
+  /** @type {{name: string, host: string, engine: string}[]} */
+  const expectedTests = JSON.parse(process.env.EXPECTED_TESTS);
+  const expectedNames = Array.from(new Set(expectedTests.map(t =&gt; t.name))).sort();
+  const expectedHosts = Array.from(new Set(expectedTests.map(t =&gt; t.host))).sort();</code></pre>
+      <details class="repro">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash"># Save as probe-summarize.sh at the root of a Rancher Desktop checkout;
+# run: bash probe-summarize.sh   (needs node and python3)
+# A local stub stands in for the GitHub jobs API, which answers normally in a real run.
+set -o errexit -o nounset
+
+work=$(mktemp -d)
+cp .github/workflows/bats/summarize.mjs &quot;$work&quot;/
+python3 - &quot;$work/api.port&quot; &lt;&lt;&#39;PY&#39; &amp;
+import http.server, socketserver, sys, json
+class H(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        body = json.dumps({&quot;jobs&quot;: [], &quot;artifacts&quot;: []}).encode()
+        self.send_response(200); self.send_header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+        self.send_header(&quot;Content-Length&quot;, str(len(body))); self.end_headers()
+        self.wfile.write(body)
+    def log_message(self, *a): pass
+with socketserver.TCPServer((&quot;127.0.0.1&quot;, 0), H) as srv:
+    open(sys.argv[1], &quot;w&quot;).write(str(srv.server_address[1]))
+    srv.serve_forever()
+PY
+stub=$!
+trap &#39;kill $stub 2&gt;/dev/null; rm -rf &quot;$work&quot;&#39; EXIT
+until [[ -s $work/api.port ]]; do sleep 0.1; done
+port=$(cat &quot;$work/api.port&quot;)
+
+cd &quot;$work&quot;
+set +o errexit
+
+echo &quot;=== get-tests skipped (fork nightly): EXPECTED_TESTS unset ===&quot;
+env -u EXPECTED_TESTS \
+    GITHUB_API_URL=&quot;http://127.0.0.1:$port&quot; \
+    GITHUB_RUN_ID=1 GITHUB_REPOSITORY=o/r GITHUB_SERVER_URL=https://github.com \
+    node summarize.mjs 2&gt;&amp;1 | tail -3
+echo &quot;  exit status: ${PIPESTATUS[0]}&quot;
+
+echo
+echo &quot;=== get-tests ran: EXPECTED_TESTS set ===&quot;
+EXPECTED_TESTS=&#39;[]&#39; \
+    GITHUB_API_URL=&quot;http://127.0.0.1:$port&quot; \
+    GITHUB_RUN_ID=1 GITHUB_REPOSITORY=o/r GITHUB_SERVER_URL=https://github.com \
+    node summarize.mjs 2&gt;&amp;1 | tail -3
+echo &quot;  exit status: ${PIPESTATUS[0]}&quot;</code></pre>
+      <pre><code class="language-text">$ bash probe-summarize.sh
+=== get-tests skipped (fork nightly): EXPECTED_TESTS unset ===
+    at printResults (.../summarize.mjs:249:11)
+    at .../summarize.mjs:315:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+  exit status: 1
+
+=== get-tests ran: EXPECTED_TESTS set ===
+
+Name
+---
+  exit status: 0</code></pre>
+      </details>
+    <p>Fix: give <code>summarize</code> the same fork condition as <code>get-tests</code>, or have it exit cleanly when <code>EXPECTED_TESTS</code> is empty.</p>
+    <p><em>Unproven:</em> that a dependent job with its own <code>if:</code> runs when a needed job is skipped is GitHub&#39;s documented behaviour for status-check functions; no local test reaches it. The consequence once it runs is reproduced above.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -1034,7 +1181,7 @@ wait_for_kube_deployment_available() {
     <h3 id="claude-opus-5"><span class="pill pill-claude">Claude Opus 5</span> <a href="#claude-opus-5" class="pilcrow">&#182;</a></h3>
     <p>Every surviving finding is Claude&#39;s. It was also the only agent to check claims against the merge-base, which is what separated its pre-existing observations from the branch&#39;s own regressions, and the only one to read commit bodies — it caught that <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d00838c62"><code>d00838c62</code></a> explains the dropped <code>verify-cached-images</code> skip, which would otherwise look like a silent behaviour change. Its severity calibration held up: everything it filed as Important survived verification here, and its three weakest suggestions (S4 in its numbering, on <code>cygpath</code> under WSL) it flagged as unconfirmed itself. It reported being unable to run Jest or <code>tsc</code> because the worktree has no <code>node_modules</code>, and said so plainly rather than implying it had.</p>
     <h3 id="codex-gpt-5-6-sol"><span class="pill pill-codex">Codex GPT 5.6 Sol</span> <a href="#codex-gpt-5-6-sol" class="pilcrow">&#182;</a></h3>
-    <p>Produced no review in two attempts, 30 and 45 minutes. Neither failure was a quota or API error: stderr shows it working throughout, building a synthetic PDH-format TSV to exercise <code>summarize-typeperf.go</code> and probing the worktree for <code>node_modules</code> and <code>pwsh</code>. The retry restarted the same experiment from scratch rather than narrowing, and the in-prompt deadline statement did not make it wrap up. That is the pattern worth noting for future rounds: Codex spends its wall clock on per-file verification, which is valuable when it finishes and worth nothing when it does not.</p>
+    <p>Wrote no review file in two attempts, 30 and 45 minutes, and neither failure was a quota or API error. Its session log tells a different story from the empty output: 130 tool calls, a completed file-by-file pass, <code>git blame</code> on the lines it questioned, <code>make -C bats lint</code>, <code>get-tests.py</code> run against the tree, <code>summarize-typeperf.go</code> run against a synthetic PDH file it built, and job logs pulled from the GitHub API for real <code>bats.yaml</code> runs. Its last progress message says it was checking GitHub&#39;s <code>needs</code> semantics before assembling the review; the watchdog fired during that check. I4 and I5 are its findings, recovered from that log and proven here, and it had independently reached S2 as well. It also compacted its context mid-run, so time was not the only limit it hit. The failure is that it verifies exhaustively and assembles last, which yields nothing when the clock runs out.</p>
     <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
     <p>Both of its non-trivial findings were fabricated, and it left the evidence in its worktree, outside the <code>.scratch/</code> directory the prompt confines it to. Its Critical claimed <code>try --scale</code> spins forever for want of a <code>shift</code>; <code>test-try.bash</code> shows it retyped the parser and omitted the trailing <code>shift</code> after <code>esac</code> that the real code has, then reported the bug in its own reconstruction. Its Important claimed WiX defaults <code>Protocol</code> to TCP; <code>test.wxs</code> shows it tested <code>Protocol=&quot;any&quot;</code>, a value the WiX 3 compiler rejects outright, so the experiment never touched the omitted-attribute case the branch actually relies on. Only S10 survived, and it is cosmetic.</p>
     <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
@@ -1044,20 +1191,20 @@ wait_for_kube_deployment_available() {
       <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
       <tbody>
         <tr><td>Duration</td><td>20m 20s</td><td>44m 34s</td><td>10m 41s</td><td>4m 08s</td></tr>
-        <tr><td>Findings</td><td>3I 8S</td><td>none</td><td>1S</td><td>none</td></tr>
+        <tr><td>Findings</td><td>3I 8S</td><td>2I</td><td>1S</td><td>none</td></tr>
         <tr><td>Tool calls</td><td>77 (Bash 73, Read 4)</td><td>—</td><td>36 (run<em>shell</em>command 36)</td><td>57 (run<em>shell</em>command 27, read<em>file 20, grep</em>search 9)</td></tr>
         <tr><td>Design observations</td><td>6</td><td>0</td><td>0</td><td>1</td></tr>
         <tr><td>False positives</td><td>0</td><td>0</td><td>2</td><td>0</td></tr>
-        <tr><td>Unique insights</td><td>11</td><td>0</td><td>1</td><td>1</td></tr>
-        <tr><td>Files reviewed</td><td>36</td><td>0</td><td>36</td><td>36</td></tr>
+        <tr><td>Unique insights</td><td>11</td><td>2</td><td>1</td><td>1</td></tr>
+        <tr><td>Files reviewed</td><td>36</td><td>36</td><td>36</td><td>36</td></tr>
         <tr><td>Coverage misses</td><td>1</td><td>0</td><td>7</td><td>9</td></tr>
-        <tr><td><strong>Totals</strong></td><td><strong>3I 8S</strong></td><td><strong>none</strong></td><td><strong>1S</strong></td><td><strong>none</strong></td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>3I 8S</strong></td><td><strong>2I</strong></td><td><strong>1S</strong></td><td><strong>none</strong></td></tr>
         <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>1 (I→S)</td></tr>
         <tr><td>Dropped</td><td>1</td><td>0</td><td>2</td><td>2</td></tr>
       </tbody>
     </table>
-    <p>Claude carried this round; the other three contributed one cosmetic suggestion between them. The two Gemini models share a family, so their agreement would count as one opinion, but they did not overlap here. The result that matters for future rounds is Gemini 3.1 Pro&#39;s failure mode: it produced a confident Critical and Important, both with reproducers, both refuted by reading the file it claimed to be quoting. Its stray files are what made the diagnosis quick, and checking every agent worktree for modifications should stay a standing step.</p>
-    <p><strong>Reconciliation.</strong> Gemini 3.1 Pro C1 (<code>try --scale</code> infinite loop) dropped as a false positive. Gemini 3.1 Pro I1 (WiX Protocol defaults to TCP) dropped as a false positive. Gemini 3.1 Pro S1 kept as S10. Gemini 3.5 Flash I1 (unbounded <code>waitForReady</code>) downgraded to a Design Observation as pre-existing. Gemini 3.5 Flash S2 and S3 dropped as noise. Claude&#39;s S4 (<code>cygpath</code> under WSL) dropped: the script runs under Git Bash in CI, where <code>cygpath</code> exists, and the agent flagged its own uncertainty. Claude&#39;s S6 kept as S5, S7 as S6, S8 as S8. One suggestion, S4, originated here rather than with an agent.</p>
+    <p>Claude carried the round on findings that reached the report on time, and Codex produced two more that only its session log preserved. The two Gemini models share a family, so their agreement would count as one opinion, but they did not overlap here. The result that matters for future rounds is Gemini 3.1 Pro&#39;s failure mode: it produced a confident Critical and Important, both with reproducers, both refuted by reading the file it claimed to be quoting. Its stray files are what made the diagnosis quick, and checking every agent worktree for modifications should stay a standing step.</p>
+    <p><strong>Reconciliation.</strong> Gemini 3.1 Pro C1 (<code>try --scale</code> infinite loop) dropped as a false positive. Gemini 3.1 Pro I1 (WiX Protocol defaults to TCP) dropped as a false positive. Gemini 3.1 Pro S1 kept as S10. Gemini 3.5 Flash I1 (unbounded <code>waitForReady</code>) downgraded to a Design Observation as pre-existing. Gemini 3.5 Flash S2 and S3 dropped as noise. Claude&#39;s S4 (<code>cygpath</code> under WSL) dropped: the script runs under Git Bash in CI, where <code>cygpath</code> exists, and the agent flagged its own uncertainty. Claude&#39;s S6 kept as S5, S7 as S6, S8 as S8. One suggestion, S4, originated here rather than with an agent. I4 and I5 were recovered from Codex&#39;s session log after the report&#39;s first publication and verified here; the retro table counts them as its findings.</p>
     </div>
     <hr>
     <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
