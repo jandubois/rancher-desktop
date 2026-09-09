@@ -8,7 +8,7 @@
 # ISO9660 filesystem: the GRUB binary in boot/grub/efi.img carries an embedded
 # `set prefix=($root)/boot/grub` and holds no config of its own.
 #
-# Usage: patch-guest-iso.sh <kernel parameters>
+# Usage: [RD_RESOURCES_DIR=<dir>] patch-guest-iso.sh <kernel parameters>
 #   tsc_early_khz=auto is replaced with this host's own TSC frequency in kHz,
 #   which is the only correct value: the parameter takes a literal number and
 #   a wrong one gives the guest a clock it trusts and should not.
@@ -21,8 +21,11 @@ if [[ -z $params ]]; then
     exit 1
 fi
 
+# The installed app by default; a dev tree (yarn test:e2e) resolves
+# baseDiskImage under the checkout's own resources instead, so let the caller
+# say where.  The layout below this directory is identical either way.
 app="/Applications/Rancher Desktop.app"
-resources="$app/Contents/Resources/resources/darwin"
+resources=${RD_RESOURCES_DIR:-$app/Contents/Resources/resources/darwin}
 
 if [[ $params == *tsc_early_khz=auto* ]]; then
     hz=$(sysctl -n machdep.tsc.frequency 2>/dev/null || echo 0)
@@ -82,7 +85,9 @@ fi
 cp "$work/patched.iso" "$iso"
 echo "Patched $iso"
 
-# Replacing a file inside the bundle breaks its seal, so re-sign ad hoc.  An
-# unsigned CI package does not need this, and signing one again is harmless.
-codesign --force --sign - "$app" 2>&1 | sed 's/^/codesign: /' || \
-    echo "codesign failed; continuing, the package may be unsigned"
+# Replacing a file inside the bundle breaks its seal, so re-sign ad hoc.  A
+# dev tree has no bundle to sign, and an unsigned CI package does not need it.
+if [[ $iso == "$app"/* ]]; then
+    codesign --force --sign - "$app" 2>&1 | sed 's/^/codesign: /' || \
+        echo "codesign failed; continuing, the package may be unsigned"
+fi

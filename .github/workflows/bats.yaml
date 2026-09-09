@@ -171,7 +171,7 @@ jobs:
           /.github/actions/
           .github/workflows/bats/sanitize-artifact-name.sh
           .github/workflows/bats/collect-logs.sh
-          .github/workflows/bats/patch-guest-iso.sh
+          scripts/patch-guest-iso.sh
 
     - name: Fetch tests from this checkout
       if: inputs.tests-from == 'checkout'
@@ -248,7 +248,7 @@ jobs:
       # it falls back to HPET and every clock read traps to the hypervisor.
       # tsc_early_khz= hands it the frequency instead.  Speed only: it does
       # not stop the guest corrupting processes.
-      run: .github/workflows/bats/patch-guest-iso.sh ${{ inputs.patch-iso }}
+      run: scripts/patch-guest-iso.sh ${{ inputs.patch-iso }}
 
     - name: "Linux: Size the VM for the runner"
       if: runner.os == 'Linux'
