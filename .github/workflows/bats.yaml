@@ -62,6 +62,10 @@ on:
         default: 'true'
         type: choice
         options: [ 'true', 'false' ]
+      patch-iso:
+        description: 'Kernel parameters to add to the guest, e.g. "tsc_early_khz=auto tsc=reliable"; empty boots the shipped image (macOS only)'
+        default: ''
+        type: string
   schedule:
   - cron: '0 8 * * 1-5' # 8AM UTC weekdays as a baseline
 
@@ -167,6 +171,7 @@ jobs:
           /.github/actions/
           .github/workflows/bats/sanitize-artifact-name.sh
           .github/workflows/bats/collect-logs.sh
+          .github/workflows/bats/patch-guest-iso.sh
 
     - name: Fetch tests from this checkout
       if: inputs.tests-from == 'checkout'
@@ -235,6 +240,15 @@ jobs:
       # run, more than two of the runner's four cores, leaving the VM too
       # little to boot in.
       run: sudo mdutil -a -i off
+
+    - name: "macOS: Add kernel parameters to the guest"
+      if: runner.os == 'macOS' && inputs.patch-iso != ''
+      shell: bash
+      # The guest cannot calibrate its TSC when the runner is itself a VM, so
+      # it falls back to HPET and every clock read traps to the hypervisor.
+      # tsc_early_khz= hands it the frequency instead.  Speed only: it does
+      # not stop the guest corrupting processes.
+      run: .github/workflows/bats/patch-guest-iso.sh ${{ inputs.patch-iso }}
 
     - name: "Linux: Size the VM for the runner"
       if: runner.os == 'Linux'
