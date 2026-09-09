@@ -310,7 +310,12 @@ load_go() {
         rc=0
         # GOTRACEBACK=crash re-raises the fatal signal under SIG_DFL after the
         # traceback, so a corrupted compiler leaves a core behind.
-        out=$(GUEST_TIMEOUT=$(( DURATION + 600 )) guest sh -c \
+        # A wedged guest is a result, but only if the summary survives to
+        # record it.  Scaling this with DURATION let one hung build sit for
+        # 40 minutes, so the step timeout killed the script before its EXIT
+        # trap ran and the whole run's evidence was lost.  The slowest real
+        # build measured is 360 s.
+        out=$(GUEST_TIMEOUT=900 guest sh -c \
             'ulimit -c unlimited; GOTRACEBACK=crash go build -a std' 2>&1) || rc=$?
         printf '%s\n' "$out"
         log "build $n exited $rc"
