@@ -205,13 +205,13 @@ summary { cursor: pointer; font-weight: 600; }
   pre code { font-size: 0.72rem; }
 }
 
-/* Reproducers — collapsed, so a long proof keeps the next finding on screen */
-details.repro { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
-details.repro > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
-details.repro > summary:hover { background: #eef1f4; }
-details.repro[open] > summary { border-bottom: 1px solid #d0d7de; }
-details.repro pre { border-radius: 0 !important; }
-details.repro .code-file-header { margin-top: 0; border-radius: 0; }
+/* Reproducers and patches, collapsed so a long block keeps the next finding on screen */
+details.fold { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+details.fold > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
+details.fold > summary:hover { background: #eef1f4; }
+details.fold[open] > summary { border-bottom: 1px solid #d0d7de; }
+details.fold pre { border-radius: 0 !important; }
+details.fold .code-file-header { margin-top: 0; border-radius: 0; }
 
   </style>
 </head>
@@ -240,6 +240,12 @@ details.repro .code-file-header { margin-top: 0; border-radius: 0; }
     <div class="card card-neutral">
     <p>The branch repairs the BATS CI lane: it scales startup waits, sizes VM CPUs per runner, adds diagnostics and a support bundle, switches Windows to a zip install, and carries five product fixes. Five Important findings survive, all the same kind: new code that misses the case it was written for. The wait scaling stops early, two diagnostics skip themselves when things are unhealthy, the new firewall test cannot fail, and the fork guard turns a skipped nightly red.</p>
     <p>Claude found three; the other two were recovered from Codex&#39;s session log after its second attempt was killed, and are attributed to it. Gemini 3.1 Pro raised a Critical and an Important; both were fabricated and are dropped, with the evidence in the retro. Gemini 3.5 Flash raised one Important that is pre-existing and documented by the branch&#39;s own new comment. Verified here by execution: the full Jest suite at the review SHA (57 suites, 846 tests, exit 0), <code>make lint</code> in <code>bats/</code> (exit 0), all 116 BATS helper self-tests, and the new updater test, which fails with <code>ENOENT</code> when the fix is reverted.</p>
+    </div>
+    <hr>
+    <h2 id="since-this-review">Since this review <a href="#since-this-review" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>On 2026-09-10 the fixes were folded into the commits that wrote the code, so every SHA and line number below refers to the reviewed tip <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/214f3e338"><code>214f3e338</code></a>, kept as tag <code>backup/bats-ci-repair-before-review-fixes</code>. The new tip is <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/6f77e0667"><code>6f77e0667</code></a>. Each finding now ends with what happened to it.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -349,7 +355,7 @@ switch_back_verify_post_switch_containers() {
 @test &#39;switch back to moby and verify containers&#39; {
     switch_back_verify_post_switch_containers moby
 }</code></pre>
-      <details class="repro">
+      <details class="fold">
         <summary>Reproducer</summary>
       <pre><code class="language-bats"># Save as bats/tests/helpers/probe-scale.bats in a Rancher Desktop checkout
 # (needs `git submodule update --init` for bats-core);
@@ -388,6 +394,7 @@ ok 1 traefik.bats:115 shape — scaled
 ok 2 spinkube.bats:90 shape — unscaled</code></pre>
       </details>
     <p>Fix: add <code>--scale</code> to every <code>try</code> in <code>bats/tests/*/*.bats</code> whose command waits for Rancher Desktop or Kubernetes to reach a state. Inverting the default, so scaling applies unless <code>--no-scale</code> is passed, would stop the next wait from inheriting the bug.</p>
+    <p><em>Resolution:</em> Fixed. <code>try</code> now scales every call, and <code>--no-scale</code> exempts the restart retry in <code>registry/creds.bats</code>. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/821ee3da1"><code>821ee3da1</code></a> (BATS: Scale the waits for slow machines); <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c4e457044"><code>c4e457044</code></a> was dropped.</p>
     </div>
     <div class="card card-important" data-file=".github/workflows/bats.yaml">
       <div class="finding-title" id="I2">
@@ -437,7 +444,7 @@ ok 2 spinkube.bats:90 shape — unscaled</code></pre>
         echo &quot;$OS&quot; &gt; logs/os.txt
         echo &quot;$ENGINE&quot; &gt; logs/engine.txt
         echo &quot;$LOG_NAME&quot; &gt; logs/log-name.txt</code></pre>
-      <details class="repro">
+      <details class="fold">
         <summary>Reproducer</summary>
       <pre><code class="language-bash"># Save as probe-consolidate.sh; run: bash probe-consolidate.sh
 # Emulates the &quot;Consolidate logs&quot; step of .github/workflows/bats.yaml.
@@ -467,6 +474,7 @@ step without-report</code></pre>
   [without-report] step exit status: 1</code></pre>
       </details>
     <p>Fix: guard the copy with <code>[ -f bats/report.tap ]</code>, and move the collection into its own <code>if: always()</code> step ahead of &quot;Consolidate logs&quot;. The script&#39;s header at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/214f3e33834ea30f8890fcb4c9592ea0c8976a2a/.github/workflows/bats/collect-logs.sh#L4-L6"><code>collect-logs.sh:4-6</code></a> also names a condition the workflow does not use; correct it to match.</p>
+    <p><em>Resolution:</em> Fixed. collect-logs.sh runs first in Consolidate logs, the <code>report.tap</code> copy and <code>version.txt</code> move are guarded, and the script&#39;s header names the condition in use. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a77d75038"><code>a77d75038</code></a>.</p>
     </div>
     <div class="card card-important" data-file="bats/tests/containers/published-udp-ports.bats">
       <div class="finding-title" id="I3">
@@ -532,7 +540,7 @@ configure_admin_install() {
             program=&quot;$host_switch&quot;
     done
 }</code></pre>
-      <details class="repro">
+      <details class="fold">
         <summary>Reproducer</summary>
       <pre><code class="language-bash"># Save as probe-rulenames.sh at the root of a Rancher Desktop checkout;
 # run: bash probe-rulenames.sh
@@ -579,6 +587,7 @@ Install mode CI uses by default:
       </details>
     <p>The <code>main.wxs</code> change itself is correct. WiX 3 applies its TCP default only inside <code>if (!String.IsNullOrEmpty(port))</code> (<code>FirewallCompiler.cs:288-293</code>), and the custom action calls <code>put_Protocol</code> only when the row is set (<code>firewall.cpp:300-302</code>), so a <code>Program</code> exception with no <code>Port</code> is protocol-agnostic.</p>
     <p>Fix: run the assertion only when <code>INSTALL_MODE=installer</code>, or have <code>configure_admin_install</code> read the protocol out of <code>main.wxs</code> so the zip mirrors what the product ships.</p>
+    <p><em>Resolution:</em> Commented. The test&#39;s header and <code>install-latest-ci.sh</code> now say that a zip install checks the harness&#39;s copy of the exception. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/965756c61"><code>965756c61</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4757c0db0"><code>4757c0db0</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d418720c2"><code>d418720c2</code></a>.</p>
     </div>
     <div class="card card-important" data-file="bats/tests/helpers/kubernetes.bash">
       <div class="finding-title" id="I4">
@@ -597,7 +606,7 @@ Install mode CI uses by default:
     mkdir -p &quot;$logdir&quot;
     kubectl --request-timeout=30s get pods --all-namespaces --output wide \</code></pre>
     <p><code>/readyz</code> is the apiserver&#39;s readiness aggregate: it answers 500 as soon as any registered check fails. A Kubernetes test fails precisely when something in the cluster is unhealthy, so the guard skips the capture in a large part of the case it was written for. The comment above it gives two reasons, &quot;Kubernetes turned off&quot; and &quot;a wedged apiserver must not hold up the capture&quot;, and both are reachability questions rather than readiness ones. Every <code>kubectl</code> call inside already carries <code>--request-timeout=30s</code> and <code>|| :</code>, so the hold-up concern is handled per call.</p>
-      <details class="repro">
+      <details class="fold">
         <summary>Reproducer</summary>
       <pre><code class="language-bash"># Save as probe-readyz.sh anywhere; run: bash probe-readyz.sh   (needs kubectl, python3)
 set -o errexit -o nounset
@@ -637,6 +646,7 @@ guard probing /readyz  -&gt; fails; capture_kubernetes_state returns early, capt
 guard probing /livez   -&gt; succeeds; capture_kubernetes_state proceeds</code></pre>
       </details>
     <p>Fix: probe reachability instead, with <code>/livez</code> or <code>kubectl version</code>, and let the per-call timeouts handle a slow apiserver.</p>
+    <p><em>Resolution:</em> Fixed. The capture probes <code>/livez</code>. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37e54be67"><code>37e54be67</code></a>.</p>
     </div>
     <div class="card card-important" data-file=".github/workflows/bats.yaml">
       <div class="finding-title" id="I5">
@@ -667,7 +677,7 @@ async function printResults(runs, output) {
   const expectedTests = JSON.parse(process.env.EXPECTED_TESTS);
   const expectedNames = Array.from(new Set(expectedTests.map(t =&gt; t.name))).sort();
   const expectedHosts = Array.from(new Set(expectedTests.map(t =&gt; t.host))).sort();</code></pre>
-      <details class="repro">
+      <details class="fold">
         <summary>Reproducer</summary>
       <pre><code class="language-bash"># Save as probe-summarize.sh at the root of a Rancher Desktop checkout;
 # run: bash probe-summarize.sh   (needs node and python3)
@@ -726,6 +736,7 @@ Name
       </details>
     <p>Fix: give <code>summarize</code> the same fork condition as <code>get-tests</code>, or have it exit cleanly when <code>EXPECTED_TESTS</code> is empty.</p>
     <p><em>Unproven:</em> that a dependent job with its own <code>if:</code> runs when a needed job is skipped is GitHub&#39;s documented behaviour for status-check functions; no local test reaches it. The consequence once it runs is reproduced above.</p>
+    <p><em>Resolution:</em> Fixed. summarize runs only when get-tests succeeded. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/86d1f7e64"><code>86d1f7e64</code></a>.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -756,7 +767,7 @@ Name
 export BATS_RUN_ERREXIT=1
 
 # RD_HELPERS_LOADED is set when bats/helpers/load.bash has been loaded</code></pre>
-      <details class="repro">
+      <details class="fold">
         <summary>Reproducer</summary>
       <pre><code class="language-bash"># Save as probe-return.sh; run: bash probe-return.sh
 make_capture() { # $1 = &quot;return&quot; (current code) | &quot;return 0&quot; (proposed fix)
@@ -794,6 +805,7 @@ with &#39;return 0&#39;:
   capture_logs exit status: 0</code></pre>
       </details>
     <p>Fix: <code>return 0</code>.</p>
+    <p><em>Resolution:</em> Fixed with <code>return 0</code>, and a test that fails without it. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c5f26efc6"><code>c5f26efc6</code></a>.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/containers/published-udp-ports.bats">
       <div class="finding-title" id="S2">
@@ -843,6 +855,7 @@ powershell_output() { # &lt;script&gt;
 }
 </code></pre>
     <p>Fix: drop the vacuous <code>assert_success</code> and assert the rules by name, for example <code>assert_line --regexp &#39;^Rancher Desktop Networking .* Exception: (Any|UDP) &#39;</code> per expected profile, keeping <code>refute_output</code> as the second gate.</p>
+    <p><em>Resolution:</em> Fixed. The test asserts the Private and Domain rules at protocol Any. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/965756c61"><code>965756c61</code></a>.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/actions/disable-compat-telemetry/action.yaml">
       <div class="finding-title" id="S3">
@@ -897,6 +910,7 @@ powershell_output() { # &lt;script&gt;
       uses: ./.github/actions/windows-typeperf-sampler
       with:</code></pre>
     <p>Fix: add <code>-ErrorAction SilentlyContinue</code>, or <code>continue-on-error: true</code> on the calling step.</p>
+    <p><em>Resolution:</em> Declined here. The action is byte-identical to rancher-desktop-2&#39;s, so the fix goes there first; it is in that repo&#39;s pending work.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats.yaml">
       <div class="finding-title" id="S4">
@@ -929,6 +943,7 @@ powershell_output() { # &lt;script&gt;
       continue-on-error: true</code></pre>
     <p>Fix: switch lines 492 and 519 to <code>always()</code>, matching the sampler steps.</p>
     <p><em>Unproven:</em> the cancellation semantics are GitHub&#39;s, documented for <code>timeout-minutes</code> (&quot;automatically cancels it&quot;) and for <code>always()</code>; no local test reaches them.</p>
+    <p><em>Resolution:</em> Declined. The macOS E2E lane lost an <code>always()</code> upload to its own job timeout on 2026-09-09, so the switch would not rescue this case.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/k8s/traefik.bats">
       <div class="finding-title" id="S5">
@@ -963,6 +978,7 @@ powershell_output() { # &lt;script&gt;
 
     # Exclude pods that are completed (i.e. jobs)</code></pre>
     <p>Fix: assert the raw output is non-empty JSON before filtering, mirroring the sibling.</p>
+    <p><em>Resolution:</em> Declined. Zero HelmCharts is a legitimate end state once both traefik charts are gone.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/actions/windows-typeperf-sampler/action.yaml">
       <div class="finding-title" id="S6">
@@ -993,6 +1009,7 @@ powershell_output() { # &lt;script&gt;
         Write-Output &quot;typeperf.blg not found, skipping summary&quot;
       }</code></pre>
     <p>Fix: sample at <code>-si 5</code>, delete <code>typeperf.tsv</code> after summarizing, and print a whole-run aggregate ahead of any per-sample dump.</p>
+    <p><em>Resolution:</em> Declined here, like S3: the action is byte-identical to rancher-desktop-2&#39;s.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats.yaml">
       <div class="finding-title" id="S7">
@@ -1012,6 +1029,7 @@ jobs:
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1</code></pre>
     <p>Running <code>get-tests.py</code> against this tree with the default <code>TESTS=&#39;*&#39;</code> yields 126 entries, 78 of them macOS; at the merge-base the same command yields 92 and 44. Adding <code>containers</code> to <code>SPLIT_PER_FILE_ON_MAC</code> is what moved it, in the branch that wrote the comment.</p>
     <p>Fix: say &quot;the full nightly matrix&quot; rather than a number the next split invalidates.</p>
+    <p><em>Resolution:</em> Fixed in the comment and in the commit body. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/86d1f7e64"><code>86d1f7e64</code></a>.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/helpers/utils.bash">
       <div class="finding-title" id="S8">
@@ -1057,6 +1075,7 @@ jobs:
 }
 </code></pre>
     <p>Fix: state the namespace reason in <code>utils.bash</code>.</p>
+    <p><em>Resolution:</em> Fixed. The comment gives the reason for netstat.exe. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c5f26efc6"><code>c5f26efc6</code></a>.</p>
     </div>
     <div class="card card-suggestion" data-file="bats/Makefile">
       <div class="finding-title" id="S9">
@@ -1076,6 +1095,7 @@ jobs:
 DEPS = bin/darwin/jq bin/linux/jq</code></pre>
     <p><code>make lint</code> runs from <code>bats/</code>, so <code>scripts</code> is <code>bats/scripts</code>. The 243 lines of new platform branching in <code>.github/workflows/bats/collect-logs.sh</code> are never checked. Both files there are clean today under the same flags, which is worth keeping true.</p>
     <p>Fix: add the <code>.github/workflows/bats/*.sh</code> scripts to the lint target, or lint them from the workflow that runs them.</p>
+    <p><em>Resolution:</em> Fixed in the new commit <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/71593d24c"><code>71593d24c</code></a> (BATS: Lint the BATS workflow&#39;s shell scripts).</p>
     </div>
     <div class="card card-suggestion" data-file="bats/tests/helpers/kubernetes.bash">
       <div class="finding-title" id="S10">
@@ -1107,6 +1127,7 @@ wait_for_kube_deployment_available() {
     trace &quot;waiting for deployment $*&quot;
     try --scale assert_kube_deployment_available &quot;$@&quot;</code></pre>
     <p>Fix: send stderr to a separate file, so <code>pods.json</code> holds JSON or nothing.</p>
+    <p><em>Resolution:</em> Fixed. stderr goes to <code>pods.err</code>, removed when empty. Folded into <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37e54be67"><code>37e54be67</code></a>.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
