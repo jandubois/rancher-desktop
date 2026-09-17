@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20260916-193842-pr-10957</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Tables written directly in a section body. parseTable classes only the
+ * Retro and Summary tables, so every other one arrives unclassed. */
+table:not([class]) { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+table:not([class]) th, table:not([class]) td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+table:not([class]) th { background: #f3f4f6; font-weight: 600; }
+table:not([class]) tr:nth-child(even) { background: #f9fafb; }
+/* A long path or job name offers no break of its own, so one cell can push
+ * the whole page into a horizontal scroll. Let those tokens wrap. */
+table:not([class]) code { overflow-wrap: anywhere; }
+
+/* Collapsible folds, for the bulk detail a report keeps out of the way */
+details { margin: 0.8rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+/* Reproducers and patches, collapsed so a long block keeps the next finding on screen */
+details.fold { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+details.fold > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
+details.fold > summary:hover { background: #eef1f4; }
+details.fold[open] > summary { border-bottom: 1px solid #d0d7de; }
+details.fold pre { border-radius: 0 !important; }
+details.fold .code-file-header { margin-top: 0; border-radius: 0; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20260916-193842-pr-10957</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-09-16 19:38</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1 (of PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10957" class="gh-ref" data-title="Confirm before deleting containers and volumes" data-state="open" data-type="pr">#10957</a>)</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10957" class="gh-ref" data-title="Confirm before deleting containers and volumes" data-state="open" data-type="pr">#10957</a> — Confirm before deleting containers and volumes</td></tr>
+      <tr><td>Branch</td><td><code>confirm-container-volume-delete</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0385ae3e5"><code>0385ae3e5</code></a> Confirm before deleting containers and volumes<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ca1c1e1fd"><code>ca1c1e1fd</code></a> Use the imperative for confirmation dialog titles<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f58b55a81"><code>f58b55a81</code></a> Translate the delete-confirmation strings<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b17487df4"><code>b17487df4</code></a> Place the delete confirmation&#39;s buttons by named index<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/adc07f989"><code>adc07f989</code></a> Give the delete confirmations an access key<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/429aa1a8b"><code>429aa1a8b</code></a> Explain the identical Chinese plural branches</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/429aa1a8b25cc3e67590063dc3da3a69e2a35b88"><code>429aa1a8b25cc3e67590063dc3da3a69e2a35b88</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5</span> (effort: xhigh), <span class="pill pill-codex">Codex GPT 5.6 Sol</span> (effort: xhigh), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the shipped behaviour is correct on every path traced, but the safeguard the PR exists to add has no test, and two pieces of prose state rationales their own artifacts contradict</td></tr>
+      <tr><td>Wall-clock time</td><td><code>30 min 25 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Both delete surfaces now route through an Electron confirmation that counts and names its targets, and the single-row path is normalised to a list of one so <code>execCommand</code> could drop its shape check. Every dispatch path traced (row menu, one-row selection, multi-row bulk) reaches the dialog exactly once. The bulk path has no test, and it is the one case the PR was written to make safe. Two prose artifacts also assert reasons their own content rules out.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="pkg/rancher-desktop/pages/__tests__/Containers.spec.ts">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> The bulk-delete path, the case the PR exists to make safe, has no test <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts#L131-L145">pkg/rancher-desktop/pages/__tests__/Containers.spec.ts</a></div>
+      <pre data-start="131" data-line="136-143"><code class="language-ts">
+      await row.deleteContainer();
+      expect(execCommand).toHaveBeenCalledWith(&#39;rm&#39;, [doomed]);
+    });
+
+    it(&#39;leaves the container alone when the user cancels&#39;, async() =&gt; {
+      const execCommand = jest.fn();
+      const row = rowFor(container(&#39;spared&#39;, &#39;exited&#39;, &#39;Exited&#39;),
+        { execCommand, confirmDelete: () =&gt; Promise.resolve(false) });
+
+      await row.deleteContainer();
+      expect(execCommand).not.toHaveBeenCalled();
+    });
+  });
+});</code></pre>
+    <p>Both deletion tests call <code>row.deleteContainer()</code> with no argument, so they drive only the single-row branch. The 2-container case at line 103 calls <code>confirmDelete</code> directly and never exercises the wiring from <code>deleteContainer(args)</code>. In the e2e spec, the bulk case (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/e2e/volumes.e2e.spec.ts#L158"><code>e2e/volumes.e2e.spec.ts:158</code></a>) runs with the stub left answering <em>confirm</em> and asserts only that the rows vanish. So a change that skipped the confirmation whenever the table hands over an array would keep every test green. That array is exactly the select-all case the PR description calls out as removing every stopped container at one click.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/e2e/volumes.e2e.spec.ts#L153-L163">e2e/volumes.e2e.spec.ts</a></div>
+      <pre data-start="153" data-line="158"><code class="language-typescript">
+      for (const volumeName of volumeNames) {
+        await volumesPage.waitForVolumeToAppear(volumeName);
+      }
+
+      await volumesPage.deleteBulkVolumes(volumeNames);
+      await expect(volumesPage.errorBanner).toBeHidden();
+
+      for (const volumeName of volumeNames) {
+        await expect(volumesPage.getVolumeRow(volumeName)).toBeHidden({
+          timeout: 10_000,</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts#L98-L108">pkg/rancher-desktop/pages/__tests__/Containers.spec.ts</a></div>
+      <pre data-start="98" data-line="103"><code class="language-typescript">
+    beforeEach(() =&gt; {
+      showMessageBox.mockReset();
+    });
+
+    it(&#39;names and counts the containers in the confirmation&#39;, async() =&gt; {
+      showMessageBox.mockResolvedValue({ response: 0 });
+      const containers = [container(&#39;one&#39;, &#39;exited&#39;, &#39;Exited&#39;), container(&#39;two&#39;, &#39;exited&#39;, &#39;Exited&#39;)];
+
+      await expect(methods.confirmDelete.call(helpers, containers)).resolves.toBe(true);
+      expect(showMessageBox).toHaveBeenCalledWith(&#39;show-message-box&#39;, expect.objectContaining({</code></pre>
+      <details class="fold">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash"># Save as probe-bulk-confirm.sh; run: bash probe-bulk-confirm.sh
+# Run from a rancher-desktop checkout at 429aa1a8b with dependencies installed.
+JEST=&quot;node --experimental-vm-modules node_modules/jest/bin/jest.js&quot;
+SPEC=pkg/rancher-desktop/pages/__tests__/Containers.spec.ts
+VUE=pkg/rancher-desktop/pages/Containers.vue
+
+patch_bulk() {   # skip confirmDelete when the table passes a bulk selection
+  python3 -c &quot;
+import pathlib
+p = pathlib.Path(&#39;$VUE&#39;); s = p.read_text()
+old = &#39;&#39;&#39;            if (await this.confirmDelete(targets)) {
+              await this.execCommand(&#39;rm&#39;, targets);
+            }&#39;&#39;&#39;
+new = &#39;&#39;&#39;            if (Array.isArray(args) &amp;&amp; args.length) {
+              await this.execCommand(&#39;rm&#39;, targets);
+
+              return;
+            }
+&#39;&#39;&#39; + old
+assert old in s; p.write_text(s.replace(old, new, 1))&quot;
+}
+
+patch_single() { # skip confirmDelete on the single-row path instead
+  python3 -c &quot;
+import pathlib
+p = pathlib.Path(&#39;$VUE&#39;); s = p.read_text()
+old = &#39;&#39;&#39;            if (await this.confirmDelete(targets)) {
+              await this.execCommand(&#39;rm&#39;, targets);
+            }&#39;&#39;&#39;
+new = &#39;&#39;&#39;            if (!Array.isArray(args) || !args.length) {
+              await this.execCommand(&#39;rm&#39;, targets);
+
+              return;
+            }
+&#39;&#39;&#39; + old
+assert old in s; p.write_text(s.replace(old, new, 1))&quot;
+}
+
+echo &#39;=== 1. BULK path bypassed (the safeguard this PR exists to add) ===&#39;
+patch_bulk
+BROWSERSLIST_IGNORE_OLD_DATA=1 $JEST --runTestsByPath &quot;$SPEC&quot; 2&gt;&amp;1 | grep -E &#39;^(Tests|Test Suites):&#39;
+git checkout --quiet &quot;$VUE&quot;
+
+echo &#39;=== 2. SINGLE-ROW path bypassed (control: the suite does catch this) ===&#39;
+patch_single
+BROWSERSLIST_IGNORE_OLD_DATA=1 $JEST --runTestsByPath &quot;$SPEC&quot; 2&gt;&amp;1 | grep -E &#39;^(Tests|Test Suites):&#39;
+git checkout --quiet &quot;$VUE&quot;</code></pre>
+      <pre><code class="language-text">$ bash probe-bulk-confirm.sh
+=== 1. BULK path bypassed (the safeguard this PR exists to add) ===
+Test Suites: 1 passed, 1 total
+Tests:       6 passed, 6 total
+=== 2. SINGLE-ROW path bypassed (control: the suite does catch this) ===
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 5 passed, 6 total</code></pre>
+      </details>
+    <p>Fix: add one unit case driving <code>deleteContainer</code> with a multi-row selection and a refusing <code>confirmDelete</code>. The patch below passes on the current tree and fails under step 1 of the probe.</p>
+      <details class="fold">
+        <summary>Patch</summary>
+      <pre><code class="language-diff">diff --git a/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts b/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts
+index b9503332f..b67ae74c7 100644
+--- a/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts
++++ b/pkg/rancher-desktop/pages/__tests__/Containers.spec.ts
+@@ -133,6 +133,17 @@ describe(&#39;Containers methods&#39;, () =&gt; {
+       expect(execCommand).toHaveBeenCalledWith(&#39;rm&#39;, [doomed]);
+     });
+ 
++    it(&#39;confirms the whole bulk selection, and deletes none of it when cancelled&#39;, async() =&gt; {
++      const execCommand = jest.fn();
++      const confirmDelete = jest.fn().mockResolvedValue(false);
++      const doomed = [container(&#39;one&#39;, &#39;exited&#39;, &#39;Exited&#39;), container(&#39;two&#39;, &#39;exited&#39;, &#39;Exited&#39;)];
++      const row = rowFor(doomed[0], { execCommand, confirmDelete });
++
++      await row.deleteContainer(doomed);
++      expect(confirmDelete).toHaveBeenCalledWith(doomed);
++      expect(execCommand).not.toHaveBeenCalled();
++    });
++
+     it(&#39;leaves the container alone when the user cancels&#39;, async() =&gt; {
+       const execCommand = jest.fn();
+       const row = rowFor(container(&#39;spared&#39;, &#39;exited&#39;, &#39;Exited&#39;),</code></pre>
+      </details>
+    <p>The volumes e2e bulk case deserves the same treatment: cancel first, assert the dialog named all three volumes, then confirm.</p>
+    </div>
+    <div class="card card-important" data-file="pkg/rancher-desktop/assets/translations/it.yaml">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> The Italian <code>@reason</code> rests on an ambiguity its own titles remove <span class="pill pill-claude">Claude Opus 5</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/assets/translations/it.yaml#L427-L439">pkg/rancher-desktop/assets/translations/it.yaml</a></div>
+      <pre data-start="427" data-line="432-434"><code class="language-yaml">    # @source &amp;Delete
+    confirm: &#39;&amp;Elimina&#39;
+    # @reason &#39;container&#39; is the established loanword in it.yaml (containers.title); loanwords are invariable in the Italian plural, so both branches read the same.
+    # @source Delete {count} {count, plural, one {container} other {containers}}?
+    message: Eliminare {count} {count, plural, one {container} other {container}}?
+    # @reason &#39;Conferma&#39; is both the noun and the second-person imperative in Italian, so the nominal form renders an imperative source correctly.
+    # @source Confirm container deletion
+    title: Conferma dell&#39;eliminazione dei container
+  manage:
+    table:
+      action:
+        # @reason &#39;Info&#39; is standard Italian shorthand for &#39;informazioni&#39;; matches containerInfo.info
+        # @source Info</code></pre>
+    <p>The note is true of the bare word, but all four titles it annotates continue with a genitive (<code>Conferma dell&#39;eliminazione</code> at lines 434, 717 and 1871, <code>Conferma della migrazione</code> at 528). An Italian imperative takes a direct object (<code>Conferma l&#39;eliminazione</code>); once <code>di</code> plus an article follows, only the noun reading is grammatical, so the stated ambiguity never reaches the reader. The titles themselves are fine; the nominal form is the usual Italian dialog-title register. Only the rationale is wrong, and it is now in four places the translation sweep will feed to future per-locale agents as precedent.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/assets/translations/it.yaml#L429-L439">pkg/rancher-desktop/assets/translations/it.yaml</a></div>
+      <pre data-start="429" data-line="434"><code class="language-yaml">    # @reason &#39;container&#39; is the established loanword in it.yaml (containers.title); loanwords are invariable in the Italian plural, so both branches read the same.
+    # @source Delete {count} {count, plural, one {container} other {containers}}?
+    message: Eliminare {count} {count, plural, one {container} other {container}}?
+    # @reason &#39;Conferma&#39; is both the noun and the second-person imperative in Italian, so the nominal form renders an imperative source correctly.
+    # @source Confirm container deletion
+    title: Conferma dell&#39;eliminazione dei container
+  manage:
+    table:
+      action:
+        # @reason &#39;Info&#39; is standard Italian shorthand for &#39;informazioni&#39;; matches containerInfo.info
+        # @source Info</code></pre>
+    <p>Unproven: a claim about Italian grammar, not program behaviour, so no in-process test decides it.</p>
+    <p>Fix: state what was actually decided (Italian dialog titles take the nominal <code>Conferma di …</code>, and the imperative was not adopted) and drop the &quot;both the noun and the imperative&quot; claim. Apply to all four copies.</p>
+    </div>
+    <div class="card card-important" data-file="">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ca1c1e1fd"><code>ca1c1e1fd</code></a>&#39;s body says only <code>@source</code> snapshots changed for five locales; it also rewrote <code>it.yaml</code> <span class="pill pill-claude">Claude Opus 5</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+    <p>The body explains that Spanish, French and Portuguese switch to an infinitive and that &quot;the other five keep their existing wording … so only their @source snapshots change.&quot; For Italian, one of those five, the same commit also adds the two <code>@reason</code> lines from I2. The diffstat shows <code>it.yaml</code> at <code>6 ++++--</code> where the four snapshot-only locales are <code>4 ++--</code>.</p>
+      <details class="fold">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash"># Save as probe-commit-prose.sh; run: bash probe-commit-prose.sh
+# Run from a rancher-desktop checkout that has commit ca1c1e1fd.
+echo &#39;=== what the body claims about the five locales that keep their wording ===&#39;
+git log -1 --format=%B ca1c1e1fd | tr &#39;\n&#39; &#39; &#39; | grep -o &#39;The other five keep[^.]*\.&#39;
+
+echo
+echo &#39;=== what it changed in it.yaml, one of those five ===&#39;
+git show --format=&#39;&#39; ca1c1e1fd -- pkg/rancher-desktop/assets/translations/it.yaml |
+  grep -E &#39;^[+-]&#39; | grep -vE &#39;^(\+\+\+|---)&#39;
+
+echo
+echo &#39;=== de.yaml, for contrast: a locale where only @source really changed ===&#39;
+git show --format=&#39;&#39; ca1c1e1fd -- pkg/rancher-desktop/assets/translations/de.yaml |
+  grep -E &#39;^[+-]&#39; | grep -vE &#39;^(\+\+\+|---)&#39;</code></pre>
+      <pre><code class="language-text">$ bash probe-commit-prose.sh
+=== what the body claims about the five locales that keep their wording ===
+The other five keep their existing wording, because an English gerund and an English imperative come out as the same form in each language, so only their @source snapshots change.
+
+=== what it changed in it.yaml, one of those five ===
+-    # @source Confirming migration
++    # @reason &#39;Conferma&#39; is both the noun and the second-person imperative in Italian, so the nominal form renders an imperative source correctly.
++    # @source Confirm migration
+-    # @source Confirming image deletion
++    # @reason &#39;Conferma&#39; is both the noun and the second-person imperative in Italian, so the nominal form renders an imperative source correctly.
++    # @source Confirm image deletion
+
+=== de.yaml, for contrast: a locale where only @source really changed ===
+-    # @source Confirming migration
++    # @source Confirm migration
+-    # @source Confirming image deletion
++    # @source Confirm image deletion</code></pre>
+      </details>
+    <p>Fix: name the Italian exception in the body (it keeps its wording and gains a <code>@reason</code> recording why), or move the two <code>@reason</code> lines to the commit that adds the rest of them.</p>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Volumes.vue">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> Volumes folds an empty bulk selection differently from Containers <span class="pill pill-claude">Claude Opus 5</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Volumes.vue#L156-L166">pkg/rancher-desktop/pages/Volumes.vue</a></div>
+      <pre data-start="156" data-line="161"><code class="language-ts">              bulkable:   true,
+              bulkAction: &#39;deleteVolume&#39;,
+            },
+          ],
+          deleteVolume: async(args?: Volume[]) =&gt; {
+            const targets = Array.isArray(args) ? args : [volume];
+
+            if (await this.confirmDelete(targets)) {
+              await this.execCommand([&#39;volume&#39;, &#39;rm&#39;], targets);
+            }
+          },</code></pre>
+    <p><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L305"><code>Containers.vue:305</code></a> writes <code>args?.length ? args : [container]</code>, which folds an empty array back to the row; this one keeps it, so an empty selection would show &quot;Delete 0 volumes?&quot; and then run <code>docker volume rm</code> with no names. It is unreachable today. <code>_execute</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/components/SortableTable/selection.js#L587"><code>SortableTable/selection.js:587</code></a>) normalises its <code>args</code> to <code>[]</code> and takes the bulk branch only when <code>resources.length &gt; 1</code>, and Volumes marks delete <code>enabled: true</code> on every row. The line predates the PR, but the PR is what put a dialog behind it.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L300-L310">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="300" data-line="305"><code class="language-markup">     * @param container {Container} The container in this row.
+     * @param args {Container[] | undefined} The bulk selection from the table&#39;s action bar, if any.
+     * @returns {Container[]} The bulk selection if there is one, otherwise the row&#39;s container.
+     */
+    containerCommandTarget(container, args) {
+      return args?.length ? args : [container];
+    },
+    /**
+     * Ask the user to confirm deleting the given containers.
+     * @param containers {Container[]} The containers to delete, listed by name in the dialog.
+     * @returns {Promise&lt;boolean&gt;} Whether the user chose to delete them.</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/components/SortableTable/selection.js#L582-L592">pkg/rancher-desktop/components/SortableTable/selection.js</a></div>
+      <pre data-start="582" data-line="587"><code class="language-javascript">  }
+
+  return out;
+}
+
+function _execute(resources, action, args, opts = {}, ctx) {
+  args = args || [];
+
+  // New pattern for extensions - always call invoke
+  if (action.invoke) {
+    const actionOpts = {</code></pre>
+    <p>Fix: <code>const targets = args?.length ? args : [volume];</code></p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/utils/accessKeys.ts">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> <code>removeParenthesizedAccessKey</code> matches only half-width parentheses <span class="pill pill-claude">Claude Opus 5</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/utils/accessKeys.ts#L16-L23">pkg/rancher-desktop/utils/accessKeys.ts</a></div>
+      <pre data-start="16" data-line="21-23"><code class="language-ts">
+/**
+ * Remove an access key written in parentheses after the label, as Chinese,
+ * Japanese and Korean translations write it. &quot;削除(&amp;D)&quot; becomes &quot;削除&quot;.
+ */
+export function removeParenthesizedAccessKey(label: string): string {
+  return label.replace(/\(&amp;[^&amp;]\)/g, &#39;&#39;);
+}</code></pre>
+    <p><code>ja.yaml</code> uses full-width <code>（</code> 33 times and <code>zh-hans.yaml</code> 19 times (counted in the worktree), and the new <code>削除(&amp;D)</code> values are the only half-width parentheses nearby. Half-width is the right choice for a mnemonic, but nothing records that. A typography-consistency pass that &quot;corrects&quot; them to <code>削除（&amp;D）</code> leaves macOS showing <code>削除（D）</code>, because the regex stops matching and Electron removes only the <code>&amp;</code>.</p>
+    <p>Fix: accept both, <code>/[(（]&amp;[^&amp;][)）]/g</code>; add <code>[&#39;削除（&amp;D）&#39;, &#39;削除&#39;]</code> to <code>accessKeys.spec.ts</code>, and say in the doc comment that translations must write the half-width form.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/en-us.yaml">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> The <code>&amp;</code> access-key convention is documented nowhere <span class="pill pill-claude">Claude Opus 5</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/assets/translations/en-us.yaml#L170-L180">pkg/rancher-desktop/assets/translations/en-us.yaml</a></div>
+      <pre data-start="170" data-line="175"><code class="language-yaml">        info: Info
+        stop: Stop
+        restart: Restart
+        start: Start
+  confirmDelete:
+    confirm: &#39;&amp;Delete&#39;
+    message: Delete {count} {count, plural, one {container} other {containers}}?
+    title: Confirm container deletion
+  sortableTables:
+    noRows: There are no containers to show
+volumes:</code></pre>
+    <p><code>assets/translations/README.md</code> prescribes source-string and YAML-comment conventions but says nothing about ampersands, where the access key goes, or the CJK <code>(&amp;D)</code> form. <code>i18n-report</code> has no <code>&amp;</code> handling either, so a locale whose Delete button loses its mnemonic passes every check.</p>
+    <p>Fix: add a short README subsection (<code>&amp;</code> marks the access key in dialog button labels, CJK writes <code>(&amp;D)</code> after the label, Cancel has none) and an <code>@meaning</code> comment on both <code>confirm</code> keys.</p>
+    </div>
+    <div class="card card-suggestion" data-file="e2e/volumes.e2e.spec.ts">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> The e2e stub replaces every message box, not just the delete confirmation <span class="pill pill-claude">Claude Opus 5</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/e2e/volumes.e2e.spec.ts#L15-L29">e2e/volumes.e2e.spec.ts</a></div>
+      <pre data-start="15" data-line="20-24"><code class="language-ts"> * records the options it was given, so a test can assert what the user saw.
+ */
+async function answerDeleteConfirmation(electronApp: ElectronApplication, response: number) {
+  await electronApp.evaluate(({ dialog }, response) =&gt; {
+    (globalThis as any).lastDeleteConfirmation = undefined;
+    dialog.showMessageBox = ((options: any) =&gt; {
+      (globalThis as any).lastDeleteConfirmation = options;
+
+      return Promise.resolve({ response, checkboxChecked: false });
+    }) as typeof dialog.showMessageBox;
+  }, response);
+}
+
+/** The options the delete confirmation was last shown with. */
+function lastDeleteConfirmation(electronApp: ElectronApplication): Promise&lt;any&gt; {</code></pre>
+    <p>The name says delete confirmation; the stub answers every <code>dialog.showMessageBox</code> in the main process for the rest of the run, including the two-argument <code>(window, options)</code> overload used elsewhere, which would record a <code>BrowserWindow</code> as <code>options</code>. The spec disables Kubernetes and allowed-images so nothing else opens a box today; the exposure is a later test in the same file.</p>
+    <p>Fix: delegate to the original unless <code>options.title</code> is one of the two confirmation titles, or rename to <code>answerMessageBox</code> / <code>lastMessageBox</code> so the scope is visible at the call site.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> A broken <code>@import</code> path means the new JSDoc types resolve to nothing <span class="pill pill-codex">Codex GPT 5.6 Sol</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L143-L153">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="143" data-line="148"><code class="language-js">import SortableTable from &#39;@pkg/components/SortableTable&#39;;
+import { mapTypedGetters, mapTypedState } from &#39;@pkg/entry/store&#39;;
+import { ipcRenderer } from &#39;@pkg/utils/ipcRenderer&#39;;
+
+/**
+ * @import { Container } from &#39;@pk/store/containers&#39;
+ */
+
+/**
+ * @typedef { Object } Action
+ * @property { string } label</code></pre>
+    <p><code>@pk</code> should be <code>@pkg</code>, and the module is <code>container-engine</code>, where <code>Container</code> is exported (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/store/container-engine.ts#L100"><code>store/container-engine.ts:100</code></a>). So every <code>{Container}</code> in this file (the pre-existing <code>@property</code> block and the <code>@param</code> tags added for the review) annotates an unresolved name. The line is byte-identical at the merge-base, so this is a pre-existing gap, not a regression. But it is what stops the reviewer&#39;s request from delivering anything, and it is a one-line fix. (Codex reported the annotations as ineffective because they put the name before the type. That part is wrong. TypeScript accepts <code>@param name {Type}</code>, and a probe against the repo&#39;s own <code>tsc</code> 6.0.3 flagged a wrong argument through both orderings and let the unannotated control through.)</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/store/container-engine.ts#L95-L105">pkg/rancher-desktop/store/container-engine.ts</a></div>
+      <pre data-start="95" data-line="100"><code class="language-typescript">}
+
+/**
+ * Each container is an object to be described in the UI.
+ */
+export interface Container {
+  id:            string;
+  containerName: string;
+  imageName:     string;
+  state:         MobyContainer[&#39;State&#39;] | NerdctlContainer[&#39;State&#39;];
+  started:       Date | undefined;</code></pre>
+    <p>Fix: <code>@import { Container } from &#39;@pkg/store/container-engine&#39;</code></p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/Images.vue">
+      <div class="finding-title" id="S6">
+        <span class="finding-num">S6.</span> The images delete dialog keeps the pattern this round removed from the other two <span class="pill pill-claude">Claude Opus 5</span><a href="#S6" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/components/Images.vue#L319-L332">pkg/rancher-desktop/components/Images.vue</a></div>
+      <pre data-start="319" data-line="324-327"><code class="language-ts">
+      const options: Electron.MessageBoxOptions = {
+        message,
+        detail,
+        type:      &#39;question&#39;,
+        buttons:   [this.t(&#39;images.confirmDelete.confirm&#39;), this.t(&#39;generic.cancel&#39;)],
+        defaultId: 1,
+        title:     this.t(&#39;images.confirmDelete.title&#39;),
+        cancelId:  1,
+      };
+
+      const result = await ipcRenderer.invoke(&#39;show-message-box&#39;, options);
+
+      if (result.response === 1) {</code></pre>
+    <p>The app now has three delete confirmations in two idioms: the named-index <code>Object.assign([], {…})</code> form in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L320"><code>Containers.vue:320</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Volumes.vue#L254"><code>Volumes.vue:254</code></a>, and these bare literals, the shape <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b17487df4"><code>b17487df4</code></a> set out to remove. <code>Images.vue</code> also passes no <code>normalizeAccessKeys</code> and its <code>confirm</code> key has no <code>&amp;</code>, so its Delete button alone has no mnemonic.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L315-L325">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="315" data-line="320"><code class="language-markup">      const result = await ipcRenderer.invoke(&#39;show-message-box&#39;, {
+        type:      &#39;question&#39;,
+        title:     this.t(&#39;containers.confirmDelete.title&#39;),
+        message:   this.t(&#39;containers.confirmDelete.message&#39;, { count: containers.length }),
+        detail:    containers.map(container =&gt; container.containerName).join(&#39;\n&#39;),
+        buttons:   Object.assign([], {
+          [acceptId]: this.t(&#39;containers.confirmDelete.confirm&#39;),
+          [cancelId]: this.t(&#39;generic.cancel&#39;),
+        }),
+        defaultId:           cancelId,
+        cancelId,</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Volumes.vue#L249-L259">pkg/rancher-desktop/pages/Volumes.vue</a></div>
+      <pre data-start="249" data-line="254"><code class="language-markup">      const cancelId = 1;
+      const result = await ipcRenderer.invoke(&#39;show-message-box&#39;, {
+        type:      &#39;question&#39;,
+        title:     this.t(&#39;volumes.confirmDelete.title&#39;),
+        message:   this.t(&#39;volumes.confirmDelete.message&#39;, { count: volumes.length }),
+        detail:    volumes.map(volume =&gt; volume.Name).join(&#39;\n&#39;),
+        buttons:   Object.assign([], {
+          [acceptId]: this.t(&#39;volumes.confirmDelete.confirm&#39;),
+          [cancelId]: this.t(&#39;generic.cancel&#39;),
+        }),
+        defaultId:           cancelId,</code></pre>
+    <p>Fix: leave this to a follow-up. Moving the images dialog over touches a fourth surface and its own translations, so this finding just records the inconsistency.</p>
+    </div>
+    <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
+      <div class="finding-title" id="S7">
+        <span class="finding-num">S7.</span> The container delete row action borrows the images translation key <span class="pill pill-gemini">Gemini 3.1 Pro</span><a href="#S7" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L356-L366">pkg/rancher-desktop/pages/Containers.vue</a></div>
+      <pre data-start="356" data-line="361"><code class="language-js">          enabled:    this.isStopped(container),
+          bulkable:   true,
+          bulkAction: &#39;startContainer&#39;,
+        },
+        {
+          label:      this.t(&#39;images.manager.table.action.delete&#39;),
+          action:     &#39;deleteContainer&#39;,
+          enabled:    this.isStopped(container),
+          bulkable:   true,
+          bulkAction: &#39;deleteContainer&#39;,
+        },</code></pre>
+    <p>The container table&#39;s own <code>containers.manage.table.action</code> group has <code>stop</code>, <code>restart</code> and <code>start</code> but no <code>delete</code>, so this row reaches into the images section. It resolves to &quot;Delete&quot; in every locale today, but the two strings are free to diverge. Pre-existing: identical at the merge-base, and untouched by this PR.</p>
+    <p>Fix: add <code>containers.manage.table.action.delete</code> (or reuse a generic key) across the nine locale files.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><strong>A bulk action that skips ineligible rows still says nothing about them</strong> <code>(future)</code> <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-claude">Claude Opus 5</span>. <code>applyTableAction</code> filters the selection to rows where the action is enabled, and delete is enabled only for stopped containers. Select five containers with two stopped and the dialog reads &quot;Delete 2 containers?&quot; and names them. That is accurate, and better than the merge-base, which deleted the two with no word at all. But nothing says the other three were dropped, and Stop, Start and Restart still skip silently with no dialog. A &quot;N of M selected rows support this action&quot; line in the table&#39;s action bar would cover all four actions. Only delete asks anything today.</li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>Deleting by container id while displaying <code>containerName</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L462"><code>Containers.vue:462</code></a>) means the confirmation cannot drift from what is removed if the store refreshes while the dialog is open. <span class="pill pill-claude">Claude Opus 5</span></li>
+      <li>Normalising <code>containerCommandTarget</code> to always return a list let <code>execCommand</code> drop its <code>Array.isArray</code> branch, so this safety feature removes a shape check instead of adding one. <span class="pill pill-claude">Claude Opus 5</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span></li>
+      <li>Placing labels by named index keeps the buttons correct when the object literal is reordered; the positional arrays used elsewhere in the app do not. <span class="pill pill-codex">Codex GPT 5.6 Sol</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span></li>
+      <li>The macOS CJK access-key strip is in the main-process wrapper once, instead of repeated per page. <span class="pill pill-gemini">Gemini 3.5 Flash</span> <span class="pill pill-codex">Codex GPT 5.6 Sol</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Executed in the lead worktree at <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/429aa1a8b"><code>429aa1a8b</code></a>, with <code>node_modules</code> and <code>resources/darwin/bin/rdctl</code> linked from the main checkout:</p>
+    <ul>
+      <li>Full jest suite: <strong>56 suites / 835 tests pass</strong>, 58 suites / 864 total. The only two failures are <code>utils/__tests__/paths.spec.ts</code> and <code>integrations/__tests__/unixIntegrationManager.spec.ts</code> (17 tests), the known scratch-worktree environmental pair that passes in a real checkout.</li>
+      <li><code>go run ./src/go/i18n-report check --locale=all</code>, the exact gate in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/.github/workflows/test.yaml#L24"><code>.github/workflows/test.yaml:24</code></a>: green for all eight locales.</li>
+      <li><code>eslint</code> on all seven changed TypeScript and Vue files: clean.</li>
+    </ul>
+    <p>Coverage is good on what it reaches. The dialog&#39;s count and names, button options, and the confirm and cancel branches of the single-row path all have real assertions, and <code>testUtils/translations</code> runs the strings through real ICU, not a stub. The gap is I1. The bulk branch is unexercised, and a mutation confined to it leaves the suite green.</p>
+    <p>Two smaller gaps, neither a reason to hold the PR. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/window/index.ts#L706"><code>window/index.ts:706</code></a>&#39;s darwin guard is untested (only the pure string helper is), so a regression shows as <code>削除(D)</code> on macOS or a lost mnemonic on Windows, cosmetic and CJK-only. And <code>Volumes.vue</code> has no spec at all, so its <code>confirmDelete</code> and the tested Containers copy can drift apart.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The JSDoc and <code>@reason</code> comments the round asked for are present and, apart from I2, accurate. Two gaps beyond the findings: <code>assets/translations/README.md</code> is the file the translation workflow hands to per-locale agents and the only place the access-key convention could live (S3), and <code>accessKeys.ts</code>&#39;s doc comment should say the half-width parenthesis is required; today it only describes what CJK locales happen to write (S2).</p>
+    <p>The comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/window/index.ts#L706"><code>window/index.ts:706</code></a> is correct: <code>normalizeAccessKeys</code> removes <code>&amp;</code> on macOS, converts it to <code>_</code> on Linux, and leaves it untouched on Windows.</p>
+    </div>
+    <hr>
+    <h2 id="commit-structure">Commit Structure <a href="#commit-structure" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>Six commits, of which three are review fixups: <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b17487df4"><code>b17487df4</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/adc07f989"><code>adc07f989</code></a> patch code from <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0385ae3e5"><code>0385ae3e5</code></a>, and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/429aa1a8b"><code>429aa1a8b</code></a> patches translations from <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/f58b55a81"><code>f58b55a81</code></a>. Keeping them separate through an open round is right; they are candidates to fold before merge. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/429aa1a8b"><code>429aa1a8b</code></a> also adds a <code>@reason</code> to the pre-existing <code>zh-hans</code> <code>images.confirmDelete.multiple</code> key; that is outside the feature, but its message says so. The messages otherwise give motivation, not mechanics. The one overreach is I3.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>No dialog has been opened on any platform.</strong> The Windows and Linux access-key behaviour rests on reading Electron&#39;s <code>dialog</code> documentation plus the <code>removeParenthesizedAccessKey</code> unit test. Windows is the platform where the mnemonic does anything, and it is the one unverified. This is already tracked in the project&#39;s <code>pending-work.md</code>.</li>
+      <li><strong>@jandubois, PR comment:</strong> stopping containers stays unconfirmed by design. The code matches; only <code>deleteContainer</code> and <code>deleteVolume</code> call <code>confirmDelete</code>.</li>
+      <li><em></em>@mook-as, <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/assets/translations/en-us.yaml#L176"><code>en-us.yaml:176</code></a><em></em> (&quot;<code>Delete one volume?</code> … probably not worth it&quot;): self-declined; <code>Delete 1 volume?</code> ships and the e2e asserts that exact string.</li>
+      <li><strong>Six threads asking to collapse the identical ICU plural branches</strong> (zh-hans ×2, ko ×2, ja ×1, it ×1) are not applicable as written. Applying the literal suggestion to a <code>zh-hans</code> fixture and running the built binary gives <code>Found 2 validation errors … missing {count, plural, ...} construct</code>, exit 1; <code>check</code> runs <code>validate</code>, so the CI gate would go red. <code>checkICUStructure</code> matches constructs exactly and its own comment says the strictness is deliberate. Only the reviewer can close those threads.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="unresolved-feedback">Unresolved Feedback <a href="#unresolved-feedback" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Volumes.vue#L247"><code>Volumes.vue:247</code></a><em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10957#discussion_r4018533675">discussion r4018533675</a>, &quot;Same comments from the other one applies too.&quot; Two of the three were applied, the named button indexes and <code>normalizeAccessKeys</code>. The third was not. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L307"><code>Containers.vue:307</code></a> gained a description while the Volumes twin has none. Low priority: the file is TypeScript, so the parameter types the thread wanted are already in the signature; the missing piece is the one-line description.</li>
+      <li><em></em><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Containers.vue#L312"><code>Containers.vue:312</code></a>, the JSDoc request<em></em> — <a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10957#discussion_r4018343094">discussion r4018343094</a>. Answered in form, but S5 keeps it from delivering. The <code>@import</code> the types depend on points at a module that does not exist.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p><strong>[Claude Opus 5]</strong> Seven of the ten findings, including both prose findings no one else looked for. It was the only agent to treat the translation comments and the commit bodies as reviewable artifacts, and the Italian one took reading four annotated strings and seeing that each continuation defeats the note above it. Its measured claims held up exactly (33 and 19 full-width parentheses, <code>enabled: true</code> on every volume row), and its three quoted <code>i18n-report</code> runs match its session log verbatim. One miss, and it is the one that mattered. Its Testing Assessment lists the bulk path as &quot;covered by the 2-container unit case&quot;, which confuses a direct call to <code>confirmDelete</code> with the wiring that reaches it.</p>
+    <p><strong>[Codex GPT 5.6 Sol]</strong> Found the one real gap. I1 was its only Important and no other agent came near it; it reasoned to the mutation (&quot;a change that bypasses <code>confirmDelete</code> whenever <code>args</code> is an array would leave all tests green&quot;) without running anything, and the mutation confirms it exactly. It declined to re-raise the resolved threads and said which runs it had not performed. Against that, its one Suggestion asserted that name-before-type JSDoc is invalid, and a probe through the repo&#39;s own <code>tsc</code> disproves that. S5 stands only because the same paragraph named the real defect, the broken <code>@import</code> path. A syntax claim stated without a check, in a review otherwise careful to label its evidence.</p>
+    <p><strong>[Gemini 3.1 Pro]</strong> The shortest review, and the only agent to notice that the container delete row borrows the images translation key, a small thing it labelled correctly as a pre-existing gap. Its other suggestion, capping the name list in <code>detail</code>, describes real behaviour but asks the PR to depart from what <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/429aa1a8b25cc3e67590063dc3da3a69e2a35b88/pkg/rancher-desktop/pages/Images.vue#L318"><code>Images.vue:318</code></a> already does; dropped for that reason. It skipped <code>git blame</code> as usual, so it could not tell new code from pre-existing, and it marked <code>it.yaml</code> and the spec files clean.</p>
+    <p><strong>[Gemini 3.5 Flash]</strong> A complete, well-formed review with no finding that made the report. Its one suggestion (warn when a bulk delete silently skips running containers) describes something real, but Claude framed the same observation better, as a gap across all four bulk actions instead of a dialog change needing a tenth translation key; it moved to Design Observations. Flash was also the only agent to state that every prior-round thread was addressed, which is nearly right, except that it reads <code>Containers.spec.ts:96</code> as accepted when the author declined it with a typecheck reason. It shares a model family with Gemini Pro, so where the two agree they count as one opinion.</p>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5</span></th><th><span class="pill pill-codex">Codex GPT 5.6 Sol</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>17m 13s</td><td>10m 35s</td><td>7m 54s</td><td>3m 21s</td></tr>
+        <tr><td>Findings</td><td>2I 5S</td><td>1I 1S</td><td>1S</td><td>none</td></tr>
+        <tr><td>Tool calls</td><td>71 (Bash 68, Read 1, ToolSearch 1)</td><td>26 (shell 26)</td><td>67 (run<em>shell</em>command 67)</td><td>35 (grep<em>search 20, read</em>file 11, glob 2)</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>3</td><td>1</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>7</td><td>2</td><td>1</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>16</td><td>16</td><td>16</td><td>16</td></tr>
+        <tr><td>Coverage misses</td><td>1</td><td>1</td><td>2</td><td>2</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2I 5S</strong></td><td><strong>1I 1S</strong></td><td><strong>1S</strong></td><td><strong>none</strong></td></tr>
+        <tr><td>Downgraded</td><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Flash P1 skipped-running-containers: suggestion → Design Observation concern (merged with Claude&#39;s better-scoped version). Gemini Pro P1 truncate-<code>detail</code>: dropped, matches the established <code>Images.vue</code> pattern. Codex P1 JSDoc ordering: the ordering claim rejected as a false positive; the finding retained as S5 on its <code>@import</code> half with the mechanism corrected. No severities were raised.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>I3 is about a commit message, so it cites the short SHA and has no leading code block. The citation lint reports it as &quot;1 without a leading block&quot;; that is deliberate, since inventing a file reference would point the reader at code the finding is not about.</p>
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a finding asserts that a language, compiler, or framework rejects a syntax the code under review uses, run that syntax through the toolchain before recording it. A tool that accepts two spellings of the same annotation makes the unfamiliar one look like a defect, and citing a rule instead of an observation makes the claim hard to doubt. The check costs one file and one invocation, and it separates an ineffective annotation from an effective one whose surrounding configuration is broken.</li>
+      <li>Treat generated or annotated metadata that ships in the repo (translation comments, rationale notes, provenance headers) as reviewable prose, not as context for the code. Where such a note states a reason, check that reason against the artifact it annotates, not against its own plausibility. The claim is often true in isolation and inapplicable to the one string, path, or value it is attached to. These notes propagate, because the next contributor treats an existing one as precedent.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li><code>[repo]</code> Delete confirmations built on <code>show-message-box</code> pass the full list of target names as <code>detail</code>, joined with newlines, with no cap; <code>components/Images.vue</code> established this and the container and volume confirmations follow it. Do not flag an unbounded name list as a defect; macOS renders <code>message</code> as the heading with <code>detail</code> beneath and scrolls it. Raise a finding here only when a caller departs from the join-everything pattern.</li>
+      <li><code>[repo]</code> Only the main/preload bundle is type-checked in CI. Renderer <code>.vue</code> and renderer-only <code>.ts</code> files are not, so a type error there fails nothing, and <code>pages/Containers.vue</code> is plain JavaScript whose JSDoc is consumed by editors alone. Calibrate type-correctness findings in renderer code accordingly, and check whether a JSDoc <code>@import</code> actually resolves before crediting the annotations that depend on it.</li>
+      <li><code>[repo]</code> <code>src/go/i18n-report</code>&#39;s <code>checkICUStructure</code> requires every locale to have exactly the ICU plural branches <code>en-us</code> has, including languages with no singular/plural distinction, where both branches are necessarily identical. <code>check --locale=all</code> runs <code>validate</code>, so collapsing such a branch turns the CI gate red. Identical branches with an <code>@reason</code> above them are the intended shape, not duplication to flag.</li>
+      <li><code>[repo]</code> Running jest from a scratch worktree outside the repo needs both <code>node_modules</code> and <code>resources/darwin/bin/rdctl</code> linked from the main checkout; without the latter, 26 suites fail at load with &quot;attempting to load the paths module from a undefined process&quot;. With both linked, exactly two suites (<code>utils/__tests__/paths.spec.ts</code>, <code>integrations/__tests__/unixIntegrationManager.spec.ts</code>, 17 tests) fail environmentally and pass in a real checkout. Treat those two as expected noise and anything else as real.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+!function(e){var t="\\b(?:BASH|BASHOPTS|BASH_ALIASES|BASH_ARGC|BASH_ARGV|BASH_CMDS|BASH_COMPLETION_COMPAT_DIR|BASH_LINENO|BASH_REMATCH|BASH_SOURCE|BASH_VERSINFO|BASH_VERSION|COLORTERM|COLUMNS|COMP_WORDBREAKS|DBUS_SESSION_BUS_ADDRESS|DEFAULTS_PATH|DESKTOP_SESSION|DIRSTACK|DISPLAY|EUID|GDMSESSION|GDM_LANG|GNOME_KEYRING_CONTROL|GNOME_KEYRING_PID|GPG_AGENT_INFO|GROUPS|HISTCONTROL|HISTFILE|HISTFILESIZE|HISTSIZE|HOME|HOSTNAME|HOSTTYPE|IFS|INSTANCE|JOB|LANG|LANGUAGE|LC_ADDRESS|LC_ALL|LC_IDENTIFICATION|LC_MEASUREMENT|LC_MONETARY|LC_NAME|LC_NUMERIC|LC_PAPER|LC_TELEPHONE|LC_TIME|LESSCLOSE|LESSOPEN|LINES|LOGNAME|LS_COLORS|MACHTYPE|MAILCHECK|MANDATORY_PATH|NO_AT_BRIDGE|OLDPWD|OPTERR|OPTIND|ORBIT_SOCKETDIR|OSTYPE|PAPERSIZE|PATH|PIPESTATUS|PPID|PS1|PS2|PS3|PS4|PWD|RANDOM|REPLY|SECONDS|SELINUX_INIT|SESSION|SESSIONTYPE|SESSION_MANAGER|SHELL|SHELLOPTS|SHLVL|SSH_AUTH_SOCK|TERM|UID|UPSTART_EVENTS|UPSTART_INSTANCE|UPSTART_JOB|UPSTART_SESSION|USER|WINDOWID|XAUTHORITY|XDG_CONFIG_DIRS|XDG_CURRENT_DESKTOP|XDG_DATA_DIRS|XDG_GREETER_DATA_DIR|XDG_MENU_PREFIX|XDG_RUNTIME_DIR|XDG_SEAT|XDG_SEAT_PATH|XDG_SESSION_DESKTOP|XDG_SESSION_ID|XDG_SESSION_PATH|XDG_SESSION_TYPE|XDG_VTNR|XMODIFIERS)\\b",a={pattern:/(^(["']?)\w+\2)[ \t]+\S.*/,lookbehind:!0,alias:"punctuation",inside:null},n={bash:a,environment:{pattern:RegExp("\\$"+t),alias:"constant"},variable:[{pattern:/\$?\(\([\s\S]+?\)\)/,greedy:!0,inside:{variable:[{pattern:/(^\$\(\([\s\S]+)\)\)/,lookbehind:!0},/^\$\(\(/],number:/\b0x[\dA-Fa-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:[Ee]-?\d+)?/,operator:/--|\+\+|\*\*=?|<<=?|>>=?|&&|\|\||[=!+\-*/%<>^&|]=?|[?~:]/,punctuation:/\(\(?|\)\)?|,|;/}},{pattern:/\$\((?:\([^)]+\)|[^()])+\)|`[^`]+`/,greedy:!0,inside:{variable:/^\$\(|^`|\)$|`$/}},{pattern:/\$\{[^}]+\}/,greedy:!0,inside:{operator:/:[-=?+]?|[!\/]|##?|%%?|\^\^?|,,?/,punctuation:/[\[\]]/,environment:{pattern:RegExp("(\\{)"+t),lookbehind:!0,alias:"constant"}}},/\$(?:\w+|[#?*!@$])/],entity:/\\(?:[abceEfnrtv\\"]|O?[0-7]{1,3}|U[0-9a-fA-F]{8}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{1,2})/};e.languages.bash={shebang:{pattern:/^#!\s*\/.*/,alias:"important"},comment:{pattern:/(^|[^"{\\$])#.*/,lookbehind:!0},"function-name":[{pattern:/(\bfunction\s+)[\w-]+(?=(?:\s*\(?:\s*\))?\s*\{)/,lookbehind:!0,alias:"function"},{pattern:/\b[\w-]+(?=\s*\(\s*\)\s*\{)/,alias:"function"}],"for-or-select":{pattern:/(\b(?:for|select)\s+)\w+(?=\s+in\s)/,alias:"variable",lookbehind:!0},"assign-left":{pattern:/(^|[\s;|&]|[<>]\()\w+(?:\.\w+)*(?=\+?=)/,inside:{environment:{pattern:RegExp("(^|[\\s;|&]|[<>]\\()"+t),lookbehind:!0,alias:"constant"}},alias:"variable",lookbehind:!0},parameter:{pattern:/(^|\s)-{1,2}(?:\w+:[+-]?)?\w+(?:\.\w+)*(?=[=\s]|$)/,alias:"variable",lookbehind:!0},string:[{pattern:/((?:^|[^<])<<-?\s*)(\w+)\s[\s\S]*?(?:\r?\n|\r)\2/,lookbehind:!0,greedy:!0,inside:n},{pattern:/((?:^|[^<])<<-?\s*)(["'])(\w+)\2\s[\s\S]*?(?:\r?\n|\r)\3/,lookbehind:!0,greedy:!0,inside:{bash:a}},{pattern:/(^|[^\\](?:\\\\)*)"(?:\\[\s\S]|\$\([^)]+\)|\$(?!\()|`[^`]+`|[^"\\`$])*"/,lookbehind:!0,greedy:!0,inside:n},{pattern:/(^|[^$\\])'[^']*'/,lookbehind:!0,greedy:!0},{pattern:/\$'(?:[^'\\]|\\[\s\S])*'/,greedy:!0,inside:{entity:n.entity}}],environment:{pattern:RegExp("\\$?"+t),alias:"constant"},variable:n.variable,function:{pattern:/(^|[\s;|&]|[<>]\()(?:add|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|bzip2|cal|cargo|cat|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|column|comm|composer|cp|cron|crontab|csplit|curl|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|docker|docker-compose|du|egrep|eject|env|ethtool|expand|expect|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|head|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|java|jobs|join|kill|killall|less|link|ln|locate|logname|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|node|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|podman|podman-compose|popd|pr|printcap|printenv|ps|pushd|pv|quota|quotacheck|quotactl|ram|rar|rcp|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|sh|shellcheck|shuf|shutdown|sleep|slocate|sort|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|sysctl|tac|tail|tar|tee|time|timeout|top|touch|tr|traceroute|tsort|tty|umount|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|v|vcpkg|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zenity|zip|zsh|zypper)(?=$|[)\s;|&])/,lookbehind:!0},keyword:{pattern:/(^|[\s;|&]|[<>]\()(?:case|do|done|elif|else|esac|fi|for|function|if|in|select|then|until|while)(?=$|[)\s;|&])/,lookbehind:!0},builtin:{pattern:/(^|[\s;|&]|[<>]\()(?:\.|:|alias|bind|break|builtin|caller|cd|command|continue|declare|echo|enable|eval|exec|exit|export|getopts|hash|help|let|local|logout|mapfile|printf|pwd|read|readarray|readonly|return|set|shift|shopt|source|test|times|trap|type|typeset|ulimit|umask|unalias|unset)(?=$|[)\s;|&])/,lookbehind:!0,alias:"class-name"},boolean:{pattern:/(^|[\s;|&]|[<>]\()(?:false|true)(?=$|[)\s;|&])/,lookbehind:!0},"file-descriptor":{pattern:/\B&\d\b/,alias:"important"},operator:{pattern:/\d?<>|>\||\+=|=[=~]?|!=?|<<[<-]?|[&\d]?>>|\d[<>]&?|[<>][&=]?|&[>&]?|\|[&|]?/,inside:{"file-descriptor":{pattern:/^\d/,alias:"important"}}},punctuation:/\$?\(\(?|\)\)?|\.\.|[{}[\];\\]/,number:{pattern:/(^|\s)(?:[1-9]\d*|0)(?:[.,]\d+)?\b/,lookbehind:!0}},a.inside=e.languages.bash;for(var s=["comment","function-name","for-or-select","assign-left","parameter","string","environment","function","keyword","builtin","boolean","file-descriptor","operator","punctuation","number"],o=n.variable[1].inside,i=0;i<s.length;i++)o[s[i]]=e.languages.bash[s[i]];e.languages.sh=e.languages.bash,e.languages.shell=e.languages.bash}(Prism);
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){var n=/[*&][^\s[\]{},]+/,r=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,t="(?:"+r.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+r.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,(function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"})),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var r="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\\]|\\}|(?:[\r\n]\\s*)?#))".replace(/<<prop>>/g,(function(){return t})).replace(/<<value>>/g,(function(){return e}));return RegExp(r,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)\\S[^\r\n]*(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,(function(){return t}))),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,(function(){return t})).replace(/<<key>>/g,(function(){return"(?:"+a+"|"+d+")"}))),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?(?:[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?))?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("false|true","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:r,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
