@@ -240,6 +240,7 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
 
     <div class="card card-neutral">
     <p>Both delete surfaces now route through an Electron confirmation that counts and names its targets, and the single-row path is normalised to a list of one so <code>execCommand</code> could drop its shape check. Every dispatch path traced (row menu, one-row selection, multi-row bulk) reaches the dialog exactly once. The bulk path has no test, and it is the one case the PR was written to make safe. Two prose artifacts also assert reasons their own content rules out.</p>
+    <p>&gt; <strong>This review has been addressed.</strong> The line numbers and quoted code below &gt; describe the tree at the Review SHA. Fourteen commits now precede the branch &gt; tip, so cited code has moved or changed. Each finding ends with what happened &gt; to it.</p>
     </div>
     <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
@@ -379,6 +380,7 @@ index b9503332f..b67ae74c7 100644
        const row = rowFor(container(&#39;spared&#39;, &#39;exited&#39;, &#39;Exited&#39;),</code></pre>
       </details>
     <p>The volumes e2e bulk case deserves the same treatment: cancel first, assert the dialog named all three volumes, then confirm.</p>
+    <p><strong>Resolution:</strong> Test written. Jest now drives the bulk branch on both pages, and the volumes e2e cancels, asserts all three names, then confirms (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/3577eb94c"><code>3577eb94c</code></a>). A second case pins that a confirmed bulk delete passes the whole selection, and <code>Volumes.spec.ts</code> is new.</p>
     </div>
     <div class="card card-important" data-file="pkg/rancher-desktop/assets/translations/it.yaml">
       <div class="finding-title" id="I2">
@@ -413,6 +415,7 @@ index b9503332f..b67ae74c7 100644
         # @source Info</code></pre>
     <p>Unproven: a claim about Italian grammar, not program behaviour, so no in-process test decides it.</p>
     <p>Fix: state what was actually decided (Italian dialog titles take the nominal <code>Conferma di …</code>, and the imperative was not adopted) and drop the &quot;both the noun and the imperative&quot; claim. Apply to all four copies.</p>
+    <p><strong>Resolution:</strong> Fixed. All four notes now key on the English <code>Confirm X</code> source instead of the ambiguity claim (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/524e564c4"><code>524e564c4</code></a>).</p>
     </div>
     <div class="card card-important" data-file="">
       <div class="finding-title" id="I3">
@@ -454,6 +457,7 @@ The other five keep their existing wording, because an English gerund and an Eng
 +    # @source Confirm image deletion</code></pre>
       </details>
     <p>Fix: name the Italian exception in the body (it keeps its wording and gains a <code>@reason</code> recording why), or move the two <code>@reason</code> lines to the commit that adds the rest of them.</p>
+    <p><strong>Resolution:</strong> Fixed. The body now says four locales change only their <code>@source</code> snapshots and names Italian as the exception (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/29e6cd552"><code>29e6cd552</code></a>, reworded in place).</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -500,6 +504,7 @@ function _execute(resources, action, args, opts = {}, ctx) {
   if (action.invoke) {
     const actionOpts = {</code></pre>
     <p>Fix: <code>const targets = args?.length ? args : [volume];</code></p>
+    <p><strong>Resolution:</strong> Fixed (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/852a2ab20"><code>852a2ab20</code></a>), and pinned by a new volumes unit case.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/utils/accessKeys.ts">
       <div class="finding-title" id="S2">
@@ -516,6 +521,7 @@ export function removeParenthesizedAccessKey(label: string): string {
 }</code></pre>
     <p><code>ja.yaml</code> uses full-width <code>（</code> 33 times and <code>zh-hans.yaml</code> 19 times (counted in the worktree), and the new <code>削除(&amp;D)</code> values are the only half-width parentheses nearby. Half-width is the right choice for a mnemonic, but nothing records that. A typography-consistency pass that &quot;corrects&quot; them to <code>削除（&amp;D）</code> leaves macOS showing <code>削除（D）</code>, because the regex stops matching and Electron removes only the <code>&amp;</code>.</p>
     <p>Fix: accept both, <code>/[(（]&amp;[^&amp;][)）]/g</code>; add <code>[&#39;削除（&amp;D）&#39;, &#39;削除&#39;]</code> to <code>accessKeys.spec.ts</code>, and say in the doc comment that translations must write the half-width form.</p>
+    <p><strong>Resolution:</strong> Fixed. The regex takes both parenthesis widths and the spec covers the full-width form (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/29b8ffb44"><code>29b8ffb44</code></a>).</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/en-us.yaml">
       <div class="finding-title" id="S3">
@@ -535,6 +541,7 @@ export function removeParenthesizedAccessKey(label: string): string {
 volumes:</code></pre>
     <p><code>assets/translations/README.md</code> prescribes source-string and YAML-comment conventions but says nothing about ampersands, where the access key goes, or the CJK <code>(&amp;D)</code> form. <code>i18n-report</code> has no <code>&amp;</code> handling either, so a locale whose Delete button loses its mnemonic passes every check.</p>
     <p>Fix: add a short README subsection (<code>&amp;</code> marks the access key in dialog button labels, CJK writes <code>(&amp;D)</code> after the label, Cancel has none) and an <code>@meaning</code> comment on both <code>confirm</code> keys.</p>
+    <p><strong>Resolution:</strong> Fixed. The README gained an access-key section and both en-us keys an <code>@meaning</code> comment (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/bf7a34f5d"><code>bf7a34f5d</code></a>).</p>
     </div>
     <div class="card card-suggestion" data-file="e2e/volumes.e2e.spec.ts">
       <div class="finding-title" id="S4">
@@ -558,6 +565,7 @@ async function answerDeleteConfirmation(electronApp: ElectronApplication, respon
 function lastDeleteConfirmation(electronApp: ElectronApplication): Promise&lt;any&gt; {</code></pre>
     <p>The name says delete confirmation; the stub answers every <code>dialog.showMessageBox</code> in the main process for the rest of the run, including the two-argument <code>(window, options)</code> overload used elsewhere, which would record a <code>BrowserWindow</code> as <code>options</code>. The spec disables Kubernetes and allowed-images so nothing else opens a box today; the exposure is a later test in the same file.</p>
     <p>Fix: delegate to the original unless <code>options.title</code> is one of the two confirmation titles, or rename to <code>answerMessageBox</code> / <code>lastMessageBox</code> so the scope is visible at the call site.</p>
+    <p><strong>Resolution:</strong> Fixed by renaming the helpers to <code>answerMessageBox</code> and <code>lastMessageBox</code>, so the scope is visible at every call site (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/401306a95"><code>401306a95</code></a>).</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
       <div class="finding-title" id="S5">
@@ -589,6 +597,7 @@ export interface Container {
   state:         MobyContainer[&#39;State&#39;] | NerdctlContainer[&#39;State&#39;];
   started:       Date | undefined;</code></pre>
     <p>Fix: <code>@import { Container } from &#39;@pkg/store/container-engine&#39;</code></p>
+    <p><strong>Resolution:</strong> Fixed (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/035202f37"><code>035202f37</code></a>).</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/components/Images.vue">
       <div class="finding-title" id="S6">
@@ -635,6 +644,7 @@ export interface Container {
         }),
         defaultId:           cancelId,</code></pre>
     <p>Fix: leave this to a follow-up. Moving the images dialog over touches a fourth surface and its own translations, so this finding just records the inconsistency.</p>
+    <p><strong>Resolution:</strong> Declined. Moving the images dialog over touches a fourth surface and its own translations; recorded as follow-up in the project&#39;s pending-work.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
       <div class="finding-title" id="S7">
@@ -654,6 +664,7 @@ export interface Container {
         },</code></pre>
     <p>The container table&#39;s own <code>containers.manage.table.action</code> group has <code>stop</code>, <code>restart</code> and <code>start</code> but no <code>delete</code>, so this row reaches into the images section. It resolves to &quot;Delete&quot; in every locale today, but the two strings are free to diverge. Pre-existing: identical at the merge-base, and untouched by this PR.</p>
     <p>Fix: add <code>containers.manage.table.action.delete</code> (or reuse a generic key) across the nine locale files.</p>
+    <p><strong>Resolution:</strong> Declined. Adding a key means nine locale files plus the i18n-report gate for a string identical in all of them today; recorded as follow-up in the project&#39;s pending-work.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
