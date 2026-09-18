@@ -242,6 +242,14 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <p>Round 2&#39;s two fixes hold. The CI typecheck gate that was red now passes on the merged head, and mutating any option the new volumes test pins turns that test red. No code defect survives this round. One commit body still describes the CJK locale files as the opposite of what they contain, and the new volumes spec omits a mock reset its containers twin has, so a later test there could pass on an earlier test&#39;s dialog.</p>
     </div>
     <hr>
+    <h2 id="status-addressed-2026-09-18">Status: addressed 2026-09-18 <a href="#status-addressed-2026-09-18" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The findings below were worked through after this review ran, so the cited code has moved. Five commits sit on top of the reviewed head: <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a8047977a"><code>a8047977a</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/630e7f7cf"><code>630e7f7cf</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2817c654f"><code>2817c654f</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d064f03ce"><code>d064f03ce</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66e12c49f"><code>66e12c49f</code></a>. Each finding carries its outcome at the end of its own section.</p>
+    <p>I1 was then fixed by rewording its commit in place, which rewrote every SHA from <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/29b8ffb44"><code>29b8ffb44</code></a> onward. The reviewed head <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c9c737751"><code>c9c737751</code></a> is now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/db951510a"><code>db951510a</code></a> with an identical tree, and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/29b8ffb44"><code>29b8ffb44</code></a> is now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/05a1b422f"><code>05a1b422f</code></a>. The <strong>Review SHA</strong> in the header is left as it was, since it records what the agents actually read.</p>
+    <p>Two of this report&#39;s own claims did not survive being acted on. S1&#39;s proposed fix is a no-op, and S2&#39;s premise that an option had drifted is false. Both are recorded in place below.</p>
+    </div>
+    <hr>
     <h2 id="delta-since-round-2">Delta Since Round 2 <a href="#delta-since-round-2" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
@@ -302,6 +310,7 @@ zh-hans   merge-base &quot;(&amp;&quot;: 25   HEAD &quot;(&amp;&quot;: 27   HEAD
 nothing. Use half-width parentheses, to match the other locales.</code></pre>
       </details>
     <p>Fix: reuse <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d3b379399"><code>d3b379399</code></a>&#39;s wording, which states the convention correctly, and add that the full-width alternation guards a future typography pass. <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/README.md#L92"><code>README.md:92</code></a>&#39;s &quot;to match the other locales&quot; points at locales that carry no parenthesized access key at all.</p>
+    <p><strong>Resolution:</strong> Fixed. The README half is <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a8047977a"><code>a8047977a</code></a>, which also drops the empty &quot;to match the other locales&quot; rationale. The commit body was then reworded in place: <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/29b8ffb44"><code>29b8ffb44</code></a> is now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/05a1b422f"><code>05a1b422f</code></a>, whose body states that every access key in the three locales uses half-width parentheses and that no locale file pairs a full-width parenthesis with an <code>&amp;</code>. The rebase changed no file content, verified by an identical tree.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -375,6 +384,7 @@ export const moreLabel = alternateLabel;
                   v-if=&quot;act.icon&quot;</code></pre>
     <p>My reproducer drives <code>applyTableAction</code> with two selected rows: a plain click produces one dialog naming both, and a modifier click produces one dialog per row.</p>
     <p>Fix: give the delete action an <code>altAction</code> equal to its <code>bulkAction</code>, so the modifier cannot split a confirmed operation.</p>
+    <p><strong>Resolution:</strong> Declined. The proposed fix does not work: <code>altAction</code> is read inside the per-row loop at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/pkg/rancher-desktop/components/SortableTable/selection.js#L614"><code>selection.js:614</code></a>, so setting it equal to <code>bulkAction</code> only changes which method each row calls and still yields one dialog per row. Collapsing the dialogs means changing <code>applyTableAction</code>&#39;s shared alternate-modifier dispatch, which every table in the app uses. Do not re-propose the <code>altAction</code> fix.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Volumes.vue">
       <div class="finding-title" id="S2">
@@ -409,6 +419,8 @@ export const moreLabel = alternateLabel;
         type:      &#39;question&#39;,
         title:     this.t(&#39;containers.confirmDelete.title&#39;),</code></pre>
     <p>Fix: a shared helper taking the key prefix and the names, called as <code>confirmDelete(&#39;volumes&#39;, volumes.map(v =&gt; v.Name))</code>. That also gives <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/pkg/rancher-desktop/components/Images.vue#L317"><code>components/Images.vue:317</code></a> somewhere to land when its dialog moves over.</p>
+    <p><strong>Resolution:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/630e7f7cf"><code>630e7f7cf</code></a>, which adds <code>pkg/rancher-desktop/utils/deleteConfirmation.ts</code> and leaves each page a wrapper resolving its own translation keys. The helper takes resolved strings rather than the key prefix this finding proposed: <code>scan.go</code>&#39;s key regexes need a literal prefix before any <code>${}</code>, so a prefix-built key would vanish from <code>i18n-report unused</code>.</p>
+    <p>This finding&#39;s premise is wrong, and the next round should not repeat it. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c9c737751"><code>c9c737751</code></a>, now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/db951510a"><code>db951510a</code></a>, is test-only, 16 insertions in <code>Volumes.spec.ts</code>, and the page-independent options (<code>type</code>, <code>defaultId</code>, <code>cancelId</code>, <code>normalizeAccessKeys</code>) are identical on both pages at all sixteen commits. What differed was test coverage, not the options.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/Containers.vue">
       <div class="finding-title" id="S3">
@@ -429,6 +441,7 @@ export const moreLabel = alternateLabel;
         console.info(`Executing command ${ command } on container ${ ids }`);</code></pre>
     <p>Rated Suggestion because the failure is loud and immediate rather than silent.</p>
     <p>Fix: add one <code>it</code> per action inside <code>describe(&#39;deletion&#39;)</code>, asserting <code>execCommand</code> was called with <code>(&#39;stop&#39;, [item])</code>. The helper <code>rowFor</code> is declared inside that block, so a test placed outside it fails with <code>ReferenceError: rowFor is not defined</code>.</p>
+    <p><strong>Resolution:</strong> Declined. The failure is loud and immediate, which the test-gap rubric rates optional.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/__tests__/Volumes.spec.ts">
       <div class="finding-title" id="S4">
@@ -484,6 +497,7 @@ with the containers spec beforeEach:       Tests:       1 failed, 4 passed, 5 to
 +  });
 +
    function volume(name: string): any {</code></pre>
+    <p><strong>Resolution:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/2817c654f"><code>2817c654f</code></a>. The reproducer above now fails with the <code>beforeEach</code> in place, where it passed as shipped.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/pages/__tests__/Volumes.spec.ts">
       <div class="finding-title" id="S5">
@@ -504,6 +518,7 @@ with the containers spec beforeEach:       Tests:       1 failed, 4 passed, 5 to
       timeout: 20_000,
     });</code></pre>
     <p>Fix: assert <code>response: 0</code> resolves to <code>true</code>, alongside the existing cancel case.</p>
+    <p><strong>Resolution:</strong> Test written in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d064f03ce"><code>d064f03ce</code></a>. Mutating the accept path to <code>return false</code>, now in the shared helper, turns the volumes spec red; it stayed green before.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/window/index.ts">
       <div class="finding-title" id="S6">
@@ -573,6 +588,7 @@ export async function showMessageBox(options: Electron.MessageBoxOptions, couldB
     },
     async execCommand(args: string[], volumes: Volume[]) {</code></pre>
     <p>Fix: name the unwrapped callers in the <code>showMessageBox</code> comment, so the next author does not assume the strip is universal. No code change needed.</p>
+    <p><strong>Resolution:</strong> Commented in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/66e12c49f"><code>66e12c49f</code></a>, naming <code>imageEvents.ts</code>, <code>background.ts</code> and <code>window/preferences.ts</code> at the strip. Routing those through the wrapper would be scope growth past this PR.</p>
     </div>
     <div class="card card-suggestion" data-file="pkg/rancher-desktop/assets/translations/README.md">
       <div class="finding-title" id="S7">
@@ -580,6 +596,7 @@ export async function showMessageBox(options: Electron.MessageBoxOptions, couldB
       </div>
     <p>The section tells translators to append <code>(&amp;D)</code> where a label has no Latin letter, and says Rancher Desktop strips the suffix on macOS. That strip reaches only the two dialogs above. The same parenthesized form is already in force for 77 <code>mainMenu.*</code> labels across <code>ja</code>, <code>ko</code> and <code>zh-hans</code>, which Electron handles itself and which never reach <code>removeParenthesizedAccessKey</code>. A translator editing those labels reads a claim that does not hold for them.</p>
     <p>Fix: add a clause naming the menu keys as the existing users of the form, handled by Electron rather than by the strip.</p>
+    <p><strong>Resolution:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a8047977a"><code>a8047977a</code></a>, alongside I1.</p>
     </div>
     <div class="card card-suggestion" data-file="e2e/containers.e2e.spec.ts">
       <div class="finding-title" id="S8">
@@ -587,6 +604,7 @@ export async function showMessageBox(options: Electron.MessageBoxOptions, couldB
       </div>
     <p><code>e2e/volumes.e2e.spec.ts</code> gained cancel and confirm coverage for the dialog. <code>containers.e2e.spec.ts</code> has no delete test at all, so the container confirmation, which is the path the PR&#39;s title names first, is exercised only by unit tests. The gap predates this PR, which is why it is a Suggestion rather than a required gap.</p>
     <p>Fix: reuse <code>answerMessageBox</code> in the containers spec and assert that cancelling leaves the row present.</p>
+    <p><strong>Resolution:</strong> Declined. The gap predates this PR, and closing it starts delete coverage on a spec that has none, on the slowest job in CI.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
@@ -628,7 +646,7 @@ export async function showMessageBox(options: Electron.MessageBoxOptions, couldB
     <ul>
       <li>Only <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/pkg/rancher-desktop/pages/Containers.vue#L326"><code>Containers.vue:326</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/pkg/rancher-desktop/pages/Volumes.vue#L264"><code>Volumes.vue:264</code></a> pass <code>normalizeAccessKeys</code>, so the section&#39;s claim that every other dialog shows its labels as written holds.</li>
       <li>The renderer&#39;s <code>show-message-box</code> really does reach the strip: <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/background.ts#L1061"><code>background.ts:1061</code></a> routes it through <code>window.showMessageBox</code>, which applies <code>removeParenthesizedAccessKey</code> under the darwin guard.</li>
-      <li>The rationale for leaving Cancel without an access key still rests on two clauses, and only the second holds. <code>generic.cancel</code> has 10 call sites outside tests and locale files. Only <code>en-us</code> renders it literally as &quot;Cancel&quot;; the other eight translate it, so the &quot;Windows uses its own standard Cancel button&quot; clause applies to none of them.</li>
+      <li>The rationale for leaving Cancel without an access key still rests on two clauses, and only the second holds. <code>generic.cancel</code> has 10 call sites outside tests and locale files. Only <code>en-us</code> renders it literally as &quot;Cancel&quot;; the other eight translate it, so the &quot;Windows uses its own standard Cancel button&quot; clause applies to none of them. <strong>Resolution:</strong> the clause is dropped in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a8047977a"><code>a8047977a</code></a>; the shared-key reason carries the point for all nine locales.</li>
     </ul>
     </div>
     <hr>
@@ -646,7 +664,7 @@ export async function showMessageBox(options: Electron.MessageBoxOptions, couldB
       <li><strong>No dialog has been opened on any platform.</strong> Confirmed again. The e2e replaces <code>dialog.showMessageBox</code> before the first delete, so Windows and Linux mnemonic behaviour rests on Electron&#39;s typings plus <code>accessKeys.spec.ts</code>. Windows is where the mnemonic does anything and stays unverified. The coincident <code>defaultId: 1, cancelId: 1</code> pairing is not new: <code>components/Images.vue</code> ships it today.</li>
       <li><strong>Stopping containers stays unconfirmed by design</strong> (@jandubois, PR comment). Still true: <code>confirmDelete</code> is called from <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/pkg/rancher-desktop/pages/Containers.vue#L255"><code>Containers.vue:255</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/pkg/rancher-desktop/pages/Volumes.vue#L163"><code>Volumes.vue:163</code></a> and nowhere else. The author flagged it for discussion rather than settling it.</li>
       <li><em></em><code>Delete 1 volume?</code> ships<em></em>, not <code>Delete one volume?</code> (@mook-as, self-declined). Unchanged, and <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c9c73775161407bbf3417fed1fb624d062538ea0/e2e/volumes.e2e.spec.ts#L129"><code>e2e/volumes.e2e.spec.ts:129</code></a> pins that exact string.</li>
-      <li><strong>The six threads asking to collapse identical ICU plural branches are not applicable as written.</strong> Re-verified this round by an agent that ran the collapse: <code>check --locale=zh-hans</code> exits 1 with <code>missing {count, plural, ...} construct</code>. <code>checkICUStructure</code> compares construct trees exactly, and its own comment records the strictness as deliberate. Only the reviewer can close those threads.</li>
+      <li><strong>The six threads asking to collapse identical ICU plural branches are not applicable as written.</strong> Re-verified this round by an agent that ran the collapse: <code>check --locale=zh-hans</code> exits 1 with <code>missing {count, plural, ...} construct</code>. <code>checkICUStructure</code> compares construct trees exactly, and its own comment records the strictness as deliberate. <strong>Resolution:</strong> Jan ruled that the plural constructs stay as written and that changing the tool belongs in a separate PR. Do not re-suggest collapsing them; the tool change is tracked in pending-work.</li>
       <li><em></em>The <code>detail</code> name list is uncapped.<em></em> Dropped in Round 1; <code>components/Images.vue</code> established the pattern and both new dialogs follow it.</li>
     </ul>
     <h3 id="declined-in-prior-rounds">Declined in prior rounds <a href="#declined-in-prior-rounds" class="pilcrow">&#182;</a></h3>
@@ -661,7 +679,7 @@ export async function showMessageBox(options: Electron.MessageBoxOptions, couldB
 
     <div class="card card-neutral">
     <ul>
-      <li><strong>Six reviewer threads asking to collapse an identical ICU plural pair</strong> (zh-hans x2, ko x2, ja x1, it x1) remain open and remain inapplicable as written. The author answered with <code>@reason</code> comments, which is the most the gate permits.</li>
+      <li><strong>Six reviewer threads asking to collapse an identical ICU plural pair</strong> (zh-hans x2, ko x2, ja x1, it x1) remain open on GitHub. The author answered with <code>@reason</code> comments, which is the most the gate permits, and has since ruled that the plural constructs stay and that a tool change is a separate PR. The threads need that reply posted before the reviewer can close them.</li>
       <li><em></em><code>Containers.spec.ts:96</code><em></em>, <a href="https://github.com/rancher-sandbox/rancher-desktop/pull/10957#discussion_r4018576577">r4018576577</a>: the suggested <code>Containers.computed?.rows.call(self)[0]</code> was not applied, and the line still reads <code>(Containers as any).computed.rows</code>. The thread&#39;s concern is resolved, since the merged-head typecheck exits 0. Applying the suggestion verbatim looks wrong anyway: <code>shims-vue.d.ts</code> types <code>computed</code> as <code>ComputedOptions | undefined</code>, and the object arm of the resulting union has no <code>.call</code>. Only the reviewer can close it.</li>
       <li>Addressed Round 1 and 2 threads: JSDoc param types, named button indexes on both pages, <code>normalizeAccessKeys</code>, the spec-helper access spelling, and the volumes method description.</li>
     </ul>
