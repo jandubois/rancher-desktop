@@ -235,3 +235,65 @@ func containsCall(calls []string, want string) bool {
 
 	return false
 }
+
+// tagged is a release whose tag is pushed and carries the version, so the
+// package-build step is the next one open.
+func tagged(build string) map[string]string {
+	answers := readyToTag(packageRunJSON("completed", "success"))
+	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
+	answers[runsQuery("v1.25.0")] = build
+
+	return answers
+}
+
+func TestPackageBuildIsDoneWhenTheTagsRunSucceeded(t *testing.T) {
+	tools := &fakeTools{output: tagged(packageRunJSON("completed", "success"))}
+	run := tagRun(t, tools, map[Version]string{testRelease: testHead})
+
+	if status := run.Status(context.Background(), packageBuild); status.State != Done {
+		t.Errorf("the package build was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestPackageBuildWaitsWhileTheRunIsGoing(t *testing.T) {
+	tools := &fakeTools{output: tagged(packageRunJSON("in_progress", ""))}
+	run := tagRun(t, tools, map[Version]string{testRelease: testHead})
+
+	if status := run.Status(context.Background(), packageBuild); status.State != Waiting {
+		t.Errorf("the package build was %s while it was running: %s", status.State, status.Detail)
+	}
+}
+
+func TestPackageBuildOffersARerunOfTheJobsThatFailed(t *testing.T) {
+	tools := &fakeTools{output: tagged(packageRunJSON("completed", "failure")), anyCommand: true}
+	run := tagRun(t, tools, map[Version]string{testRelease: testHead})
+
+	// The tag push is what starts the run, and nothing moves the tag, so a
+	// rerun is the only way on from a failure.
+	if status := run.Status(context.Background(), packageBuild); status.State != Available {
+		t.Fatalf("the package build was %s after a failure: %s", status.State, status.Detail)
+	}
+
+	if err := RunAction(context.Background(), packageBuild, run, strings.NewReader("y\n"), io.Discard); err != nil {
+		t.Fatal(err)
+	}
+
+	want := "gh run rerun 30474476005 --repo " + testRepo + " --failed"
+	if !containsCall(tools.calls, want) {
+		t.Errorf("the rerun action never ran %q; it ran %v", want, tools.calls)
+	}
+}
+
+func TestPackageBuildWaitsForTheTag(t *testing.T) {
+	tools := &fakeTools{output: readyToTag(packageRunJSON("completed", "success"))}
+	run := tagRun(t, tools, map[Version]string{})
+
+	status := run.Status(context.Background(), packageBuild)
+	if status.State != Blocked {
+		t.Fatalf("the package build was %s with no tag: %s", status.State, status.Detail)
+	}
+
+	if !strings.Contains(status.Detail, "step 9") {
+		t.Errorf("the detail does not say it waits for the tag: %s", status.Detail)
+	}
+}

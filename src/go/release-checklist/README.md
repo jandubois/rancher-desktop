@@ -4,7 +4,7 @@
 release is in progress, checks each step it ships against the system that
 would show it done, and prints one line per step with its state. It will
 replace the release checklist the team follows by hand; this version ships
-four of that checklist's steps.
+five of that checklist's steps.
 
 Run it from a clone of the repository:
 
@@ -115,12 +115,13 @@ perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
 would build on work that did not happen.
 
-Two of the steps below have automation. The version bump pushes a branch and
+Three of the steps below have automation. The version bump pushes a branch and
 opens a pull request against the release branch; that branch goes to your fork
 of the release repository, or to the release repository itself when you have no
 fork of it. The tag step pushes the release branch head to `refs/tags/vX.Y.Z`
 in the release repository, which starts the build every release asset comes
-from. Each step names the system it reaches.
+from. The package build step reruns the jobs of that build that failed. Each
+step names the system it reaches.
 
 ## Step reference
 
@@ -182,3 +183,17 @@ Tag the head of {branch}:
     git push <url of {repo}> <head of {branch}>:refs/tags/{tag}
 
 Name the release repository by URL. In most clones `origin` is your own fork, so a tag pushed there never reaches {repo}. The push starts the package workflow for the tag, and that run builds the assets the release ships. Nothing moves a tag once it is pushed, so a tag on the wrong commit costs the version: it has to be burned, and the release goes out as the next patch.
+
+### 10. Package build
+
+- **Applies to:** Every release.
+- **Done when:** The package workflow run for {tag} succeeded.
+- **Waits for:** gh can push to {repo}, and {tag} is pushed. Nothing starts this run by hand; the tag push does.
+- **Reaches:** GitHub repo.
+- **Runs:** Rerun the failed jobs of the package run for {tag}.
+
+Wait for the package run the tag push started, at
+
+    https://github.com/{repo}/actions/workflows/package.yaml
+
+Every release asset comes from that run. Rerun the jobs that failed if it does not pass.

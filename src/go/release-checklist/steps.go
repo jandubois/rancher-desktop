@@ -13,7 +13,7 @@ import (
 )
 
 // checklist is the release process, in the order a release runs it.
-var checklist = []*Step{releaseBranch, versionBump, draftRelease, tagRelease}
+var checklist = []*Step{releaseBranch, versionBump, draftRelease, tagRelease, packageBuild}
 
 // everyRelease is the applicability of a step that a minor and a patch both
 // run.
@@ -350,5 +350,73 @@ func planTag(_ context.Context, run *Run) ([]Operation, error) {
 	return []Operation{
 		command("", "git", "fetch", run.Repo.url, branch),
 		command("", "git", "push", run.Repo.url, head+":refs/tags/"+run.Release.Tag()),
+	}, nil
+}
+
+// packageBuild is step 10. The tag's package run builds and signs every asset
+// the release ships, so until it passes the steps that upload them have
+// nothing to upload.
+var packageBuild = &Step{
+	ID:    "10",
+	Title: "Package build",
+	Kinds: []Kind{Minor, Patch},
+	Needs: []*Resource{githubRepo},
+	Doc: Doc{
+		Applies: everyRelease,
+		Check:   "The package workflow run for {tag} succeeded.",
+		Precondition: "gh can push to {repo}, and {tag} is pushed. Nothing starts " +
+			"this run by hand; the tag push does.",
+		Instructions: "Wait for the package run the tag push started, at\n\n" +
+			"    https://github.com/{repo}/actions/workflows/package.yaml\n\n" +
+			"Every release asset comes from that run. Rerun the jobs that failed " +
+			"if it does not pass.",
+	},
+	Check: func(ctx context.Context, run *Run) (Answer, error) {
+		commit, tagged := run.Refs.Tags[run.Release.Version]
+		if !tagged {
+			return Answer{Detail: "no " + run.Release.Tag() + " to build"}, nil
+		}
+
+		return packageRun(ctx, run, run.Release.Tag(), commit)
+	},
+	Precondition: func(ctx context.Context, run *Run) (Answer, error) {
+		if ready := waitFor(ctx, run, tagRelease); !ready.OK {
+			return ready, nil
+		}
+
+		answer, err := packageRun(ctx, run, run.Release.Tag(), run.Refs.Tags[run.Release.Version])
+		if err != nil {
+			return Answer{}, err
+		}
+
+		if answer.Waiting {
+			return answer, nil
+		}
+
+		// The run is over and the check has already found that it did not
+		// pass, so rerunning the jobs that failed is what is left.
+		return Answer{OK: true}, nil
+	},
+	Action: &Action{
+		Title: "Rerun the failed jobs of the package run for {tag}",
+		Plan:  planRerunPackage,
+	},
+}
+
+// planRerunPackage reruns only the jobs that failed, so the artifacts the run
+// has already built stay where the release steps reach them.
+func planRerunPackage(ctx context.Context, run *Run) ([]Operation, error) {
+	build, err := run.Repo.LatestRun(ctx, packageWorkflow,
+		run.Release.Tag(), run.Refs.Tags[run.Release.Version])
+	if err != nil {
+		return nil, err
+	}
+
+	if build == nil {
+		return nil, fmt.Errorf("%s has no package run to rerun", run.Release.Tag())
+	}
+
+	return []Operation{
+		command("", "gh", "run", "rerun", build.ID, "--repo", run.Repo.repo, "--failed"),
 	}, nil
 }
