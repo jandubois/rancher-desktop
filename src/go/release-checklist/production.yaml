@@ -1,0 +1,15 @@
+# The resources a real Rancher Desktop release touches. This profile is built
+# into the binary, so plain `yarn release` drives the real release.
+name: production
+github:
+  repo: rancher-sandbox/rancher-desktop
+  docsRepo: rancher-sandbox/docs.rancherdesktop.io
+docs:
+  site: https://docs.rancherdesktop.io
+obs:
+  devProject: isv:Rancher:dev
+  stableProject: isv:Rancher:stable
+screenshots:
+  bucket: suse-rancher-media
+responder:
+  url: https://desktop.version.rancher.io/v1/checkupgrade

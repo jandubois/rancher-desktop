@@ -11,6 +11,7 @@ use (
 	./src/go/nerdctl-stub/generate
 	./src/go/networking
 	./src/go/rdctl
+	./src/go/release-checklist
 	./src/go/spin-stub
 	./src/go/startup-profile
 	./src/go/wsl-helper
