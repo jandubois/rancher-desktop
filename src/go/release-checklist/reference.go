@@ -36,10 +36,11 @@ func stepReference(steps []*Step) string {
 
 // runs says what the step's automation does. The tool shows every command it
 // would run, filled in with this release's values, before it runs any of
-// them.
+// them. The wording suits both places it appears: under the instructions in
+// the README, and in the dashboard pane that keeps them behind a key.
 func runs(step *Step) string {
 	if step.Action == nil {
-		return "nothing. Follow the instructions below."
+		return "nothing. Follow the instructions."
 	}
 
 	return step.Action.Title + "."

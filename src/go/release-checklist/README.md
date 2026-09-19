@@ -2,14 +2,32 @@
 
 `yarn release` drives a Rancher Desktop 1.x release. It works out which
 release is in progress, checks each step it ships against the system that
-would show it done, and prints one line per step with its state. It will
+would show it done, and shows one line per step with its state. It will
 replace the release checklist the team follows by hand; this version ships
 five of that checklist's steps.
 
 Run it from a clone of the repository:
 
-    yarn release            print the checklist
+    yarn release            open the dashboard
+    yarn release --status   print the checklist and exit
     yarn release --run 4    run one step's automation, by its number
+
+## The dashboard
+
+`yarn release` opens the checklist full screen: the release it found at the
+top, every step and its state below it, and a pane describing the step under
+the cursor.
+
+| Key | What it does |
+| --- | --- |
+| `↑` `↓` | Move to another step. `k` and `j` work too. |
+| `enter` | Run the step's automation. The dashboard gives up the terminal, so the action can show its commands and ask before it runs them. |
+| `i` | Read the step's instructions, filled in with this release's values. |
+| `r` | Read every check again. |
+| `q` | Quit. |
+
+`--status` prints the same checklist as plain text, for a terminal the
+dashboard cannot draw in and for pasting into a report.
 
 ## Which release it drives
 
@@ -138,7 +156,7 @@ checklist, so the steps below are not consecutive.
 - **Done when:** {repo} has the branch {branch}.
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
-- **Runs:** nothing. Follow the instructions below.
+- **Runs:** nothing. Follow the instructions.
 
 Push the head of main to the new branch:
 
@@ -162,7 +180,7 @@ Set the `version` field of package.json on {branch} to {version}, commit it with
 - **Done when:** A release named {tag} exists in {repo}, as a draft or published.
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
-- **Runs:** nothing. Follow the instructions below.
+- **Runs:** nothing. Follow the instructions.
 
 Create the draft, with no --target:
 

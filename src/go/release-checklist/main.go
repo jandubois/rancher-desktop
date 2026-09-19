@@ -3,11 +3,11 @@
 // SPDX-FileCopyrightText: The Rancher Desktop Authors
 
 // release-checklist drives a Rancher Desktop release. It finds the release in
-// progress, checks each step it ships, and prints the checklist.
+// progress, checks each step it ships, and shows the checklist.
 //
 // Usage:
 //
-//	yarn release [--profile <name>]
+//	yarn release [--profile <name>] [--status] [--run <step>]
 //
 // See README.md for what it checks and what it changes.
 package main
@@ -31,6 +31,8 @@ func run(ctx context.Context) error {
 		"the profile naming the resources to release to")
 	stepID := flag.String("run", "",
 		"run one step's automation, by its number in the checklist")
+	text := flag.Bool("status", false,
+		"print the checklist and exit, instead of opening the dashboard")
 	flag.Parse()
 
 	profile, err := LoadProfile(*profileName)
@@ -38,18 +40,38 @@ func run(ctx context.Context) error {
 		return err
 	}
 
+	switch {
+	case *stepID != "":
+		return runStep(ctx, profile, *stepID)
+	case *text:
+		return printChecklist(ctx, profile)
+	default:
+		return showDashboard(ctx, profile)
+	}
+}
+
+// runStep runs one step's automation without opening the dashboard, which is
+// how a step is driven from a script.
+func runStep(ctx context.Context, profile *Profile, stepID string) error {
+	step, found := findStep(stepID)
+	if !found {
+		return fmt.Errorf("the checklist has no step %s", stepID)
+	}
+
 	run, err := refresh(ctx, profile)
 	if err != nil {
 		return err
 	}
 
-	if *stepID != "" {
-		step, found := findStep(*stepID)
-		if !found {
-			return fmt.Errorf("the checklist has no step %s", *stepID)
-		}
+	return RunAction(ctx, step, run, os.Stdin, os.Stdout)
+}
 
-		return RunAction(ctx, step, run, os.Stdin, os.Stdout)
+// printChecklist writes the whole checklist as plain text, for a terminal the
+// dashboard cannot draw in and for pasting into a report.
+func printChecklist(ctx context.Context, profile *Profile) error {
+	run, err := refresh(ctx, profile)
+	if err != nil {
+		return err
 	}
 
 	printStatus(ctx, os.Stdout, run)
