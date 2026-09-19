@@ -6,11 +6,25 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
+	"path/filepath"
 )
 
 // checklist is the release process, in the order a release runs it.
-var checklist = []*Step{releaseBranch, draftRelease}
+var checklist = []*Step{releaseBranch, versionBump, draftRelease}
+
+// findStep is the step with a checklist number.
+func findStep(id string) (*Step, bool) {
+	for _, step := range checklist {
+		if step.ID == id {
+			return step, true
+		}
+	}
+
+	return nil, false
+}
 
 // releaseBranch is step 1. Every release of a line is cut from this branch,
 // and creating it starts the package workflow, whose Linux zip the OBS dev
@@ -38,6 +52,135 @@ var releaseBranch = &Step{
 
 		return Answer{Detail: "no " + line.Branch() + " branch"}, nil
 	},
+}
+
+// versionBump is step 4. The release branch carries the version it ships, and
+// when a release has no other commit of its own, the bump is the one commit
+// the tag can point at that is not already in main.
+var versionBump = &Step{
+	ID:    "4",
+	Title: "Version bump",
+	Kinds: []Kind{Minor, Patch},
+	Needs: []*Resource{githubRepo},
+	Doc: Doc{
+		Applies: "Every release.",
+		Check:   "package.json on {branch} says {version}.",
+		Precondition: "gh can push to {repo}, and the release branch step is " +
+			"done or does not apply.",
+		Instructions: "Set the `version` field of package.json on {branch} to " +
+			"{version}, commit it with a sign-off, push the commit to a branch " +
+			"of your own, and open a pull request against {branch} titled " +
+			"\"Bump version to {version}\". A reviewer approves and merges it.",
+	},
+	Check: func(ctx context.Context, run *Run) (Answer, error) {
+		branch := run.Release.Branch()
+
+		content, err := run.Repo.FileOnBranch(ctx, branch, "package.json")
+		if errors.Is(err, errNotFound) {
+			return Answer{Detail: branch + " has no package.json"}, nil
+		}
+
+		if err != nil {
+			return Answer{}, err
+		}
+
+		version, err := readPackageVersion(content)
+		if err != nil {
+			return Answer{}, err
+		}
+
+		if version == run.Release.Version {
+			return Answer{OK: true, Detail: fmt.Sprintf("package.json on %s says %s", branch, version)}, nil
+		}
+
+		return Answer{Detail: bumpPending(ctx, run, version)}, nil
+	},
+	Precondition: func(ctx context.Context, run *Run) (Answer, error) {
+		return waitFor(ctx, run, releaseBranch), nil
+	},
+	Action: &Action{
+		Title: "Open a pull request bumping package.json to {version}",
+		Plan:  planVersionBump,
+	},
+}
+
+// bumpPending says what the branch says today, and names the pull request
+// that would change it, so the wait for a reviewer is visible.
+func bumpPending(ctx context.Context, run *Run, found Version) string {
+	still := fmt.Sprintf("package.json on %s says %s", run.Release.Branch(), found)
+
+	owner, _, err := run.Repo.PushTarget(ctx)
+	if err != nil {
+		return still
+	}
+
+	number, err := run.Repo.OpenPR(ctx, owner, bumpBranch(run.Release.Version))
+	if err != nil || number == 0 {
+		return still
+	}
+
+	return fmt.Sprintf("PR #%d is open; %s", number, still)
+}
+
+// bumpBranch is the branch the bump commit is pushed to.
+func bumpBranch(version Version) string { return "bump-to-" + version.String() }
+
+func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
+	branch := run.Release.Branch()
+	head := run.Refs.Branches[run.Release.Version.Line()]
+
+	owner, forkURL, err := run.Repo.PushTarget(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	cache, err := CacheDir(run.Profile.Name, run.Release.Version)
+	if err != nil {
+		return nil, err
+	}
+
+	dir := filepath.Join(cache, "bump")
+	title := "Bump version to " + run.Release.Version.String()
+
+	return []Operation{
+		command("", "git", "fetch", run.Repo.url, branch),
+		{
+			Description: fmt.Sprintf("check %.7s out in %s", head, dir),
+			Do: func(ctx context.Context, run *Run) error {
+				_, err := worktreeAt(ctx, run, "bump", head)
+
+				return err
+			},
+		},
+		{
+			Description: "set the version in package.json to " + run.Release.Version.String(),
+			Do: func(context.Context, *Run) error {
+				return writePackageVersion(dir, run.Release.Version)
+			},
+		},
+		command(dir, "git", "commit", "--signoff", "--message", title, "--", "package.json"),
+		command(dir, "git", "push", forkURL, "HEAD:refs/heads/"+bumpBranch(run.Release.Version)),
+		command("", "gh", "pr", "create", "--repo", run.Repo.repo,
+			"--base", branch, "--head", owner+":"+bumpBranch(run.Release.Version),
+			"--title", title, "--body", "The release branch carries the version it ships."),
+	}, nil
+}
+
+// writePackageVersion sets the version in a worktree's package.json.
+func writePackageVersion(dir string, version Version) error {
+	path := filepath.Join(dir, "package.json")
+
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	updated, err := setPackageVersion(content, version)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(path, updated, 0o644)
 }
 
 // draftRelease is step 5. The draft holds the release notes and every asset

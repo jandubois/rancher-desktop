@@ -26,11 +26,23 @@ func stepReference(steps []*Step) string {
 		fmt.Fprintf(&out, "- **Applies to:** %s\n", step.Doc.Applies)
 		fmt.Fprintf(&out, "- **Done when:** %s\n", step.Doc.Check)
 		fmt.Fprintf(&out, "- **Waits for:** %s\n", step.Doc.Precondition)
-		fmt.Fprintf(&out, "- **Reaches:** %s\n\n", reaches(step))
+		fmt.Fprintf(&out, "- **Reaches:** %s\n", reaches(step))
+		fmt.Fprintf(&out, "- **Runs:** %s\n\n", runs(step))
 		fmt.Fprintf(&out, "%s\n\n", step.Doc.Instructions)
 	}
 
 	return strings.TrimRight(out.String(), "\n") + "\n"
+}
+
+// runs says what the step's automation does. The tool shows every command it
+// would run, filled in with this release's values, before it runs any of
+// them.
+func runs(step *Step) string {
+	if step.Action == nil {
+		return "nothing. Follow the instructions below."
+	}
+
+	return step.Action.Title + "."
 }
 
 // reaches names the systems a step touches, so a reader can see what it can

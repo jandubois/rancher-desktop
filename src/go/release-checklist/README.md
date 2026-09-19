@@ -4,11 +4,12 @@
 release is in progress, checks each step it ships against the system that
 would show it done, and prints one line per step with its state. It will
 replace the release checklist the team follows by hand; this version ships
-two of that checklist's steps.
+three of that checklist's steps.
 
 Run it from a clone of the repository:
 
-    yarn release
+    yarn release            print the checklist
+    yarn release --run 4    run one step's automation, by its number
 
 ## Which release it drives
 
@@ -82,22 +83,49 @@ Two rules keep a rehearsal away from the real release:
 
 The tool stores no credentials. Everything that needs authentication runs
 through a command line tool that keeps its own: `gh` for GitHub, and `git` for
-the refs, which the tool reads before the checklist prints. Each step declares
-which systems it reaches, the tool probes each
-one once per run, and a step whose tool is missing is `blocked`, with the
-address to install it from.
+the refs and the worktrees. Each step declares which systems it reaches, the
+tool probes each one once per run, and a step whose tool is missing is
+`blocked`, with the address to install it from.
+
+## What it keeps on this machine
+
+Everything is keyed by profile, so a rehearsal on a fork never reads or writes
+what a real release left behind.
+
+| Path | Holds |
+| --- | --- |
+| `<config>/rancher-desktop-release/<profile>/` | a profile other than production |
+| `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out |
+
+`<cache>` is `~/Library/Caches` on macOS, `~/.cache` on Linux and
+`%LocalAppData%` on Windows. Your own clone never changes branch: a step that
+needs a checkout makes a worktree under the cache directory, so a failed step
+cannot leave you on a bump branch. The clone is still the worktree's parent,
+and the fetch that feeds it writes to the clone's object store.
+
+Nothing removes a worktree afterwards: one that needs its own `yarn install`
+then pays for it once instead of once per attempt. Delete a finished release's
+cache directory when you want the space back, and the next checkout prunes the
+registration it leaves behind.
 
 ## What it changes outside this machine
 
-Nothing yet. Every step in this version only reads. Each step below names the
-system it reaches.
+Nothing without a confirmation. `--run` prints every operation the step would
+perform, filled in with this release's values, and runs them only after you
+answer yes. It stops at the first failure, because the operations after it
+would build on work that did not happen.
+
+Of the steps below, only the version bump has automation. It pushes a branch
+and opens a pull request against the release branch. The branch goes to your
+fork of the release repository, or to the release repository itself when you
+have no fork of it. Each step names the system it reaches.
 
 ## Step reference
 
 Placeholders stand for the release's own values: `{version}` for `1.25.0`,
 `{tag}` for `v1.25.0`, `{branch}` for `release-1.25`, `{line}` for `1.25`, and
 `{repo}` for the profile's repository. The step numbers come from the hand
-checklist, so the two steps below are not consecutive.
+checklist, so the steps below are not consecutive.
 
 <!-- The reference below is generated from the step definitions. -->
 
@@ -107,6 +135,7 @@ checklist, so the two steps below are not consecutive.
 - **Done when:** {repo} has the branch {branch}.
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
+- **Runs:** nothing. Follow the instructions below.
 
 Push the head of main to the new branch:
 
@@ -114,12 +143,23 @@ Push the head of main to the new branch:
 
 Check the head commit's subject, date and checks first. It is what the release ships. The push starts the package workflow, which uploads the branch's Linux zip to the OBS bucket.
 
+### 4. Version bump
+
+- **Applies to:** Every release.
+- **Done when:** package.json on {branch} says {version}.
+- **Waits for:** gh can push to {repo}, and the release branch step is done or does not apply.
+- **Reaches:** GitHub repo.
+- **Runs:** Open a pull request bumping package.json to {version}.
+
+Set the `version` field of package.json on {branch} to {version}, commit it with a sign-off, push the commit to a branch of your own, and open a pull request against {branch} titled "Bump version to {version}". A reviewer approves and merges it.
+
 ### 5. Draft release
 
 - **Applies to:** Every release.
 - **Done when:** A release named {tag} exists in {repo}, as a draft or published.
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
+- **Runs:** nothing. Follow the instructions below.
 
 Create the draft, with no --target:
 

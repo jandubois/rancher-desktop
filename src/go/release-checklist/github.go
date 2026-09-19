@@ -17,6 +17,10 @@ import (
 // new line branches from.
 const defaultBranch = "main"
 
+// errNotFound is GitHub answering that a branch, file or release is not
+// there, which is an answer a check reads rather than a failure.
+var errNotFound = errors.New("not found")
+
 // ReleaseState is what GitHub knows about the release for a tag.
 type ReleaseState string
 
@@ -55,6 +59,10 @@ type repository struct {
 	// refs is read once and shared by every step that checks a branch or a
 	// tag, so one refresh makes one call.
 	refs *Refs
+	// pushOwner and pushURL are where the user's own branches go, looked up
+	// once because finding them costs two API calls.
+	pushOwner string
+	pushURL   string
 }
 
 func newRepository(ctx context.Context, repo string, run commander) *repository {
@@ -111,7 +119,7 @@ func (r *repository) ReleaseState(ctx context.Context, tag string) (ReleaseState
 	output, err := r.run.run(ctx, "gh", "release", "view", tag, "--repo", r.repo, "--json", "isDraft")
 	if err != nil {
 		var failure *commandFailure
-		if errors.As(err, &failure) && failure.says("release not found") {
+		if errors.As(err, &failure) && (failure.says("release not found") || failure.missing()) {
 			return ReleaseMissing, nil
 		}
 
@@ -131,6 +139,77 @@ func (r *repository) ReleaseState(ctx context.Context, tag string) (ReleaseState
 	}
 
 	return ReleasePublished, nil
+}
+
+// FileOnBranch is a file's content on a branch, read through the API so a
+// check gives the same answer whatever the local clone has fetched.
+func (r *repository) FileOnBranch(ctx context.Context, branch, path string) ([]byte, error) {
+	query := fmt.Sprintf("repos/%s/contents/%s?ref=%s", r.repo, path, branch)
+
+	output, err := r.run.run(ctx, "gh", "api", query, "--header", "Accept: application/vnd.github.raw")
+	if err != nil {
+		var failure *commandFailure
+		if errors.As(err, &failure) && failure.missing() {
+			return nil, errNotFound
+		}
+
+		return nil, fmt.Errorf("reading %s on %s: %w", path, branch, err)
+	}
+
+	return output, nil
+}
+
+// OpenPR is the number of the open pull request from a branch, or zero when
+// there is none.
+func (r *repository) OpenPR(ctx context.Context, owner, branch string) (int, error) {
+	query := fmt.Sprintf("repos/%s/pulls?state=open&head=%s:%s", r.repo, owner, branch)
+
+	output, err := r.run.run(ctx, "gh", "api", query, "--jq", ".[0].number")
+	if err != nil {
+		return 0, fmt.Errorf("looking for a pull request from %s:%s: %w", owner, branch, err)
+	}
+
+	text := strings.TrimSpace(string(output))
+	if text == "" {
+		return 0, nil
+	}
+
+	number, err := strconv.Atoi(text)
+	if err != nil {
+		return 0, fmt.Errorf("looking for a pull request from %s:%s: %w", owner, branch, err)
+	}
+
+	return number, nil
+}
+
+// PushTarget is where a step's own branch goes: the user's fork of the
+// release repository, or the release repository itself when they have no
+// fork of it, which is what a profile pointing at a fork already wants.
+func (r *repository) PushTarget(ctx context.Context) (string, string, error) {
+	if r.pushOwner != "" {
+		return r.pushOwner, r.pushURL, nil
+	}
+
+	output, err := r.run.run(ctx, "gh", "api", "user", "--jq", ".login")
+	if err != nil {
+		return "", "", fmt.Errorf("reading who you are signed in as: %w", err)
+	}
+
+	login := strings.TrimSpace(string(output))
+	_, name, _ := strings.Cut(r.repo, "/")
+	fork := login + "/" + name
+
+	parent, err := r.run.run(ctx, "gh", "api", "repos/"+fork, "--jq", ".parent.full_name")
+	if err == nil && strings.TrimSpace(string(parent)) == r.repo {
+		r.pushOwner, r.pushURL = login, remoteURL(ctx, fork, r.run)
+
+		return r.pushOwner, r.pushURL, nil
+	}
+
+	r.pushOwner, _, _ = strings.Cut(r.repo, "/")
+	r.pushURL = r.url
+
+	return r.pushOwner, r.pushURL, nil
 }
 
 func (r *repository) TagInMain(ctx context.Context, tag string) (bool, error) {

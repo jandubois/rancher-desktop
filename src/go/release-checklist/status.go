@@ -19,7 +19,7 @@ func printStatus(ctx context.Context, out io.Writer, run *Run) {
 	table := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
 
 	for _, step := range checklist {
-		status := Evaluate(ctx, step, run)
+		status := run.Status(ctx, step)
 		fmt.Fprintf(table, "  %s\t%s\t%s\t%s\n", step.ID, step.Title, status.State, status.Detail)
 	}
 

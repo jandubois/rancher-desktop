@@ -21,6 +21,9 @@ type commander interface {
 	// run returns the command's standard output. A command that exits
 	// non-zero returns a *commandFailure.
 	run(ctx context.Context, name string, args ...string) ([]byte, error)
+	// runIn runs the command in a directory, for the worktrees the actions
+	// work in.
+	runIn(ctx context.Context, dir, name string, args ...string) ([]byte, error)
 	// installed reports whether the command is on the PATH.
 	installed(name string) bool
 }
@@ -50,15 +53,28 @@ func (f *commandFailure) says(text string) bool {
 	return strings.Contains(strings.ToLower(f.Stderr), strings.ToLower(text))
 }
 
+// missing reports whether GitHub answered that the thing is not there, which
+// is an answer a check reads rather than a failure. gh ends every API error
+// with the status, and the prose before it varies: a missing branch gives
+// "No commit found for the ref", not "Not Found".
+func (f *commandFailure) missing() bool {
+	return f.says("(HTTP 404)")
+}
+
 // tools runs the real command line tools.
 type tools struct{}
 
-func (tools) run(ctx context.Context, name string, args ...string) ([]byte, error) {
+func (t tools) run(ctx context.Context, name string, args ...string) ([]byte, error) {
+	return t.runIn(ctx, "", name, args...)
+}
+
+func (tools) runIn(ctx context.Context, dir, name string, args ...string) ([]byte, error) {
 	var stdout, stderr bytes.Buffer
 
 	// The command and its arguments come from the step definitions and the
 	// profile, and never reach a shell, so nothing is word-split or globbed.
 	cmd := exec.CommandContext(ctx, name, args...)
+	cmd.Dir = dir
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 

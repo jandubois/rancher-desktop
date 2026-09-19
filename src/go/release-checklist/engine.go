@@ -71,6 +71,35 @@ type Step struct {
 	// Precondition reports whether the step can run now. A nil precondition
 	// means the resources in Needs are all it takes.
 	Precondition func(context.Context, *Run) (Answer, error)
+	// Action is the step's automation. A step without one is done by hand,
+	// following its instructions.
+	Action *Action
+}
+
+// Action is a step's automation. It is a list of operations rather than a
+// function body, so the confirmation the user reads, the README's account of
+// the step, and what actually runs all come from one place.
+type Action struct {
+	// Title says what running the action does.
+	Title string
+	// Plan builds the operations for this release. It runs before the user
+	// confirms anything, so it must change nothing itself.
+	Plan func(context.Context, *Run) ([]Operation, error)
+}
+
+// Operation is one piece of an action.
+type Operation struct {
+	// Description is the line shown for confirmation and in the README. For
+	// an external command it is the command line.
+	Description string
+	// Command, Args and Dir are the external command to run. An operation
+	// with no command does its work in Do.
+	Command string
+	Args    []string
+	Dir     string
+	// Do is work that no single command expresses, such as replacing the
+	// version in package.json.
+	Do func(context.Context, *Run) error
 }
 
 // Doc is a step's prose. The placeholders {version}, {tag}, {branch}, {line}
@@ -117,7 +146,66 @@ type Run struct {
 	Refs    *Refs
 	Tools   commander
 
-	probed map[string]Status
+	probed     map[string]Status
+	statuses   map[string]Status
+	evaluating map[string]bool
+}
+
+// newRun starts a refresh.
+func newRun(release *Release, profile *Profile, repo *repository) *Run {
+	return &Run{
+		Release:    release,
+		Profile:    profile,
+		Repo:       repo,
+		Tools:      repo.run,
+		probed:     map[string]Status{},
+		statuses:   map[string]Status{},
+		evaluating: map[string]bool{},
+	}
+}
+
+// Status works out what to show for one step and remembers it for the rest of
+// the refresh, so a step that waits on another reads its state without
+// checking it a second time.
+func (r *Run) Status(ctx context.Context, step *Step) Status {
+	if status, ok := r.statuses[step.ID]; ok {
+		return status
+	}
+
+	if r.evaluating[step.ID] {
+		return Status{State: Unknown, Detail: "step " + step.ID + " waits on itself"}
+	}
+
+	if r.statuses == nil {
+		r.statuses, r.evaluating = map[string]Status{}, map[string]bool{}
+	}
+
+	r.evaluating[step.ID] = true
+	status := Evaluate(ctx, step, r)
+	delete(r.evaluating, step.ID)
+
+	r.statuses[step.ID] = status
+
+	return status
+}
+
+// waitFor holds a step until the steps it follows are done, or skipped
+// because this release does not run them.
+func waitFor(ctx context.Context, run *Run, needed ...*Step) Answer {
+	for _, step := range needed {
+		switch status := run.Status(ctx, step); status.State {
+		case Done, Skipped:
+		case Waiting:
+			return Answer{
+				Waiting: true,
+				Detail:  fmt.Sprintf("step %s, %s, is %s", step.ID, step.Title, status.Detail),
+			}
+		default:
+			return Answer{Detail: fmt.Sprintf("step %s, %s, is %s", step.ID, step.Title, status.State)}
+		}
+	}
+
+	return Answer{OK: true}
 }
 
 // Evaluate works out what to show for one step. It asks the same questions in

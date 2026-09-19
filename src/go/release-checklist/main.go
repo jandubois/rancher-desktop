@@ -29,6 +29,8 @@ func main() {
 func run(ctx context.Context) error {
 	profileName := flag.String("profile", productionName,
 		"the profile naming the resources to release to")
+	stepID := flag.String("run", "",
+		"run one step's automation, by its number in the checklist")
 	flag.Parse()
 
 	profile, err := LoadProfile(*profileName)
@@ -39,6 +41,15 @@ func run(ctx context.Context) error {
 	run, err := refresh(ctx, profile)
 	if err != nil {
 		return err
+	}
+
+	if *stepID != "" {
+		step, found := findStep(*stepID)
+		if !found {
+			return fmt.Errorf("the checklist has no step %s", *stepID)
+		}
+
+		return RunAction(ctx, step, run, os.Stdin, os.Stdout)
 	}
 
 	printStatus(ctx, os.Stdout, run)
@@ -61,13 +72,10 @@ func refresh(ctx context.Context, profile *Profile) (*Run, error) {
 		return nil, err
 	}
 
-	return &Run{
-		Release: release,
-		Profile: profile,
-		Repo:    repo,
-		Refs:    refs,
-		Tools:   repo.run,
-	}, nil
+	run := newRun(release, profile, repo)
+	run.Refs = refs
+
+	return run, nil
 }
 
 // chooseRelease is the release VERSION names, or, with VERSION unset, the one

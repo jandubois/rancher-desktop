@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"testing"
 )
@@ -16,21 +17,31 @@ type fakeTools struct {
 	output map[string]string
 	stderr map[string]string
 	absent map[string]bool
+	// anyCommand lets a command nobody gave an answer for succeed, for
+	// tests about what runs rather than about what it prints.
+	anyCommand bool
+	// calls records every command line, in order.
+	calls []string
 }
 
 func (f *fakeTools) run(_ context.Context, name string, args ...string) ([]byte, error) {
 	line := strings.Join(append([]string{name}, args...), " ")
+	f.calls = append(f.calls, line)
 
 	if stderr, ok := f.stderr[line]; ok {
 		return nil, &commandFailure{Command: line, Stderr: stderr, Err: errExit}
 	}
 
 	output, ok := f.output[line]
-	if !ok {
+	if !ok && !f.anyCommand {
 		return nil, &commandFailure{Command: line, Stderr: "no answer for this command", Err: errExit}
 	}
 
 	return []byte(output), nil
+}
+
+func (f *fakeTools) runIn(ctx context.Context, _ string, name string, args ...string) ([]byte, error) {
+	return f.run(ctx, name, args...)
 }
 
 func (f *fakeTools) installed(name string) bool { return !f.absent[name] }
@@ -119,5 +130,23 @@ func TestTagInMainReadsTheCommitsMainIsMissing(t *testing.T) {
 		if merged != want {
 			t.Errorf("%s in main: %v, want %v", tag, merged, want)
 		}
+	}
+}
+
+func TestGitHubsNotThereAnswersAreReadAsAnswers(t *testing.T) {
+	const file = "gh api repos/rancher-sandbox/rancher-desktop/contents/package.json?ref=release-1.25 " +
+		"--header Accept: application/vnd.github.raw"
+
+	// gh ends an API error with the status. The prose before it varies: a
+	// missing branch reads "No commit found for the ref", which no match on
+	// the words "not found" catches.
+	run := &fakeTools{stderr: map[string]string{
+		file: "gh: No commit found for the ref release-1.25 (HTTP 404)",
+	}}
+	repo := &repository{repo: "rancher-sandbox/rancher-desktop", run: run}
+
+	_, err := repo.FileOnBranch(context.Background(), "release-1.25", "package.json")
+	if !errors.Is(err, errNotFound) {
+		t.Errorf("a missing branch gave %v", err)
 	}
 }
