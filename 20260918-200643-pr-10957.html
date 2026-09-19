@@ -242,6 +242,12 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <p>Round 3&#39;s fixes extracted the two pages&#39; identical delete confirmation into a shared helper, added the volumes accept-path test, and reset that spec&#39;s mock. Comparing the helper field by field against both removed call sites shows no option, index or return value changed, and every property earlier rounds credited still holds. No code defect appeared. One commit body says only one spec asserted the shared dialog options; both did at its parent, one commit after the volumes half arrived.</p>
     </div>
     <hr>
+    <h2 id="since-this-review-ran">Since This Review Ran <a href="#since-this-review-ran" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>All three findings have been addressed. The fixes went into their original commits, so every SHA cited below is stale. Each finding ends with a line saying what happened to it.</p>
+    </div>
+    <hr>
     <h2 id="delta-since-round-3">Delta Since Round 3 <a href="#delta-since-round-3" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
@@ -291,6 +297,7 @@ a8047977a  specs asserting the shared options: 2  (Correct the access-key sectio
       </details>
     <p>The first row is the case where the claim would have held, one commit too early to describe the tree it was written against.</p>
     <p>Fix: reword the clause to say the shared options had to be asserted twice, once per spec, or drop it. The paragraph&#39;s first sentence makes the argument without it.</p>
+    <p><strong>Fixed</strong> in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/3a36b5970"><code>3a36b5970</code></a>. The clause now reads &quot;Keeping the two copies in step meant asserting the same options in both specs&quot;.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -325,6 +332,7 @@ a8047977a  specs asserting the shared options: 2  (Correct the access-key sectio
       // The rows stay selected after a cancelled delete, so selecting them again
       // would clear the selection.</code></pre>
     <p>Fix: reload and wait for the table before asserting the row survived, so the check outlives the race.</p>
+    <p><strong>Fixed</strong> in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/371e4c402"><code>371e4c402</code></a>, through <code>waitForVolumeToAppear</code> so the reloaded row gets 15 s instead of the 5 s default expect timeout. The bulk arm keeps the weaker check and now carries a comment saying why, in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/980f653eb"><code>980f653eb</code></a>.</p>
     </div>
     <div class="card card-suggestion" data-file="e2e/volumes.e2e.spec.ts">
       <div class="finding-title" id="S2">
@@ -368,6 +376,7 @@ a8047977a  specs asserting the shared options: 2  (Correct the access-key sectio
 
     try {</code></pre>
     <p>Fix: set the answer in a <code>beforeEach</code> so each test starts from CONFIRM, and let a test that wants cancel say so.</p>
+    <p><strong>Fixed</strong> in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/0f3facfae"><code>0f3facfae</code></a>.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
