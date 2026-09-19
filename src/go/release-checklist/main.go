@@ -3,12 +3,13 @@
 // SPDX-FileCopyrightText: The Rancher Desktop Authors
 
 // release-checklist drives a Rancher Desktop release. It finds the release in
-// progress, checks every step of the release process, and offers the steps
-// that are available but not done.
+// progress, checks each step it ships, and prints the checklist.
 //
 // Usage:
 //
 //	yarn release [--profile <name>]
+//
+// See README.md for what it checks and what it changes.
 package main
 
 import (
@@ -35,14 +36,38 @@ func run(ctx context.Context) error {
 		return err
 	}
 
-	release, err := chooseRelease(ctx, newRepository(ctx, profile.GitHub.Repo, tools{}))
+	run, err := refresh(ctx, profile)
 	if err != nil {
 		return err
 	}
 
-	printHeader(os.Stdout, release, profile)
+	printStatus(ctx, os.Stdout, run)
 
 	return nil
+}
+
+// refresh reads everything the checklist is derived from: which release is in
+// progress, and the refs the steps check against.
+func refresh(ctx context.Context, profile *Profile) (*Run, error) {
+	repo := newRepository(ctx, profile.GitHub.Repo, tools{})
+
+	release, err := chooseRelease(ctx, repo)
+	if err != nil {
+		return nil, err
+	}
+
+	refs, err := repo.Refs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Run{
+		Release: release,
+		Profile: profile,
+		Repo:    repo,
+		Refs:    refs,
+		Tools:   repo.run,
+	}, nil
 }
 
 // chooseRelease is the release VERSION names, or, with VERSION unset, the one

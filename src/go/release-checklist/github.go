@@ -47,11 +47,14 @@ type repoFacts interface {
 // keep their own credentials.
 type repository struct {
 	repo string
-	// url is the remote to read refs from. Remotes are found by URL rather
-	// than by name, so a clone that calls the release repository anything at
-	// all still works.
+	// url is the remote to read refs from. Remotes are found by URL, never
+	// by name, so a clone that calls the release repository anything at all
+	// still works.
 	url string
 	run commander
+	// refs is read once and shared by every step that checks a branch or a
+	// tag, so one refresh makes one call.
+	refs *Refs
 }
 
 func newRepository(ctx context.Context, repo string, run commander) *repository {
@@ -90,12 +93,18 @@ func sameRepo(url, repo string) bool {
 }
 
 func (r *repository) Refs(ctx context.Context) (*Refs, error) {
+	if r.refs != nil {
+		return r.refs, nil
+	}
+
 	output, err := r.run.run(ctx, "git", "ls-remote", r.url, "refs/heads/release-*", "refs/tags/v*")
 	if err != nil {
 		return nil, fmt.Errorf("listing the refs of %s: %w", r.repo, err)
 	}
 
-	return ParseRefs(string(output)), nil
+	r.refs = ParseRefs(string(output))
+
+	return r.refs, nil
 }
 
 func (r *repository) ReleaseState(ctx context.Context, tag string) (ReleaseState, error) {
