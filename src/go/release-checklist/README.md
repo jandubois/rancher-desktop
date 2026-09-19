@@ -4,7 +4,7 @@
 release is in progress, checks each step it ships against the system that
 would show it done, and prints one line per step with its state. It will
 replace the release checklist the team follows by hand; this version ships
-three of that checklist's steps.
+four of that checklist's steps.
 
 Run it from a clone of the repository:
 
@@ -115,10 +115,12 @@ perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
 would build on work that did not happen.
 
-Of the steps below, only the version bump has automation. It pushes a branch
-and opens a pull request against the release branch. The branch goes to your
-fork of the release repository, or to the release repository itself when you
-have no fork of it. Each step names the system it reaches.
+Two of the steps below have automation. The version bump pushes a branch and
+opens a pull request against the release branch; that branch goes to your fork
+of the release repository, or to the release repository itself when you have no
+fork of it. The tag step pushes the release branch head to `refs/tags/vX.Y.Z`
+in the release repository, which starts the build every release asset comes
+from. Each step names the system it reaches.
 
 ## Step reference
 
@@ -166,3 +168,17 @@ Create the draft, with no --target:
     gh release create {tag} --repo {repo} --draft --title "<title>" --notes-file <file>
 
 The title is "Rancher Desktop X.Y" for a minor release and "Rancher Desktop X.Y.Z" for a patch. Drafts are visible only to users who can push, so nobody sees the notes before the release.
+
+### 9. Tag
+
+- **Applies to:** Every release.
+- **Done when:** {tag} names a commit of {repo} whose package.json says {version}.
+- **Waits for:** gh can push to {repo}, the version bump and the draft release are done, {branch} has a commit main does not, and the package run for the head of {branch} succeeded.
+- **Reaches:** GitHub repo.
+- **Runs:** Push {tag} to {repo}.
+
+Tag the head of {branch}:
+
+    git push <url of {repo}> <head of {branch}>:refs/tags/{tag}
+
+Name the release repository by URL. In most clones `origin` is your own fork, so a tag pushed there never reaches {repo}. The push starts the package workflow for the tag, and that run builds the assets the release ships. Nothing moves a tag once it is pushed, so a tag on the wrong commit costs the version: it has to be burned, and the release goes out as the next patch.

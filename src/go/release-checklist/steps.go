@@ -13,7 +13,11 @@ import (
 )
 
 // checklist is the release process, in the order a release runs it.
-var checklist = []*Step{releaseBranch, versionBump, draftRelease}
+var checklist = []*Step{releaseBranch, versionBump, draftRelease, tagRelease}
+
+// everyRelease is the applicability of a step that a minor and a patch both
+// run.
+const everyRelease = "Every release."
 
 // findStep is the step with a checklist number.
 func findStep(id string) (*Step, bool) {
@@ -63,7 +67,7 @@ var versionBump = &Step{
 	Kinds: []Kind{Minor, Patch},
 	Needs: []*Resource{githubRepo},
 	Doc: Doc{
-		Applies: "Every release.",
+		Applies: everyRelease,
 		Check:   "package.json on {branch} says {version}.",
 		Precondition: "gh can push to {repo}, and the release branch step is " +
 			"done or does not apply.",
@@ -75,7 +79,7 @@ var versionBump = &Step{
 	Check: func(ctx context.Context, run *Run) (Answer, error) {
 		branch := run.Release.Branch()
 
-		content, err := run.Repo.FileOnBranch(ctx, branch, "package.json")
+		content, err := run.Repo.FileAtRef(ctx, branch, "package.json")
 		if errors.Is(err, errNotFound) {
 			return Answer{Detail: branch + " has no package.json"}, nil
 		}
@@ -192,7 +196,7 @@ var draftRelease = &Step{
 	Kinds: []Kind{Minor, Patch},
 	Needs: []*Resource{githubRepo},
 	Doc: Doc{
-		Applies:      "Every release.",
+		Applies:      everyRelease,
 		Check:        "A release named {tag} exists in {repo}, as a draft or published.",
 		Precondition: "gh can push to {repo}.",
 		Instructions: "Create the draft, with no --target:\n\n" +
@@ -213,4 +217,138 @@ var draftRelease = &Step{
 
 		return Answer{OK: true, Detail: fmt.Sprintf("%s is %s", run.Release.Tag(), state)}, nil
 	},
+}
+
+// packageWorkflow builds every platform's release assets. A push to a release
+// branch starts one run and the tag push starts another, so the ref is what
+// tells two runs of the same commit apart.
+const packageWorkflow = "package.yaml"
+
+// tagRelease is step 9. Pushing the tag starts the package run that builds
+// every asset the release ships, and the tag is what the merge-back carries
+// into main, so a tag on the wrong commit costs the version.
+var tagRelease = &Step{
+	ID:    "9",
+	Title: "Tag",
+	Kinds: []Kind{Minor, Patch},
+	Needs: []*Resource{githubRepo},
+	Doc: Doc{
+		Applies: everyRelease,
+		Check:   "{tag} names a commit of {repo} whose package.json says {version}.",
+		Precondition: "gh can push to {repo}, the version bump and the draft release are " +
+			"done, {branch} has a commit main does not, and the package run for the " +
+			"head of {branch} succeeded.",
+		Instructions: "Tag the head of {branch}:\n\n" +
+			"    git push <url of {repo}> <head of {branch}>:refs/tags/{tag}\n\n" +
+			"Name the release repository by URL. In most clones `origin` is your " +
+			"own fork, so a tag pushed there never reaches {repo}. The push starts " +
+			"the package workflow for the tag, and that run builds the assets the " +
+			"release ships. Nothing moves a tag once it is pushed, so a tag on the " +
+			"wrong commit costs the version: it has to be burned, and the release " +
+			"goes out as the next patch.",
+	},
+	Check: func(ctx context.Context, run *Run) (Answer, error) {
+		tag := run.Release.Tag()
+
+		commit, tagged := run.Refs.Tags[run.Release.Version]
+		if !tagged {
+			return Answer{Detail: "no " + tag + " in " + run.Profile.GitHub.Repo}, nil
+		}
+
+		content, err := run.Repo.FileAtRef(ctx, tag, "package.json")
+		if err != nil {
+			return Answer{}, err
+		}
+
+		version, err := readPackageVersion(content)
+		if err != nil {
+			return Answer{}, err
+		}
+
+		if version != run.Release.Version {
+			return Answer{Detail: fmt.Sprintf(
+				"%s is at %.7s, whose package.json says %s", tag, commit, version)}, nil
+		}
+
+		return Answer{OK: true, Detail: fmt.Sprintf("%s is at %.7s", tag, commit)}, nil
+	},
+	Precondition: func(ctx context.Context, run *Run) (Answer, error) {
+		// The check has already found the tag wrong, and no step can put
+		// that right, because the tool never moves a pushed tag.
+		if _, tagged := run.Refs.Tags[run.Release.Version]; tagged {
+			return Answer{Detail: fmt.Sprintf(
+				"%s is already pushed and nothing moves a tag; burn %s and release %s",
+				run.Release.Tag(), run.Release.Version, run.Release.Version.NextPatch())}, nil
+		}
+
+		if ready := waitFor(ctx, run, versionBump, draftRelease); !ready.OK {
+			return ready, nil
+		}
+
+		branch := run.Release.Branch()
+		head := run.Refs.Branches[run.Release.Version.Line()]
+
+		// A commit main already has is one the merge-back cannot carry back,
+		// and reaching main is what marks a release done, so tagging one
+		// would show the release finished the moment it started.
+		merged, err := run.Repo.InBranch(ctx, head, defaultBranch)
+		if err != nil {
+			return Answer{}, err
+		}
+
+		if merged {
+			return Answer{Detail: fmt.Sprintf(
+				"the head of %s is already in %s, so the release has no commit of its own",
+				branch, defaultBranch)}, nil
+		}
+
+		return packageRun(ctx, run, branch, head)
+	},
+	Action: &Action{
+		Title: "Push {tag} to {repo}",
+		Plan:  planTag,
+	},
+}
+
+// packageRun reports how the package workflow's run for a ref is going: OK
+// once it has succeeded, Waiting until it finishes, and otherwise the line
+// that says how it ended and where to read it.
+func packageRun(ctx context.Context, run *Run, ref, commit string) (Answer, error) {
+	build, err := run.Repo.LatestRun(ctx, packageWorkflow, ref, commit)
+	if err != nil {
+		return Answer{}, err
+	}
+
+	switch {
+	case build == nil:
+		return Answer{Waiting: true, Detail: "no package run for " + ref + " yet"}, nil
+	case !build.Finished():
+		return Answer{Waiting: true, Detail: fmt.Sprintf(
+			"the package run for %s is %s: %s", ref, build.State(), build.URL)}, nil
+	case !build.Succeeded():
+		return Answer{Detail: fmt.Sprintf(
+			"the package run for %s ended in %s: %s", ref, build.State(), build.URL)}, nil
+	default:
+		return Answer{OK: true, Detail: fmt.Sprintf(
+			"the package run for %s succeeded: %s", ref, build.URL)}, nil
+	}
+}
+
+// planTag pushes the release branch head to the tag. The fetch brings the
+// commit into the clone, because git resolves the source of a push locally
+// however well the remote knows it.
+func planTag(_ context.Context, run *Run) ([]Operation, error) {
+	branch := run.Release.Branch()
+
+	// git reads a push with an empty source as a request to delete the
+	// destination, so a missing branch head must never reach the push.
+	head, ok := run.Refs.Branches[run.Release.Version.Line()]
+	if !ok {
+		return nil, fmt.Errorf("%s has no %s branch to tag", run.Profile.GitHub.Repo, branch)
+	}
+
+	return []Operation{
+		command("", "git", "fetch", run.Repo.url, branch),
+		command("", "git", "push", run.Repo.url, head+":refs/tags/"+run.Release.Tag()),
+	}, nil
 }

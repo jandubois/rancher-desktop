@@ -145,7 +145,7 @@ func TestGitHubsNotThereAnswersAreReadAsAnswers(t *testing.T) {
 	}}
 	repo := &repository{repo: "rancher-sandbox/rancher-desktop", run: run}
 
-	_, err := repo.FileOnBranch(context.Background(), "release-1.25", "package.json")
+	_, err := repo.FileAtRef(context.Background(), "release-1.25", "package.json")
 	if !errors.Is(err, errNotFound) {
 		t.Errorf("a missing branch gave %v", err)
 	}

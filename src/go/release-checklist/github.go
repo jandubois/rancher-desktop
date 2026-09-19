@@ -33,6 +33,35 @@ const (
 	ReleasePublished ReleaseState = "published"
 )
 
+// WorkflowRun is one run of a GitHub Actions workflow.
+type WorkflowRun struct {
+	// ID names the run to gh, which takes it as a string.
+	ID string
+	// Status is what the run is doing: queued, in_progress or completed.
+	Status string
+	// Conclusion is how a run that completed ended: success, failure,
+	// cancelled, skipped or timed_out. It is empty until then.
+	Conclusion string
+	// URL is the run's page, for the line beside a step waiting on it.
+	URL string
+}
+
+// Finished reports whether the run has stopped, however it ended.
+func (w *WorkflowRun) Finished() bool { return w.Status == "completed" }
+
+// Succeeded reports whether every job of the run passed.
+func (w *WorkflowRun) Succeeded() bool { return w.Conclusion == "success" }
+
+// State is how the run is going, for the line beside a step that waits on
+// it: how it ended once it is over, and what it is doing until then.
+func (w *WorkflowRun) State() string {
+	if w.Finished() {
+		return w.Conclusion
+	}
+
+	return strings.ReplaceAll(w.Status, "_", " ")
+}
+
 // repoFacts is what the release detection asks about the release repository.
 // It is an interface so the tests can answer with output captured from real
 // runs.
@@ -63,6 +92,9 @@ type repository struct {
 	// once because finding them costs two API calls.
 	pushOwner string
 	pushURL   string
+	// runs caches the workflow runs by ref, because a step's check and its
+	// precondition ask about the same one.
+	runs map[string]*WorkflowRun
 }
 
 func newRepository(ctx context.Context, repo string, run commander) *repository {
@@ -141,10 +173,10 @@ func (r *repository) ReleaseState(ctx context.Context, tag string) (ReleaseState
 	return ReleasePublished, nil
 }
 
-// FileOnBranch is a file's content on a branch, read through the API so a
-// check gives the same answer whatever the local clone has fetched.
-func (r *repository) FileOnBranch(ctx context.Context, branch, path string) ([]byte, error) {
-	query := fmt.Sprintf("repos/%s/contents/%s?ref=%s", r.repo, path, branch)
+// FileAtRef is a file's content at a branch, tag or commit, read through the
+// API so a check gives the same answer whatever the local clone has fetched.
+func (r *repository) FileAtRef(ctx context.Context, ref, path string) ([]byte, error) {
+	query := fmt.Sprintf("repos/%s/contents/%s?ref=%s", r.repo, path, ref)
 
 	output, err := r.run.run(ctx, "gh", "api", query, "--header", "Accept: application/vnd.github.raw")
 	if err != nil {
@@ -153,7 +185,7 @@ func (r *repository) FileOnBranch(ctx context.Context, branch, path string) ([]b
 			return nil, errNotFound
 		}
 
-		return nil, fmt.Errorf("reading %s on %s: %w", path, branch, err)
+		return nil, fmt.Errorf("reading %s at %s: %w", path, ref, err)
 	}
 
 	return output, nil
@@ -213,19 +245,78 @@ func (r *repository) PushTarget(ctx context.Context) (string, string, error) {
 }
 
 func (r *repository) TagInMain(ctx context.Context, tag string) (bool, error) {
-	path := fmt.Sprintf("repos/%s/compare/%s...%s", r.repo, tag, defaultBranch)
+	return r.InBranch(ctx, tag, defaultBranch)
+}
+
+// InBranch reports whether a branch already has a commit or tag.
+func (r *repository) InBranch(ctx context.Context, ref, branch string) (bool, error) {
+	path := fmt.Sprintf("repos/%s/compare/%s...%s", r.repo, ref, branch)
 
 	output, err := r.run.run(ctx, "gh", "api", path, "--jq", ".behind_by")
 	if err != nil {
-		return false, fmt.Errorf("comparing %s with %s: %w", tag, defaultBranch, err)
+		return false, fmt.Errorf("comparing %s with %s: %w", ref, branch, err)
 	}
 
-	// behind_by counts the commits the tag has that the default branch does
-	// not, so zero means the tag has been merged back.
+	// behind_by counts the commits the ref has that the branch does not, so
+	// zero means the branch already has it.
 	behind, err := strconv.Atoi(strings.TrimSpace(string(output)))
 	if err != nil {
-		return false, fmt.Errorf("comparing %s with %s: %w", tag, defaultBranch, err)
+		return false, fmt.Errorf("comparing %s with %s: %w", ref, branch, err)
 	}
 
 	return behind == 0, nil
+}
+
+// LatestRun is the newest run of a workflow for a ref, or nil when the
+// workflow has not run for it. GitHub starts a run per ref, so the release
+// branch head and the tag on that same commit each have one of their own,
+// and the commit alone would not tell them apart.
+func (r *repository) LatestRun(ctx context.Context, workflow, ref, commit string) (*WorkflowRun, error) {
+	key := workflow + " " + ref + " " + commit
+	if cached, ok := r.runs[key]; ok {
+		return cached, nil
+	}
+
+	query := fmt.Sprintf("repos/%s/actions/workflows/%s/runs?branch=%s&head_sha=%s&per_page=1",
+		r.repo, workflow, ref, commit)
+
+	output, err := r.run.run(ctx, "gh", "api", query)
+	if err != nil {
+		return nil, fmt.Errorf("reading the %s runs for %s: %w", workflow, ref, err)
+	}
+
+	var answer struct {
+		Runs []struct {
+			// The id is an identifier rather than a quantity, and gh takes
+			// it as one more argument, so it never becomes a number here.
+			ID         json.Number `json:"id"`
+			Status     string      `json:"status"`
+			Conclusion string      `json:"conclusion"`
+			URL        string      `json:"html_url"`
+		} `json:"workflow_runs"`
+	}
+
+	if err := json.Unmarshal(output, &answer); err != nil {
+		return nil, fmt.Errorf("reading the %s runs for %s: %w", workflow, ref, err)
+	}
+
+	var latest *WorkflowRun
+
+	if len(answer.Runs) > 0 {
+		newest := answer.Runs[0]
+		latest = &WorkflowRun{
+			ID:         newest.ID.String(),
+			Status:     newest.Status,
+			Conclusion: newest.Conclusion,
+			URL:        newest.URL,
+		}
+	}
+
+	if r.runs == nil {
+		r.runs = map[string]*WorkflowRun{}
+	}
+
+	r.runs[key] = latest
+
+	return latest, nil
 }
