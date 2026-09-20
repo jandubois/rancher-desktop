@@ -3,8 +3,7 @@
 `yarn release` drives a Rancher Desktop 1.x release. It works out which
 release is in progress, checks each step it ships against the system that
 would show it done, and shows one line per step with its state. It will
-replace the release checklist the team follows by hand; this version ships
-six of that checklist's steps.
+replace the release checklist the team follows by hand.
 
 Run it from a clone of the repository:
 
