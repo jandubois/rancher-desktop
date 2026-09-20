@@ -282,7 +282,9 @@ func (d *dashboard) View() string {
 	above := []string{d.header(), rule}
 
 	below := append([]string{rule}, d.detail()...)
-	below = append(below, "", d.footer(), "", d.legend())
+	below = append(below, "", d.footer())
+	below = append(below, d.noticeLines()...)
+	below = append(below, "", d.legend())
 
 	rows := d.rows(max(d.height-len(above)-len(below), 1))
 
@@ -297,6 +299,7 @@ func (d *dashboard) instructionsView() string {
 	lines := []string{d.header(), "", d.title(step), ""}
 	lines = append(lines, d.wrap(fill(step.Doc.Instructions, d.run))...)
 	lines = append(lines, "", d.footer())
+	lines = append(lines, d.noticeLines()...)
 
 	return strings.Join(lines, "\n")
 }
@@ -409,19 +412,24 @@ func (d *dashboard) wrap(text string) []string {
 	return indent(strings.Split(wrapped, "\n"))
 }
 
-// footer names the keys that do something here, and shows what the last one
-// left to say.
+// footer names the keys that do something here.
 func (d *dashboard) footer() string {
 	keys := "  enter run · m mark done · i instructions · r refresh · q quit"
 	if d.instructions {
 		keys = "  i back · r refresh · q quit"
 	}
 
-	if d.notice != "" {
-		return dim.Render(keys) + "\n\n  " + d.notice
+	return dim.Render(keys)
+}
+
+// noticeLines breaks the notice to the screen, one line per element, so the
+// view can count them and the list above keeps the height it was given.
+func (d *dashboard) noticeLines() []string {
+	if d.notice == "" {
+		return nil
 	}
 
-	return dim.Render(keys)
+	return append([]string{""}, d.wrap(d.notice)...)
 }
 
 // legend spells out the glyphs in the list.

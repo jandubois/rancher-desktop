@@ -325,3 +325,23 @@ func TestMarkingAStepThatNeedsNoJudgmentSaysSo(t *testing.T) {
 		t.Errorf("the dashboard said nothing about the key:\n%s", plain(dash.View()))
 	}
 }
+
+// TestTheDashboardFitsItsScreen keeps the notice counted in the height the
+// list is given. A view taller than the screen loses its top lines, so the
+// header scrolls away.
+func TestTheDashboardFitsItsScreen(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+
+	for _, notice := range []string{
+		"",
+		"step 1 is settled by its check, so there is nothing to mark",
+		strings.Repeat("a notice long enough to wrap on any terminal ", 4),
+	} {
+		dash.notice = notice
+
+		if lines := strings.Count(plain(dash.View()), "\n") + 1; lines != dash.height {
+			t.Errorf("the dashboard drew %d lines on a %d line screen saying %q",
+				lines, dash.height, notice)
+		}
+	}
+}
