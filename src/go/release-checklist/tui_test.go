@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"context"
 	"errors"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"testing"
@@ -343,5 +344,37 @@ func TestTheDashboardFitsItsScreen(t *testing.T) {
 			t.Errorf("the dashboard drew %d lines on a %d line screen saying %q",
 				lines, dash.height, notice)
 		}
+	}
+}
+
+func TestGatheringFactsForAStepWithNoneSaysSo(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+	selectStep(t, dash, "1")
+
+	if view := plain(dash.View()); !strings.Contains(view, "f gather facts") {
+		t.Errorf("the footer does not name the key:\n%s", view)
+	}
+
+	command := press(dash, "f")
+	if command == nil {
+		t.Fatal("f on the release branch step started nothing")
+	}
+
+	dash.Update(command())
+
+	if !strings.Contains(plain(dash.View()), "gathers nothing") {
+		t.Errorf("the dashboard said nothing about the key:\n%s", plain(dash.View()))
+	}
+}
+
+func TestTheDashboardNamesTheFactsItGathered(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	dash := dashboardShowing(t, nil)
+	dash.Update(factsGathered{path: filepath.Join(home, "Caches", factsFile)})
+
+	if want := filepath.Join("~", "Caches", factsFile); !strings.Contains(plain(dash.View()), want) {
+		t.Errorf("the dashboard does not name %s:\n%s", want, plain(dash.View()))
 	}
 }

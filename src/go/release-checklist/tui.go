@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"slices"
 	"strings"
 	"time"
@@ -26,6 +27,9 @@ const (
 	// clock is the time of the last refresh, which is all the reader needs
 	// to tell a fresh checklist from one left on screen over lunch.
 	clock = "15:04"
+	// unread is the notice for a key pressed before the first refresh has
+	// finished.
+	unread = "the checklist has not been read yet"
 )
 
 // The dashboard paints in the terminal's own colours, so it follows the
@@ -93,6 +97,13 @@ type checklistRead struct {
 // is read again.
 type stepChanged struct{ err error }
 
+// factsGathered carries back where a step's reference material was written.
+// Gathering changes nothing a check reads, so no refresh follows it.
+type factsGathered struct {
+	path string
+	err  error
+}
+
 func newDashboard(ctx context.Context, profile *Profile) *dashboard {
 	return &dashboard{ctx: ctx, profile: profile, refreshing: true}
 }
@@ -144,6 +155,12 @@ func (d *dashboard) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 
 		return d, read
 
+	case factsGathered:
+		d.notice = "the facts are in " + atHome(message.path)
+		if message.err != nil {
+			d.notice = message.err.Error()
+		}
+
 	case tea.KeyMsg:
 		return d.press(message)
 	}
@@ -177,6 +194,10 @@ func (d *dashboard) press(key tea.KeyMsg) (tea.Model, tea.Cmd) {
 		mark := d.markSelected()
 
 		return d, mark
+	case "f":
+		gather := d.gatherSelected()
+
+		return d, gather
 	}
 
 	return d, nil
@@ -197,7 +218,7 @@ func (d *dashboard) runSelected() tea.Cmd {
 
 	switch {
 	case d.run == nil:
-		d.notice = "the checklist has not been read yet"
+		d.notice = unread
 	case step.Action == nil:
 		d.notice = fmt.Sprintf("step %s is done by hand; press i for its instructions", step.ID)
 	case d.statuses[step.ID].State != Available:
@@ -217,7 +238,7 @@ func (d *dashboard) runSelected() tea.Cmd {
 // GitHub, so the mark is made in a command rather than on the drawing path.
 func (d *dashboard) markSelected() tea.Cmd {
 	if d.run == nil {
-		d.notice = "the checklist has not been read yet"
+		d.notice = unread
 
 		return nil
 	}
@@ -225,6 +246,24 @@ func (d *dashboard) markSelected() tea.Cmd {
 	step := checklist[d.selected]
 
 	return func() tea.Msg { return stepChanged{err: Mark(d.ctx, step, d.run)} }
+}
+
+// gatherSelected writes the selected step's reference material. Gathering
+// reaches GitHub, so it runs in a command rather than on the drawing path.
+func (d *dashboard) gatherSelected() tea.Cmd {
+	if d.run == nil {
+		d.notice = unread
+
+		return nil
+	}
+
+	step := checklist[d.selected]
+
+	return func() tea.Msg {
+		path, err := GatherFacts(d.ctx, step, d.run)
+
+		return factsGathered{path: path, err: err}
+	}
 }
 
 // stepAction runs one step's automation while the dashboard is suspended. It
@@ -268,7 +307,8 @@ func (d *dashboard) View() string {
 	case d.width == 0:
 		return ""
 	case d.run == nil && d.failure != nil:
-		return fmt.Sprintf("\n  reading the checklist: %v\n\n%s\n", d.failure, d.footer())
+		return fmt.Sprintf("\n  reading the checklist: %v\n\n%s\n",
+			d.failure, strings.Join(d.footerLines(), "\n"))
 	case d.run == nil:
 		return "\n  Reading the checklist…\n"
 	}
@@ -282,7 +322,8 @@ func (d *dashboard) View() string {
 	above := []string{d.header(), rule}
 
 	below := append([]string{rule}, d.detail()...)
-	below = append(below, "", d.footer())
+	below = append(below, "")
+	below = append(below, d.footerLines()...)
 	below = append(below, d.noticeLines()...)
 	below = append(below, "", d.legend())
 
@@ -298,7 +339,8 @@ func (d *dashboard) instructionsView() string {
 
 	lines := []string{d.header(), "", d.title(step), ""}
 	lines = append(lines, d.wrap(fill(step.Doc.Instructions, d.run))...)
-	lines = append(lines, "", d.footer())
+	lines = append(lines, "")
+	lines = append(lines, d.footerLines()...)
 	lines = append(lines, d.noticeLines()...)
 
 	return strings.Join(lines, "\n")
@@ -381,6 +423,7 @@ func (d *dashboard) detail() []string {
 		{"Waits for", fill(step.Doc.Precondition, d.run)},
 		{"Reaches", reaches(step)},
 		{"Runs", fill(runs(step), d.run)},
+		{"Gathers", gathers(step)},
 	} {
 		lines = append(lines, d.field(entry.label, entry.body)...)
 	}
@@ -412,14 +455,32 @@ func (d *dashboard) wrap(text string) []string {
 	return indent(strings.Split(wrapped, "\n"))
 }
 
-// footer names the keys that do something here.
-func (d *dashboard) footer() string {
-	keys := "  enter run · m mark done · i instructions · r refresh · q quit"
+// footerLines names the keys that do something here, broken to the screen
+// like the notice, because the keys do not fit one line of a narrow
+// terminal.
+func (d *dashboard) footerLines() []string {
+	keys := "enter run · m mark done · f gather facts · i instructions · r refresh · q quit"
 	if d.instructions {
-		keys = "  i back · r refresh · q quit"
+		keys = "i back · r refresh · q quit"
 	}
 
-	return dim.Render(keys)
+	lines := d.wrap(keys)
+	for index, line := range lines {
+		lines[index] = dim.Render(line)
+	}
+
+	return lines
+}
+
+// atHome shortens a path under the home directory the way a reader would
+// type it, so a notice naming a path fits the screen.
+func atHome(path string) string {
+	home, err := os.UserHomeDir()
+	if err != nil || !strings.HasPrefix(path, home+string(os.PathSeparator)) {
+		return path
+	}
+
+	return "~" + strings.TrimPrefix(path, home)
 }
 
 // noticeLines breaks the notice to the screen, one line per element, so the

@@ -9,6 +9,8 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -123,4 +125,34 @@ func quote(arg string) string {
 	}
 
 	return arg
+}
+
+// GatherFacts writes the reference material a step's manual work is done
+// from, and says where it went. Gathering reads the release and changes
+// nothing, so it asks no question first.
+func GatherFacts(ctx context.Context, step *Step, run *Run) (string, error) {
+	if step.Facts == nil {
+		return "", fmt.Errorf("step %s gathers nothing; press i for its instructions", step.ID)
+	}
+
+	material, err := step.Facts.Gather(ctx, run)
+	if err != nil {
+		return "", err
+	}
+
+	cache, err := CacheDir(run.Profile.Name, run.Release.Version)
+	if err != nil {
+		return "", err
+	}
+
+	if err := os.MkdirAll(cache, cachePermissions); err != nil {
+		return "", err
+	}
+
+	path := filepath.Join(cache, step.Facts.File)
+	if err := os.WriteFile(path, []byte(material), 0o644); err != nil {
+		return "", err
+	}
+
+	return path, nil
 }

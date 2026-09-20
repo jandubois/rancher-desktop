@@ -96,3 +96,23 @@ func (r *Refs) HighestTag(line Line) (Version, bool) {
 
 	return highest, found
 }
+
+// LowestTag is the oldest release tag on the line, which is the release the
+// line opened with.
+func (r *Refs) LowestTag(line Line) (Version, bool) {
+	var lowest Version
+
+	found := false
+
+	for version := range r.Tags {
+		if version.Line() != line {
+			continue
+		}
+
+		if !found || CompareVersions(version, lowest) < 0 {
+			lowest, found = version, true
+		}
+	}
+
+	return lowest, found
+}

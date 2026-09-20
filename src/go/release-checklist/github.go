@@ -322,20 +322,31 @@ func (r *repository) TagInMain(ctx context.Context, tag string) (bool, error) {
 	return r.InBranch(ctx, tag, defaultBranch)
 }
 
-// InBranch reports whether a branch already has a commit or tag.
-func (r *repository) InBranch(ctx context.Context, ref, branch string) (bool, error) {
-	path := fmt.Sprintf("repos/%s/compare/%s...%s", r.repo, ref, branch)
-
-	output, err := r.run.run(ctx, "gh", "api", path, "--jq", ".behind_by")
+// count asks the API a question a number answers, and wraps a failure in
+// what was being read.
+func (r *repository) count(ctx context.Context, query, filter, reading string) (int, error) {
+	output, err := r.run.run(ctx, "gh", "api", query, "--jq", filter)
 	if err != nil {
-		return false, fmt.Errorf("comparing %s with %s: %w", ref, branch, err)
+		return 0, fmt.Errorf("%s: %w", reading, err)
 	}
 
+	number, err := strconv.Atoi(strings.TrimSpace(string(output)))
+	if err != nil {
+		return 0, fmt.Errorf("%s: %w", reading, err)
+	}
+
+	return number, nil
+}
+
+// InBranch reports whether a branch already has a commit or tag.
+func (r *repository) InBranch(ctx context.Context, ref, branch string) (bool, error) {
 	// behind_by counts the commits the ref has that the branch does not, so
 	// zero means the branch already has it.
-	behind, err := strconv.Atoi(strings.TrimSpace(string(output)))
+	behind, err := r.count(ctx,
+		fmt.Sprintf("repos/%s/compare/%s...%s", r.repo, ref, branch), ".behind_by",
+		fmt.Sprintf("comparing %s with %s", ref, branch))
 	if err != nil {
-		return false, fmt.Errorf("comparing %s with %s: %w", ref, branch, err)
+		return false, err
 	}
 
 	return behind == 0, nil
@@ -393,4 +404,71 @@ func (r *repository) LatestRun(ctx context.Context, workflow, ref, commit string
 	r.runs[key] = latest
 
 	return latest, nil
+}
+
+// GeneratedNotes is GitHub's own draft of the notes for a tag: the pull
+// requests merged since the previous release, and the authors it counts as
+// contributing for the first time. Drafting creates nothing.
+func (r *repository) GeneratedNotes(ctx context.Context, tag, previous, target string) (string, error) {
+	output, err := r.run.run(ctx, "gh", "api", "--method", "POST",
+		"repos/"+r.repo+"/releases/generate-notes",
+		"--field", "tag_name="+tag,
+		"--field", "previous_tag_name="+previous,
+		"--field", "target_commitish="+target,
+		"--jq", ".body")
+	if err != nil {
+		return "", fmt.Errorf("asking GitHub to draft the notes for %s: %w", tag, err)
+	}
+
+	return string(output), nil
+}
+
+// CommitDate is when a ref's commit was made, in the form the API takes as a
+// bound on a search of the history.
+func (r *repository) CommitDate(ctx context.Context, ref string) (string, error) {
+	output, err := r.run.run(ctx, "gh", "api", "repos/"+r.repo+"/commits/"+ref,
+		"--jq", ".commit.committer.date")
+	if err != nil {
+		return "", fmt.Errorf("reading the date of %s: %w", ref, err)
+	}
+
+	return strings.TrimSpace(string(output)), nil
+}
+
+// CommittedBefore reports whether an author has a commit in the repository
+// as old as a date.
+func (r *repository) CommittedBefore(ctx context.Context, author, date string) (bool, error) {
+	commits, err := r.count(ctx,
+		fmt.Sprintf("repos/%s/commits?author=%s&until=%s&per_page=1", r.repo, author, date),
+		"length", fmt.Sprintf("reading what %s committed before %s", author, date))
+	if err != nil {
+		return false, err
+	}
+
+	return commits > 0, nil
+}
+
+// Milestone is the number of the milestone with a title, or zero when the
+// repository has none. Milestones are listed rather than searched, because
+// the API offers no lookup by title.
+func (r *repository) Milestone(ctx context.Context, title string) (int, error) {
+	output, err := r.run.run(ctx, "gh", "api", "--paginate",
+		"repos/"+r.repo+"/milestones?state=all&per_page=100",
+		"--jq", fmt.Sprintf(".[] | select(.title == %q) | .number", title))
+	if err != nil {
+		return 0, fmt.Errorf("looking for the milestone %q: %w", title, err)
+	}
+
+	found := strings.TrimSpace(string(output))
+	if found == "" {
+		return 0, nil
+	}
+
+	// A repository can have the same title twice; the first is the answer.
+	number, err := strconv.Atoi(strings.Fields(found)[0])
+	if err != nil {
+		return 0, fmt.Errorf("looking for the milestone %q: %w", title, err)
+	}
+
+	return number, nil
 }

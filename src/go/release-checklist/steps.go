@@ -241,6 +241,9 @@ var releaseNotes = &Step{
 			"same sections: the installer links for {version}, the new contributors, what " +
 			"changed for the user, the bundled utilities that moved, and the compare " +
 			"link. Write what a user sees and leave internal work out.\n\n" +
+			"Press `f` to write this release's facts out as sections to paste. " +
+			"nerdctl and containerd are not among them, because they ship in the " +
+			"guest ISO rather than in dependencies.yaml.\n\n" +
 			"The file is untracked and nothing ignores it, so keep it out of your " +
 			"commits. Press `m` once the notes on the release are the ones to ship.",
 	},
@@ -249,6 +252,11 @@ var releaseNotes = &Step{
 		return waitFor(ctx, run, draftRelease), nil
 	},
 	Confirms: notesInRelease,
+	Facts: &Facts{
+		Title:  "The bundled utilities that moved, the first-time contributors, and the changelog links",
+		File:   factsFile,
+		Gather: gatherNotesFacts,
+	},
 	Action: &Action{
 		Title:   "Put release-notes.md into the notes of {tag}",
 		Summary: notesChange,

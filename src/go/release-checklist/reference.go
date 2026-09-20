@@ -27,7 +27,8 @@ func stepReference(steps []*Step) string {
 		fmt.Fprintf(&out, "- **Done when:** %s\n", step.Doc.Check)
 		fmt.Fprintf(&out, "- **Waits for:** %s\n", step.Doc.Precondition)
 		fmt.Fprintf(&out, "- **Reaches:** %s\n", reaches(step))
-		fmt.Fprintf(&out, "- **Runs:** %s\n\n", runs(step))
+		fmt.Fprintf(&out, "- **Runs:** %s\n", runs(step))
+		fmt.Fprintf(&out, "- **Gathers:** %s\n\n", gathers(step))
 		fmt.Fprintf(&out, "%s\n\n", step.Doc.Instructions)
 	}
 
@@ -44,6 +45,17 @@ func runs(step *Step) string {
 	}
 
 	return step.Action.Title + "."
+}
+
+// gathers says what reference material the step writes for whoever does its
+// manual work.
+func gathers(step *Step) string {
+	if step.Facts == nil {
+		return "nothing. The instructions are all the step needs."
+	}
+
+	return fmt.Sprintf("%s, written to %s under the release's cache directory.",
+		step.Facts.Title, step.Facts.File)
 }
 
 // reaches names the systems a step touches, so a reader can see what it can

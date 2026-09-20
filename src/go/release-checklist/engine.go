@@ -82,6 +82,22 @@ type Step struct {
 	// Action is the step's automation. A step without one is done by hand,
 	// following its instructions.
 	Action *Action
+	// Facts is the reference material the step's manual work is done from,
+	// read from the release itself. A step without one needs only what its
+	// instructions already say.
+	Facts *Facts
+}
+
+// Facts is a step's reference material. It runs to more than a pane holds,
+// and the reader pastes from it into a draft, so it goes to a file.
+type Facts struct {
+	// Title says what the material is, for the README and the dashboard.
+	Title string
+	// File is the name the material is written under, in the release's
+	// cache directory.
+	File string
+	// Gather builds the material. It reads the release and changes nothing.
+	Gather func(context.Context, *Run) (string, error)
 }
 
 // Action is a step's automation. It is a list of operations rather than a

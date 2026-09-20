@@ -23,6 +23,7 @@ the cursor.
 | `↑` `↓` | Move to another step. `k` and `j` work too. |
 | `enter` | Run the step's automation. The dashboard gives up the terminal, so the action can show its commands and ask before it runs them. |
 | `m` | Mark the step done when only your judgment can settle it, such as the release notes. Press `m` again to take the mark off. |
+| `f` | Write out the facts the step's manual work is done from, such as how the bundled utilities moved since the previous release. |
 | `i` | Read the step's instructions, filled in with this release's values. |
 | `r` | Read every check again. |
 | `q` | Quit. |
@@ -72,9 +73,9 @@ an older line:
 
 Every check reads the system that would show the step done, on every run, so
 the tool notices work done by hand or out of order, and a step somebody undid
-goes back to `available`. It stores one thing of its own, the mark on a step
-that only judgment settles. The release notes are done when you say they are,
-and editing them afterwards puts the step back to `available`.
+goes back to `available`. It keeps one piece of state of its own, the mark on
+a step that only judgment settles. The release notes are done when you say
+they are, and editing them afterwards puts the step back to `available`.
 
 ## Profiles
 
@@ -117,7 +118,7 @@ what a real release left behind.
 | --- | --- |
 | `<config>/rancher-desktop-release/<profile>/` | a profile other than production |
 | `<config>/rancher-desktop-release/<profile>/confirmations.yaml` | the steps you have marked done |
-| `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out |
+| `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out, and the facts `f` writes |
 
 `<cache>` is `~/Library/Caches` on macOS, `~/.cache` on Linux and
 `%LocalAppData%` on Windows. Your own clone never changes branch: a step that
@@ -162,6 +163,7 @@ checklist, so the steps below are not consecutive.
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
 - **Runs:** nothing. Follow the instructions.
+- **Gathers:** nothing. The instructions are all the step needs.
 
 Push the head of main to the new branch:
 
@@ -176,6 +178,7 @@ Check the head commit's subject, date and checks first. It is what the release s
 - **Waits for:** gh can push to {repo}, and the release branch step is done or does not apply.
 - **Reaches:** GitHub repo.
 - **Runs:** Open a pull request bumping package.json to {version}.
+- **Gathers:** nothing. The instructions are all the step needs.
 
 Set the `version` field of package.json on {branch} to {version}, commit it with a sign-off, push the commit to a branch of your own, and open a pull request against {branch} titled "Bump version to {version}". A reviewer approves and merges it.
 
@@ -186,6 +189,7 @@ Set the `version` field of package.json on {branch} to {version}, commit it with
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
 - **Runs:** nothing. Follow the instructions.
+- **Gathers:** nothing. The instructions are all the step needs.
 
 Create the draft, with no --target:
 
@@ -200,12 +204,15 @@ The title is "Rancher Desktop X.Y" for a minor release and "Rancher Desktop X.Y.
 - **Waits for:** gh can push to {repo}, and the draft release exists.
 - **Reaches:** GitHub repo.
 - **Runs:** Put release-notes.md into the notes of {tag}.
+- **Gathers:** The bundled utilities that moved, the first-time contributors, and the changelog links, written to release-notes-facts.md under the release's cache directory.
 
 Write the notes in release-notes.md at the top of your clone, then put them into the release:
 
     gh release edit {tag} --repo {repo} --notes-file release-notes.md
 
 Start from the previous release's notes, which `gh release view <previous tag> --repo {repo}` prints, and keep the same sections: the installer links for {version}, the new contributors, what changed for the user, the bundled utilities that moved, and the compare link. Write what a user sees and leave internal work out.
+
+Press `f` to write this release's facts out as sections to paste. nerdctl and containerd are not among them, because they ship in the guest ISO rather than in dependencies.yaml.
 
 The file is untracked and nothing ignores it, so keep it out of your commits. Press `m` once the notes on the release are the ones to ship.
 
@@ -216,6 +223,7 @@ The file is untracked and nothing ignores it, so keep it out of your commits. Pr
 - **Waits for:** gh can push to {repo}, the version bump and the draft release are done, {branch} has a commit main does not, and the package run for the head of {branch} succeeded.
 - **Reaches:** GitHub repo.
 - **Runs:** Push {tag} to {repo}.
+- **Gathers:** nothing. The instructions are all the step needs.
 
 Tag the head of {branch}:
 
@@ -230,6 +238,7 @@ Name the release repository by URL. In most clones `origin` is your own fork, so
 - **Waits for:** gh can push to {repo}, and {tag} is pushed. Nothing starts this run by hand; the tag push does.
 - **Reaches:** GitHub repo.
 - **Runs:** Rerun the failed jobs of the package run for {tag}.
+- **Gathers:** nothing. The instructions are all the step needs.
 
 Wait for the package run the tag push started, at
 
