@@ -218,6 +218,25 @@ Press `f` to write this release's facts out as sections to paste. nerdctl and co
 
 The file is untracked and nothing ignores it, so keep it out of your commits. Press `m` once the notes on the release are the ones to ship.
 
+### 7a. Docs: bundled utilities
+
+- **Applies to:** Minor releases. A patch ships the documentation its line already has, unless a bundled utility moved.
+- **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it, and the file lists the versions {version} bundles.
+- **Waits for:** gh can push to {docsRepo}, and the release branch exists.
+- **Reaches:** GitHub repo, GitHub docs repo.
+- **Runs:** nothing. Follow the instructions.
+- **Gathers:** nothing. The instructions are all the step needs.
+
+Write the bundled utility versions for {version} into the documentation:
+
+1. Add docs/bundled-utilities-version-info/v{version}.md, one utility per line, in the form `name: version <br/>`.
+2. Delete the oldest file in that directory, so the page lists three releases.
+3. In docs/references/bundled-utilities.md, import the new file and add its row at the top of the table, and take out the deleted one.
+
+Every version but nerdctl's comes from dependencies.yaml on {branch}. nerdctl ships in the guest images instead. The Lima image's Makefile and the WSL distribution's versions.env each set NERDCTL_VERSION, in the image release that dependencies.yaml names.
+
+Commit it to a release-{line} branch of your fork of {docsRepo} with a sign-off. The rdctl reference and the versioning snapshot go on the same branch, and one pull request carries all three.
+
 ### 9. Tag
 
 - **Applies to:** Every release.

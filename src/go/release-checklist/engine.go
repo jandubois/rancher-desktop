@@ -130,9 +130,9 @@ type Operation struct {
 	Do func(context.Context, *Run) error
 }
 
-// Doc is a step's prose. The placeholders {version}, {tag}, {branch}, {line}
-// and {repo} stand for the release's own values, which the detail pane fills
-// in and the README keeps, so the README describes every release.
+// Doc is a step's prose. The placeholders {version}, {tag}, {branch}, {line},
+// {repo} and {docsRepo} stand for the release's own values, which the detail
+// pane fills in and the README keeps, so the README describes every release.
 type Doc struct {
 	// Applies says which releases the step is for.
 	Applies string
@@ -179,6 +179,17 @@ type Run struct {
 	probed     map[string]Status
 	statuses   map[string]Status
 	evaluating map[string]bool
+	docs       *repository
+}
+
+// Docs is the documentation repository, built when a step first asks for it
+// because only the documentation steps reach it.
+func (r *Run) Docs(ctx context.Context) *repository {
+	if r.docs == nil {
+		r.docs = newRepository(ctx, r.Profile.GitHub.DocsRepo, r.Tools)
+	}
+
+	return r.docs
 }
 
 // newRun starts a refresh.
@@ -426,5 +437,6 @@ func fill(text string, run *Run) string {
 		"{branch}", run.Release.Branch(),
 		"{line}", run.Release.Version.Line().String(),
 		"{repo}", run.Profile.GitHub.Repo,
+		"{docsRepo}", run.Profile.GitHub.DocsRepo,
 	).Replace(text)
 }

@@ -14,8 +14,8 @@ import (
 
 // checklist is the release process, in the order a release runs it.
 var checklist = []*Step{
-	releaseBranch, versionBump, draftRelease, releaseNotes, tagRelease, packageBuild, linuxAssets,
-	windowsAssets,
+	releaseBranch, versionBump, draftRelease, releaseNotes, docsUtilities, tagRelease, packageBuild,
+	linuxAssets, windowsAssets,
 }
 
 // everyRelease is the applicability of a step that a minor and a patch both

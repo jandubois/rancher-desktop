@@ -92,6 +92,9 @@ type repository struct {
 	// once because finding them costs two API calls.
 	pushOwner string
 	pushURL   string
+	// fork is the repository a step pushes its branches to, which is where a
+	// release's work is until somebody merges it.
+	fork *repository
 	// root is the top of the clone the tool runs in.
 	root string
 	// releases caches what GitHub knows about a tag's release, because the
@@ -291,19 +294,68 @@ func (r *repository) Root(ctx context.Context) (string, error) {
 // FileAtRef is a file's content at a branch, tag or commit, read through the
 // API so a check gives the same answer whatever the local clone has fetched.
 func (r *repository) FileAtRef(ctx context.Context, ref, path string) ([]byte, error) {
-	query := fmt.Sprintf("repos/%s/contents/%s?ref=%s", r.repo, path, ref)
+	return fileAtRef(ctx, r.run, r.repo, ref, path)
+}
 
-	output, err := r.run.run(ctx, "gh", "api", query, "--header", "Accept: application/vnd.github.raw")
+// fileAtRef reads a file from any repository. The guest image pins need that,
+// because they are in repositories no profile names.
+func fileAtRef(ctx context.Context, run commander, repo, ref, path string) ([]byte, error) {
+	query := fmt.Sprintf("repos/%s/contents/%s?ref=%s", repo, path, ref)
+
+	output, err := run.run(ctx, "gh", "api", query, "--header", "Accept: application/vnd.github.raw")
 	if err != nil {
 		var failure *commandFailure
 		if errors.As(err, &failure) && failure.missing() {
 			return nil, errNotFound
 		}
 
-		return nil, fmt.Errorf("reading %s at %s: %w", path, ref, err)
+		return nil, fmt.Errorf("reading %s at %s of %s: %w", path, ref, repo, err)
 	}
 
 	return output, nil
+}
+
+// BranchHead is the commit a branch points at, or errNotFound when the
+// repository has no such branch. It asks about the branch, not the commit.
+// The commits endpoint resolves a ref as a SHA and answers an unknown name
+// with 422, which missing() does not count as an absence.
+func (r *repository) BranchHead(ctx context.Context, branch string) (string, error) {
+	output, err := r.run.run(ctx, "gh", "api", "repos/"+r.repo+"/branches/"+branch, "--jq", ".commit.sha")
+	if err != nil {
+		var failure *commandFailure
+		if errors.As(err, &failure) && failure.missing() {
+			return "", errNotFound
+		}
+
+		return "", fmt.Errorf("reading the head of %s in %s: %w", branch, r.repo, err)
+	}
+
+	return strings.TrimSpace(string(output)), nil
+}
+
+// Fork is the repository the user's own branches go to, which a check reads
+// to find work that is pushed but not yet merged. A user with no fork gets
+// the repository itself, which is what a profile that already points at a
+// fork needs.
+func (r *repository) Fork(ctx context.Context) (*repository, error) {
+	if r.fork != nil {
+		return r.fork, nil
+	}
+
+	owner, _, err := r.PushTarget(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	_, name, _ := strings.Cut(r.repo, "/")
+
+	if fork := owner + "/" + name; fork != r.repo {
+		r.fork = &repository{repo: fork, url: r.url, run: r.run}
+	} else {
+		r.fork = r
+	}
+
+	return r.fork, nil
 }
 
 // OpenPR is the number of the open pull request from a branch, or zero when
