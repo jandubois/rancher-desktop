@@ -21,6 +21,9 @@ const (
 	testRunID = "30474476005"
 	// testZip is what the Linux zip is called on the test release.
 	testZip = "rancher-desktop-linux-v1.25.0.zip"
+	// testMSI is what the signed Windows installer is called on the test
+	// release.
+	testMSI = "Rancher.Desktop.Setup.1.25.0.msi"
 	// testArtifactSize is the size of a real Linux artifact.
 	testArtifactSize = 705811481
 )
@@ -30,11 +33,11 @@ func artifactsQuery(runID string) string {
 	return "gh api repos/" + testRepo + "/actions/runs/" + runID + "/artifacts?per_page=100"
 }
 
-// artifactsJSON is what GitHub answers for a run that built the Linux zip,
-// in the shape a real lookup returns.
-func artifactsJSON(expired bool) string {
+// artifactsJSON is what GitHub answers for a run that built one artifact, in
+// the shape a real lookup returns.
+func artifactsJSON(name string, expired bool) string {
 	return fmt.Sprintf(`{"total_count":1,"artifacts":[{"name":%q,"expired":%t,"size_in_bytes":%d}]}`,
-		linuxArtifact, expired, testArtifactSize)
+		name, expired, testArtifactSize)
 }
 
 // draftWithAssets is what gh answers for a draft release carrying files.
@@ -83,7 +86,7 @@ func inACacheOfItsOwn(t *testing.T) {
 func TestLinuxAssetsAreDoneWhenTheReleaseHasBoth(t *testing.T) {
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip), stored(testZip+checksumSuffix)),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	if status := run.Status(context.Background(), linuxAssets); status.State != Done {
 		t.Errorf("the Linux assets were %s: %s", status.State, status.Detail)
@@ -93,7 +96,7 @@ func TestLinuxAssetsAreDoneWhenTheReleaseHasBoth(t *testing.T) {
 func TestLinuxAssetsAreAvailableWhileTheChecksumIsMissing(t *testing.T) {
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip)),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	status := run.Status(context.Background(), linuxAssets)
 	if status.State != Available {
@@ -110,7 +113,7 @@ func TestAnAssetStillArrivingIsNotOnTheRelease(t *testing.T) {
 
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip), half),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	// GitHub names an asset as soon as an upload starts, so the name alone
 	// would report a release nobody can download from as finished.
@@ -127,7 +130,7 @@ func TestAnAssetStillArrivingIsNotOnTheRelease(t *testing.T) {
 func TestLinuxAssetsAreBlockedOnceTheArtifactHasExpired(t *testing.T) {
 	run := uploadRun(t,
 		draftWithAssets(t),
-		artifactsJSON(true))
+		artifactsJSON(linuxArtifact, true))
 
 	status := run.Status(context.Background(), linuxAssets)
 	if status.State != Blocked {
@@ -160,7 +163,7 @@ func TestLinuxAssetsWaitForSomewhereToUploadTo(t *testing.T) {
 	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = ""
 	answers[runsQuery("v1.25.0")] = packageRunJSON("completed", "success")
-	answers[artifactsQuery(testRunID)] = artifactsJSON(false)
+	answers[artifactsQuery(testRunID)] = artifactsJSON(linuxArtifact, false)
 
 	tools := &fakeTools{output: answers, stderr: map[string]string{
 		"gh release view v1.25.0 --repo " + testRepo + " --json " + releaseFields: "release not found",
@@ -183,7 +186,7 @@ func TestUploadingSendsOnlyWhatTheReleaseIsMissing(t *testing.T) {
 
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip)),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	operations, err := planLinuxAssets(context.Background(), run)
 	if err != nil {
@@ -215,7 +218,7 @@ func TestUploadingRefusesWhenTheReleaseHasEverything(t *testing.T) {
 
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip), stored(testZip+checksumSuffix)),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	if _, err := planLinuxAssets(context.Background(), run); err == nil {
 		t.Error("a release with both files was given an upload to run")
@@ -282,7 +285,7 @@ func TestTheChecksumIsTheFormTheReleasesCarry(t *testing.T) {
 func TestAnUploadThatArrivedShortIsCaught(t *testing.T) {
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip)),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	dir := t.TempDir()
 	if err := os.WriteFile(filepath.Join(dir, testZip), []byte("a build"), 0o644); err != nil {
@@ -305,7 +308,7 @@ func TestAnUploadThatArrivedWholePasses(t *testing.T) {
 
 	run := uploadRun(t,
 		draftWithAssets(t, releaseAsset{Name: testZip, State: uploaded, Digest: digest}),
-		artifactsJSON(false))
+		artifactsJSON(linuxArtifact, false))
 
 	dir := t.TempDir()
 	if err := os.WriteFile(filepath.Join(dir, testZip), content, 0o644); err != nil {
@@ -326,5 +329,84 @@ func TestARunWithMoreFilesThanAPageIsNotReadAsBuildingNothing(t *testing.T) {
 	// one the run never built would send somebody to rebuild a good run.
 	if status := run.Status(context.Background(), linuxAssets); status.State != Unknown {
 		t.Errorf("a truncated listing was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestWindowsAssetsAreDoneWhenTheReleaseHasBoth(t *testing.T) {
+	run := uploadRun(t,
+		draftWithAssets(t, stored(testMSI), stored(testMSI+checksumSuffix)),
+		artifactsJSON(windowsArtifact, false))
+
+	if status := run.Status(context.Background(), windowsAssets); status.State != Done {
+		t.Errorf("the Windows assets were %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestWindowsAssetsAreAvailableWhileTheChecksumIsMissing(t *testing.T) {
+	run := uploadRun(t,
+		draftWithAssets(t, stored(testMSI)),
+		artifactsJSON(windowsArtifact, false))
+
+	status := run.Status(context.Background(), windowsAssets)
+	if status.State != Available {
+		t.Fatalf("a release missing the checksum was %s: %s", status.State, status.Detail)
+	}
+
+	if !strings.Contains(status.Detail, checksumSuffix) {
+		t.Errorf("the detail does not name what is missing: %s", status.Detail)
+	}
+}
+
+func TestWindowsAssetsAreBlockedWhenTheRunBuiltOnlyTheLinuxZip(t *testing.T) {
+	run := uploadRun(t,
+		draftWithAssets(t),
+		artifactsJSON(linuxArtifact, false))
+
+	// Every asset step reads the same run, so one that took the first
+	// artifact it found would send the signer a build for another platform.
+	status := run.Status(context.Background(), windowsAssets)
+	if status.State != Blocked {
+		t.Fatalf("a run that built no Windows zip was %s: %s", status.State, status.Detail)
+	}
+
+	if !strings.Contains(status.Detail, windowsArtifact) {
+		t.Errorf("the detail does not name the build that is missing: %s", status.Detail)
+	}
+}
+
+func TestTheSignerMessageNamesTheRunAndWhatComesBack(t *testing.T) {
+	run := uploadRun(t,
+		draftWithAssets(t),
+		artifactsJSON(windowsArtifact, false))
+
+	message, err := gatherWindowsSigning(context.Background(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// The run is the part the signer cannot look up, and the two names are
+	// what the check then waits for.
+	for _, want := range []string{
+		"https://github.com/" + testRepo + "/actions/runs/" + testRunID,
+		windowsArtifact,
+		testMSI,
+		testMSI + checksumSuffix,
+	} {
+		if !strings.Contains(message, want) {
+			t.Errorf("the message does not name %s:\n%s", want, message)
+		}
+	}
+}
+
+func TestTheSignerMessageNeedsATag(t *testing.T) {
+	run := uploadRun(t,
+		draftWithAssets(t),
+		artifactsJSON(windowsArtifact, false))
+	run.Refs.Tags = map[Version]string{}
+
+	// Without the tag there is no run to point the signer at, and the
+	// message would name whichever run a lookup found.
+	if _, err := gatherWindowsSigning(context.Background(), run); err == nil {
+		t.Error("a release with no tag produced a message for the signer")
 	}
 }

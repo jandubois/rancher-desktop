@@ -268,3 +268,18 @@ gh unpacks the artifact, so the zip arrives under the name the build stamped it 
 Leave -b off, so the line reads the way every released Linux checksum does. macOS has no sha512sum, and shasum -a 512 prints the same line. Upload both files:
 
     gh release upload {tag} --repo {repo} <the zip> <the checksum>
+
+### 14. Windows assets
+
+- **Applies to:** Every release.
+- **Done when:** {tag} has Rancher.Desktop.Setup.{version}.msi and its .sha512sum.
+- **Waits for:** gh can push to {repo}, the draft release exists, {tag} is pushed, and the package run for {tag} has built its Windows zip.
+- **Reaches:** GitHub repo.
+- **Runs:** nothing. Follow the instructions.
+- **Gathers:** What the Windows signer needs, written to windows-signing.md under the release's cache directory.
+
+The Windows signing key is a fob, so the key holder builds and signs the installer on their own machine. Press `f` for the message to send them, which names the package run the build is in.
+
+They take the "Rancher Desktop-win.zip" artifact of that run and sign it with the SUSE code-signing certificate, as docs/development/signing.md describes. yarn sign writes the installer and its checksum under the names the release uses, so nothing has to be renamed or hashed by hand.
+
+They can upload the two files or send them to you.

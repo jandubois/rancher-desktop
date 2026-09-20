@@ -15,6 +15,7 @@ import (
 // checklist is the release process, in the order a release runs it.
 var checklist = []*Step{
 	releaseBranch, versionBump, draftRelease, releaseNotes, tagRelease, packageBuild, linuxAssets,
+	windowsAssets,
 }
 
 // everyRelease is the applicability of a step that a minor and a patch both
@@ -499,5 +500,36 @@ var linuxAssets = &Step{
 		Title:   "Upload the Linux zip and its checksum to {tag}",
 		Summary: linuxDownloadSize,
 		Plan:    planLinuxAssets,
+	},
+}
+
+// windowsAssets is step 14. The Windows signing key is a fob held by one
+// person, so the tool gathers what they need and waits for their upload.
+var windowsAssets = &Step{
+	ID:    "14",
+	Title: "Windows assets",
+	Kinds: []Kind{Minor, Patch},
+	Needs: []*Resource{githubRepo},
+	Doc: Doc{
+		Applies: everyRelease,
+		Check:   "{tag} has Rancher.Desktop.Setup.{version}.msi and its .sha512sum.",
+		Precondition: "gh can push to {repo}, the draft release exists, {tag} is pushed, " +
+			"and the package run for {tag} has built its Windows zip.",
+		Instructions: "The Windows signing key is a fob, so the key holder builds and " +
+			"signs the installer on their own machine. Press `f` for the message to " +
+			"send them, which names the package run the build is in.\n\n" +
+			"They take the \"Rancher Desktop-win.zip\" artifact of that run and sign " +
+			"it with the SUSE code-signing certificate, as docs/development/signing.md " +
+			"describes. yarn sign writes the installer and its checksum under the " +
+			"names the release uses, so nothing has to be renamed or hashed by " +
+			"hand.\n\n" +
+			"They can upload the two files or send them to you.",
+	},
+	Check:        checkWindowsAssets,
+	Precondition: windowsAssetsReady,
+	Facts: &Facts{
+		Title:  "What the Windows signer needs",
+		File:   windowsSigningFile,
+		Gather: gatherWindowsSigning,
 	},
 }

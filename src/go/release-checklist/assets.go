@@ -15,6 +15,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // checksumSuffix ends the name of the file holding an asset's sha512.
@@ -23,9 +24,18 @@ const checksumSuffix = ".sha512sum"
 // assetsDir is where a release's downloads go, under its cache directory.
 const assetsDir = "assets"
 
+// windowsSigningFile is the file the message for the Windows signer is
+// written to, under the release's cache directory.
+const windowsSigningFile = "windows-signing.md"
+
 // linuxArtifact is what the package workflow calls the Linux build it
 // uploads (.github/workflows/package.yaml).
 const linuxArtifact = "Rancher Desktop-linux.zip"
+
+// windowsArtifact is what the package workflow calls the Windows build it
+// uploads (.github/workflows/package.yaml). It holds the zip the signer
+// builds the installer from.
+const windowsArtifact = "Rancher Desktop-win.zip"
 
 // builtLinuxZip matches the name the build gives the Linux zip, which holds
 // the version it stamped (packaging/electron-builder.yml, artifactName).
@@ -54,7 +64,7 @@ func linuxAssetsReady(ctx context.Context, run *Run) (Answer, error) {
 		return ready, nil
 	}
 
-	_, answer, err := artifactToUpload(ctx, run, linuxArtifact)
+	_, answer, err := builtArtifact(ctx, run, linuxArtifact)
 
 	return answer, err
 }
@@ -62,7 +72,7 @@ func linuxAssetsReady(ctx context.Context, run *Run) (Answer, error) {
 // linuxDownloadSize says what the download will cost before the action
 // starts.
 func linuxDownloadSize(ctx context.Context, run *Run) (string, error) {
-	artifact, answer, err := artifactToUpload(ctx, run, linuxArtifact)
+	artifact, answer, err := builtArtifact(ctx, run, linuxArtifact)
 	if err != nil || !answer.OK {
 		return "", err
 	}
@@ -131,6 +141,97 @@ func planLinuxAssets(ctx context.Context, run *Run) ([]Operation, error) {
 	}, nil
 }
 
+// windowsAsset is what the signed installer is called on the release.
+// scripts/lib/installer-win32.tsx names the installer, and scripts/sign.ts
+// writes the checksum beside it under that name, so neither file is
+// renamed on the way to the release.
+func windowsAsset(version Version) string {
+	return "Rancher.Desktop.Setup." + version.String() + ".msi"
+}
+
+// checkWindowsAssets reports whether the release has the signed installer
+// and the checksum that covers it.
+func checkWindowsAssets(ctx context.Context, run *Run) (Answer, error) {
+	msi := windowsAsset(run.Release.Version)
+
+	return assetsPresent(ctx, run, "the Windows installer and its checksum", msi, msi+checksumSuffix)
+}
+
+// windowsAssetsReady holds the step until there is a release to upload to
+// and a build to sign.
+func windowsAssetsReady(ctx context.Context, run *Run) (Answer, error) {
+	if ready := waitFor(ctx, run, draftRelease, tagRelease); !ready.OK {
+		return ready, nil
+	}
+
+	_, answer, err := builtArtifact(ctx, run, windowsArtifact)
+
+	return answer, err
+}
+
+// windowsSigningMessage is what the signer is sent. The signer never sees
+// the step's instructions, so the message repeats them and names the run
+// the build is in.
+const windowsSigningMessage = `# Signing the Windows build of Rancher Desktop {version}
+
+The build is the "{artifact}" artifact of this run:
+
+    {runURL}
+
+gh unpacks the artifact, so the zip arrives as the build wrote it:
+
+    gh run download {run} --repo {repo} --name "{artifact}"
+
+Sign it from a checkout of {tag} with its dependencies installed, and with
+CSC_FINGERPRINT set to the fingerprint of the SUSE code-signing certificate.
+docs/development/signing.md says how to read the fingerprint off the key and
+what else the environment needs.
+
+    yarn sign (Get-Item "Rancher Desktop*-win.zip")
+
+That writes two files to dist:
+
+    {msi}
+    {checksum}
+
+Upload both to the draft release under those names:
+
+    gh release upload {tag} --repo {repo} dist/{msi} dist/{checksum}
+
+Or send me both files and I will upload them.
+`
+
+// gatherWindowsSigning fills in the message for this release.
+func gatherWindowsSigning(ctx context.Context, run *Run) (string, error) {
+	tag := run.Release.Tag()
+	msi := windowsAsset(run.Release.Version)
+
+	commit, tagged := run.Refs.Tags[run.Release.Version]
+	if !tagged {
+		return "", fmt.Errorf("%s is not pushed, so no run has built the Windows zip", tag)
+	}
+
+	build, err := run.Repo.LatestRun(ctx, packageWorkflow, tag, commit)
+	if err != nil {
+		return "", err
+	}
+
+	if build == nil {
+		return "", fmt.Errorf("%s has no package run to take %s from", tag, windowsArtifact)
+	}
+
+	return strings.NewReplacer(
+		"{version}", run.Release.Version.String(),
+		"{tag}", tag,
+		"{repo}", run.Repo.repo,
+		"{artifact}", windowsArtifact,
+		"{run}", build.ID,
+		"{runURL}", build.URL,
+		"{msi}", msi,
+		"{checksum}", msi+checksumSuffix,
+	).Replace(windowsSigningMessage), nil
+}
+
 // assetsPresent reports whether the release has every named file in full.
 // Its what argument names them together, for the line beside a step that has
 // them all.
@@ -185,9 +286,9 @@ func findAsset(assets []releaseAsset, name string) (releaseAsset, bool) {
 	return releaseAsset{}, false
 }
 
-// artifactToUpload is the file a step uploads, with how the package run for
-// the tag is going.
-func artifactToUpload(ctx context.Context, run *Run, name string) (Artifact, Answer, error) {
+// builtArtifact is the file a step takes from the tag's package run, with
+// how that run is going.
+func builtArtifact(ctx context.Context, run *Run, name string) (Artifact, Answer, error) {
 	tag := run.Release.Tag()
 
 	// The caller has already waited for the tag step, so the tag is in the
