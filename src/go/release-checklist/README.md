@@ -118,7 +118,7 @@ what a real release left behind.
 | --- | --- |
 | `<config>/rancher-desktop-release/<profile>/` | a profile other than production |
 | `<config>/rancher-desktop-release/<profile>/confirmations.yaml` | the steps you have marked done |
-| `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out, and the facts `f` writes |
+| `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out, the release assets it downloads, and the facts `f` writes |
 
 `<cache>` is `~/Library/Caches` on macOS, `~/.cache` on Linux and
 `%LocalAppData%` on Windows. Your own clone never changes branch: a step that
@@ -126,10 +126,11 @@ needs a checkout makes a worktree under the cache directory, so a failed step
 cannot leave you on a bump branch. The clone is still the worktree's parent,
 and the fetch that feeds it writes to the clone's object store.
 
-Nothing removes a worktree afterwards: one that needs its own `yarn install`
-then pays for it once instead of once per attempt. Delete a finished release's
-cache directory when you want the space back, and the next checkout prunes the
-registration it leaves behind.
+Nothing removes a worktree or a download afterwards. A worktree that needs its
+own `yarn install` then pays for it once instead of once per attempt, and a
+release asset runs to hundreds of megabytes, so the directory grows. Delete a
+finished release's cache directory when you want the space back, and the next
+checkout prunes the registration it leaves behind.
 
 ## What it changes outside this machine
 
@@ -138,14 +139,16 @@ perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
 would build on work that did not happen.
 
-Four of the steps below have automation. The version bump pushes a branch and
+Five of the steps below have automation. The version bump pushes a branch and
 opens a pull request against the release branch; that branch goes to your fork
 of the release repository, or to the release repository itself when you have no
 fork of it. The release notes step shows how release-notes.md differs from the
 notes of `vX.Y.Z`, then puts the file into the release. The tag step pushes the
 release branch head to `refs/tags/vX.Y.Z` in the release repository, which
 starts the build every release asset comes from. The package build step reruns
-the jobs of that build that failed. Each step names the system it reaches.
+the jobs of that build that failed. The Linux assets step takes that build's
+Linux zip, gives it the name the release uses, writes its checksum and uploads
+what the release does not have. Each step names the system it reaches.
 
 ## Step reference
 
@@ -245,3 +248,24 @@ Wait for the package run the tag push started, at
     https://github.com/{repo}/actions/workflows/package.yaml
 
 Every release asset comes from that run. Rerun the jobs that failed if it does not pass.
+
+### 11. Linux assets
+
+- **Applies to:** Every release.
+- **Done when:** {tag} has rancher-desktop-linux-{tag}.zip and its .sha512sum.
+- **Waits for:** gh can push to {repo}, the draft release exists, {tag} is pushed, and the package run for {tag} has built its Linux zip.
+- **Reaches:** GitHub repo.
+- **Runs:** Upload the Linux zip and its checksum to {tag}.
+- **Gathers:** nothing. The instructions are all the step needs.
+
+Take the Linux build from the package run for {tag}:
+
+    gh run download <run id> --repo {repo} --name "Rancher Desktop-linux.zip" --dir <dir>
+
+gh unpacks the artifact, so the zip arrives under the name the build stamped it with. Rename it to rancher-desktop-linux-{tag}.zip. The workflow that copies the release's Linux zip to the OBS bucket builds its download URL from that name, so the release cannot keep the build's. Write the checksum beside it:
+
+    sha512sum rancher-desktop-linux-{tag}.zip > rancher-desktop-linux-{tag}.zip.sha512sum
+
+Leave -b off, so the line reads the way every released Linux checksum does. macOS has no sha512sum, and shasum -a 512 prints the same line. Upload both files:
+
+    gh release upload {tag} --repo {repo} <the zip> <the checksum>

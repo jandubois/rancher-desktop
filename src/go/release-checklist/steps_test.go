@@ -135,7 +135,7 @@ func packageRunJSON(status, conclusion string) string {
 func readyToTag(build string) map[string]string {
 	return map[string]string{
 		contentsQuery(testBranch): strings.Replace(manifest, "1.24.0", "1.25.0", 1),
-		"gh release view v1.25.0 --repo " + testRepo + " --json isDraft,body":           "{\"isDraft\":true}",
+		"gh release view v1.25.0 --repo " + testRepo + " --json " + releaseFields:       "{\"isDraft\":true}",
 		"gh api repos/" + testRepo + "/compare/" + testHead + "...main --jq .behind_by": "2\n",
 		runsQuery(testBranch): build,
 	}

@@ -46,8 +46,8 @@ func notesRun(t *testing.T, published, written string) *Run {
 	}
 
 	tools := &fakeTools{output: map[string]string{
-		"git rev-parse --show-toplevel":                                       clone + "\n",
-		"gh release view v1.25.0 --repo " + testRepo + " --json isDraft,body": releaseJSON(t, published),
+		"git rev-parse --show-toplevel":                                           clone + "\n",
+		"gh release view v1.25.0 --repo " + testRepo + " --json " + releaseFields: releaseJSON(t, published),
 	}}
 
 	return checklistRun(t, testRelease, map[Line]string{{Major: 1, Minor: 25}: testHead}, tools)
@@ -55,7 +55,7 @@ func notesRun(t *testing.T, published, written string) *Run {
 
 func TestReleaseNotesWaitForTheDraftRelease(t *testing.T) {
 	tools := &fakeTools{stderr: map[string]string{
-		"gh release view v1.25.0 --repo " + testRepo + " --json isDraft,body": "release not found",
+		"gh release view v1.25.0 --repo " + testRepo + " --json " + releaseFields: "release not found",
 	}}
 
 	run := checklistRun(t, testRelease, map[Line]string{{Major: 1, Minor: 25}: testHead}, tools)

@@ -13,7 +13,9 @@ import (
 )
 
 // checklist is the release process, in the order a release runs it.
-var checklist = []*Step{releaseBranch, versionBump, draftRelease, releaseNotes, tagRelease, packageBuild}
+var checklist = []*Step{
+	releaseBranch, versionBump, draftRelease, releaseNotes, tagRelease, packageBuild, linuxAssets,
+}
 
 // everyRelease is the applicability of a step that a minor and a patch both
 // run.
@@ -464,4 +466,38 @@ func planRerunPackage(ctx context.Context, run *Run) ([]Operation, error) {
 	return []Operation{
 		command("", "gh", "run", "rerun", build.ID, "--repo", run.Repo.repo, "--failed"),
 	}, nil
+}
+
+// linuxAssets is step 11. Nothing signs the Linux zip, so it goes from the
+// build to the release as it was built.
+var linuxAssets = &Step{
+	ID:    "11",
+	Title: "Linux assets",
+	Kinds: []Kind{Minor, Patch},
+	Needs: []*Resource{githubRepo},
+	Doc: Doc{
+		Applies: everyRelease,
+		Check:   "{tag} has rancher-desktop-linux-{tag}.zip and its .sha512sum.",
+		Precondition: "gh can push to {repo}, the draft release exists, {tag} is pushed, " +
+			"and the package run for {tag} has built its Linux zip.",
+		Instructions: "Take the Linux build from the package run for {tag}:\n\n" +
+			"    gh run download <run id> --repo {repo} --name \"Rancher Desktop-linux.zip\" --dir <dir>\n\n" +
+			"gh unpacks the artifact, so the zip arrives under the name the build " +
+			"stamped it with. Rename it to rancher-desktop-linux-{tag}.zip. The " +
+			"workflow that copies the release's Linux zip to the OBS bucket builds its " +
+			"download URL from that name, so the release cannot keep the build's. Write " +
+			"the checksum beside it:\n\n" +
+			"    sha512sum rancher-desktop-linux-{tag}.zip > rancher-desktop-linux-{tag}.zip.sha512sum\n\n" +
+			"Leave -b off, so the line reads the way every released Linux checksum " +
+			"does. macOS has no sha512sum, and shasum -a 512 prints the same line. " +
+			"Upload both files:\n\n" +
+			"    gh release upload {tag} --repo {repo} <the zip> <the checksum>",
+	},
+	Check:        checkLinuxAssets,
+	Precondition: linuxAssetsReady,
+	Action: &Action{
+		Title:   "Upload the Linux zip and its checksum to {tag}",
+		Summary: linuxDownloadSize,
+		Plan:    planLinuxAssets,
+	},
 }

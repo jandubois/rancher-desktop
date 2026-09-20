@@ -101,6 +101,9 @@ type repository struct {
 	// runs caches the workflow runs by ref, because a step's check and its
 	// precondition ask about the same one.
 	runs map[string]*WorkflowRun
+	// artifacts caches what a run built, because every step that uploads an
+	// asset asks the same run about its own file.
+	artifacts map[string][]Artifact
 }
 
 func newRepository(ctx context.Context, repo string, run commander) *repository {
@@ -153,11 +156,30 @@ func (r *repository) Refs(ctx context.Context) (*Refs, error) {
 	return r.refs, nil
 }
 
+// releaseFields are the parts of a release the tool reads.
+const releaseFields = "isDraft,body,assets"
+
 // releaseView is what GitHub answers about the release for a tag.
 type releaseView struct {
-	IsDraft bool   `json:"isDraft"`
-	Body    string `json:"body"`
+	IsDraft bool           `json:"isDraft"`
+	Body    string         `json:"body"`
+	Assets  []releaseAsset `json:"assets"`
 }
+
+// releaseAsset is a file attached to a release.
+type releaseAsset struct {
+	Name string `json:"name"`
+	// Digest is the sha256 GitHub made of the bytes it stored, written
+	// "sha256:<hex>".
+	Digest string `json:"digest"`
+	// State is "uploaded" once the whole file has arrived. An upload that
+	// stopped partway leaves the name behind in another state, so a name
+	// alone does not mean the file is there.
+	State string `json:"state"`
+}
+
+// uploaded is the state of an asset GitHub has the whole of.
+const uploaded = "uploaded"
 
 // releaseFor reads the release for a tag, or errNotFound when no release
 // names it.
@@ -185,7 +207,7 @@ func (r *repository) releaseFor(ctx context.Context, tag string) (*releaseView, 
 }
 
 func (r *repository) readRelease(ctx context.Context, tag string) (*releaseView, error) {
-	output, err := r.run.run(ctx, "gh", "release", "view", tag, "--repo", r.repo, "--json", "isDraft,body")
+	output, err := r.run.run(ctx, "gh", "release", "view", tag, "--repo", r.repo, "--json", releaseFields)
 	if err != nil {
 		var failure *commandFailure
 		if errors.As(err, &failure) && (failure.says("release not found") || failure.missing()) {
@@ -228,6 +250,25 @@ func (r *repository) ReleaseNotes(ctx context.Context, tag string) (string, erro
 	}
 
 	return view.Body, nil
+}
+
+// ReleaseAssets are the files attached to the release for a tag.
+func (r *repository) ReleaseAssets(ctx context.Context, tag string) ([]releaseAsset, error) {
+	view, err := r.releaseFor(ctx, tag)
+	if err != nil {
+		return nil, err
+	}
+
+	return view.Assets, nil
+}
+
+// AssetsAfterUpload are the files attached to a release, read again. The
+// tool cached the release before the upload, so the cached copy still shows
+// it without the files.
+func (r *repository) AssetsAfterUpload(ctx context.Context, tag string) ([]releaseAsset, error) {
+	delete(r.releases, tag)
+
+	return r.ReleaseAssets(ctx, tag)
 }
 
 // Root is the top of the clone the tool runs in, which is where the working
@@ -404,6 +445,65 @@ func (r *repository) LatestRun(ctx context.Context, workflow, ref, commit string
 	r.runs[key] = latest
 
 	return latest, nil
+}
+
+// Artifact is a file a workflow run uploaded, which is where a release asset
+// comes from.
+type Artifact struct {
+	Name string
+	// Expired is true once GitHub has removed the file. The entry outlives
+	// the bytes, so a name alone does not mean the file can be downloaded.
+	Expired bool
+	// Size is the artifact's size in bytes, which a step shows before it
+	// starts a download.
+	Size int64
+}
+
+// Artifacts are the files a workflow run uploaded.
+func (r *repository) Artifacts(ctx context.Context, runID string) ([]Artifact, error) {
+	if cached, ok := r.artifacts[runID]; ok {
+		return cached, nil
+	}
+
+	query := fmt.Sprintf("repos/%s/actions/runs/%s/artifacts?per_page=100", r.repo, runID)
+
+	output, err := r.run.run(ctx, "gh", "api", query)
+	if err != nil {
+		return nil, fmt.Errorf("reading what the run %s built: %w", runID, err)
+	}
+
+	var answer struct {
+		Total     int `json:"total_count"`
+		Artifacts []struct {
+			Name    string `json:"name"`
+			Expired bool   `json:"expired"`
+			Size    int64  `json:"size_in_bytes"`
+		} `json:"artifacts"`
+	}
+
+	if err := json.Unmarshal(output, &answer); err != nil {
+		return nil, fmt.Errorf("reading what the run %s built: %w", runID, err)
+	}
+
+	// The listing is one page, so a run with more artifacts than that has
+	// pages nobody read. Failing beats reporting a file a later page holds
+	// as one the run never built.
+	if answer.Total > len(answer.Artifacts) {
+		return nil, fmt.Errorf("the run %s built %d files, more than one page holds", runID, answer.Total)
+	}
+
+	built := make([]Artifact, 0, len(answer.Artifacts))
+	for _, artifact := range answer.Artifacts {
+		built = append(built, Artifact{Name: artifact.Name, Expired: artifact.Expired, Size: artifact.Size})
+	}
+
+	if r.artifacts == nil {
+		r.artifacts = map[string][]Artifact{}
+	}
+
+	r.artifacts[runID] = built
+
+	return built, nil
 }
 
 // GeneratedNotes is GitHub's own draft of the notes for a tag: the pull
