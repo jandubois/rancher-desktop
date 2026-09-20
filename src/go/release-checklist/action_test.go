@@ -130,3 +130,22 @@ func TestArgumentsWithSpacesAreShownQuoted(t *testing.T) {
 		t.Errorf("shown as %s", operation.Description)
 	}
 }
+
+func TestWhatAnOperationPrintsReachesTheTerminal(t *testing.T) {
+	run := testRun(t, Minor)
+	run.Tools = &fakeTools{
+		anyCommand: true,
+		output:     map[string]string{"git fetch origin": "counting objects\n"},
+	}
+
+	var out strings.Builder
+	if err := RunAction(context.Background(), twoCommands(), run, strings.NewReader("y\n"), &out); err != nil {
+		t.Fatal(err)
+	}
+
+	// A terminal showing nothing during a long operation looks like a tool
+	// that has stopped.
+	if !strings.Contains(out.String(), "counting objects") {
+		t.Errorf("the command's output never reached the terminal:\n%s", out.String())
+	}
+}

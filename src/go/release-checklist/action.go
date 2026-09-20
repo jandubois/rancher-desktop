@@ -65,7 +65,7 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 	for _, operation := range operations {
 		fmt.Fprintf(out, "\n%s\n", operation.Description)
 
-		if err := operation.perform(ctx, run); err != nil {
+		if err := operation.perform(ctx, run, out); err != nil {
 			return fmt.Errorf("%s: %w", operation.Description, err)
 		}
 	}
@@ -89,14 +89,12 @@ func confirmed(in io.Reader) bool {
 	}
 }
 
-func (o *Operation) perform(ctx context.Context, run *Run) error {
+func (o *Operation) perform(ctx context.Context, run *Run, out io.Writer) error {
 	if o.Do != nil {
 		return o.Do(ctx, run)
 	}
 
-	_, err := run.Tools.runIn(ctx, o.Dir, o.Command, o.Args...)
-
-	return err
+	return run.Tools.runTo(ctx, o.Dir, out, o.Command, o.Args...)
 }
 
 // command is an operation that runs an external command, described by the

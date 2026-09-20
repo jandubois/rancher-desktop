@@ -7,6 +7,7 @@ package main
 import (
 	"context"
 	"errors"
+	"io"
 	"strings"
 	"testing"
 )
@@ -42,6 +43,17 @@ func (f *fakeTools) run(_ context.Context, name string, args ...string) ([]byte,
 
 func (f *fakeTools) runIn(ctx context.Context, _ string, name string, args ...string) ([]byte, error) {
 	return f.run(ctx, name, args...)
+}
+
+// runTo answers as the other two do, and writes the answer where a real
+// command's output would go.
+func (f *fakeTools) runTo(ctx context.Context, dir string, out io.Writer, name string, args ...string) error {
+	output, err := f.runIn(ctx, dir, name, args...)
+	if _, written := out.Write(output); written != nil {
+		return written
+	}
+
+	return err
 }
 
 func (f *fakeTools) installed(name string) bool { return !f.absent[name] }

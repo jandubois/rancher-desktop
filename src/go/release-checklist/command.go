@@ -8,6 +8,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"os/exec"
 	"strings"
 )
@@ -24,6 +25,10 @@ type commander interface {
 	// runIn runs the command in a directory, for the worktrees the actions
 	// work in.
 	runIn(ctx context.Context, dir, name string, args ...string) ([]byte, error)
+	// runTo runs the command with its output going to a writer as it
+	// arrives, so an operation that takes minutes shows progress to the
+	// person watching.
+	runTo(ctx context.Context, dir string, out io.Writer, name string, args ...string) error
 	// installed reports whether the command is on the PATH.
 	installed(name string) bool
 }
@@ -87,6 +92,24 @@ func (tools) runIn(ctx context.Context, dir, name string, args ...string) ([]byt
 	}
 
 	return stdout.Bytes(), nil
+}
+
+func (tools) runTo(ctx context.Context, dir string, out io.Writer, name string, args ...string) error {
+	cmd := exec.CommandContext(ctx, name, args...)
+	cmd.Dir = dir
+	cmd.Stdout = out
+	cmd.Stderr = out
+
+	if err := cmd.Run(); err != nil {
+		// The failure has no Stderr, because the output has already gone
+		// to out.
+		return &commandFailure{
+			Command: strings.Join(append([]string{name}, args...), " "),
+			Err:     err,
+		}
+	}
+
+	return nil
 }
 
 func (tools) installed(name string) bool {
