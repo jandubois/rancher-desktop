@@ -256,6 +256,26 @@ Every version but nerdctl's comes from dependencies.yaml on {branch}. nerdctl sh
 
 Commit it to a release-{line} branch of your fork of {docsRepo} with a sign-off. The rdctl reference and the versioning snapshot go on the same branch, and one pull request carries all three.
 
+### 7b. Docs: rdctl reference
+
+- **Applies to:** Minor releases. A patch ships the documentation its line already has, unless an rdctl command changed.
+- **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has references/rdctl-command-reference.md reporting {version}, and you have marked the page done. Editing it afterwards puts the step back to available.
+- **Waits for:** gh can push to {docsRepo}, the bundled utilities step is done, Rancher Desktop is running, and this machine holds no snapshots.
+- **Reaches:** GitHub docs repo.
+- **Runs:** Push the rdctl command reference for {version} to {branch} of your documentation fork.
+- **Gathers:** nothing. The instructions are all the step needs.
+
+Regenerate the rdctl command reference for {version}:
+
+1. Start Rancher Desktop, so the commands the page runs are answered by the build it documents.
+2. In a worktree of your documentation clone on release-{line}, run scripts/update-rdctl-reference {version}.
+3. Put back the settings that report your own machine: application.updater.enabled, containerEngine.name, and virtualMachine.memoryInGB. Leave the kubernetes version alone, because it moves with the release.
+4. Read the diff for anything else of yours that reached the page, then commit it with a sign-off and push it to release-{line} of your fork of {docsRepo}.
+
+The script runs every command the page shows, so it creates and deletes a snapshot called example_snapshot. The page lists no snapshots, and any this machine holds would appear in it with their timestamps.
+
+Press `m` once the page is the one to ship.
+
 ### 9. Tag
 
 - **Applies to:** Every release.
