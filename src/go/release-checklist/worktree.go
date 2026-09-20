@@ -28,38 +28,43 @@ func CacheDir(profile string, version Version) (string, error) {
 	return filepath.Join(dir, storeDir, profile, version.String()), nil
 }
 
-// worktreeAt checks a commit out under the release's cache directory and
-// returns the path. The user's own clone never changes branch, so a failed
-// action cannot leave it on a bump branch.
-func worktreeAt(ctx context.Context, run *Run, name, commit string) (string, error) {
+// worktreePath is where a worktree the release makes goes. An action plans the
+// commands it will run in the worktree before anything creates it, so the path
+// comes from the release and not from the checkout.
+func worktreePath(run *Run, name string) (string, error) {
 	cache, err := CacheDir(run.Profile.Name, run.Release.Version)
 	if err != nil {
 		return "", err
 	}
 
-	path := filepath.Join(cache, name)
+	return filepath.Join(cache, name), nil
+}
 
+// worktreeAt checks a commit of a clone out at a path under the release's
+// cache directory. The clone never changes branch, so a failed action cannot
+// leave it on a bump branch. An empty clone is the one the tool runs in.
+func worktreeAt(ctx context.Context, run *Run, clone, path, commit string) error {
 	// A worktree whose directory somebody deleted by hand stays registered,
 	// and the registration alone blocks a new worktree at the same path.
-	if _, err := run.Tools.run(ctx, "git", "worktree", "prune"); err != nil {
-		return "", fmt.Errorf("pruning worktrees: %w", err)
+	if _, err := run.Tools.runIn(ctx, clone, "git", "worktree", "prune"); err != nil {
+		return fmt.Errorf("pruning worktrees: %w", err)
 	}
 
 	if _, err := os.Stat(path); err == nil {
 		if _, err := run.Tools.runIn(ctx, path, "git", "checkout", "--detach", commit); err != nil {
-			return "", fmt.Errorf("checking out %s in %s: %w", commit, path, err)
+			return fmt.Errorf("checking out %s in %s: %w", commit, path, err)
 		}
 
-		return path, nil
+		return nil
 	}
 
-	if err := os.MkdirAll(cache, cachePermissions); err != nil {
-		return "", err
+	if err := os.MkdirAll(filepath.Dir(path), cachePermissions); err != nil {
+		return err
 	}
 
-	if _, err := run.Tools.run(ctx, "git", "worktree", "add", "--detach", path, commit); err != nil {
-		return "", fmt.Errorf("adding a worktree at %s: %w", path, err)
+	if _, err := run.Tools.runIn(ctx, clone, "git", "worktree", "add", "--detach", path, commit); err != nil {
+		return fmt.Errorf("adding a worktree at %s: %w", path, err)
 	}
 
-	return path, nil
+	return nil
 }

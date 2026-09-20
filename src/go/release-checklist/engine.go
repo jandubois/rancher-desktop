@@ -175,6 +175,8 @@ type Run struct {
 	Tools   commander
 	// Confirmations are the steps of this profile somebody has marked done.
 	Confirmations confirmations
+	// Settings are the paths on this machine a step works in.
+	Settings Settings
 
 	probed     map[string]Status
 	statuses   map[string]Status
@@ -183,10 +185,12 @@ type Run struct {
 }
 
 // Docs is the documentation repository, built when a step first asks for it
-// because only the documentation steps reach it.
+// because only the documentation steps reach it. Its remotes are the ones the
+// documentation clone holds, so the URLs a step pushes to are the ones the user
+// already pushes to by hand.
 func (r *Run) Docs(ctx context.Context) *repository {
 	if r.docs == nil {
-		r.docs = newRepository(ctx, "", r.Profile.GitHub.DocsRepo, r.Tools)
+		r.docs = newRepository(ctx, r.Settings.DocsClone, r.Profile.GitHub.DocsRepo, r.Tools)
 	}
 
 	return r.docs

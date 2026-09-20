@@ -9,6 +9,9 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+	"os"
+	"path"
+	"path/filepath"
 	"regexp"
 	"slices"
 	"strings"
@@ -23,9 +26,27 @@ const docsVersionDir = "docs/bundled-utilities-version-info"
 // docsReferencePage imports the version files and shows them in a table.
 const docsReferencePage = "docs/references/bundled-utilities.md"
 
+// docsVersionWindow is how many releases the reference page lists. Its table
+// shows every utility of every release it names, so the page stays readable
+// only while the window is small.
+const docsVersionWindow = 3
+
 // utilityLine is how a version file names one utility. The site renders the
 // file inside a table cell, so every line ends with a break.
 var utilityLine = regexp.MustCompile(`^(\S+): (\S+) <br/>$`)
+
+// versionImport is how the reference page imports one release's version file.
+var versionImport = regexp.MustCompile(`^import Version\w+ from '` +
+	regexp.QuoteMeta(docsVersionImportDir) + `/v\S+\.md';$`)
+
+// versionRow is how the page's table shows one release: its version, and the
+// component the import gives its version file.
+var versionRow = regexp.MustCompile(`^\| +v\S+ +\| +<Version\w+ */> +\|$`)
+
+// tableRule is the rule under the table's header. It sets the width of every
+// cell in the column below it, so a row written by hand and one written here
+// line up.
+var tableRule = regexp.MustCompile(`^\|(-+)\|(-+)\|$`)
 
 // versionFileName names the file listing what a release bundles.
 func versionFileName(version Version) string { return "v" + version.String() + ".md" }
@@ -33,6 +54,21 @@ func versionFileName(version Version) string { return "v" + version.String() + "
 // versionFilePath is that file's path in the documentation repository.
 func versionFilePath(version Version) string {
 	return docsVersionDir + "/" + versionFileName(version)
+}
+
+// docsVersionImportDir is the version directory as the reference page reaches
+// it, one level up from the page's own directory.
+var docsVersionImportDir = "../" + path.Base(docsVersionDir)
+
+// versionImportPath is a version file as the reference page imports it.
+func versionImportPath(version Version) string {
+	return docsVersionImportDir + "/" + versionFileName(version)
+}
+
+// importName is the name the page imports a release's version file under:
+// Version, then the line with its dot taken out, as the published page has it.
+func importName(version Version) string {
+	return fmt.Sprintf("Version%d%d", version.Major, version.Minor)
 }
 
 // docsUtilities is step 7a. The bundled utility versions are the one part of
@@ -70,6 +106,10 @@ var docsUtilities = &Step{
 	},
 	Check:        checkDocsUtilities,
 	Precondition: docsUtilitiesReady,
+	Action: &Action{
+		Title: "Push the bundled utility versions for {version} to {branch} of your documentation fork",
+		Plan:  planDocsUtilities,
+	},
 }
 
 // docsUtilitiesReady holds the step until the release has a branch to read
@@ -379,4 +419,304 @@ func utilitiesDiffer(listed, bundled map[string]string) string {
 	slices.Sort(wrong)
 
 	return strings.Join(wrong, "; ")
+}
+
+// docsCommitMessage is the subject the documentation's own history gives these
+// commits.
+func docsCommitMessage(version Version) string {
+	return "Update bundled utilities for " + version.String()
+}
+
+// docsChange is what the action writes into the documentation: where the
+// branch is cut from, the releases the reference page ends up listing, and the
+// version files the window leaves behind.
+type docsChange struct {
+	// repo and ref are where the release's documentation is now, and head is
+	// the commit the worktree checks out.
+	repo *repository
+	ref  string
+	head string
+	// window is the releases the page lists once this one is in, newest first.
+	window []Version
+	// dropped are the version files the window leaves behind, oldest first.
+	dropped []Version
+	// bundled is what the release bundles, by the name the page calls it.
+	bundled map[string]string
+}
+
+// docsChangeFor works out what the documentation has to say about this release.
+// It changes nothing, so the confirmation can name every file the action
+// writes, drops and rewrites before any of it happens.
+func docsChangeFor(ctx context.Context, run *Run) (*docsChange, error) {
+	docs, ref, err := docsLocation(ctx, run)
+	if err != nil {
+		return nil, err
+	}
+
+	head, err := docs.BranchHead(ctx, ref)
+	if err != nil {
+		return nil, err
+	}
+
+	names, err := docs.FilesAtRef(ctx, ref, docsVersionDir)
+	if err != nil {
+		return nil, err
+	}
+
+	bundled, err := bundledVersions(ctx, run)
+	if err != nil {
+		return nil, err
+	}
+
+	listed := listedVersions(names)
+	window := versionWindow(listed, run.Release.Version)
+
+	return &docsChange{
+		repo:    docs,
+		ref:     ref,
+		head:    head,
+		window:  window,
+		dropped: droppedVersions(listed, window),
+		bundled: bundled,
+	}, nil
+}
+
+// planDocsUtilities writes the versions this release bundles into a worktree of
+// the documentation clone and pushes the commit to the release branch of the
+// user's fork. It opens no pull request, because the rdctl reference and the
+// versioning snapshot go on the same branch and one pull request carries all
+// three.
+func planDocsUtilities(ctx context.Context, run *Run) ([]Operation, error) {
+	clone, err := docsCloneDir(run)
+	if err != nil {
+		return nil, err
+	}
+
+	dir, err := worktreePath(run, "docs")
+	if err != nil {
+		return nil, err
+	}
+
+	change, err := docsChangeFor(ctx, run)
+	if err != nil {
+		return nil, err
+	}
+
+	fork, err := run.Docs(ctx).Fork(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	version := run.Release.Version
+
+	operations := []Operation{
+		command(clone, "git", "fetch", change.repo.url, change.ref),
+		{
+			Description: fmt.Sprintf("check %.7s of %s out in %s", change.head, change.ref, dir),
+			Do: func(ctx context.Context, run *Run) error {
+				return worktreeAt(ctx, run, clone, dir, change.head)
+			},
+		},
+		{
+			Description: fmt.Sprintf("write %s, listing the %d utilities %s bundles",
+				versionFilePath(version), len(change.bundled), version),
+			Do: func(context.Context, *Run) error {
+				return os.WriteFile(filepath.Join(dir, versionFilePath(version)),
+					versionFileContent(change.bundled), 0o644)
+			},
+		},
+	}
+
+	for _, dropped := range change.dropped {
+		operations = append(operations, Operation{
+			Description: fmt.Sprintf("drop %s, so the page lists %d releases",
+				versionFilePath(dropped), docsVersionWindow),
+			Do: func(context.Context, *Run) error {
+				return os.Remove(filepath.Join(dir, versionFilePath(dropped)))
+			},
+		})
+	}
+
+	return append(operations,
+		Operation{
+			Description: fmt.Sprintf("list %s in %s",
+				nameList(versionTags(change.window)), docsReferencePage),
+			Do: func(context.Context, *Run) error {
+				return writeReferencePage(dir, change.window)
+			},
+		},
+		command(dir, "git", "add", "--all", "--", docsVersionDir, docsReferencePage),
+		command(dir, "git", "commit", "--signoff", "--message", docsCommitMessage(version)),
+		command(dir, "git", "push", fork.url, "HEAD:refs/heads/"+run.Release.Branch()),
+	), nil
+}
+
+// versionTags names releases the way the reference page's table does.
+func versionTags(versions []Version) []string {
+	named := make([]string, 0, len(versions))
+	for _, version := range versions {
+		named = append(named, version.Tag())
+	}
+
+	return named
+}
+
+// versionFileContent is the version file for what a release bundles, one
+// utility per line, sorted by name. The published files are in no order a sort
+// produces and the check compares the pairs, so sorting costs nothing and
+// makes a diff between two releases readable.
+func versionFileContent(bundled map[string]string) []byte {
+	var out strings.Builder
+
+	for _, name := range slices.Sorted(maps.Keys(bundled)) {
+		fmt.Fprintf(&out, "%s: %s <br/>\n", name, bundled[name])
+	}
+
+	return []byte(out.String())
+}
+
+// listedVersions are the releases a directory of version files names.
+func listedVersions(names []string) []Version {
+	versions := make([]Version, 0, len(names))
+
+	for _, name := range names {
+		base, isMarkdown := strings.CutSuffix(name, ".md")
+		if !isMarkdown {
+			continue
+		}
+
+		if version, err := ParseVersion(base); err == nil {
+			versions = append(versions, version)
+		}
+	}
+
+	return versions
+}
+
+// versionWindow is the releases the reference page lists once this one is
+// added, newest first.
+func versionWindow(listed []Version, release Version) []Version {
+	window := slices.Clone(listed)
+
+	if !slices.Contains(window, release) {
+		window = append(window, release)
+	}
+
+	slices.SortFunc(window, func(a, b Version) int { return CompareVersions(b, a) })
+
+	return window[:min(len(window), docsVersionWindow)]
+}
+
+// droppedVersions are the version files the window leaves behind, oldest first.
+func droppedVersions(listed, window []Version) []Version {
+	var dropped []Version
+
+	for _, version := range listed {
+		if !slices.Contains(window, version) {
+			dropped = append(dropped, version)
+		}
+	}
+
+	slices.SortFunc(dropped, CompareVersions)
+
+	return dropped
+}
+
+// writeReferencePage rewrites the reference page in a worktree, so it lists
+// the window.
+func writeReferencePage(dir string, window []Version) error {
+	file := filepath.Join(dir, docsReferencePage)
+
+	page, err := os.ReadFile(file)
+	if err != nil {
+		return err
+	}
+
+	updated, err := rewriteReferencePage(page, window)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(file, updated, 0o644)
+}
+
+// rewriteReferencePage puts the window into the reference page: an import per
+// release, oldest first as the page has them, and a row per release, newest
+// first as the table shows them. It replaces those two runs of lines and
+// leaves the rest of the page alone, so the prose and the formatting stay as
+// whoever wrote them had them.
+func rewriteReferencePage(page []byte, window []Version) ([]byte, error) {
+	lines := strings.Split(string(page), "\n")
+
+	versionWidth, importWidth, err := tableWidths(lines)
+	if err != nil {
+		return nil, err
+	}
+
+	imports := make([]string, 0, len(window))
+	for _, version := range slices.SortedFunc(slices.Values(window), CompareVersions) {
+		imports = append(imports, fmt.Sprintf("import %s from '%s';",
+			importName(version), versionImportPath(version)))
+	}
+
+	rows := make([]string, 0, len(window))
+	for _, version := range window {
+		rows = append(rows, referenceRow(version, versionWidth, importWidth))
+	}
+
+	lines, err = replaceMatches(lines, versionImport, imports, "imports of the version files")
+	if err != nil {
+		return nil, err
+	}
+
+	lines, err = replaceMatches(lines, versionRow, rows, "table rows for the releases")
+	if err != nil {
+		return nil, err
+	}
+
+	return []byte(strings.Join(lines, "\n")), nil
+}
+
+// tableWidths are the widths the rule sets for the table's two columns.
+func tableWidths(lines []string) (int, int, error) {
+	for _, line := range lines {
+		if match := tableRule.FindStringSubmatch(line); match != nil {
+			return len(match[1]), len(match[2]), nil
+		}
+	}
+
+	return 0, 0, fmt.Errorf("%s has no table to write the releases into", docsReferencePage)
+}
+
+// referenceRow is a release's row of the table, padded to the widths the rule
+// sets.
+func referenceRow(version Version, versionWidth, importWidth int) string {
+	return fmt.Sprintf("| %-*s| %-*s|",
+		versionWidth-1, version.Tag(), importWidth-1, "<"+importName(version)+" />")
+}
+
+// replaceMatches puts the lines given where the first line a pattern matches
+// is and drops the rest it matches, so a rewrite touches nothing else in the
+// file. Dropping them all is what a page whose imports somebody has written
+// something between needs: leaving one behind would import a file the action
+// has deleted.
+func replaceMatches(lines []string, pattern *regexp.Regexp, with []string, what string) ([]string, error) {
+	kept := make([]string, 0, len(lines)+len(with))
+	written := false
+
+	for _, line := range lines {
+		switch {
+		case !pattern.MatchString(line):
+			kept = append(kept, line)
+		case !written:
+			kept = append(kept, with...)
+			written = true
+		}
+	}
+
+	if !written {
+		return nil, fmt.Errorf("%s has no %s to rewrite", docsReferencePage, what)
+	}
+
+	return kept, nil
 }

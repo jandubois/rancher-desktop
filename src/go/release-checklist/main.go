@@ -80,8 +80,8 @@ func printChecklist(ctx context.Context, profile *Profile) error {
 }
 
 // refresh reads everything the checklist is derived from: which release is in
-// progress, the refs the steps check against, and the steps somebody has
-// marked done.
+// progress, the refs the steps check against, the steps somebody has marked
+// done, and the settings naming this machine's clones.
 func refresh(ctx context.Context, profile *Profile) (*Run, error) {
 	repo := newRepository(ctx, "", profile.GitHub.Repo, tools{})
 
@@ -100,9 +100,15 @@ func refresh(ctx context.Context, profile *Profile) (*Run, error) {
 		return nil, err
 	}
 
+	settings, err := LoadSettings(profile.Name)
+	if err != nil {
+		return nil, err
+	}
+
 	run := newRun(release, profile, repo)
 	run.Refs = refs
 	run.Confirmations = marked
+	run.Settings = settings
 
 	return run, nil
 }

@@ -141,12 +141,11 @@ func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
 		return nil, err
 	}
 
-	cache, err := CacheDir(run.Profile.Name, run.Release.Version)
+	dir, err := worktreePath(run, "bump")
 	if err != nil {
 		return nil, err
 	}
 
-	dir := filepath.Join(cache, "bump")
 	title := "Bump version to " + run.Release.Version.String()
 
 	return []Operation{
@@ -154,9 +153,7 @@ func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
 		{
 			Description: fmt.Sprintf("check %.7s out in %s", head, dir),
 			Do: func(ctx context.Context, run *Run) error {
-				_, err := worktreeAt(ctx, run, "bump", head)
-
-				return err
+				return worktreeAt(ctx, run, "", dir, head)
 			},
 		},
 		{

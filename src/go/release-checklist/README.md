@@ -100,6 +100,19 @@ Two rules keep a rehearsal away from the real release:
   does not name is `skipped`, so a profile with no `obs` section runs the
   release without the OBS steps.
 
+## Settings
+
+Some steps need a path on the machine they run on. The profile cannot hold one:
+it names the release's resources and goes into the repository. They go in
+`<config>/rancher-desktop-release/<profile>/settings.yaml` instead:
+
+| Setting | What it is |
+| --- | --- |
+| `docsClone` | your clone of the documentation repository, which a documentation step makes its worktree in |
+
+The file is optional, and a step that needs a setting it does not have says
+which setting and where to write it.
+
 ## Credentials
 
 The tool stores no credentials. Everything that needs authentication runs
@@ -116,6 +129,7 @@ what a real release left behind.
 | Path | Holds |
 | --- | --- |
 | `<config>/rancher-desktop-release/<profile>/` | a profile other than production |
+| `<config>/rancher-desktop-release/<profile>/settings.yaml` | the paths on this machine a step works in |
 | `<config>/rancher-desktop-release/<profile>/confirmations.yaml` | the steps you have marked done |
 | `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out, the release assets it downloads, and the facts `f` writes |
 
@@ -138,16 +152,21 @@ perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
 would build on work that did not happen.
 
-Five of the steps below have automation. The version bump pushes a branch and
-opens a pull request against the release branch; that branch goes to your fork
-of the release repository, or to the release repository itself when you have no
-fork of it. The release notes step shows how release-notes.md differs from the
-notes of `vX.Y.Z`, then puts the file into the release. The tag step pushes the
-release branch head to `refs/tags/vX.Y.Z` in the release repository, which
-starts the build every release asset comes from. The package build step reruns
-the jobs of that build that failed. The Linux assets step takes that build's
-Linux zip, gives it the name the release uses, writes its checksum and uploads
-what the release does not have. Each step names the system it reaches.
+The version bump pushes a branch and opens a pull request against the release
+branch; that branch goes to your fork of the release repository, or to the
+release repository itself when you have no fork of it. The release notes step
+shows how release-notes.md differs from the notes of `vX.Y.Z`, then puts the
+file into the release. The bundled utilities step writes the versions this
+release ships into a worktree of your documentation clone, drops the oldest
+version file, rewrites the reference page and pushes the commit to
+`release-X.Y` of your documentation fork; it opens no pull request, because two
+more documentation steps commit to that branch. The tag step pushes the release
+branch head to `refs/tags/vX.Y.Z` in the release repository, which starts the
+build every release asset comes from. The package build step reruns the jobs of
+that build that failed. The Linux assets step takes that build's Linux zip,
+gives it the name the release uses, writes its checksum and uploads what the
+release does not have. Each step says under **Runs:** what its automation does,
+and names the system it reaches.
 
 ## Step reference
 
@@ -224,7 +243,7 @@ The file is untracked and nothing ignores it, so keep it out of your commits. Pr
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it, and the file lists the versions {version} bundles.
 - **Waits for:** gh can push to {docsRepo}, and the release branch exists.
 - **Reaches:** GitHub repo, GitHub docs repo.
-- **Runs:** nothing. Follow the instructions.
+- **Runs:** Push the bundled utility versions for {version} to {branch} of your documentation fork.
 - **Gathers:** nothing. The instructions are all the step needs.
 
 Write the bundled utility versions for {version} into the documentation:

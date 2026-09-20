@@ -338,6 +338,32 @@ func fileAtRef(ctx context.Context, run commander, repo, ref, path string) ([]by
 	return output, nil
 }
 
+// FilesAtRef are the names of the files in a directory at a ref, which is
+// what a step needs to leave a directory holding the newest few of something.
+func (r *repository) FilesAtRef(ctx context.Context, ref, dir string) ([]string, error) {
+	query := fmt.Sprintf("repos/%s/contents/%s?ref=%s", r.repo, dir, ref)
+
+	output, err := r.run.run(ctx, "gh", "api", query, "--jq", ".[].name")
+	if err != nil {
+		var failure *commandFailure
+		if errors.As(err, &failure) && failure.missing() {
+			return nil, errNotFound
+		}
+
+		return nil, fmt.Errorf("listing %s at %s of %s: %w", dir, ref, r.repo, err)
+	}
+
+	var names []string
+
+	for name := range strings.SplitSeq(strings.TrimSpace(string(output)), "\n") {
+		if name != "" {
+			names = append(names, name)
+		}
+	}
+
+	return names, nil
+}
+
 // BranchHead is the commit a branch points at, or errNotFound when the
 // repository has no such branch. It asks about the branch, not the commit.
 // The commits endpoint resolves a ref as a SHA and answers an unknown name
