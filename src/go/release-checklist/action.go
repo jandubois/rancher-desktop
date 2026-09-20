@@ -32,11 +32,27 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 
 	fmt.Fprintf(out, "%s\n\n", fill(step.Action.Title, run))
 
+	if step.Action.Summary != nil {
+		summary, err := step.Action.Summary(ctx, run)
+		if err != nil {
+			return err
+		}
+
+		if summary != "" {
+			fmt.Fprintf(out, "%s\n", summary)
+		}
+	}
+
 	for _, operation := range operations {
 		fmt.Fprintf(out, "    %s\n", operation.Description)
 	}
 
-	fmt.Fprintf(out, "\nRun these %d operations? [y/N] ", len(operations))
+	question := fmt.Sprintf("Run these %d operations?", len(operations))
+	if len(operations) == 1 {
+		question = "Run this operation?"
+	}
+
+	fmt.Fprintf(out, "\n%s [y/N] ", question)
 
 	if !confirmed(in) {
 		fmt.Fprintln(out, "Nothing was run.")

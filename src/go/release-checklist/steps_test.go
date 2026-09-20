@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -36,10 +37,16 @@ func checklistRun(t *testing.T, version Version, branches map[Line]string, tools
 
 	repo := &repository{repo: testRepo, url: "https://github.com/" + testRepo + ".git", run: tools}
 
+	marked, err := confirmationsAt(filepath.Join(t.TempDir(), confirmationsFile))
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	run := newRun(&Release{Version: version, Kind: version.Kind()},
 		&Profile{Name: "test", GitHub: GitHubResources{Repo: testRepo}}, repo)
 	run.Tools = tools
 	run.Refs = &Refs{Branches: branches, Tags: map[Version]string{}}
+	run.Confirmations = marked
 
 	return run
 }
@@ -128,7 +135,7 @@ func packageRunJSON(status, conclusion string) string {
 func readyToTag(build string) map[string]string {
 	return map[string]string{
 		contentsQuery(testBranch): strings.Replace(manifest, "1.24.0", "1.25.0", 1),
-		"gh release view v1.25.0 --repo " + testRepo + " --json isDraft":                "{\"isDraft\":true}",
+		"gh release view v1.25.0 --repo " + testRepo + " --json isDraft,body":           "{\"isDraft\":true}",
 		"gh api repos/" + testRepo + "/compare/" + testHead + "...main --jq .behind_by": "2\n",
 		runsQuery(testBranch): build,
 	}

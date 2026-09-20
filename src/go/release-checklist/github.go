@@ -92,6 +92,12 @@ type repository struct {
 	// once because finding them costs two API calls.
 	pushOwner string
 	pushURL   string
+	// root is the top of the clone the tool runs in.
+	root string
+	// releases caches what GitHub knows about a tag's release, because the
+	// detection, the draft step and the notes step all ask about it. A tag
+	// with no release is cached as nil.
+	releases map[string]*releaseView
 	// runs caches the workflow runs by ref, because a step's check and its
 	// precondition ask about the same one.
 	runs map[string]*WorkflowRun
@@ -147,30 +153,98 @@ func (r *repository) Refs(ctx context.Context) (*Refs, error) {
 	return r.refs, nil
 }
 
-func (r *repository) ReleaseState(ctx context.Context, tag string) (ReleaseState, error) {
-	output, err := r.run.run(ctx, "gh", "release", "view", tag, "--repo", r.repo, "--json", "isDraft")
+// releaseView is what GitHub answers about the release for a tag.
+type releaseView struct {
+	IsDraft bool   `json:"isDraft"`
+	Body    string `json:"body"`
+}
+
+// releaseFor reads the release for a tag, or errNotFound when no release
+// names it.
+func (r *repository) releaseFor(ctx context.Context, tag string) (*releaseView, error) {
+	if view, cached := r.releases[tag]; cached {
+		if view == nil {
+			return nil, errNotFound
+		}
+
+		return view, nil
+	}
+
+	view, err := r.readRelease(ctx, tag)
+	if err != nil && !errors.Is(err, errNotFound) {
+		return nil, err
+	}
+
+	if r.releases == nil {
+		r.releases = map[string]*releaseView{}
+	}
+
+	r.releases[tag] = view
+
+	return view, err
+}
+
+func (r *repository) readRelease(ctx context.Context, tag string) (*releaseView, error) {
+	output, err := r.run.run(ctx, "gh", "release", "view", tag, "--repo", r.repo, "--json", "isDraft,body")
 	if err != nil {
 		var failure *commandFailure
 		if errors.As(err, &failure) && (failure.says("release not found") || failure.missing()) {
-			return ReleaseMissing, nil
+			return nil, errNotFound
 		}
 
-		return "", fmt.Errorf("reading the release %s: %w", tag, err)
+		return nil, fmt.Errorf("reading the release %s: %w", tag, err)
 	}
 
-	var release struct {
-		IsDraft bool `json:"isDraft"`
+	view := &releaseView{}
+
+	if err := json.Unmarshal(output, view); err != nil {
+		return nil, fmt.Errorf("reading the release %s: %w", tag, err)
 	}
 
-	if err := json.Unmarshal(output, &release); err != nil {
-		return "", fmt.Errorf("reading the release %s: %w", tag, err)
-	}
+	return view, nil
+}
 
-	if release.IsDraft {
+func (r *repository) ReleaseState(ctx context.Context, tag string) (ReleaseState, error) {
+	view, err := r.releaseFor(ctx, tag)
+
+	switch {
+	case errors.Is(err, errNotFound):
+		return ReleaseMissing, nil
+	case err != nil:
+		return "", err
+	case view.IsDraft:
 		return ReleaseDraft, nil
+	default:
+		return ReleasePublished, nil
+	}
+}
+
+// ReleaseNotes is the body of the release for a tag, what a reader sees under
+// the release on GitHub.
+func (r *repository) ReleaseNotes(ctx context.Context, tag string) (string, error) {
+	view, err := r.releaseFor(ctx, tag)
+	if err != nil {
+		return "", err
 	}
 
-	return ReleasePublished, nil
+	return view.Body, nil
+}
+
+// Root is the top of the clone the tool runs in, which is where the working
+// copy of the release notes is.
+func (r *repository) Root(ctx context.Context) (string, error) {
+	if r.root != "" {
+		return r.root, nil
+	}
+
+	output, err := r.run.run(ctx, "git", "rev-parse", "--show-toplevel")
+	if err != nil {
+		return "", fmt.Errorf("finding the top of the clone: %w", err)
+	}
+
+	r.root = strings.TrimSpace(string(output))
+
+	return r.root, nil
 }
 
 // FileAtRef is a file's content at a branch, tag or commit, read through the

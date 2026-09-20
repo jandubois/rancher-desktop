@@ -88,9 +88,10 @@ type checklistRead struct {
 	err      error
 }
 
-// actionRan reports that a step's automation finished. The step changed the
-// source of truth its check reads, so the checklist is read again.
-type actionRan struct{ err error }
+// stepChanged reports that a step's automation finished, or that somebody
+// marked the step done. Either changes what a check reads, so the checklist
+// is read again.
+type stepChanged struct{ err error }
 
 func newDashboard(ctx context.Context, profile *Profile) *dashboard {
 	return &dashboard{ctx: ctx, profile: profile, refreshing: true}
@@ -133,7 +134,7 @@ func (d *dashboard) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 	case checklistRead:
 		d.run, d.statuses, d.refreshed = message.run, message.statuses, message.at
 		d.failure, d.refreshing = message.err, false
-	case actionRan:
+	case stepChanged:
 		d.notice = ""
 		if message.err != nil {
 			d.notice = message.err.Error()
@@ -151,7 +152,7 @@ func (d *dashboard) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 // press acts on one key. Moving the selection and opening the instructions
-// need nothing outside the dashboard; the other two keys start a command.
+// need nothing outside the dashboard; the rest start a command.
 func (d *dashboard) press(key tea.KeyMsg) (tea.Model, tea.Cmd) {
 	d.notice = ""
 
@@ -172,6 +173,10 @@ func (d *dashboard) press(key tea.KeyMsg) (tea.Model, tea.Cmd) {
 		action := d.runSelected()
 
 		return d, action
+	case "m":
+		mark := d.markSelected()
+
+		return d, mark
 	}
 
 	return d, nil
@@ -201,10 +206,25 @@ func (d *dashboard) runSelected() tea.Cmd {
 	default:
 		action := &stepAction{ctx: d.ctx, step: step, run: d.run}
 
-		return tea.Exec(action, func(err error) tea.Msg { return actionRan{err: err} })
+		return tea.Exec(action, func(err error) tea.Msg { return stepChanged{err: err} })
 	}
 
 	return nil
+}
+
+// markSelected marks the selected step done, or takes the mark off when it is
+// already marked for the text it would mark now. Reading that text reaches
+// GitHub, so the mark is made in a command rather than on the drawing path.
+func (d *dashboard) markSelected() tea.Cmd {
+	if d.run == nil {
+		d.notice = "the checklist has not been read yet"
+
+		return nil
+	}
+
+	step := checklist[d.selected]
+
+	return func() tea.Msg { return stepChanged{err: Mark(d.ctx, step, d.run)} }
 }
 
 // stepAction runs one step's automation while the dashboard is suspended. It
@@ -392,7 +412,7 @@ func (d *dashboard) wrap(text string) []string {
 // footer names the keys that do something here, and shows what the last one
 // left to say.
 func (d *dashboard) footer() string {
-	keys := "  enter run · i instructions · r refresh · q quit"
+	keys := "  enter run · m mark done · i instructions · r refresh · q quit"
 	if d.instructions {
 		keys = "  i back · r refresh · q quit"
 	}

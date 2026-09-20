@@ -4,7 +4,7 @@
 release is in progress, checks each step it ships against the system that
 would show it done, and shows one line per step with its state. It will
 replace the release checklist the team follows by hand; this version ships
-five of that checklist's steps.
+six of that checklist's steps.
 
 Run it from a clone of the repository:
 
@@ -22,6 +22,7 @@ the cursor.
 | --- | --- |
 | `↑` `↓` | Move to another step. `k` and `j` work too. |
 | `enter` | Run the step's automation. The dashboard gives up the terminal, so the action can show its commands and ask before it runs them. |
+| `m` | Mark the step done when only your judgment can settle it, such as the release notes. Press `m` again to take the mark off. |
 | `i` | Read the step's instructions, filled in with this release's values. |
 | `r` | Read every check again. |
 | `q` | Quit. |
@@ -69,9 +70,11 @@ an older line:
 | `skipped` | The step is for the other kind of release, or the profile leaves out the system it touches. |
 | `unknown` | The check could not decide: nothing answered, or the answer could not be read. |
 
-Every check reads the system that would show the step done, on every run. The
-tool keeps no record of what it has done, so it notices work done by hand or
-out of order, and a step somebody undid goes back to `available`.
+Every check reads the system that would show the step done, on every run, so
+the tool notices work done by hand or out of order, and a step somebody undid
+goes back to `available`. It stores one thing of its own, the mark on a step
+that only judgment settles. The release notes are done when you say they are,
+and editing them afterwards puts the step back to `available`.
 
 ## Profiles
 
@@ -113,6 +116,7 @@ what a real release left behind.
 | Path | Holds |
 | --- | --- |
 | `<config>/rancher-desktop-release/<profile>/` | a profile other than production |
+| `<config>/rancher-desktop-release/<profile>/confirmations.yaml` | the steps you have marked done |
 | `<cache>/rancher-desktop-release/<profile>/<version>/` | the worktrees an action checks out |
 
 `<cache>` is `~/Library/Caches` on macOS, `~/.cache` on Linux and
@@ -133,13 +137,14 @@ perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
 would build on work that did not happen.
 
-Three of the steps below have automation. The version bump pushes a branch and
+Four of the steps below have automation. The version bump pushes a branch and
 opens a pull request against the release branch; that branch goes to your fork
 of the release repository, or to the release repository itself when you have no
-fork of it. The tag step pushes the release branch head to `refs/tags/vX.Y.Z`
-in the release repository, which starts the build every release asset comes
-from. The package build step reruns the jobs of that build that failed. Each
-step names the system it reaches.
+fork of it. The release notes step shows how release-notes.md differs from the
+notes of `vX.Y.Z`, then puts the file into the release. The tag step pushes the
+release branch head to `refs/tags/vX.Y.Z` in the release repository, which
+starts the build every release asset comes from. The package build step reruns
+the jobs of that build that failed. Each step names the system it reaches.
 
 ## Step reference
 
@@ -187,6 +192,22 @@ Create the draft, with no --target:
     gh release create {tag} --repo {repo} --draft --title "<title>" --notes-file <file>
 
 The title is "Rancher Desktop X.Y" for a minor release and "Rancher Desktop X.Y.Z" for a patch. Drafts are visible only to users who can push, so nobody sees the notes before the release.
+
+### 6. Release notes
+
+- **Applies to:** Every release.
+- **Done when:** {tag} has notes, they are the ones in release-notes.md when this clone has that file, and you have marked them done. Editing them afterwards puts the step back to available.
+- **Waits for:** gh can push to {repo}, and the draft release exists.
+- **Reaches:** GitHub repo.
+- **Runs:** Put release-notes.md into the notes of {tag}.
+
+Write the notes in release-notes.md at the top of your clone, then put them into the release:
+
+    gh release edit {tag} --repo {repo} --notes-file release-notes.md
+
+Start from the previous release's notes, which `gh release view <previous tag> --repo {repo}` prints, and keep the same sections: the installer links for {version}, the new contributors, what changed for the user, the bundled utilities that moved, and the compare link. Write what a user sees and leave internal work out.
+
+The file is untracked and nothing ignores it, so keep it out of your commits. Press `m` once the notes on the release are the ones to ship.
 
 ### 9. Tag
 

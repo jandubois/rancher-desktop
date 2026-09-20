@@ -309,3 +309,19 @@ func TestAnActionKeepsTheTerminalUntilTheReaderLeaves(t *testing.T) {
 		}
 	}
 }
+
+func TestMarkingAStepThatNeedsNoJudgmentSaysSo(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+	selectStep(t, dash, "1")
+
+	command := press(dash, "m")
+	if command == nil {
+		t.Fatal("m on the release branch step started nothing")
+	}
+
+	dash.Update(command())
+
+	if !strings.Contains(plain(dash.View()), "nothing to mark") {
+		t.Errorf("the dashboard said nothing about the key:\n%s", plain(dash.View()))
+	}
+}

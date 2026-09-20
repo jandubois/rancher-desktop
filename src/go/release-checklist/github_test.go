@@ -79,7 +79,7 @@ func TestRemoteIsFoundByURLNotByName(t *testing.T) {
 }
 
 func TestReleaseStateReadsDraftPublishedAndMissing(t *testing.T) {
-	const view = "gh release view %s --repo rancher-sandbox/rancher-desktop --json isDraft"
+	const view = "gh release view %s --repo rancher-sandbox/rancher-desktop --json isDraft,body"
 
 	run := &fakeTools{
 		output: map[string]string{

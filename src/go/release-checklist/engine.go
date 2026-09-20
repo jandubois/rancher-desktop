@@ -6,9 +6,11 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
+	"time"
 )
 
 // State is what the checklist shows for one step.
@@ -71,6 +73,12 @@ type Step struct {
 	// Precondition reports whether the step can run now. A nil precondition
 	// means the resources in Needs are all it takes.
 	Precondition func(context.Context, *Run) (Answer, error)
+	// Confirms is the text somebody marks done for this step, read from the
+	// system the step checks. A step with one is done only once a person has
+	// marked it, and a change to that text puts it back to available, so the
+	// person marks what they have read. A step without one takes no
+	// judgment, and its check settles it.
+	Confirms func(context.Context, *Run) (string, error)
 	// Action is the step's automation. A step without one is done by hand,
 	// following its instructions.
 	Action *Action
@@ -82,6 +90,10 @@ type Step struct {
 type Action struct {
 	// Title says what running the action does.
 	Title string
+	// Summary shows what the action would change, above the operations and
+	// the question. An action whose operations speak for themselves has
+	// none.
+	Summary func(context.Context, *Run) (string, error)
 	// Plan builds the operations for this release. It runs before the user
 	// confirms anything, so it must change nothing itself.
 	Plan func(context.Context, *Run) ([]Operation, error)
@@ -145,6 +157,8 @@ type Run struct {
 	Repo    *repository
 	Refs    *Refs
 	Tools   commander
+	// Confirmations are the steps of this profile somebody has marked done.
+	Confirmations confirmations
 
 	probed     map[string]Status
 	statuses   map[string]Status
@@ -227,7 +241,11 @@ func Evaluate(ctx context.Context, step *Step, run *Run) Status {
 	}
 
 	if answer.OK {
-		return Status{State: Done, Detail: answer.Detail}
+		if step.Confirms == nil {
+			return Status{State: Done, Detail: answer.Detail}
+		}
+
+		return judged(ctx, step, run, answer)
 	}
 
 	if step.Precondition == nil {
@@ -246,6 +264,75 @@ func Evaluate(ctx context.Context, step *Step, run *Run) Status {
 	default:
 		return Status{State: Blocked, Detail: ready.Detail}
 	}
+}
+
+// judged is the status of a step whose check has passed but whose work takes
+// judgment. The step is done once a person has marked the text the check
+// read, and available again when that text changes.
+func judged(ctx context.Context, step *Step, run *Run, answer Answer) Status {
+	subject, err := step.Confirms(ctx, run)
+	if err != nil {
+		return Status{State: Unknown, Detail: err.Error()}
+	}
+
+	confirmation, marked := run.Confirmation(step.ID)
+
+	switch {
+	case !marked:
+		return Status{State: Available, Detail: answer.Detail + "; nobody has marked it done"}
+	case confirmation.Digest != digestOf(subject):
+		return Status{State: Available, Detail: fmt.Sprintf(
+			"%s; what you marked done on %s has changed",
+			answer.Detail, markedOn(confirmation))}
+	default:
+		return Status{State: Done, Detail: fmt.Sprintf(
+			"%s; marked done on %s", answer.Detail, markedOn(confirmation))}
+	}
+}
+
+// markedOn is the day somebody marked a step done, in their own time zone.
+func markedOn(confirmation Confirmation) string {
+	return confirmation.At.Local().Format(time.DateOnly)
+}
+
+// Confirmation is what somebody has marked for a step of this release. A run
+// built without a store has marked nothing.
+func (r *Run) Confirmation(step string) (Confirmation, bool) {
+	if r.Confirmations == nil {
+		return Confirmation{}, false
+	}
+
+	return r.Confirmations.Confirmed(r.Release.Version, step)
+}
+
+// Mark records that a person has judged a step done, or takes the mark off
+// when they mark it a second time. It reads the text at the moment of
+// marking, so the mark covers what they have in front of them.
+func Mark(ctx context.Context, step *Step, run *Run) error {
+	if step.Confirms == nil {
+		return fmt.Errorf("step %s is settled by its check, so there is nothing to mark", step.ID)
+	}
+
+	if run.Confirmations == nil {
+		return errors.New("this checklist has nowhere to keep confirmations")
+	}
+
+	subject, err := step.Confirms(ctx, run)
+	if err != nil {
+		return err
+	}
+
+	if subject == "" {
+		return fmt.Errorf("step %s has nothing to mark done yet", step.ID)
+	}
+
+	digest := digestOf(subject)
+
+	if confirmation, marked := run.Confirmation(step.ID); marked && confirmation.Digest == digest {
+		return run.Confirmations.Unconfirm(run.Release.Version, step.ID)
+	}
+
+	return run.Confirmations.Confirm(run.Release.Version, step.ID, digest)
 }
 
 // skip reports the steps this release never runs: the ones for the other kind

@@ -13,7 +13,7 @@ import (
 )
 
 // checklist is the release process, in the order a release runs it.
-var checklist = []*Step{releaseBranch, versionBump, draftRelease, tagRelease, packageBuild}
+var checklist = []*Step{releaseBranch, versionBump, draftRelease, releaseNotes, tagRelease, packageBuild}
 
 // everyRelease is the applicability of a step that a minor and a patch both
 // run.
@@ -216,6 +216,43 @@ var draftRelease = &Step{
 		}
 
 		return Answer{OK: true, Detail: fmt.Sprintf("%s is %s", run.Release.Tag(), state)}, nil
+	},
+}
+
+// releaseNotes is step 6. The notes are what a user reads when the release
+// arrives, so the tool puts the clone's copy into the release and leaves the
+// judgment of whether they are right to a person.
+var releaseNotes = &Step{
+	ID:    "6",
+	Title: "Release notes",
+	Kinds: []Kind{Minor, Patch},
+	Needs: []*Resource{githubRepo},
+	Doc: Doc{
+		Applies: everyRelease,
+		Check: "{tag} has notes, they are the ones in release-notes.md when this " +
+			"clone has that file, and you have marked them done. Editing them " +
+			"afterwards puts the step back to available.",
+		Precondition: "gh can push to {repo}, and the draft release exists.",
+		Instructions: "Write the notes in release-notes.md at the top of your clone, " +
+			"then put them into the release:\n\n" +
+			"    gh release edit {tag} --repo {repo} --notes-file release-notes.md\n\n" +
+			"Start from the previous release's notes, which " +
+			"`gh release view <previous tag> --repo {repo}` prints, and keep the " +
+			"same sections: the installer links for {version}, the new contributors, what " +
+			"changed for the user, the bundled utilities that moved, and the compare " +
+			"link. Write what a user sees and leave internal work out.\n\n" +
+			"The file is untracked and nothing ignores it, so keep it out of your " +
+			"commits. Press `m` once the notes on the release are the ones to ship.",
+	},
+	Check: checkReleaseNotes,
+	Precondition: func(ctx context.Context, run *Run) (Answer, error) {
+		return waitFor(ctx, run, draftRelease), nil
+	},
+	Confirms: notesInRelease,
+	Action: &Action{
+		Title:   "Put release-notes.md into the notes of {tag}",
+		Summary: notesChange,
+		Plan:    planReleaseNotes,
 	},
 }
 
