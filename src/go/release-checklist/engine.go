@@ -122,8 +122,8 @@ type Action struct {
 
 // Operation is one piece of an action.
 type Operation struct {
-	// Description is the line shown for confirmation and in the README. For
-	// an external command it is the command line.
+	// Description is the line shown for confirmation and as the operation
+	// runs. For an external command it is the command line.
 	Description string
 	// Command, Args and Dir are the external command to run. An operation
 	// with no command does its work in Do.
