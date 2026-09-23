@@ -507,6 +507,45 @@ func TestTheDashboardFitsItsScreen(t *testing.T) {
 	}
 }
 
+func TestAMultiLineDetailKeepsTheDashboardOnItsScreen(t *testing.T) {
+	lines := make([]string, 50)
+	for index := range lines {
+		lines[index] = fmt.Sprintf("gh: line %d of an error", index+1)
+	}
+
+	for _, selected := range []string{"1", "9"} {
+		dash := dashboardShowing(t, nil)
+		dash.statuses["9"] = Status{State: Unknown, Detail: strings.Join(lines, "\n")}
+		selectStep(t, dash, selected)
+
+		view := plain(dash.View())
+		if drawn := strings.Count(view, "\n") + 1; drawn != dash.height {
+			t.Errorf("with step %s selected, a 50-line detail drew %d lines on a %d line screen",
+				selected, drawn, dash.height)
+		}
+
+		if selected == "9" && !strings.Contains(view, "yarn release --status") {
+			t.Errorf("the pane does not say where the rest of the detail is:\n%s", view)
+		}
+	}
+}
+
+func TestADetailOneLineOverThePaneShowsThatLine(t *testing.T) {
+	lines := make([]string, detailPaneLines+1)
+	for index := range lines {
+		lines[index] = fmt.Sprintf("gh: line %d of an error", index+1)
+	}
+
+	dash := dashboardShowing(t, nil)
+	dash.statuses["9"] = Status{State: Unknown, Detail: strings.Join(lines, "\n")}
+	selectStep(t, dash, "9")
+
+	// A pointer to the one hidden line would take as much room as the line.
+	if view := plain(dash.View()); !strings.Contains(view, lines[len(lines)-1]) {
+		t.Errorf("the pane hides the last line of a detail one line too long:\n%s", view)
+	}
+}
+
 func TestGatheringFactsForAStepWithNoneSaysSo(t *testing.T) {
 	dash := dashboardShowing(t, nil)
 	selectStep(t, dash, "1")

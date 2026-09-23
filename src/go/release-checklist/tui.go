@@ -24,6 +24,9 @@ const (
 	gutter = 2
 	// labelWidth lines the detail pane's values up in one column.
 	labelWidth = 12
+	// detailPaneLines is how many screen lines of a step's detail the pane
+	// shows, so a long error cannot push the list off the screen.
+	detailPaneLines = 8
 	// clock is the time of the last refresh, which is all the reader needs
 	// to tell a fresh checklist from one left on screen over lunch.
 	clock = "15:04"
@@ -460,7 +463,10 @@ func (d *dashboard) row(step *Step, selected bool, titles int) string {
 		bar, title = accent.Render("▌")+" ", strong.Render(title)
 	}
 
-	line := fmt.Sprintf("%s%s %s  %s", bar, glyph(status.State), title, dim.Render(status.Detail))
+	// A multi-line detail, such as a gh error, shows only its first line in
+	// the list. The pane shows it whole, up to detailPaneLines.
+	summary, _, _ := strings.Cut(status.Detail, "\n")
+	line := fmt.Sprintf("%s%s %s  %s", bar, glyph(status.State), title, dim.Render(summary))
 
 	return strings.TrimRight(lipgloss.NewStyle().MaxWidth(d.width).Render(line), " ")
 }
@@ -471,10 +477,9 @@ func (d *dashboard) detail() []string {
 	step := checklist[d.selected]
 	status := d.statuses[step.ID]
 
-	lines := []string{d.title(step)}
+	lines := append([]string{d.title(step)}, d.stateField(status)...)
 
 	for _, entry := range []struct{ label, body string }{
-		{string(status.State), status.Detail},
 		{"Done when", fill(step.Doc.Check, d.run)},
 		{"Waits for", fill(step.Doc.Precondition, d.run)},
 		{"Reaches", reaches(step)},
@@ -482,6 +487,19 @@ func (d *dashboard) detail() []string {
 		{"Gathers", gathers(step)},
 	} {
 		lines = append(lines, d.field(entry.label, entry.body)...)
+	}
+
+	return lines
+}
+
+// stateField is the pane's first entry, the step's state and what its check
+// found, cut to detailPaneLines. The plain-text checklist prints all of it.
+func (d *dashboard) stateField(status Status) []string {
+	lines := d.field(string(status.State), status.Detail)
+	// Hiding a single line would take a line to say so.
+	if hidden := len(lines) - detailPaneLines; hidden > 1 {
+		lines = append(lines[:detailPaneLines],
+			d.field("", fmt.Sprintf("… %d more lines; yarn release --status prints them all", hidden))...)
 	}
 
 	return lines
