@@ -184,6 +184,13 @@ func windowsAsset(version Version) string {
 	return "Rancher.Desktop.Setup." + version.String() + ".msi"
 }
 
+// macAsset is what the signed disk image for an architecture, x86_64 or
+// aarch64, is called on the release. scripts/lib/sign-macos.ts gives it that
+// name.
+func macAsset(version Version, arch string) string {
+	return "Rancher.Desktop-" + version.String() + "." + arch + ".dmg"
+}
+
 // checkWindowsAssets reports whether the release has the signed installer
 // and the checksum that covers it.
 func checkWindowsAssets(ctx context.Context, run *Run) (Answer, error) {

@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
 	"path/filepath"
 	"slices"
 	"strings"
@@ -308,6 +309,72 @@ func TestStepsReadingTheDraftNeedPushAccess(t *testing.T) {
 
 		if status := run.Status(context.Background(), step); status.State != Blocked {
 			t.Errorf("step %s was %s for someone who cannot push: %s", step.ID, status.State, status.Detail)
+		}
+	}
+}
+
+func TestTheDraftReleaseStartsFromTheNotesSkeleton(t *testing.T) {
+	t.Setenv("HOME", t.TempDir())
+
+	for version, title := range map[Version]string{
+		{Major: 1, Minor: 25}:           "Rancher Desktop 1.25",
+		{Major: 1, Minor: 24, Patch: 1}: "Rancher Desktop 1.24.1",
+	} {
+		tag := version.Tag()
+		tools := &fakeTools{anyCommand: true, stderr: map[string]string{
+			"gh release view " + tag + " --repo " + testRepo + " --json " + releaseFields: "release not found",
+		}}
+		run := checklistRun(t, version, map[Line]string{version.Line(): testHead}, tools)
+		run.Profile.Docs = &DocsResources{Site: "https://docs.example.com"}
+
+		if err := RunAction(context.Background(), draftRelease, run, strings.NewReader("y\n"), io.Discard); err != nil {
+			t.Fatal(err)
+		}
+
+		create := "gh release create " + tag + " --repo " + testRepo + " --draft --title " + title + " --notes-file "
+
+		var skeleton string
+
+		for _, call := range tools.calls {
+			if file, found := strings.CutPrefix(call, create); found {
+				skeleton = file
+			}
+		}
+
+		if skeleton == "" {
+			t.Errorf("the draft release action never ran %q; it ran %v", create+"<file>", tools.calls)
+
+			continue
+		}
+
+		notes, err := os.ReadFile(skeleton)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		download := "https://github.com/" + testRepo + "/releases/download/" + tag + "/"
+		for _, want := range []string{
+			"This is the " + version.String() + " release of Rancher Desktop",
+			"[Windows](" + download + "Rancher.Desktop.Setup." + version.String() + ".msi)",
+			"[macOS x86_64](" + download + "Rancher.Desktop-" + version.String() + ".x86_64.dmg)",
+			"[macOS aarch64](" + download + "Rancher.Desktop-" + version.String() + ".aarch64.dmg)",
+			"[Linux install notes](https://docs.example.com/" + version.Line().String() + "/getting-started/installation#linux)",
+			"## Release Notes for " + version.String(),
+		} {
+			if !strings.Contains(string(notes), want) {
+				t.Errorf("the notes skeleton of %s lacks %q:\n%s", tag, want, notes)
+			}
+		}
+	}
+}
+
+func TestANotesSkeletonWithNoDocsSiteLeavesOutTheLinuxLink(t *testing.T) {
+	for _, docs := range []*DocsResources{nil, {}} {
+		run := checklistRun(t, testRelease, nil, &fakeTools{})
+		run.Profile.Docs = docs
+
+		if notes := notesSkeleton(run); strings.Contains(notes, "Linux install notes") {
+			t.Errorf("a profile naming no documentation site got a link to one:\n%s", notes)
 		}
 	}
 }

@@ -22,6 +22,38 @@ const notesFile = "release-notes.md"
 // the action shows, under the release's cache directory.
 const draftNotesFile = "notes-in-release.md"
 
+// notesSkeletonFile is where the draft release step writes the notes it
+// creates the release with, under the release's cache directory.
+const notesSkeletonFile = "notes-skeleton.md"
+
+// notesSkeleton is the notes a release starts with, which hold the opening
+// sentence and installer links of the releases before it and the heading the
+// release notes go under.
+func notesSkeleton(run *Run) string {
+	version := run.Release.Version
+	download := fmt.Sprintf("https://github.com/%s/releases/download/%s/", run.Repo.repo, run.Release.Tag())
+
+	installers := fmt.Sprintf(`* [Windows](%[1]s%[2]s)
+* [macOS x86_64](%[1]s%[3]s)
+* [macOS aarch64](%[1]s%[4]s)
+`, download, windowsAsset(version), macAsset(version, "x86_64"), macAsset(version, "aarch64"))
+
+	// The Linux instructions are on the documentation site, so a profile that
+	// names none gets no link.
+	if docs := run.Profile.Docs; docs != nil && docs.Site != "" {
+		installers += fmt.Sprintf("* [Linux install notes](%s/%s/getting-started/installation#linux)\n",
+			docs.Site, version.Line())
+	}
+
+	return fmt.Sprintf(`This is the %[1]s release of Rancher Desktop, an open source desktop application to bring Kubernetes and container management to macOS, Windows, and Linux.
+
+## Installers
+
+%[2]s
+## Release Notes for %[1]s
+`, version, installers)
+}
+
 // notesInClone is the release notes as the clone has them, and whether the
 // file is there at all.
 func notesInClone(ctx context.Context, run *Run) (string, bool, error) {

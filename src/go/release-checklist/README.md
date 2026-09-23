@@ -169,7 +169,9 @@ The release branch step shows the head of main with its subject, date and
 checks, then pushes that commit to `release-X.Y` in the release repository.
 The version bump pushes a branch and opens a pull request against the release
 branch; that branch goes to your fork of the release repository, or to the
-release repository itself when you have no fork of it. The release notes step
+release repository itself when you have no fork of it. The draft release step
+creates the draft of `vX.Y.Z`, whose notes hold only the opening sentence,
+the installer links and the heading the notes go under. The release notes step
 shows how release-notes.md differs from the notes of `vX.Y.Z`, then puts the
 file into the release. The bundled utilities step writes the versions this
 release ships into a worktree of your documentation clone, drops the oldest
@@ -225,14 +227,14 @@ Set the `version` field of package.json on {branch} to {version}, commit it with
 - **Done when:** A release named {tag} exists in {repo}, as a draft or published.
 - **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
-- **Runs:** nothing. Follow the instructions.
+- **Runs:** Create the draft release {tag} with a skeleton of its notes.
 - **Gathers:** nothing. The instructions are all the step needs.
 
 Create the draft, with no --target:
 
     gh release create {tag} --repo {repo} --draft --title "<title>" --notes-file <file>
 
-The title is "Rancher Desktop X.Y" for a minor release and "Rancher Desktop X.Y.Z" for a patch. Drafts are visible only to users who can push, so nobody sees the notes before the release.
+The title is "Rancher Desktop X.Y" for an X.Y.0 release and "Rancher Desktop X.Y.Z" for any other. Start the notes from the previous release's opening sentence and installer links, with the version changed to {version}, followed by a "## Release Notes for {version}" heading. Drafts are visible only to users who can push, so nobody sees the notes before the release.
 
 ### 6. Release notes
 

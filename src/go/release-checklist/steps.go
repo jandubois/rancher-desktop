@@ -271,9 +271,12 @@ var draftRelease = &Step{
 		Precondition: "gh can push to {repo}.",
 		Instructions: "Create the draft, with no --target:\n\n" +
 			"    gh release create {tag} --repo {repo} --draft --title \"<title>\" --notes-file <file>\n\n" +
-			"The title is \"Rancher Desktop X.Y\" for a minor release and " +
-			"\"Rancher Desktop X.Y.Z\" for a patch. Drafts are visible only to " +
-			"users who can push, so nobody sees the notes before the release.",
+			"The title is \"Rancher Desktop X.Y\" for an X.Y.0 release and " +
+			"\"Rancher Desktop X.Y.Z\" for any other. Start the notes from the " +
+			"previous release's opening sentence and installer links, with the " +
+			"version changed to {version}, followed by a \"## Release Notes for " +
+			"{version}\" heading. Drafts are visible only to users who can push, " +
+			"so nobody sees the notes before the release.",
 	},
 	Check: func(ctx context.Context, run *Run) (Answer, error) {
 		state, err := run.Repo.ReleaseState(ctx, run.Release.Tag())
@@ -287,6 +290,48 @@ var draftRelease = &Step{
 
 		return Answer{OK: true, Detail: fmt.Sprintf("%s is %s", run.Release.Tag(), state)}, nil
 	},
+	Action: &Action{
+		Title:  "Create the draft release {tag} with a skeleton of its notes",
+		Writes: []*Resource{githubRepoPush},
+		Plan:   planDraftRelease,
+	},
+}
+
+// planDraftRelease writes the notes skeleton and creates the draft from it.
+// It sets no --target, because GitHub ignores the target once the tag exists,
+// and the tag step pushes the tag before the release is published.
+func planDraftRelease(_ context.Context, run *Run) ([]Operation, error) {
+	cache, err := CacheDir(run.Profile.Name, run.Release.Version)
+	if err != nil {
+		return nil, err
+	}
+
+	skeleton := filepath.Join(cache, notesSkeletonFile)
+
+	return []Operation{
+		{
+			Description: "write the notes skeleton to " + skeleton,
+			Do: func(context.Context, *Run) error {
+				if err := os.MkdirAll(cache, cachePermissions); err != nil {
+					return err
+				}
+
+				return os.WriteFile(skeleton, []byte(notesSkeleton(run)), 0o644)
+			},
+		},
+		command("", "gh", "release", "create", run.Release.Tag(), "--repo", run.Repo.repo, "--draft",
+			"--title", releaseTitle(run.Release.Version), "--notes-file", skeleton),
+	}, nil
+}
+
+// releaseTitle is the name GitHub shows for a release, the line alone for its
+// X.Y.0 and the whole version for any other.
+func releaseTitle(version Version) string {
+	if version.Patch == 0 {
+		return "Rancher Desktop " + version.Line().String()
+	}
+
+	return "Rancher Desktop " + version.String()
 }
 
 // releaseNotes is step 6. The notes are what a user reads when the release
