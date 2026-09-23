@@ -66,8 +66,10 @@ var legendOrder = []State{Done, Available, Waiting, Blocked, Skipped, Unknown}
 type dashboard struct {
 	// ctx is held here because bubbletea's model methods take none, and the
 	// checks and actions the dashboard starts both need one.
-	ctx     context.Context
-	profile *Profile
+	ctx context.Context
+	// refresh reads the release in progress, which every check and action
+	// works from. The tests answer in its place.
+	refresh func(context.Context) (*Run, error)
 
 	run        *Run
 	statuses   map[string]Status
@@ -105,7 +107,11 @@ type factsGathered struct {
 }
 
 func newDashboard(ctx context.Context, profile *Profile) *dashboard {
-	return &dashboard{ctx: ctx, profile: profile, refreshing: true}
+	return &dashboard{
+		ctx:        ctx,
+		refresh:    func(ctx context.Context) (*Run, error) { return refresh(ctx, profile) },
+		refreshing: true,
+	}
 }
 
 // showDashboard opens the checklist full screen. The dashboard reads the
@@ -124,7 +130,7 @@ func (d *dashboard) Init() tea.Cmd { return d.read() }
 // they run as a command rather than on the drawing path.
 func (d *dashboard) read() tea.Cmd {
 	return func() tea.Msg {
-		run, err := refresh(d.ctx, d.profile)
+		run, err := d.refresh(d.ctx)
 		if err != nil {
 			return checklistRead{at: time.Now(), err: err}
 		}
@@ -225,12 +231,15 @@ func (d *dashboard) runSelected() tea.Cmd {
 		d.notice = fmt.Sprintf("step %s is %s, so there is nothing to run",
 			step.ID, d.statuses[step.ID].State)
 	default:
-		action := &stepAction{ctx: d.ctx, step: step, run: d.run}
-
-		return tea.Exec(action, func(err error) tea.Msg { return stepChanged{err: err} })
+		return tea.Exec(d.actionFor(step), func(err error) tea.Msg { return stepChanged{err: err} })
 	}
 
 	return nil
+}
+
+// actionFor is a step's automation, chosen from the release on screen.
+func (d *dashboard) actionFor(step *Step) *stepAction {
+	return &stepAction{ctx: d.ctx, step: step, version: d.run.Release.Version, refresh: d.refresh}
 }
 
 // markSelected marks the selected step done, or takes the mark off when it is
@@ -271,7 +280,9 @@ func (d *dashboard) gatherSelected() tea.Cmd {
 type stepAction struct {
 	ctx  context.Context
 	step *Step
-	run  *Run
+	// version is the release the step was chosen in.
+	version Version
+	refresh func(context.Context) (*Run, error)
 
 	in  *bufio.Reader
 	out io.Writer
@@ -290,7 +301,7 @@ func (a *stepAction) SetStderr(io.Writer) {}
 // reader. The dashboard paints over everything printed here as soon as it
 // comes back, so leaving is the reader's to decide.
 func (a *stepAction) Run() error {
-	err := RunAction(a.ctx, a.step, a.run, a.in, a.out)
+	err := a.runFresh()
 	if err != nil {
 		fmt.Fprintf(a.out, "\n%v\n", err)
 	}
@@ -300,6 +311,25 @@ func (a *stepAction) Run() error {
 	_, _ = a.in.ReadString('\n')
 
 	return err
+}
+
+// runFresh reads the release again and runs the action against that read.
+// The dashboard's read can be hours old, and the tag step would push the
+// branch head it saw, missing any commit pushed since.
+func (a *stepAction) runFresh() error {
+	fmt.Fprintln(a.out, "Reading the checklist again…")
+
+	run, err := a.refresh(a.ctx)
+	if err != nil {
+		return err
+	}
+
+	if run.Release.Version != a.version {
+		return fmt.Errorf("the checklist showed %s, but the release in progress is now %s; nothing ran",
+			a.version, run.Release.Version)
+	}
+
+	return RunAction(a.ctx, a.step, run, a.in, a.out)
 }
 
 func (d *dashboard) View() string {

@@ -8,8 +8,10 @@ import (
 	"bufio"
 	"context"
 	"errors"
+	"io"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -28,7 +30,13 @@ func plain(view string) string { return colours.ReplaceAllString(view, "") }
 func dashboardShowing(t *testing.T, states map[string]State) *dashboard {
 	t.Helper()
 
-	run := testRun(t, Minor)
+	return dashboardReading(t, testRun(t, Minor), states)
+}
+
+// dashboardReading is dashboardShowing for a run the test has set up.
+func dashboardReading(t *testing.T, run *Run, states map[string]State) *dashboard {
+	t.Helper()
+
 	statuses := make(map[string]Status, len(checklist))
 
 	for _, step := range checklist {
@@ -296,7 +304,12 @@ func TestAnActionKeepsTheTerminalUntilTheReaderLeaves(t *testing.T) {
 	}
 
 	shown := &strings.Builder{}
-	action := &stepAction{ctx: t.Context(), step: step, run: run}
+	action := &stepAction{
+		ctx:     t.Context(),
+		step:    step,
+		version: run.Release.Version,
+		refresh: func(context.Context) (*Run, error) { return run, nil },
+	}
 	action.SetStdin(strings.NewReader("y\n\n"))
 	action.SetStdout(shown)
 	action.SetStderr(shown)
@@ -309,6 +322,60 @@ func TestAnActionKeepsTheTerminalUntilTheReaderLeaves(t *testing.T) {
 		if !strings.Contains(shown.String(), want) {
 			t.Errorf("the action did not show %q:\n%s", want, shown.String())
 		}
+	}
+}
+
+// TestAnActionWorksFromTheReleaseAsItIsNow covers a dashboard left open while
+// somebody pushed to the release branch. Tagging the head it shows would
+// leave their commit out of the release.
+func TestAnActionWorksFromTheReleaseAsItIsNow(t *testing.T) {
+	then := &fakeTools{output: readyToTag(packageRunJSON("completed", "success")), anyCommand: true}
+	dash := dashboardReading(t, tagRun(t, then, map[Version]string{}),
+		map[string]State{tagRelease.ID: Available})
+
+	moved := "cafecafecafecafecafecafecafecafecafecafe"
+	answers := readyToTag(packageRunJSON("completed", "success"))
+	answers["gh api repos/"+testRepo+"/compare/"+moved+"...main --jq .behind_by"] = "2\n"
+	answers[runsQueryAt(testBranch, moved)] = packageRunJSON("in_progress", "")
+	now := &fakeTools{output: answers}
+	dash.refresh = func(context.Context) (*Run, error) {
+		return checklistRun(t, testRelease, map[Line]string{testRelease.Line(): moved}, now), nil
+	}
+
+	action := dash.actionFor(tagRelease)
+	action.SetStdin(strings.NewReader("y\n\n"))
+	action.SetStdout(io.Discard)
+
+	if err := action.Run(); err == nil || !strings.Contains(err.Error(), string(Waiting)) {
+		t.Errorf("tagging a branch whose new head is still building gave %v", err)
+	}
+
+	for _, call := range slices.Concat(then.calls, now.calls) {
+		if strings.HasPrefix(call, "git push") {
+			t.Errorf("the action ran %q", call)
+		}
+	}
+}
+
+func TestAnActionRunsNothingForAReleaseOtherThanTheOneShown(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+
+	next := testRun(t, Patch)
+	tools := &fakeTools{anyCommand: true}
+	next.Tools = tools
+	dash.refresh = func(context.Context) (*Run, error) { return next, nil }
+
+	action := dash.actionFor(twoCommands())
+	action.SetStdin(strings.NewReader("y\n\n"))
+	action.SetStdout(io.Discard)
+
+	if err := action.Run(); err == nil || !strings.Contains(err.Error(), next.Release.Version.String()) {
+		t.Errorf("an action chosen on %s, with %s now in progress, gave %v",
+			dash.run.Release.Version, next.Release.Version, err)
+	}
+
+	if len(tools.calls) != 0 {
+		t.Errorf("ran %v for a release nobody chose", tools.calls)
 	}
 }
 

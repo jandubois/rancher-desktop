@@ -20,7 +20,7 @@ the cursor.
 | Key | What it does |
 | --- | --- |
 | `↑` `↓` | Move to another step. `k` and `j` work too. |
-| `enter` | Run the step's automation. The dashboard gives up the terminal, so the action can show its commands and ask before it runs them. |
+| `enter` | Run the step's automation. The dashboard gives up the terminal, so the action can show its commands and ask before it runs them. The action reads the release again first, so it acts on the release as it is now, however long the dashboard has been open, and runs nothing if a different release is in progress. |
 | `m` | Mark the step done when only your judgment can settle it, such as the release notes. Press `m` again to take the mark off. |
 | `f` | Write out the facts the step's manual work is done from, such as how the bundled utilities moved since the previous release. |
 | `i` | Read the step's instructions, filled in with this release's values. |

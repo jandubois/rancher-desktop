@@ -115,10 +115,15 @@ func contentsQuery(ref string) string {
 		" --header Accept: application/vnd.github.raw"
 }
 
-// runsQuery is the command that looks up the package run for a ref.
-func runsQuery(ref string) string {
+// runsQuery is the command that looks up the package run for a ref at the
+// release branch head.
+func runsQuery(ref string) string { return runsQueryAt(ref, testHead) }
+
+// runsQueryAt is the command that looks up the package run for a ref at a
+// commit.
+func runsQueryAt(ref, commit string) string {
 	return "gh api repos/" + testRepo + "/actions/workflows/package.yaml/runs?branch=" +
-		ref + "&head_sha=" + testHead + "&per_page=1"
+		ref + "&head_sha=" + commit + "&per_page=1"
 }
 
 // packageRunJSON is GitHub's answer for a workflow's runs, in the shape a
