@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -174,7 +175,10 @@ func (p *Profile) RefuseProductionResources(production *Profile) error {
 
 	for field, value := range p.Resources() {
 		for productionField, productionValue := range shared {
-			if value == productionValue {
+			// GitHub ignores case in repository names. Folding case for the
+			// other fields too refuses only names that differ from
+			// production's by case.
+			if strings.EqualFold(value, productionValue) {
 				return fmt.Errorf("profile %q: %s is %q, which production uses as %s",
 					p.Name, field, value, productionField)
 			}

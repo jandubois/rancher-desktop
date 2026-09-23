@@ -76,3 +76,22 @@ func TestProductionProfileIsAllowedItsOwnResources(t *testing.T) {
 		t.Errorf("production refused itself: %v", err)
 	}
 }
+
+func TestProfileRefusesAProductionRepositoryWrittenInAnotherCase(t *testing.T) {
+	production, err := LoadProfile(productionName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// GitHub ignores case in repository names, so this names the production
+	// repository.
+	fork, err := parseProfile([]byte("name: fork\ngithub:\n  repo: "+strings.ToUpper(production.GitHub.Repo)+"\n"), "test")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = fork.RefuseProductionResources(production)
+	if err == nil || !strings.Contains(err.Error(), "github.repo") {
+		t.Errorf("the production repository in capitals gave %v", err)
+	}
+}
