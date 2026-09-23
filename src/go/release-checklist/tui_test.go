@@ -419,6 +419,74 @@ func TestMarkingAStepThatNeedsNoJudgmentSaysSo(t *testing.T) {
 	}
 }
 
+// TestAMarkGoesToTheChecklistTheKeyWasPressedOn covers a read that finishes
+// between the key press and the mark, which runs on a goroutine of its own.
+func TestAMarkGoesToTheChecklistTheKeyWasPressedOn(t *testing.T) {
+	shown := notesRun(t, theNotes, theNotes)
+	dash := dashboardReading(t, shown, map[string]State{releaseNotes.ID: Available})
+	selectStep(t, dash, releaseNotes.ID)
+
+	mark := press(dash, "m")
+	if mark == nil {
+		t.Fatal("m on the release notes started nothing")
+	}
+
+	later := notesRun(t, theNotes, theNotes)
+	dash.Update(checklistRead{run: later, at: time.Now()})
+
+	if marked := mark().(stepChanged); marked.err != nil {
+		t.Fatal(marked.err)
+	}
+
+	if _, marked := shown.Confirmation(releaseNotes.ID); !marked {
+		t.Error("the mark missed the checklist the key was pressed on")
+	}
+
+	if _, marked := later.Confirmation(releaseNotes.ID); marked {
+		t.Error("the mark went to a read that finished after the key press")
+	}
+}
+
+// TestAKeyWaitsForTheCommandStillRunning covers enter, m or f pressed while
+// a command still runs, as when the first press seemed to do nothing.
+// Commands run on goroutines of their own, and two marks on one checklist
+// write its confirmations at once.
+func TestAKeyWaitsForTheCommandStillRunning(t *testing.T) {
+	for _, first := range []struct {
+		key      string
+		finished tea.Msg
+	}{
+		{"enter", stepChanged{}},
+		{"m", stepChanged{}},
+		{"f", factsGathered{}},
+	} {
+		t.Run(first.key, func(t *testing.T) {
+			dash := dashboardShowing(t, map[string]State{tagRelease.ID: Available})
+			selectStep(t, dash, tagRelease.ID)
+
+			if press(dash, first.key) == nil {
+				t.Fatalf("%s started nothing", first.key)
+			}
+
+			for _, key := range []string{"enter", "m", "f"} {
+				if press(dash, key) != nil {
+					t.Errorf("%s started a command while %s's was still running", key, first.key)
+				}
+
+				if !strings.Contains(dash.notice, "step "+tagRelease.ID) {
+					t.Errorf("%s said %q, which does not name what is still running", key, dash.notice)
+				}
+			}
+
+			dash.Update(first.finished)
+
+			if press(dash, "m") == nil {
+				t.Errorf("m started nothing after %s's command finished", first.key)
+			}
+		})
+	}
+}
+
 // TestTheDashboardFitsItsScreen keeps the notice counted in the height the
 // list is given. A view taller than the screen loses its top lines, so the
 // header scrolls away.
@@ -456,6 +524,27 @@ func TestGatheringFactsForAStepWithNoneSaysSo(t *testing.T) {
 
 	if !strings.Contains(plain(dash.View()), "gathers nothing") {
 		t.Errorf("the dashboard said nothing about the key:\n%s", plain(dash.View()))
+	}
+}
+
+// TestFactsComeFromTheChecklistTheKeyWasPressedOn covers a read that finishes
+// between pressing f and the gathering. Neither release is tagged, so the
+// error names the release the gathering read.
+func TestFactsComeFromTheChecklistTheKeyWasPressedOn(t *testing.T) {
+	dash := dashboardReading(t, checklistRun(t, testRelease, nil, &fakeTools{}), nil)
+	selectStep(t, dash, windowsAssets.ID)
+
+	gather := press(dash, "f")
+	if gather == nil {
+		t.Fatal("f on the Windows assets started nothing")
+	}
+
+	next := Version{Major: 1, Minor: 25, Patch: 1}
+	dash.Update(checklistRead{run: checklistRun(t, next, nil, &fakeTools{}), at: time.Now()})
+
+	if gathered := gather().(factsGathered); gathered.err == nil ||
+		!strings.Contains(gathered.err.Error(), testRelease.String()) {
+		t.Errorf("gathering on %s, after a read of %s finished, gave %v", testRelease, next, gathered.err)
 	}
 }
 

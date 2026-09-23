@@ -71,6 +71,8 @@ type dashboard struct {
 	// works from. The tests answer in its place.
 	refresh func(context.Context) (*Run, error)
 
+	// run is the release on screen. A command takes it when its key is
+	// pressed, because a read can replace it while the command runs.
 	run        *Run
 	statuses   map[string]Status
 	refreshed  time.Time
@@ -82,6 +84,10 @@ type dashboard struct {
 	failure error
 	// notice is what the last key press or action left to say.
 	notice string
+	// pending names the command still running, such as "marking step 6".
+	// Commands run on goroutines of their own, and two of them on one run
+	// would write its caches and confirmations at once.
+	pending string
 
 	selected     int
 	instructions bool
@@ -158,7 +164,7 @@ func (d *dashboard) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 			d.failure, d.refreshing = message.err, false
 		}
 	case stepChanged:
-		d.notice = ""
+		d.notice, d.pending = "", ""
 		if message.err != nil {
 			d.notice = message.err.Error()
 		}
@@ -168,6 +174,7 @@ func (d *dashboard) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 		return d, read
 
 	case factsGathered:
+		d.pending = ""
 		d.notice = "the facts are in " + atHome(message.path)
 		if message.err != nil {
 			d.notice = message.err.Error()
@@ -227,21 +234,40 @@ func (d *dashboard) startRead() tea.Cmd {
 // commands print, so the action runs against the real terminal with the
 // dashboard suspended.
 func (d *dashboard) runSelected() tea.Cmd {
+	if !d.ready() {
+		return nil
+	}
+
 	step := checklist[d.selected]
 
 	switch {
-	case d.run == nil:
-		d.notice = unread
 	case step.Action == nil:
 		d.notice = fmt.Sprintf("step %s is done by hand; press i for its instructions", step.ID)
 	case d.statuses[step.ID].State != Available:
 		d.notice = fmt.Sprintf("step %s is %s, so there is nothing to run",
 			step.ID, d.statuses[step.ID].State)
 	default:
+		d.pending = "running step " + step.ID
+
 		return tea.Exec(d.actionFor(step), func(err error) tea.Msg { return stepChanged{err: err} })
 	}
 
 	return nil
+}
+
+// ready reports whether a key can start a command, and puts the reason in the
+// notice when it cannot.
+func (d *dashboard) ready() bool {
+	switch {
+	case d.run == nil:
+		d.notice = unread
+	case d.pending != "":
+		d.notice = fmt.Sprintf("still %s; wait for it to finish", d.pending)
+	default:
+		return true
+	}
+
+	return false
 }
 
 // actionFor is a step's automation, chosen from the release on screen.
@@ -253,30 +279,28 @@ func (d *dashboard) actionFor(step *Step) *stepAction {
 // already marked for the text it would mark now. Reading that text reaches
 // GitHub, so the mark is made in a command rather than on the drawing path.
 func (d *dashboard) markSelected() tea.Cmd {
-	if d.run == nil {
-		d.notice = unread
-
+	if !d.ready() {
 		return nil
 	}
 
-	step := checklist[d.selected]
+	step, run := checklist[d.selected], d.run
+	d.pending = "marking step " + step.ID
 
-	return func() tea.Msg { return stepChanged{err: Mark(d.ctx, step, d.run)} }
+	return func() tea.Msg { return stepChanged{err: Mark(d.ctx, step, run)} }
 }
 
 // gatherSelected writes the selected step's reference material. Gathering
 // reaches GitHub, so it runs in a command rather than on the drawing path.
 func (d *dashboard) gatherSelected() tea.Cmd {
-	if d.run == nil {
-		d.notice = unread
-
+	if !d.ready() {
 		return nil
 	}
 
-	step := checklist[d.selected]
+	step, run := checklist[d.selected], d.run
+	d.pending = "gathering the facts for step " + step.ID
 
 	return func() tea.Msg {
-		path, err := GatherFacts(d.ctx, step, d.run)
+		path, err := GatherFacts(d.ctx, step, run)
 
 		return factsGathered{path: path, err: err}
 	}
