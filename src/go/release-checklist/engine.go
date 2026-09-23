@@ -188,12 +188,17 @@ type Run struct {
 // because only the documentation steps reach it. Its remotes are the ones the
 // documentation clone holds, so the URLs a step pushes to are the ones the user
 // already pushes to by hand.
-func (r *Run) Docs(ctx context.Context) *repository {
+func (r *Run) Docs(ctx context.Context) (*repository, error) {
 	if r.docs == nil {
-		r.docs = newRepository(ctx, r.Settings.DocsClone, r.Profile.GitHub.DocsRepo, r.Tools)
+		docs, err := newRepository(ctx, r.Settings.DocsClone, r.Profile.GitHub.DocsRepo, r.Tools)
+		if err != nil {
+			return nil, err
+		}
+
+		r.docs = docs
 	}
 
-	return r.docs
+	return r.docs, nil
 }
 
 // newRun starts a refresh.

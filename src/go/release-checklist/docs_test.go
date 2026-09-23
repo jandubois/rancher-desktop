@@ -78,9 +78,11 @@ func headQuery(repo, branch string) string {
 }
 
 // docsAnswers is every command the check runs when the documentation is on
-// the fork's release branch and lists what the release bundles.
+// the fork's release branch and lists what the release bundles. The clone has
+// no remotes, so both repositories are read at their public URLs.
 func docsAnswers() map[string]string {
 	return map[string]string{
+		"git remote --verbose": "",
 		"gh api repos/" + testDocsRepo + " --jq .permissions.push":                        "true\n",
 		"gh api user --jq .login":                                                         testLogin + "\n",
 		"gh api repos/" + testDocsFork + " --jq .parent.full_name":                        testDocsRepo + "\n",
@@ -276,7 +278,7 @@ func TestUtilitiesDifferNamesWhatIsMissingAndWhatIsExtra(t *testing.T) {
 // somebody set to keep a remote from being pushed to at all.
 const docsRemoteOutput = "origin\thttps://github.com/" + testDocsFork + "/ (fetch)\n" +
 	"origin\thttps://github.com/" + testDocsFork + "/ (push)\n" +
-	"upstream\tgit@github.com:" + testDocsRepo + " (fetch)\n" +
+	"upstream\thttps://github.com/" + testDocsRepo + " (fetch)\n" +
 	"upstream\tDISABLED (push)\n"
 
 // testDocsHead is the commit the documentation's main branch points at, which
@@ -332,7 +334,7 @@ func TestTheDocsActionCutsFromMainAndPushesToTheFork(t *testing.T) {
 	}
 
 	want := []string{
-		"git fetch git@github.com:" + testDocsRepo + " " + defaultBranch,
+		"git fetch https://github.com/" + testDocsRepo + " " + defaultBranch,
 		"check 1234abc of " + defaultBranch + " out in " + dir,
 		"write " + docsVersionDir + "/v1.25.0.md, listing the 4 utilities 1.25.0 bundles",
 		"drop " + docsVersionDir + "/v1.22.0.md, so the page lists 3 releases",
@@ -380,6 +382,31 @@ func TestTheDocsRemotesAreReadInTheDocumentationClone(t *testing.T) {
 	}
 
 	ranOnlyIn(t, tools, "git remote --verbose", clone)
+}
+
+// TestTheDocsActionsPushWhereTheForkRemotePushes covers a clone whose fork
+// remote pushes over ssh.
+func TestTheDocsActionsPushWhereTheForkRemotePushes(t *testing.T) {
+	run, tools := docsPlanRun(t, "/clones/docs")
+	tools.output["git remote --verbose"] = strings.Replace(docsRemoteOutput,
+		"origin\thttps://github.com/"+testDocsFork+"/ (push)",
+		"origin\tgit@github.com:"+testDocsFork+".git (push)", 1)
+
+	push := "git push git@github.com:" + testDocsFork + ".git HEAD:refs/heads/" + testBranch
+
+	for step, plan := range map[string]func(context.Context, *Run) ([]Operation, error){
+		docsUtilities.ID: planDocsUtilities,
+		docsReference.ID: planDocsReference,
+	} {
+		operations, err := plan(t.Context(), run)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if !slices.ContainsFunc(operations, func(operation Operation) bool { return operation.Description == push }) {
+			t.Errorf("step %s does not run %q", step, push)
+		}
+	}
 }
 
 func TestTheDocsActionSaysWhereToWriteTheClonePath(t *testing.T) {

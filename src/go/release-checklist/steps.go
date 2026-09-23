@@ -394,7 +394,7 @@ func planTag(_ context.Context, run *Run) ([]Operation, error) {
 
 	return []Operation{
 		command("", "git", "fetch", run.Repo.url, branch),
-		command("", "git", "push", run.Repo.url, head+":refs/tags/"+run.Release.Tag()),
+		command("", "git", "push", run.Repo.pushURL, head+":refs/tags/"+run.Release.Tag()),
 	}, nil
 }
 

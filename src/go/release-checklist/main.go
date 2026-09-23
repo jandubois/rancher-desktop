@@ -83,7 +83,10 @@ func printChecklist(ctx context.Context, profile *Profile) error {
 // progress, the refs the steps check against, the steps somebody has marked
 // done, and the settings naming this machine's clones.
 func refresh(ctx context.Context, profile *Profile) (*Run, error) {
-	repo := newRepository(ctx, "", profile.GitHub.Repo, tools{})
+	repo, err := newRepository(ctx, "", profile.GitHub.Repo, tools{})
+	if err != nil {
+		return nil, err
+	}
 
 	release, err := chooseRelease(ctx, repo)
 	if err != nil {

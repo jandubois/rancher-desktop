@@ -95,36 +95,76 @@ type exitStatus struct{}
 func (*exitStatus) Error() string { return "exit status 1" }
 
 // remoteOutput is `git remote --verbose` from a clone that has the release
-// repository under a name of its own, one remote that is a local path, a fetch
-// URL without the .git suffix, and a fork URL ending in a slash, which is what
-// a clone set up by gh holds.
-const remoteOutput = "origin\thttps://github.com/me/rancher-desktop/ (fetch)\n" +
-	"origin\thttps://github.com/me/rancher-desktop/ (push)\n" +
+// repository under a name of its own, fetched over https without the .git
+// suffix and pushed to over ssh, and one remote that is a local path.
+const remoteOutput = "origin\thttps://github.com/me/rancher-desktop.git (fetch)\n" +
+	"origin\thttps://github.com/me/rancher-desktop.git (push)\n" +
 	"rd2\t../rancher-desktop-2 (fetch)\n" +
 	"rd2\t../rancher-desktop-2 (push)\n" +
-	"upstream\tgit@github.com:rancher-sandbox/rancher-desktop (fetch)\n" +
+	"upstream\thttps://github.com/rancher-sandbox/rancher-desktop (fetch)\n" +
 	"upstream\tgit@github.com:rancher-sandbox/rancher-desktop.git (push)\n"
 
 func TestRemoteIsFoundByURLNotByName(t *testing.T) {
-	run := &fakeTools{output: map[string]string{"git remote --verbose": remoteOutput}}
+	tools := &fakeTools{output: map[string]string{"git remote --verbose": remoteOutput}}
 
-	url := remoteURL(context.Background(), "", "rancher-sandbox/rancher-desktop", run)
-	if url != "git@github.com:rancher-sandbox/rancher-desktop" {
-		t.Errorf("found %q, not the remote pointing at the release repository", url)
+	repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools)
+	if repo.url != "https://github.com/rancher-sandbox/rancher-desktop" {
+		t.Errorf("fetches from %q, not the remote pointing at the release repository", repo.url)
 	}
 
-	// A URL ending in a slash still points at the fork, and the fork's own
-	// remote is the one the user has already pushed to.
-	url = remoteURL(context.Background(), "", "me/rancher-desktop", run)
-	if url != "https://github.com/me/rancher-desktop/" {
-		t.Errorf("found %q, not the fork's own remote", url)
+	if repo.pushURL != "git@github.com:rancher-sandbox/rancher-desktop.git" {
+		t.Errorf("pushes to %q, not the push URL of the remote pointing at the release repository", repo.pushURL)
+	}
+
+	// The fork's own remote is the one the user has already pushed to.
+	repo = repositoryIn(t, "", "me/rancher-desktop", tools)
+	if repo.url != "https://github.com/me/rancher-desktop.git" {
+		t.Errorf("found %q, not the fork's own remote", repo.url)
 	}
 
 	// A clone with no remote for the repository still reads its public refs.
-	url = remoteURL(context.Background(), "", "someone/rancher-desktop", run)
-	if url != "https://github.com/someone/rancher-desktop.git" {
-		t.Errorf("fell back to %q", url)
+	repo = repositoryIn(t, "", "someone/rancher-desktop", tools)
+	if repo.url != "https://github.com/someone/rancher-desktop.git" {
+		t.Errorf("fell back to %q", repo.url)
 	}
+}
+
+// TestAPartialCloneRemoteIsFound covers a remote cloned with a filter, whose
+// fetch line names the filter after the URL.
+func TestAPartialCloneRemoteIsFound(t *testing.T) {
+	tools := &fakeTools{output: map[string]string{
+		"git remote --verbose": "upstream\thttps://github.com/rancher-sandbox/rancher-desktop (fetch) [blob:none]\n" +
+			"upstream\tgit@github.com:rancher-sandbox/rancher-desktop.git (push)\n",
+	}}
+
+	repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools)
+	if repo.pushURL != "git@github.com:rancher-sandbox/rancher-desktop.git" {
+		t.Errorf("pushes to %q, not the partial clone's own push URL", repo.pushURL)
+	}
+}
+
+// TestRemotesThatCannotBeReadAreAnError covers a clone path that is no clone,
+// a mistake in the settings that falling back to the public URL would hide.
+func TestRemotesThatCannotBeReadAreAnError(t *testing.T) {
+	tools := &fakeTools{stderr: map[string]string{
+		"git remote --verbose": "fatal: not a git repository (or any of the parent directories): .git",
+	}}
+
+	if repo, err := newRepository(t.Context(), "/clones/gone", "rancher-sandbox/rancher-desktop", tools); err == nil {
+		t.Errorf("remotes nobody could read gave %q", repo.url)
+	}
+}
+
+// repositoryIn is the repository as a clone's remotes reach it.
+func repositoryIn(t *testing.T, clone, repo string, tools commander) *repository {
+	t.Helper()
+
+	repository, err := newRepository(t.Context(), clone, repo, tools)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return repository
 }
 
 func TestRemotesAreReadInTheRepositorysClone(t *testing.T) {
@@ -132,27 +172,35 @@ func TestRemotesAreReadInTheRepositorysClone(t *testing.T) {
 
 	tools := &fakeTools{output: map[string]string{"git remote --verbose": remoteOutput}}
 
-	newRepository(context.Background(), clone, "rancher-sandbox/rancher-desktop", tools)
+	repositoryIn(t, clone, "rancher-sandbox/rancher-desktop", tools)
 
 	ranOnlyIn(t, tools, "git remote --verbose", clone)
 }
 
 func TestForkHasItsOwnRemote(t *testing.T) {
+	const push = "git@github.com:me/rancher-desktop.git"
+
 	tools := &fakeTools{output: map[string]string{
-		"git remote --verbose":                                   remoteOutput,
+		// The fork's remote pushes over ssh.
+		"git remote --verbose": strings.Replace(remoteOutput,
+			"origin\thttps://github.com/me/rancher-desktop.git (push)", "origin\t"+push+" (push)", 1),
 		"gh api user --jq .login":                                "me\n",
 		"gh api repos/me/rancher-desktop --jq .parent.full_name": "rancher-sandbox/rancher-desktop\n",
 	}}
 
-	repo := newRepository(context.Background(), "", "rancher-sandbox/rancher-desktop", tools)
+	repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools)
 
 	fork, err := repo.Fork(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if fork.url != "https://github.com/me/rancher-desktop/" {
-		t.Errorf("the fork pushes to %q, not to its own remote", fork.url)
+	if fork.url != "https://github.com/me/rancher-desktop.git" || fork.pushURL != push {
+		t.Errorf("the fork fetches from %q and pushes to %q, not its own remote's URLs", fork.url, fork.pushURL)
+	}
+
+	if owner, url, err := repo.PushTarget(context.Background()); err != nil || owner != "me" || url != push {
+		t.Errorf("a step's own branch goes to %q at %q, %v", owner, url, err)
 	}
 }
 
@@ -169,7 +217,7 @@ func TestOnlyAMissingForkMeansThereIsNoFork(t *testing.T) {
 		}
 	}
 
-	repo := newRepository(context.Background(), "", "rancher-sandbox/rancher-desktop", answers("gh: Not Found (HTTP 404)"))
+	repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", answers("gh: Not Found (HTTP 404)"))
 
 	owner, _, err := repo.PushTarget(context.Background())
 	if err != nil || owner != "rancher-sandbox" {
@@ -178,7 +226,7 @@ func TestOnlyAMissingForkMeansThereIsNoFork(t *testing.T) {
 
 	// A lookup that failed for any other reason says nothing about the fork,
 	// and guessing would send a branch to the repository itself.
-	repo = newRepository(context.Background(), "", "rancher-sandbox/rancher-desktop", answers("gh: API rate limit exceeded (HTTP 403)"))
+	repo = repositoryIn(t, "", "rancher-sandbox/rancher-desktop", answers("gh: API rate limit exceeded (HTTP 403)"))
 
 	if owner, _, err = repo.PushTarget(context.Background()); err == nil {
 		t.Errorf("a failed fork lookup made %q the push target", owner)

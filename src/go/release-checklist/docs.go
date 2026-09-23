@@ -173,7 +173,10 @@ func checkDocsUtilities(ctx context.Context, run *Run) (Answer, error) {
 // after a merge, so a check that read only the fork would show every finished
 // release as unfinished.
 func docsLocation(ctx context.Context, run *Run) (*repository, string, error) {
-	docs := run.Docs(ctx)
+	docs, err := run.Docs(ctx)
+	if err != nil {
+		return nil, "", err
+	}
 
 	fork, err := docs.Fork(ctx)
 	if err != nil {
@@ -192,6 +195,17 @@ func docsLocation(ctx context.Context, run *Run) (*repository, string, error) {
 	default:
 		return nil, "", err
 	}
+}
+
+// docsFork is the user's fork of the documentation repository, or the
+// documentation repository itself when they have no fork of it.
+func docsFork(ctx context.Context, run *Run) (*repository, error) {
+	docs, err := run.Docs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return docs.Fork(ctx)
 }
 
 // bundledVersions is every utility the release bundles, by the name the
@@ -502,7 +516,7 @@ func planDocsUtilities(ctx context.Context, run *Run) ([]Operation, error) {
 		return nil, err
 	}
 
-	fork, err := run.Docs(ctx).Fork(ctx)
+	fork, err := docsFork(ctx, run)
 	if err != nil {
 		return nil, err
 	}
@@ -547,7 +561,7 @@ func planDocsUtilities(ctx context.Context, run *Run) ([]Operation, error) {
 		},
 		command(dir, "git", "add", "--all", "--", docsVersionDir, docsReferencePage),
 		command(dir, "git", "commit", "--signoff", "--message", docsCommitMessage(version), "--", docsVersionDir, docsReferencePage),
-		command(dir, "git", "push", fork.url, "HEAD:refs/heads/"+run.Release.Branch()),
+		command(dir, "git", "push", fork.pushURL, "HEAD:refs/heads/"+run.Release.Branch()),
 	), nil
 }
 

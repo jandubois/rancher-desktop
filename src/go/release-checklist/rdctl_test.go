@@ -205,9 +205,11 @@ func TestRestoreValueKeepsTheGeneratedComma(t *testing.T) {
 }
 
 // referenceAnswers is every command the check runs when the command reference
-// is on the fork's release branch.
+// is on the fork's release branch. The clone has no remotes, so both
+// repositories are read at their public URLs.
 func referenceAnswers(page string) map[string]string {
 	return map[string]string{
+		"git remote --verbose": "",
 		"gh api repos/" + testDocsRepo + " --jq .permissions.push": "true\n",
 		"gh api user --jq .login":                                  testLogin + "\n",
 		"gh api repos/" + testDocsFork + " --jq .parent.full_name": testDocsRepo + "\n",

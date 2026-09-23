@@ -117,7 +117,7 @@ func newDocsSandbox(t *testing.T) *docsSandbox {
 	// bare repositories here, and refuses every other protocol.
 	config := fmt.Sprintf("[user]\n\tname = Test Person\n\temail = test@example.invalid\n"+
 		"[url %q]\n\tinsteadOf = https://github.com/%s/\n"+
-		"[url %q]\n\tinsteadOf = git@github.com:%s\n"+
+		"[url %q]\n\tinsteadOf = https://github.com/%s\n"+
 		"[init]\n\tdefaultBranch = %s\n", s.fork, testDocsFork, s.upstream, testDocsRepo, defaultBranch)
 	configFile := filepath.Join(root, "gitconfig")
 	if err := os.WriteFile(configFile, []byte(config), 0o644); err != nil {

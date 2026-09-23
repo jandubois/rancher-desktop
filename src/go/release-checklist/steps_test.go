@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -35,7 +36,8 @@ func checklistRun(t *testing.T, version Version, branches map[Line]string, tools
 
 	tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "true\n"
 
-	repo := &repository{repo: testRepo, url: "https://github.com/" + testRepo + ".git", run: tools}
+	url := "https://github.com/" + testRepo + ".git"
+	repo := &repository{repo: testRepo, url: url, pushURL: url, run: tools}
 
 	marked, err := confirmationsAt(filepath.Join(t.TempDir(), confirmationsFile))
 	if err != nil {
@@ -235,6 +237,36 @@ func TestTagGoesToTheReleaseRepositoryNotTheClonesOrigin(t *testing.T) {
 		if !containsCall(tools.calls, call) {
 			t.Errorf("the tag action never ran %q; it ran %v", call, tools.calls)
 		}
+	}
+}
+
+// TestTheTagIsPushedWhereTheClonePushes covers a clone that fetches the
+// release repository over https and pushes to it over ssh.
+func TestTheTagIsPushedWhereTheClonePushes(t *testing.T) {
+	const repo = "rancher-sandbox/rancher-desktop"
+
+	tools := &fakeTools{output: map[string]string{"git remote --verbose": remoteOutput}}
+	run := newRun(&Release{Version: testRelease, Kind: Minor},
+		&Profile{Name: "test", GitHub: GitHubResources{Repo: repo}}, repositoryIn(t, "", repo, tools))
+	run.Refs = &Refs{Branches: map[Line]string{testRelease.Line(): testHead}}
+
+	operations, err := planTag(t.Context(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := []string{
+		"git fetch https://github.com/" + repo + " " + testBranch,
+		"git push git@github.com:" + repo + ".git " + testHead + ":refs/tags/v1.25.0",
+	}
+
+	shown := make([]string, 0, len(operations))
+	for _, operation := range operations {
+		shown = append(shown, operation.Description)
+	}
+
+	if !slices.Equal(shown, want) {
+		t.Errorf("the tag runs %q, want %q", shown, want)
 	}
 }
 

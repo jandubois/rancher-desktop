@@ -80,10 +80,14 @@ type repoFacts interface {
 // keep their own credentials.
 type repository struct {
 	repo string
-	// url is the remote to read refs from and push to. Remotes are found by
+	// url is the remote to fetch and read refs from. Remotes are found by
 	// URL, never by name, so a clone that calls the release repository
 	// anything at all still works.
 	url string
+	// pushURL is the same remote's push URL. A clone can set it apart from
+	// url, to push over ssh or to refuse pushes with DISABLED, and every push
+	// goes to it.
+	pushURL string
 	// dir is the clone this repository is checked out in, which is where its
 	// remotes are read. Empty is the clone the tool runs in.
 	dir string
@@ -91,12 +95,9 @@ type repository struct {
 	// refs is read once and shared by every step that checks a branch or a
 	// tag, so one refresh makes one call.
 	refs *Refs
-	// pushOwner and pushURL are where the user's own branches go, looked up
-	// once because finding them costs two API calls.
-	pushOwner string
-	pushURL   string
 	// fork is the repository a step pushes its branches to, which is where a
-	// release's work is until somebody merges it.
+	// release's work is until somebody merges it. It is looked up once,
+	// because finding it costs two API calls.
 	fork *repository
 	// root is the top of the clone the tool runs in.
 	root string
@@ -112,30 +113,60 @@ type repository struct {
 	artifacts map[string][]Artifact
 }
 
-func newRepository(ctx context.Context, clone, repo string, run commander) *repository {
-	return &repository{repo: repo, url: remoteURL(ctx, clone, repo, run), dir: clone, run: run}
+func newRepository(ctx context.Context, clone, repo string, run commander) (*repository, error) {
+	fetch, push, err := remoteURLs(ctx, clone, repo, run)
+	if err != nil {
+		return nil, err
+	}
+
+	return &repository{repo: repo, url: fetch, pushURL: push, dir: clone, run: run}, nil
 }
 
-// remoteURL is the URL of a clone's remote for the repository, or the
-// repository's public URL when no remote points at it. A repository is read in
-// the clone it is checked out in, because a URL the user has already pushed to
-// needs no credentials set up a second time.
-func remoteURL(ctx context.Context, clone, repo string, run commander) string {
+// remoteURLs are the fetch and push URLs of a clone's remote for the
+// repository, or the repository's public URL for both when no remote fetches
+// from it. A repository is read in the clone it is checked out in, because a
+// URL the user has already pushed to needs no credentials set up a second
+// time.
+func remoteURLs(ctx context.Context, clone, repo string, run commander) (string, string, error) {
 	output, err := run.runIn(ctx, clone, "git", "remote", "--verbose")
-	if err == nil {
-		for line := range strings.SplitSeq(strings.TrimSpace(string(output)), "\n") {
-			fields := strings.Fields(line)
-			if len(fields) < 2 {
-				continue
-			}
+	if err != nil {
+		return "", "", fmt.Errorf("reading the remotes for %s: %w", repo, err)
+	}
 
-			if sameRepo(fields[1], repo) {
-				return fields[1]
-			}
+	type remote struct{ fetch, push string }
+
+	var names []string
+
+	remotes := map[string]*remote{}
+
+	// A line reads "<name>\t<url> (fetch)", followed by the filter in a
+	// partial clone, or "<name>\t<url> (push)".
+	for line := range strings.SplitSeq(strings.TrimSpace(string(output)), "\n") {
+		name, rest, _ := strings.Cut(line, "\t")
+
+		found, seen := remotes[name]
+		if !seen {
+			found = &remote{}
+			remotes[name] = found
+			names = append(names, name)
+		}
+
+		if url, _, fetch := strings.Cut(rest, " (fetch)"); fetch {
+			found.fetch = url
+		} else if url, _, push := strings.Cut(rest, " (push)"); push {
+			found.push = url
 		}
 	}
 
-	return "https://github.com/" + repo + ".git"
+	for _, name := range names {
+		if found := remotes[name]; sameRepo(found.fetch, repo) {
+			return found.fetch, found.push, nil
+		}
+	}
+
+	public := "https://github.com/" + repo + ".git"
+
+	return public, public, nil
 }
 
 // sameRepo reports whether a git remote URL points at the owner/name
@@ -391,17 +422,32 @@ func (r *repository) Fork(ctx context.Context) (*repository, error) {
 		return r.fork, nil
 	}
 
-	owner, url, err := r.PushTarget(ctx)
+	output, err := r.run.run(ctx, "gh", "api", "user", "--jq", ".login")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("reading who you are signed in as: %w", err)
 	}
 
+	login := strings.TrimSpace(string(output))
 	_, name, _ := strings.Cut(r.repo, "/")
+	fork := login + "/" + name
 
-	if fork := owner + "/" + name; fork != r.repo {
-		r.fork = &repository{repo: fork, url: url, dir: r.dir, run: r.run}
-	} else {
+	// Only a missing repository means there is no fork. Any other failure
+	// says nothing about it, and guessing would send a branch to the release
+	// repository itself.
+	parent, err := r.run.run(ctx, "gh", "api", "repos/"+fork, "--jq", ".parent.full_name")
+
+	var failure *commandFailure
+
+	switch {
+	case err == nil && strings.EqualFold(strings.TrimSpace(string(parent)), r.repo):
+		r.fork, err = newRepository(ctx, r.dir, fork, r.run)
+		if err != nil {
+			return nil, err
+		}
+	case err == nil, errors.As(err, &failure) && failure.missing():
 		r.fork = r
+	default:
+		return nil, fmt.Errorf("looking for your fork of %s: %w", r.repo, err)
 	}
 
 	return r.fork, nil
@@ -430,41 +476,17 @@ func (r *repository) OpenPR(ctx context.Context, owner, branch string) (int, err
 	return number, nil
 }
 
-// PushTarget is where a step's own branch goes: the user's fork of the
-// release repository, or the release repository itself when they have no
-// fork of it, which is what a profile pointing at a fork already wants.
+// PushTarget is the owner of the repository a step's own branch goes to, and
+// the URL the branch is pushed to.
 func (r *repository) PushTarget(ctx context.Context) (string, string, error) {
-	if r.pushOwner != "" {
-		return r.pushOwner, r.pushURL, nil
-	}
-
-	output, err := r.run.run(ctx, "gh", "api", "user", "--jq", ".login")
+	fork, err := r.Fork(ctx)
 	if err != nil {
-		return "", "", fmt.Errorf("reading who you are signed in as: %w", err)
+		return "", "", err
 	}
 
-	login := strings.TrimSpace(string(output))
-	_, name, _ := strings.Cut(r.repo, "/")
-	fork := login + "/" + name
+	owner, _, _ := strings.Cut(fork.repo, "/")
 
-	// Only a missing repository means there is no fork. Any other failure
-	// says nothing about it, and guessing would send a branch to the release
-	// repository itself.
-	parent, err := r.run.run(ctx, "gh", "api", "repos/"+fork, "--jq", ".parent.full_name")
-
-	var failure *commandFailure
-
-	switch {
-	case err == nil && strings.EqualFold(strings.TrimSpace(string(parent)), r.repo):
-		r.pushOwner, r.pushURL = login, remoteURL(ctx, r.dir, fork, r.run)
-	case err == nil, errors.As(err, &failure) && failure.missing():
-		r.pushOwner, _, _ = strings.Cut(r.repo, "/")
-		r.pushURL = r.url
-	default:
-		return "", "", fmt.Errorf("looking for your fork of %s: %w", r.repo, err)
-	}
-
-	return r.pushOwner, r.pushURL, nil
+	return owner, fork.pushURL, nil
 }
 
 func (r *repository) TagInMain(ctx context.Context, tag string) (bool, error) {
