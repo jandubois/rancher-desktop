@@ -80,10 +80,13 @@ type repoFacts interface {
 // keep their own credentials.
 type repository struct {
 	repo string
-	// url is the remote to read refs from. Remotes are found by URL, never
-	// by name, so a clone that calls the release repository anything at all
-	// still works.
+	// url is the remote to read refs from and push to. Remotes are found by
+	// URL, never by name, so a clone that calls the release repository
+	// anything at all still works.
 	url string
+	// dir is the clone this repository is checked out in, which is where its
+	// remotes are read. Empty is the clone the tool runs in.
+	dir string
 	run commander
 	// refs is read once and shared by every step that checks a branch or a
 	// tag, so one refresh makes one call.
@@ -109,14 +112,16 @@ type repository struct {
 	artifacts map[string][]Artifact
 }
 
-func newRepository(ctx context.Context, repo string, run commander) *repository {
-	return &repository{repo: repo, url: remoteURL(ctx, repo, run), run: run}
+func newRepository(ctx context.Context, clone, repo string, run commander) *repository {
+	return &repository{repo: repo, url: remoteURL(ctx, clone, repo, run), dir: clone, run: run}
 }
 
-// remoteURL is the URL of the clone's remote for the repository, or the
-// repository's public URL when no remote points at it.
-func remoteURL(ctx context.Context, repo string, run commander) string {
-	output, err := run.run(ctx, "git", "remote", "--verbose")
+// remoteURL is the URL of a clone's remote for the repository, or the
+// repository's public URL when no remote points at it. A repository is read in
+// the clone it is checked out in, because a URL the user has already pushed to
+// needs no credentials set up a second time.
+func remoteURL(ctx context.Context, clone, repo string, run commander) string {
+	output, err := run.runIn(ctx, clone, "git", "remote", "--verbose")
 	if err == nil {
 		for line := range strings.SplitSeq(strings.TrimSpace(string(output)), "\n") {
 			fields := strings.Fields(line)
@@ -134,14 +139,32 @@ func remoteURL(ctx context.Context, repo string, run commander) string {
 }
 
 // sameRepo reports whether a git remote URL points at the owner/name
-// repository, in any of the spellings a clone may hold.
+// repository.
 func sameRepo(url, repo string) bool {
-	trimmed := strings.TrimSuffix(url, ".git")
-	if host, path, found := strings.Cut(trimmed, ":"); found && !strings.Contains(host, "/") {
-		trimmed = path
+	return strings.EqualFold(repoPath(url), repo)
+}
+
+// repoPath is the owner/name a git remote URL names, in any of the spellings a
+// clone may hold: an https or ssh URL, an scp-style address, with or without
+// the .git suffix and a trailing slash. Anything else, a local path among them,
+// keeps what it has and so names no repository.
+func repoPath(url string) string {
+	trimmed := strings.TrimSuffix(strings.TrimSuffix(url, "/"), ".git")
+
+	// The first segment of a URL's path is the host, which may carry a port.
+	if _, rest, found := strings.Cut(trimmed, "://"); found {
+		_, after, _ := strings.Cut(rest, "/")
+
+		return after
 	}
 
-	return strings.EqualFold(strings.TrimPrefix(trimmed, "https://github.com/"), repo)
+	// An scp-style address puts the path after the colon. A local path can
+	// hold a colon too, but then a slash comes before it.
+	if host, after, found := strings.Cut(trimmed, ":"); found && !strings.Contains(host, "/") {
+		return after
+	}
+
+	return trimmed
 }
 
 func (r *repository) Refs(ctx context.Context) (*Refs, error) {
@@ -281,7 +304,7 @@ func (r *repository) Root(ctx context.Context) (string, error) {
 		return r.root, nil
 	}
 
-	output, err := r.run.run(ctx, "git", "rev-parse", "--show-toplevel")
+	output, err := r.run.runIn(ctx, r.dir, "git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		return "", fmt.Errorf("finding the top of the clone: %w", err)
 	}
@@ -342,7 +365,7 @@ func (r *repository) Fork(ctx context.Context) (*repository, error) {
 		return r.fork, nil
 	}
 
-	owner, _, err := r.PushTarget(ctx)
+	owner, url, err := r.PushTarget(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -350,7 +373,7 @@ func (r *repository) Fork(ctx context.Context) (*repository, error) {
 	_, name, _ := strings.Cut(r.repo, "/")
 
 	if fork := owner + "/" + name; fork != r.repo {
-		r.fork = &repository{repo: fork, url: r.url, run: r.run}
+		r.fork = &repository{repo: fork, url: url, dir: r.dir, run: r.run}
 	} else {
 		r.fork = r
 	}
@@ -400,7 +423,7 @@ func (r *repository) PushTarget(ctx context.Context) (string, string, error) {
 
 	parent, err := r.run.run(ctx, "gh", "api", "repos/"+fork, "--jq", ".parent.full_name")
 	if err == nil && strings.TrimSpace(string(parent)) == r.repo {
-		r.pushOwner, r.pushURL = login, remoteURL(ctx, fork, r.run)
+		r.pushOwner, r.pushURL = login, remoteURL(ctx, r.dir, fork, r.run)
 
 		return r.pushOwner, r.pushURL, nil
 	}

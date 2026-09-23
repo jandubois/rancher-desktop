@@ -23,6 +23,11 @@ type fakeTools struct {
 	anyCommand bool
 	// calls records every command line, in order.
 	calls []string
+	// ranIn is the directories each command line ran in, in order, for the
+	// steps that work in a clone other than the one the tool runs in. A line
+	// that ran more than once keeps every one, so a caller passing the right
+	// directory once covers for one passing the wrong one.
+	ranIn map[string][]string
 }
 
 func (f *fakeTools) run(_ context.Context, name string, args ...string) ([]byte, error) {
@@ -41,8 +46,32 @@ func (f *fakeTools) run(_ context.Context, name string, args ...string) ([]byte,
 	return []byte(output), nil
 }
 
-func (f *fakeTools) runIn(ctx context.Context, _ string, name string, args ...string) ([]byte, error) {
+func (f *fakeTools) runIn(ctx context.Context, dir string, name string, args ...string) ([]byte, error) {
+	if f.ranIn == nil {
+		f.ranIn = map[string][]string{}
+	}
+
+	line := strings.Join(append([]string{name}, args...), " ")
+	f.ranIn[line] = append(f.ranIn[line], dir)
+
 	return f.run(ctx, name, args...)
+}
+
+// ranOnlyIn fails unless a command line ran, and ran in one directory every
+// time.
+func ranOnlyIn(t *testing.T, tools *fakeTools, line, dir string) {
+	t.Helper()
+
+	where := tools.ranIn[line]
+	if len(where) == 0 {
+		t.Errorf("%s never ran", line)
+	}
+
+	for _, ran := range where {
+		if ran != dir {
+			t.Errorf("%s ran in %q, not %q", line, ran, dir)
+		}
+	}
 }
 
 // runTo answers as the other two do, and writes the answer where a real
@@ -66,10 +95,11 @@ type exitStatus struct{}
 func (*exitStatus) Error() string { return "exit status 1" }
 
 // remoteOutput is `git remote --verbose` from a clone that has the release
-// repository under a name of its own, one remote that is a local path, and a
-// fetch URL without the .git suffix.
-const remoteOutput = "origin\tgit@github.com:me/rancher-desktop.git (fetch)\n" +
-	"origin\tgit@github.com:me/rancher-desktop.git (push)\n" +
+// repository under a name of its own, one remote that is a local path, a fetch
+// URL without the .git suffix, and a fork URL ending in a slash, which is what
+// a clone set up by gh holds.
+const remoteOutput = "origin\thttps://github.com/me/rancher-desktop/ (fetch)\n" +
+	"origin\thttps://github.com/me/rancher-desktop/ (push)\n" +
 	"rd2\t../rancher-desktop-2 (fetch)\n" +
 	"rd2\t../rancher-desktop-2 (push)\n" +
 	"upstream\tgit@github.com:rancher-sandbox/rancher-desktop (fetch)\n" +
@@ -78,15 +108,51 @@ const remoteOutput = "origin\tgit@github.com:me/rancher-desktop.git (fetch)\n" +
 func TestRemoteIsFoundByURLNotByName(t *testing.T) {
 	run := &fakeTools{output: map[string]string{"git remote --verbose": remoteOutput}}
 
-	url := remoteURL(context.Background(), "rancher-sandbox/rancher-desktop", run)
+	url := remoteURL(context.Background(), "", "rancher-sandbox/rancher-desktop", run)
 	if url != "git@github.com:rancher-sandbox/rancher-desktop" {
 		t.Errorf("found %q, not the remote pointing at the release repository", url)
 	}
 
+	// A URL ending in a slash still points at the fork, and the fork's own
+	// remote is the one the user has already pushed to.
+	url = remoteURL(context.Background(), "", "me/rancher-desktop", run)
+	if url != "https://github.com/me/rancher-desktop/" {
+		t.Errorf("found %q, not the fork's own remote", url)
+	}
+
 	// A clone with no remote for the repository still reads its public refs.
-	url = remoteURL(context.Background(), "someone/rancher-desktop", run)
+	url = remoteURL(context.Background(), "", "someone/rancher-desktop", run)
 	if url != "https://github.com/someone/rancher-desktop.git" {
 		t.Errorf("fell back to %q", url)
+	}
+}
+
+func TestRemotesAreReadInTheRepositorysClone(t *testing.T) {
+	const clone = "/clones/docs"
+
+	tools := &fakeTools{output: map[string]string{"git remote --verbose": remoteOutput}}
+
+	newRepository(context.Background(), clone, "rancher-sandbox/rancher-desktop", tools)
+
+	ranOnlyIn(t, tools, "git remote --verbose", clone)
+}
+
+func TestForkHasItsOwnRemote(t *testing.T) {
+	tools := &fakeTools{output: map[string]string{
+		"git remote --verbose":                                   remoteOutput,
+		"gh api user --jq .login":                                "me\n",
+		"gh api repos/me/rancher-desktop --jq .parent.full_name": "rancher-sandbox/rancher-desktop\n",
+	}}
+
+	repo := newRepository(context.Background(), "", "rancher-sandbox/rancher-desktop", tools)
+
+	fork, err := repo.Fork(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if fork.url != "https://github.com/me/rancher-desktop/" {
+		t.Errorf("the fork pushes to %q, not to its own remote", fork.url)
 	}
 }
 

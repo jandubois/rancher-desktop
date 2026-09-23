@@ -83,7 +83,7 @@ func printChecklist(ctx context.Context, profile *Profile) error {
 // progress, the refs the steps check against, and the steps somebody has
 // marked done.
 func refresh(ctx context.Context, profile *Profile) (*Run, error) {
-	repo := newRepository(ctx, profile.GitHub.Repo, tools{})
+	repo := newRepository(ctx, "", profile.GitHub.Repo, tools{})
 
 	release, err := chooseRelease(ctx, repo)
 	if err != nil {

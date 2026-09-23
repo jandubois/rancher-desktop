@@ -186,7 +186,7 @@ type Run struct {
 // because only the documentation steps reach it.
 func (r *Run) Docs(ctx context.Context) *repository {
 	if r.docs == nil {
-		r.docs = newRepository(ctx, r.Profile.GitHub.DocsRepo, r.Tools)
+		r.docs = newRepository(ctx, "", r.Profile.GitHub.DocsRepo, r.Tools)
 	}
 
 	return r.docs
