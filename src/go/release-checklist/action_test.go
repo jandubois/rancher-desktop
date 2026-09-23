@@ -11,6 +11,9 @@ import (
 	"testing"
 )
 
+// cleanTreeQuery is what every action asks before it plans anything.
+const cleanTreeQuery = "git status --porcelain --untracked-files=no"
+
 // twoCommands is a step whose automation runs two commands, for the tests
 // about what an action shows and what it runs.
 func twoCommands() *Step {
@@ -59,8 +62,8 @@ func TestActionShowsEveryOperationAndRunsNothingWhenDeclined(t *testing.T) {
 		}
 	}
 
-	if len(tools.calls) != 0 {
-		t.Errorf("declining ran %v", tools.calls)
+	if len(tools.calls) != 1 {
+		t.Errorf("declining ran %v", tools.calls[1:])
 	}
 }
 
@@ -73,7 +76,7 @@ func TestActionRunsTheOperationsInOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := []string{"git fetch origin", "git push origin HEAD:refs/tags/v1.25.0"}
+	want := []string{cleanTreeQuery, "git fetch origin", "git push origin HEAD:refs/tags/v1.25.0"}
 	if len(tools.calls) != len(want) {
 		t.Fatalf("ran %v", tools.calls)
 	}
@@ -99,8 +102,8 @@ func TestActionStopsAtTheFirstFailure(t *testing.T) {
 	}
 
 	// The push would otherwise tag a commit the fetch never brought over.
-	if len(tools.calls) != 1 {
-		t.Errorf("ran %v after the failure", tools.calls[1:])
+	if len(tools.calls) != 2 {
+		t.Errorf("ran %v after the failure", tools.calls[2:])
 	}
 }
 
@@ -152,6 +155,24 @@ func TestActionAsksThePreconditionAgainBeforeRunning(t *testing.T) {
 
 	if len(tools.calls) != 0 {
 		t.Errorf("ran %v although the precondition no longer held", tools.calls)
+	}
+}
+
+func TestActionRefusesToRunFromAnUncommittedTree(t *testing.T) {
+	run := testRun(t, Minor)
+	tools := &fakeTools{
+		anyCommand: true,
+		output:     map[string]string{cleanTreeQuery: " M src/go/release-checklist/steps.go\n"},
+	}
+	run.Tools = tools
+
+	err := RunAction(context.Background(), twoCommands(), run, strings.NewReader("y\n"), io.Discard)
+	if err == nil || !strings.Contains(err.Error(), "uncommitted") {
+		t.Fatalf("an uncommitted tree gave %v", err)
+	}
+
+	if len(tools.calls) != 1 {
+		t.Errorf("ran %v from an uncommitted tree", tools.calls[1:])
 	}
 }
 

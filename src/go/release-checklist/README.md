@@ -150,7 +150,9 @@ checkout prunes the registration it leaves behind.
 Nothing without a confirmation. `--run` prints every operation the step would
 perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
-would build on work that did not happen.
+would build on work that did not happen. An action also refuses to start
+from a clone with uncommitted changes, since `yarn release` runs whatever is
+in the working tree, and only committed code should touch a release.
 
 The version bump pushes a branch and opens a pull request against the release
 branch; that branch goes to your fork of the release repository, or to the

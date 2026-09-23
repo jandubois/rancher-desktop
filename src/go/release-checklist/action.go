@@ -40,6 +40,10 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 		}
 	}
 
+	if err := treeIsCommitted(ctx, run); err != nil {
+		return err
+	}
+
 	operations, err := step.Action.Plan(ctx, run)
 	if err != nil {
 		return err
@@ -81,6 +85,22 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 		if err := operation.perform(ctx, run, out); err != nil {
 			return fmt.Errorf("%s: %w", operation.Description, err)
 		}
+	}
+
+	return nil
+}
+
+// treeIsCommitted refuses to act from a clone with uncommitted changes. The
+// tool is compiled from the working tree, so a clean tree is what makes the
+// code that touches a release the code that is committed.
+func treeIsCommitted(ctx context.Context, run *Run) error {
+	output, err := run.Tools.run(ctx, "git", "status", "--porcelain", "--untracked-files=no")
+	if err != nil {
+		return fmt.Errorf("checking for uncommitted changes: %w", err)
+	}
+
+	if changed := strings.TrimSpace(string(output)); changed != "" {
+		return fmt.Errorf("the clone has uncommitted changes, and an action runs the code in the working tree; commit or stash them first:\n%s", changed)
 	}
 
 	return nil
