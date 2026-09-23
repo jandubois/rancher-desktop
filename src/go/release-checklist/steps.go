@@ -8,8 +8,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
+	"slices"
+	"strings"
 )
 
 // checklist is the release process, in the order a release runs it.
@@ -44,7 +47,7 @@ var releaseBranch = &Step{
 	Doc: Doc{
 		Applies:      "Minor releases. A patch is cut from the branch its line already has.",
 		Check:        "{repo} has the branch {branch}.",
-		Precondition: "nothing.",
+		Precondition: "gh can push to {repo}.",
 		Instructions: "Push the head of main to the new branch:\n\n" +
 			"    git push <url of {repo}> <head of main>:refs/heads/{branch}\n\n" +
 			"Check the head commit's subject, date and checks first. It is what " +
@@ -59,6 +62,64 @@ var releaseBranch = &Step{
 
 		return Answer{Detail: "no " + line.Branch() + " branch"}, nil
 	},
+	Action: &Action{
+		Title:   "Push the head of main to {branch} in {repo}",
+		Writes:  []*Resource{githubRepoPush},
+		Summary: mainHeadSummary,
+		Plan:    planReleaseBranch,
+	},
+}
+
+// mainHeadSummary shows the commit the new branch starts at, which is what
+// the release ships.
+func mainHeadSummary(ctx context.Context, run *Run) (string, error) {
+	head, err := run.Repo.MainHead(ctx)
+	if err != nil {
+		return "", err
+	}
+
+	states, err := run.Repo.CheckStates(ctx, head.SHA)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("The head of %s is %.7s, committed %s:\n\n    %s\n\n"+
+		"Its checks: %s\nhttps://github.com/%s/commit/%s/checks\n",
+		defaultBranch, head.SHA, head.Date, head.Subject, tally(states), run.Repo.repo, head.SHA), nil
+}
+
+// tally is how many of each state there are, such as "1 failure, 12 success".
+func tally(states []string) string {
+	if len(states) == 0 {
+		return "none"
+	}
+
+	counts := map[string]int{}
+	for _, state := range states {
+		counts[state]++
+	}
+
+	counted := make([]string, 0, len(counts))
+	for _, state := range slices.Sorted(maps.Keys(counts)) {
+		counted = append(counted, fmt.Sprintf("%d %s", counts[state], state))
+	}
+
+	return strings.Join(counted, ", ")
+}
+
+// planReleaseBranch pushes the commit the summary showed, rather than main by
+// name, because main can move in between. The fetch brings that commit into
+// the clone, since git resolves the source of a push locally.
+func planReleaseBranch(ctx context.Context, run *Run) ([]Operation, error) {
+	head, err := run.Repo.MainHead(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return []Operation{
+		command("", "git", "fetch", run.Repo.url, defaultBranch),
+		command("", "git", "push", run.Repo.pushURL, head.SHA+":refs/heads/"+run.Release.Branch()),
+	}, nil
 }
 
 // versionBump is step 4. The release branch carries the version it ships, and

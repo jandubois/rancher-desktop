@@ -119,6 +119,62 @@ func TestPatchSkipsTheReleaseBranchAndStillBumps(t *testing.T) {
 	}
 }
 
+func TestReleaseBranchStartsAtTheCommitTheConfirmationShows(t *testing.T) {
+	const mainQuery = "gh api repos/" + testRepo + "/branches/main"
+
+	tools := &fakeTools{anyCommand: true, output: map[string]string{
+		mainQuery: `{"name":"main","commit":{"sha":"` + testHead + `","commit":{` +
+			`"committer":{"date":"2026-09-01T12:00:00Z"},` +
+			`"message":"Merge pull request #4242 from me/some-fix\n\nFix the thing"}}}`,
+		"gh api --paginate repos/" + testRepo + "/commits/" + testHead + "/check-runs?per_page=100 " +
+			`--jq .check_runs[] | "\(.status) \(.conclusion)"`: "completed success\ncompleted failure\nin_progress null\ncompleted success\n",
+	}}
+	run := checklistRun(t, testRelease, map[Line]string{}, tools)
+	run.Repo.pushURL = "git@github.com:" + testRepo + ".git"
+
+	if status := run.Status(context.Background(), releaseBranch); status.State != Available {
+		t.Fatalf("the release branch was %s: %s", status.State, status.Detail)
+	}
+
+	var out strings.Builder
+	if err := RunAction(context.Background(), releaseBranch, run, strings.NewReader("y\n"), &out); err != nil {
+		t.Fatal(err)
+	}
+
+	// The release ships this commit, so the confirmation shows it before the
+	// push.
+	for _, want := range []string{"\n    Merge pull request #4242 from me/some-fix\n\nIts checks:", "2026-09-01", "1 failure, 1 in progress, 2 success"} {
+		if !strings.Contains(out.String(), want) {
+			t.Errorf("the confirmation does not show %q:\n%s", want, out.String())
+		}
+	}
+
+	want := []string{
+		"git fetch https://github.com/" + testRepo + ".git main",
+		"git push git@github.com:" + testRepo + ".git " + testHead + ":refs/heads/" + testBranch,
+	}
+
+	for _, call := range want {
+		if !containsCall(tools.calls, call) {
+			t.Errorf("the release branch action never ran %q; it ran %v", call, tools.calls)
+		}
+	}
+
+	// A second read of main could find a commit merged after the
+	// confirmation.
+	reads := 0
+
+	for _, call := range tools.calls {
+		if call == mainQuery {
+			reads++
+		}
+	}
+
+	if reads != 1 {
+		t.Errorf("main was read %d times", reads)
+	}
+}
+
 // bumpAnswers is what the tools answer for the 1.24.1 bump while package.json
 // on the release branch still says 1.24.0. pr is what the pull request lookup
 // prints.

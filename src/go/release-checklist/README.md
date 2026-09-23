@@ -165,6 +165,8 @@ would build on work that did not happen. An action also refuses to start
 from a clone with uncommitted changes, since `yarn release` runs whatever is
 in the working tree, and only committed code should touch a release.
 
+The release branch step shows the head of main with its subject, date and
+checks, then pushes that commit to `release-X.Y` in the release repository.
 The version bump pushes a branch and opens a pull request against the release
 branch; that branch goes to your fork of the release repository, or to the
 release repository itself when you have no fork of it. The release notes step
@@ -195,9 +197,9 @@ checklist, so the steps below are not consecutive.
 
 - **Applies to:** Minor releases. A patch is cut from the branch its line already has.
 - **Done when:** {repo} has the branch {branch}.
-- **Waits for:** nothing.
+- **Waits for:** gh can push to {repo}.
 - **Reaches:** GitHub repo.
-- **Runs:** nothing. Follow the instructions.
+- **Runs:** Push the head of main to {branch} in {repo}.
 - **Gathers:** nothing. The instructions are all the step needs.
 
 Push the head of main to the new branch:

@@ -64,6 +64,14 @@ func (w *WorkflowRun) State() string {
 	return strings.ReplaceAll(w.Status, "_", " ")
 }
 
+// Commit is what a person reads about a commit before building on it.
+type Commit struct {
+	SHA     string
+	Subject string
+	// Date is when the commit was made, as GitHub writes it.
+	Date string
+}
+
 // repoFacts is what the release detection asks about the release repository.
 // It is an interface so the tests can answer with output captured from real
 // runs.
@@ -101,6 +109,9 @@ type repository struct {
 	// release's work is until somebody merges it. It is looked up once,
 	// because finding it costs two API calls.
 	fork *repository
+	// mainHead is read once, so an action that branches from main pushes the
+	// commit its confirmation showed.
+	mainHead *Commit
 	// root is the top of the clone the tool runs in.
 	root string
 	// releases caches what GitHub knows about a tag's release, because the
@@ -416,6 +427,41 @@ func (r *repository) BranchHead(ctx context.Context, branch string) (string, err
 	return strings.TrimSpace(string(output)), nil
 }
 
+// MainHead is the commit at the head of the default branch, which a new
+// release line starts from.
+func (r *repository) MainHead(ctx context.Context) (*Commit, error) {
+	if r.mainHead != nil {
+		return r.mainHead, nil
+	}
+
+	output, err := r.run.run(ctx, "gh", "api", "repos/"+r.repo+"/branches/"+defaultBranch)
+	if err != nil {
+		return nil, fmt.Errorf("reading the head of %s in %s: %w", defaultBranch, r.repo, err)
+	}
+
+	var answer struct {
+		Commit struct {
+			SHA    string `json:"sha"`
+			Commit struct {
+				Message   string `json:"message"`
+				Committer struct {
+					Date string `json:"date"`
+				} `json:"committer"`
+			} `json:"commit"`
+		} `json:"commit"`
+	}
+
+	if err := json.Unmarshal(output, &answer); err != nil {
+		return nil, fmt.Errorf("reading the head of %s in %s: %w", defaultBranch, r.repo, err)
+	}
+
+	head := answer.Commit
+	subject, _, _ := strings.Cut(head.Commit.Message, "\n")
+	r.mainHead = &Commit{SHA: head.SHA, Subject: subject, Date: head.Commit.Committer.Date}
+
+	return r.mainHead, nil
+}
+
 // Fork is the repository the user's own branches go to, which a check reads
 // to find work that is pushed but not yet merged. A user with no fork gets
 // the repository itself, which is what a profile that already points at a
@@ -578,6 +624,31 @@ func (r *repository) LatestRun(ctx context.Context, workflow, ref, commit string
 	r.runs[key] = latest
 
 	return latest, nil
+}
+
+// CheckStates are how the checks on a commit are going, one entry per check,
+// in the words a workflow run's State uses. gh prints the conclusion of a
+// check still running as null, which State never reads.
+func (r *repository) CheckStates(ctx context.Context, commit string) ([]string, error) {
+	output, err := r.run.run(ctx, "gh", "api", "--paginate",
+		fmt.Sprintf("repos/%s/commits/%s/check-runs?per_page=100", r.repo, commit),
+		"--jq", `.check_runs[] | "\(.status) \(.conclusion)"`)
+	if err != nil {
+		return nil, fmt.Errorf("reading the checks on %.7s: %w", commit, err)
+	}
+
+	var states []string
+
+	for line := range strings.SplitSeq(strings.TrimSpace(string(output)), "\n") {
+		if line == "" {
+			continue
+		}
+
+		status, conclusion, _ := strings.Cut(line, " ")
+		states = append(states, (&WorkflowRun{Status: status, Conclusion: conclusion}).State())
+	}
+
+	return states, nil
 }
 
 // Artifact is a file a workflow run uploaded, which is where a release asset
