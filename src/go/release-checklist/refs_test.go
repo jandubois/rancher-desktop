@@ -78,3 +78,24 @@ func TestAnnotatedTagsUseTheirPeeledCommit(t *testing.T) {
 		t.Errorf("v1.25.0 points at %s, not at the commit it peels to", got)
 	}
 }
+
+func TestAReleaseOpensItsLineUntilAnEarlierOneIsTagged(t *testing.T) {
+	first := Version{Major: 1, Minor: 25}
+	second := first.NextPatch()
+
+	// With 1.25.0 burned, the line has no tag.
+	refs := &Refs{Tags: map[Version]string{}}
+	if kind := refs.KindOf(second); kind != Minor {
+		t.Errorf("1.25.1 with nothing tagged before it was a %s release", kind)
+	}
+
+	refs.Tags[first] = "beef"
+
+	if kind := refs.KindOf(first); kind != Minor {
+		t.Errorf("1.25.0 with its own tag pushed was a %s release", kind)
+	}
+
+	if kind := refs.KindOf(second); kind != Patch {
+		t.Errorf("1.25.1 after v1.25.0 was a %s release", kind)
+	}
+}

@@ -92,7 +92,7 @@ func dependencyVersions(content []byte) (map[string]string, error) {
 // patched ships in this one. Versions with no tag were burned rather than
 // released, so the search passes over them.
 func previousRelease(version Version, refs *Refs) (Version, bool) {
-	if version.Kind() == Patch {
+	if refs.KindOf(version) == Patch {
 		for patch := version.Patch - 1; patch >= 0; patch-- {
 			candidate := Version{Major: version.Major, Minor: version.Minor, Patch: patch}
 			if _, tagged := refs.Tags[candidate]; tagged {
@@ -331,7 +331,7 @@ func changelogSection(ctx context.Context, run *Run, previous Version) (string, 
 
 	compare := fmt.Sprintf("https://github.com/%s/compare/%s...%s", repo, previous.Tag(), tag)
 
-	title := milestoneTitle(run.Release.Version)
+	title := milestoneTitle(run.Release)
 
 	number, err := run.Repo.Milestone(ctx, title)
 	if err != nil {
@@ -355,12 +355,12 @@ func changelogSection(ctx context.Context, run *Run, previous Version) (string, 
 // milestoneTitle is what the release's milestone is called. A minor release
 // shares its line's milestone, because the line opens with it; a patch has
 // one of its own.
-func milestoneTitle(version Version) string {
-	if version.Kind() == Minor {
-		return version.Line().String()
+func milestoneTitle(release *Release) string {
+	if release.Kind == Minor {
+		return release.Version.Line().String()
 	}
 
-	return version.String()
+	return release.Version.String()
 }
 
 // nameList joins names the way a sentence does.

@@ -44,7 +44,7 @@ func (l Line) String() string { return fmt.Sprintf("%d.%d", l.Major, l.Minor) }
 // Branch is the release branch for the line.
 func (l Line) Branch() string { return "release-" + l.String() }
 
-// Release is the line's first release, X.Y.0.
+// Release is the line's first version, X.Y.0.
 func (l Line) Release() Version { return Version{Major: l.Major, Minor: l.Minor} }
 
 // Next is the line after this one.
@@ -81,15 +81,6 @@ func (v Version) Tag() string { return "v" + v.String() }
 
 // Line is the line the version belongs to.
 func (v Version) Line() Line { return Line{Major: v.Major, Minor: v.Minor} }
-
-// Kind reports whether the version opens a line or patches one.
-func (v Version) Kind() Kind {
-	if v.Patch == 0 {
-		return Minor
-	}
-
-	return Patch
-}
 
 // NextPatch is the next version on the same line.
 func (v Version) NextPatch() Version {

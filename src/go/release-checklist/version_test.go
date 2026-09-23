@@ -53,13 +53,9 @@ func TestLinesCompareByNumber(t *testing.T) {
 	}
 }
 
-func TestVersionsKnowTheirKindAndNames(t *testing.T) {
+func TestVersionsKnowTheirNames(t *testing.T) {
 	minor := Version{Major: 1, Minor: 24}
 	patch := Version{Major: 1, Minor: 24, Patch: 1}
-
-	if minor.Kind() != Minor || patch.Kind() != Patch {
-		t.Errorf("kinds were %s and %s", minor.Kind(), patch.Kind())
-	}
 
 	if minor.Tag() != "v1.24.0" || minor.Line().Branch() != "release-1.24" {
 		t.Errorf("1.24.0 gave tag %s on branch %s", minor.Tag(), minor.Line().Branch())

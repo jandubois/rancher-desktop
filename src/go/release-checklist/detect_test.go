@@ -146,14 +146,15 @@ func TestDetectPassesOverBurnedVersions(t *testing.T) {
 	facts := branched(t, Line{Major: 1, Minor: 25}, nil, "beef")
 	facts.releases["burned-v1.25.0"] = ReleaseDraft
 
+	// With 1.25.0 burned, 1.25.1 is the line's first release.
 	release := detect(t, facts)
-	if release.Version != (Version{Major: 1, Minor: 25, Patch: 1}) {
-		t.Errorf("drove %s, which is burned", release.Version)
+	if release.Version != (Version{Major: 1, Minor: 25, Patch: 1}) || release.Kind != Minor {
+		t.Errorf("drove %s as a %s release with 1.25.0 burned", release.Version, release.Kind)
 	}
 }
 
 func TestAVersionOverrideWhoseTagIsInMainIsFinished(t *testing.T) {
-	facts := &fakeRepo{inMain: map[string]bool{"v1.24.0": true}}
+	facts := &fakeRepo{refs: upstreamRefs(t), inMain: map[string]bool{"v1.24.0": true}}
 
 	t.Setenv("VERSION", "1.24.0")
 
@@ -174,5 +175,31 @@ func TestAVersionOverrideWhoseTagIsInMainIsFinished(t *testing.T) {
 
 	if release.Finished {
 		t.Error("a release whose tag is not in main is finished")
+	}
+}
+
+func TestAVersionOverrideIsAPatchOnceItsLineHasATag(t *testing.T) {
+	facts := branched(t, Line{Major: 1, Minor: 25}, nil, "beef")
+
+	t.Setenv("VERSION", "1.25.1")
+
+	// With 1.25.0 burned, the line has no tag, so 1.25.1 opens it.
+	release, err := chooseRelease(context.Background(), facts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if release.Kind != Minor {
+		t.Errorf("1.25.1 with no tag on its line was a %s release", release.Kind)
+	}
+
+	facts.refs.Tags[Version{Major: 1, Minor: 25}] = "beef"
+
+	if release, err = chooseRelease(context.Background(), facts); err != nil {
+		t.Fatal(err)
+	}
+
+	if release.Kind != Patch {
+		t.Errorf("1.25.1 after v1.25.0 was a %s release", release.Kind)
 	}
 }

@@ -97,6 +97,17 @@ func (r *Refs) HighestTag(line Line) (Version, bool) {
 	return highest, found
 }
 
+// KindOf reports whether a release opens its line or patches one. A release
+// opens its line when no earlier version on the line has a tag, which is also
+// true of X.Y.1 once X.Y.0 is burned.
+func (r *Refs) KindOf(version Version) Kind {
+	if first, found := r.LowestTag(version.Line()); found && CompareVersions(first, version) < 0 {
+		return Patch
+	}
+
+	return Minor
+}
+
 // LowestTag is the oldest release tag on the line, which is the release the
 // line opened with.
 func (r *Refs) LowestTag(line Line) (Version, bool) {

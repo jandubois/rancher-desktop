@@ -44,10 +44,18 @@ func checklistRun(t *testing.T, version Version, branches map[Line]string, tools
 		t.Fatal(err)
 	}
 
-	run := newRun(&Release{Version: version, Kind: version.Kind()},
+	tags := map[Version]string{}
+	if version.Patch > 0 {
+		// A patch follows the release its line opened with.
+		tags[Version{Major: version.Major, Minor: version.Minor}] = "feed"
+	}
+
+	refs := &Refs{Branches: branches, Tags: tags}
+
+	run := newRun(&Release{Version: version, Kind: refs.KindOf(version)},
 		&Profile{Name: "test", GitHub: GitHubResources{Repo: testRepo}}, repo)
 	run.Tools = tools
-	run.Refs = &Refs{Branches: branches, Tags: map[Version]string{}}
+	run.Refs = refs
 	run.Confirmations = marked
 
 	return run

@@ -115,6 +115,7 @@ func TestABurnedVersionIsNotWrittenAgainst(t *testing.T) {
 		release, previous Version
 	}{
 		{Version{Major: 1, Minor: 24}, Version{Major: 1, Minor: 23}},
+		{Version{Major: 1, Minor: 24, Patch: 1}, Version{Major: 1, Minor: 23}},
 		{Version{Major: 1, Minor: 25}, Version{Major: 1, Minor: 24, Patch: 1}},
 		{Version{Major: 1, Minor: 23, Patch: 2}, Version{Major: 1, Minor: 23, Patch: 1}},
 		{Version{Major: 1, Minor: 23, Patch: 3}, Version{Major: 1, Minor: 23, Patch: 1}},
@@ -231,6 +232,20 @@ func TestTheChangelogSaysWhenThereIsNoMilestoneToLink(t *testing.T) {
 
 	if !strings.Contains(facts, `no milestone called "1.25" yet`) {
 		t.Errorf("the changelog does not say the milestone is missing:\n%s", facts)
+	}
+}
+
+func TestALinesFirstReleaseAfterABurnedOneLinksTheLinesMilestone(t *testing.T) {
+	run := factsRun(t, factsAnswers())
+	run.Release = &Release{Version: Version{Major: 1, Minor: 25, Patch: 1}, Kind: Minor}
+
+	changelog, err := changelogSection(t.Context(), run, previousTagged)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !strings.Contains(changelog, "milestone/61?closed=1") {
+		t.Errorf("the changelog does not link the 1.25 milestone:\n%s", changelog)
 	}
 }
 

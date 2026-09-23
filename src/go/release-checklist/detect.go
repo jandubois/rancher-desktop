@@ -94,7 +94,7 @@ func Detect(ctx context.Context, facts repoFacts) (*Release, error) {
 
 	return &Release{
 		Version:   version,
-		Kind:      version.Kind(),
+		Kind:      refs.KindOf(version),
 		Published: published,
 		Warnings:  warnings,
 	}, nil

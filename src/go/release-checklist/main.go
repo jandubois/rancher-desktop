@@ -135,5 +135,10 @@ func chooseRelease(ctx context.Context, facts repoFacts) (*Release, error) {
 		return nil, err
 	}
 
-	return &Release{Version: version, Kind: version.Kind(), Finished: finished}, nil
+	refs, err := facts.Refs(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Release{Version: version, Kind: refs.KindOf(version), Finished: finished}, nil
 }

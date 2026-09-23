@@ -52,7 +52,9 @@ somebody started without it.
 
 A burned version is never a target. Burning a bad tag deletes it from GitHub
 and renames its draft to `burned-vX.Y.Z`, and the tool passes over every
-version that has such a draft.
+version that has such a draft. A release is a patch only when an earlier
+version on its line has a tag, so `X.Y.1` after a burned `X.Y.0` runs the
+steps a minor runs.
 
 Set `VERSION` to drive a release the rule would not pick, such as a patch on
 an older line:
