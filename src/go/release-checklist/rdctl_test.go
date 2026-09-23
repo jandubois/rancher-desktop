@@ -283,6 +283,13 @@ func TestDocsReferenceIsAvailableWhenThePageReportsNoVersion(t *testing.T) {
 // snapshotQuery is the command that reads this machine's snapshots.
 const snapshotQuery = "rdctl snapshot list --json"
 
+// extensionQuery is the command that lists this machine's extensions, and
+// noExtensions is what it prints on a machine with none.
+const (
+	extensionQuery = "rdctl extension ls"
+	noExtensions   = "No extensions are installed.\n"
+)
+
 func TestDocsReferenceWaitsForARespondingBackend(t *testing.T) {
 	tools := &fakeTools{
 		output: docsAnswers(),
@@ -321,6 +328,7 @@ func TestDocsReferenceIsReadyOnACleanMachine(t *testing.T) {
 	answers := docsAnswers()
 	answers["rdctl list-settings"] = "{}\n"
 	answers[snapshotQuery] = "\n"
+	answers[extensionQuery] = noExtensions
 
 	answer, err := docsReferenceReady(context.Background(),
 		docsRun(t, &fakeTools{output: answers}))
@@ -330,6 +338,33 @@ func TestDocsReferenceIsReadyOnACleanMachine(t *testing.T) {
 
 	if !answer.OK {
 		t.Errorf("a machine with no snapshots answered %v: %s", answer.OK, answer.Detail)
+	}
+}
+
+// TestDocsReferenceBlocksWhileTheMachineHasExtensions covers the page's
+// extension list, which shows every extension this machine has.
+func TestDocsReferenceBlocksWhileTheMachineHasExtensions(t *testing.T) {
+	answers := cleanMachineAnswers(t)
+	answers[extensionQuery] = "Extension IDs\n\ndocker/logs-explorer-extension:0.2.2\n"
+
+	answer, err := docsReferenceReady(context.Background(),
+		docsRun(t, &fakeTools{output: answers}))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if answer.OK || !strings.Contains(answer.Detail, "extensions") {
+		t.Errorf("a machine with an extension answered %v: %s", answer.OK, answer.Detail)
+	}
+}
+
+func TestDocsReferenceFailsWhenTheExtensionsCannotBeRead(t *testing.T) {
+	answers := cleanMachineAnswers(t)
+	delete(answers, extensionQuery)
+
+	tools := &fakeTools{output: answers, stderr: map[string]string{extensionQuery: "Error: connection refused"}}
+	if _, err := docsReferenceReady(context.Background(), docsRun(t, tools)); err == nil {
+		t.Error("a machine whose extensions could not be read was ready")
 	}
 }
 
@@ -345,6 +380,23 @@ func TestReferenceSummaryNamesABuildThatIsNotTheRelease(t *testing.T) {
 
 	if !strings.Contains(summary, "v1.24.0-438-g46139d511") || !strings.Contains(summary, testRelease.Tag()) {
 		t.Errorf("the summary named neither the build nor the release: %s", summary)
+	}
+}
+
+func TestReferenceSummarySaysWhatRegeneratingDoesToThisMachine(t *testing.T) {
+	answers := referenceAnswers("")
+	answers["rdctl version"] = "rdctl client version: " + testRelease.Tag() + ", targeting server version: v1\n"
+
+	summary, err := referenceSummary(context.Background(),
+		docsRun(t, &fakeTools{output: answers}))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, want := range []string{"docker/logs-explorer-extension", exampleSnapshot, "stops"} {
+		if !strings.Contains(summary, want) {
+			t.Errorf("the summary does not say %q: %s", want, summary)
+		}
 	}
 }
 
@@ -428,6 +480,7 @@ func cleanMachineAnswers(t *testing.T) map[string]string {
 	maps.Copy(answers, referenceAnswers(page))
 	answers["rdctl list-settings"] = "{}\n"
 	answers[snapshotQuery] = "\n"
+	answers[extensionQuery] = noExtensions
 
 	return answers
 }

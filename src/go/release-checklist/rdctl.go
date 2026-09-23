@@ -29,6 +29,19 @@ const rdctlReferenceScript = "scripts/update-rdctl-reference"
 // snapshot of this name.
 const exampleSnapshot = "example_snapshot"
 
+// exampleExtension is the extension the page's examples install, list and
+// uninstall, so regenerating the page installs and removes it on this machine.
+const exampleExtension = "docker/logs-explorer-extension"
+
+// noExtensionsInstalled is what rdctl extension ls prints on a machine with
+// no extensions.
+const noExtensionsInstalled = "No extensions are installed."
+
+// regenerationEffects is what regenerating the page does to this machine.
+const regenerationEffects = "Regenerating the page installs and removes " + exampleExtension +
+	", and creates and deletes the snapshot " + exampleSnapshot +
+	". Creating the snapshot stops the VM and starts it again."
+
 // reportedVersion matches the line the page shows rdctl reporting itself on.
 // The script writes it from the version it is given, so it is the one part of
 // the page that names the release.
@@ -75,7 +88,7 @@ var docsReference = &Step{
 			"marked the page done. Editing it afterwards puts the step back to " +
 			"available.",
 		Precondition: "gh can push to {docsRepo}, the bundled utilities step is done, " +
-			"Rancher Desktop is running, and this machine holds no snapshots.",
+			"Rancher Desktop is running, and this machine holds no snapshots and no extensions.",
 		Instructions: "Regenerate the rdctl command reference for {version}:\n\n" +
 			"1. Start Rancher Desktop, so the commands the page runs are answered by " +
 			"the build it documents.\n" +
@@ -88,8 +101,10 @@ var docsReference = &Step{
 			"commit it with a sign-off and push it to release-{line} of your fork of " +
 			"{docsRepo}.\n\n" +
 			"The script runs every command the page shows, so it creates and deletes a " +
-			"snapshot called " + exampleSnapshot + ". The page lists no snapshots, and " +
-			"any this machine holds would appear in it with their timestamps.\n\n" +
+			"snapshot called " + exampleSnapshot + " and installs and removes " +
+			exampleExtension + ". Creating the snapshot stops the VM and starts it " +
+			"again. The page lists no snapshots and no other extension, and any this " +
+			"machine holds would appear in it.\n\n" +
 			"Press `m` once the page is the one to ship.",
 	},
 	Check:        checkDocsReference,
@@ -161,6 +176,16 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 			"them with their timestamps"}, nil
 	}
 
+	extensions, err := run.Tools.run(ctx, "rdctl", "extension", "ls")
+	if err != nil {
+		return Answer{}, fmt.Errorf("reading this machine's extensions: %w", err)
+	}
+
+	if string(bytes.TrimSpace(extensions)) != noExtensionsInstalled {
+		return Answer{Detail: "this machine has extensions installed, and the page " +
+			"would list them beside its own example"}, nil
+	}
+
 	return Answer{OK: true}, nil
 }
 
@@ -184,10 +209,10 @@ func referenceInDocs(ctx context.Context, run *Run) (string, error) {
 	return string(page), nil
 }
 
-// referenceSummary names the build the page will be generated from. The script
-// writes the release's version into the page whatever answers, so a release
-// candidate produces a page that names the release and shows that candidate's
-// output.
+// referenceSummary names the build the page will be generated from, and what
+// generating it does to this machine. The script writes the release's version
+// into the page whatever answers, so a release candidate produces a page that
+// names the release and shows that candidate's output.
 func referenceSummary(ctx context.Context, run *Run) (string, error) {
 	tag := run.Release.Version.Tag()
 
@@ -202,13 +227,15 @@ func referenceSummary(ctx context.Context, run *Run) (string, error) {
 	}
 
 	build := string(match[1])
-	if build == tag {
-		return "The rdctl on PATH is " + build + ".", nil
+
+	summary := "The rdctl on PATH is " + build + "."
+	if build != tag {
+		summary = fmt.Sprintf("The rdctl on PATH is %s, not %s. The page will report %s, "+
+			"because the script is given the version, but every command's output comes "+
+			"from %s.", build, tag, tag, build)
 	}
 
-	return fmt.Sprintf("The rdctl on PATH is %s, not %s. The page will report %s, "+
-		"because the script is given the version, but every command's output comes "+
-		"from %s.", build, tag, tag, build), nil
+	return summary + " " + regenerationEffects, nil
 }
 
 // planDocsReference regenerates the command reference in a worktree of the
