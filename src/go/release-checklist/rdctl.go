@@ -80,8 +80,7 @@ var docsReference = &Step{
 	Kinds: []Kind{Minor},
 	Needs: []*Resource{githubDocsRepo},
 	Doc: Doc{
-		Applies: "Minor releases. A patch ships the documentation its line already has, " +
-			"unless an rdctl command changed.",
+		Applies: minorDocs,
 		Check: "The release branch of your fork of {docsRepo}, or {docsRepo}'s own main " +
 			"branch once the documentation is merged, has " +
 			"references/rdctl-command-reference.md reporting {version}, and you have " +

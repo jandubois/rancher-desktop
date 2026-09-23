@@ -625,7 +625,7 @@ var linuxAssets = &Step{
 	Check:        checkLinuxAssets,
 	Precondition: linuxAssetsReady,
 	Action: &Action{
-		Title:   "Upload the Linux zip and its checksum to {tag}",
+		Title:   "Upload the Linux zip and its checksum to {tag}, replacing a partial upload",
 		Writes:  []*Resource{githubRepoPush},
 		Summary: linuxDownloadSize,
 		Plan:    planLinuxAssets,

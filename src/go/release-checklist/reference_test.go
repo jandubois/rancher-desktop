@@ -11,9 +11,9 @@ import (
 	"testing"
 )
 
-// updateReference rewrites the README's step reference instead of checking
-// it: `go test -update`.
-var updateReference = flag.Bool("update", false, "rewrite the README step reference from the step definitions")
+// updateREADME makes `go test -update` rewrite the README's generated parts
+// instead of checking them.
+var updateREADME = flag.Bool("update", false, "rewrite the README's generated parts from the step definitions")
 
 func TestREADMEDescribesTheStepsItShips(t *testing.T) {
 	const path = "README.md"
@@ -23,23 +23,32 @@ func TestREADMEDescribesTheStepsItShips(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	overview, reference, found := strings.Cut(string(readme), referenceMarker)
-	if !found {
-		t.Fatalf("%s has no step reference; it should hold the line %q", path, referenceMarker)
-	}
+	text := string(readme)
 
-	generated := stepReference(checklist)
-
-	if *updateReference {
-		updated := overview + referenceMarker + "\n\n" + generated
-		if err := os.WriteFile(path, []byte(updated), 0o644); err != nil {
-			t.Fatal(err)
+	for _, region := range readmeRegions {
+		before, rest, found := strings.Cut(text, region.Begin)
+		if !found {
+			t.Fatalf("%s should hold the line %q", path, region.Begin)
 		}
 
-		return
+		current, after, found := strings.Cut(rest, region.End)
+		if !found {
+			t.Fatalf("%s should hold the line %q after %q", path, region.End, region.Begin)
+		}
+
+		generated := region.Render(checklist)
+
+		if !*updateREADME && strings.TrimSpace(current) != strings.TrimSpace(generated) {
+			t.Errorf("%s below %q no longer describes the steps; run `go test -update` and read the change",
+				path, region.Begin)
+		}
+
+		text = before + region.Begin + "\n\n" + generated + "\n" + region.End + after
 	}
 
-	if strings.TrimSpace(reference) != strings.TrimSpace(generated) {
-		t.Errorf("%s no longer describes the steps; run `go test -update` and read the change", path)
+	if *updateREADME {
+		if err := os.WriteFile(path, []byte(text), 0o644); err != nil {
+			t.Fatal(err)
+		}
 	}
 }

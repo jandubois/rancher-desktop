@@ -79,8 +79,9 @@ to run.
 Every check reads the system that would show the step done, on every run, so
 the tool notices work done by hand or out of order, and a step somebody undid
 goes back to `available`. It keeps one piece of state of its own, the mark on
-a step that only judgment settles. The release notes are done when you say
-they are, and editing them afterwards puts the step back to `available`.
+a step that only judgment settles. The release notes and the rdctl reference
+are done when you say they are, and editing either afterwards puts its step
+back to `available`.
 
 ## Profiles
 
@@ -122,15 +123,19 @@ which setting and where to write it.
 ## Credentials
 
 The tool stores no credentials. Everything that needs authentication runs
-through a command line tool that keeps its own: `gh` for GitHub, and `git` for
-the refs and the worktrees. Each step declares which systems its check reads
-and which its action writes, and the tool probes each one once per run. A
-check needs to read the repository, and needs push access only where it reads
-the draft release, which only someone who can push sees. An action needs push
+through a command line tool that keeps its own. Those are `gh` for GitHub,
+`git` for the refs and the worktrees, and `rdctl` for the Rancher Desktop
+running on this machine. Each step declares which systems its check reads and
+which its action writes, and the tool probes each one once per run. A check
+needs to read the repository, and needs push access only where it reads the
+draft release, which only someone who can push sees. An action needs push
 access to the repository it writes to, which is your fork for the version bump
-and the documentation steps, and the release repository for the rest. A step
-is `blocked` when its tool is missing, with the address to install it from, or
-when gh lacks the access, with the command that fixes it.
+and the documentation steps, and the release repository for the rest. A step is
+`blocked` when its tool is missing, with the address to install it from, or
+when gh lacks the access, with the command that fixes it. But no step declares
+the Rancher Desktop on this machine. Step 7b's precondition asks rdctl whether
+Rancher Desktop is running, so a missing rdctl blocks the step with the message
+a stopped Rancher Desktop gets.
 
 ## What it keeps on this machine
 
@@ -165,33 +170,36 @@ would build on work that did not happen. An action also refuses to start
 from a clone with uncommitted changes, since `yarn release` runs whatever is
 in the working tree, and only committed code should touch a release.
 
-The release branch step shows the head of main with its subject, date and
-checks, then pushes that commit to `release-X.Y` in the release repository.
-The version bump pushes a branch and opens a pull request against the release
-branch; that branch goes to your fork of the release repository, or to the
-release repository itself when you have no fork of it. The draft release step
-creates the draft of `vX.Y.Z`, whose notes hold only the opening sentence,
-the installer links and the heading the notes go under. The release notes step
-shows how release-notes.md differs from the notes of `vX.Y.Z`, then puts the
-file into the release. The bundled utilities step writes the versions this
-release ships into a worktree of your documentation clone, drops the oldest
-version file, rewrites the reference page and pushes the commit to
-`release-X.Y` of your documentation fork; it opens no pull request, because two
-more documentation steps commit to that branch. The tag step pushes the release
-branch head to `refs/tags/vX.Y.Z` in the release repository, which starts the
-build every release asset comes from. The package build step reruns the jobs of
-that build that failed. The Linux assets step takes that build's Linux zip,
-gives it the name the release uses, writes its checksum and uploads what the
-release does not have in full, replacing a file whose upload stopped partway.
-Each step says under **Runs:** what its automation does, and names the system
-it reaches.
+<!-- The table below is generated from the step actions. -->
+
+| Step | What its automation does |
+| --- | --- |
+| 1. Release branch | Push the head of main to {branch} in {repo} |
+| 4. Version bump | Open a pull request bumping package.json to {version} |
+| 5. Draft release | Create the draft release {tag} with a skeleton of its notes |
+| 6. Release notes | Put release-notes.md into the notes of {tag} |
+| 7a. Docs: bundled utilities | Push the bundled utility versions for {version} to {branch} of your documentation fork |
+| 7b. Docs: rdctl reference | Push the rdctl command reference for {version} to {branch} of your documentation fork |
+| 9. Tag | Push {tag} to {repo} |
+| 10. Package build | Rerun the failed jobs of the package run for {tag} |
+| 11. Linux assets | Upload the Linux zip and its checksum to {tag}, replacing a partial upload |
+
+<!-- The generated table ends here. -->
+
+Step 7b also changes Rancher Desktop on this machine. It installs and removes
+an extension, and it creates and deletes a snapshot. Creating the snapshot
+restarts the VM.
+
+The step reference below explains the placeholders and says more about each
+step.
 
 ## Step reference
 
 Placeholders stand for the release's own values: `{version}` for `1.25.0`,
-`{tag}` for `v1.25.0`, `{branch}` for `release-1.25`, `{line}` for `1.25`, and
-`{repo}` for the profile's repository. The step numbers come from the hand
-checklist, so the steps below are not consecutive.
+`{tag}` for `v1.25.0`, `{branch}` for `release-1.25`, `{line}` for `1.25`,
+`{repo}` for the profile's repository, and `{docsRepo}` for its documentation
+repository. The step numbers come from the hand checklist, so the steps below
+are not consecutive.
 
 <!-- The reference below is generated from the step definitions. -->
 
@@ -257,7 +265,7 @@ The file is untracked and nothing ignores it, so keep it out of your commits. Pr
 
 ### 7a. Docs: bundled utilities
 
-- **Applies to:** Minor releases. A patch ships the documentation its line already has, unless a bundled utility moved.
+- **Applies to:** Minor releases. A patch ships the documentation its line already has.
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it and shows it in its table, and the file lists the versions {version} bundles.
 - **Waits for:** gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), and the release branch exists.
 - **Reaches:** GitHub repo, GitHub docs repo, GitHub docs fork.
@@ -276,7 +284,7 @@ Commit it to a release-{line} branch of your fork of {docsRepo} with a sign-off.
 
 ### 7b. Docs: rdctl reference
 
-- **Applies to:** Minor releases. A patch ships the documentation its line already has, unless an rdctl command changed.
+- **Applies to:** Minor releases. A patch ships the documentation its line already has.
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has references/rdctl-command-reference.md reporting {version}, and you have marked the page done. Editing it afterwards puts the step back to available.
 - **Waits for:** gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), the bundled utilities step is done, Rancher Desktop is running, and this machine holds no snapshots and no extensions.
 - **Reaches:** GitHub docs repo, GitHub docs fork.
@@ -330,7 +338,7 @@ Every release asset comes from that run. Rerun the jobs that failed if it does n
 - **Done when:** {tag} has rancher-desktop-linux-{tag}.zip and its .sha512sum.
 - **Waits for:** gh can push to {repo}, the draft release exists, {tag} is pushed, and the package run for {tag} has built its Linux zip.
 - **Reaches:** GitHub repo.
-- **Runs:** Upload the Linux zip and its checksum to {tag}.
+- **Runs:** Upload the Linux zip and its checksum to {tag}, replacing a partial upload.
 - **Gathers:** nothing. The instructions are all the step needs.
 
 Take the Linux build from the package run for {tag}:
@@ -359,3 +367,5 @@ The Windows signing key is a fob, so the key holder builds and signs the install
 They take the "Rancher Desktop-win.zip" artifact of that run and sign it with the SUSE code-signing certificate, as docs/development/signing.md describes. yarn sign writes the installer and its checksum under the names the release uses, so nothing has to be renamed or hashed by hand.
 
 They can upload the two files or send them to you.
+
+<!-- The generated reference ends here. -->

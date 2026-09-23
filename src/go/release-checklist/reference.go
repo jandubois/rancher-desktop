@@ -10,11 +10,44 @@ import (
 	"strings"
 )
 
-// referenceMarker opens the generated part of the README. Everything after it
-// is rendered from the step definitions, and a test fails when the two
+// readmeRegion is a part of the README rendered from the step definitions,
+// between two comment lines. A test fails when the README and the steps
 // disagree, so a change to a step cannot quietly change what the README
 // promises.
-const referenceMarker = "<!-- The reference below is generated from the step definitions. -->"
+type readmeRegion struct {
+	Begin, End string
+	Render     func([]*Step) string
+}
+
+// readmeRegions are the generated parts of the README.
+var readmeRegions = []readmeRegion{
+	{
+		Begin:  "<!-- The table below is generated from the step actions. -->",
+		End:    "<!-- The generated table ends here. -->",
+		Render: actionTable,
+	},
+	{
+		Begin:  "<!-- The reference below is generated from the step definitions. -->",
+		End:    "<!-- The generated reference ends here. -->",
+		Render: stepReference,
+	},
+}
+
+// actionTable lists what each step's automation does, one row per step that
+// has an action.
+func actionTable(steps []*Step) string {
+	var out strings.Builder
+
+	out.WriteString("| Step | What its automation does |\n| --- | --- |\n")
+
+	for _, step := range steps {
+		if step.Action != nil {
+			fmt.Fprintf(&out, "| %s. %s | %s |\n", step.ID, step.Title, step.Action.Title)
+		}
+	}
+
+	return out.String()
+}
 
 // stepReference renders the checklist for the README. It keeps the
 // placeholders, so the reference describes every release rather than the one

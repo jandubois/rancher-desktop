@@ -84,6 +84,9 @@ func releaseRow(version Version) *regexp.Regexp {
 		` +\| +<` + importName(version) + ` */> +\|$`)
 }
 
+// minorDocs is the applicability of a documentation step.
+const minorDocs = "Minor releases. A patch ships the documentation its line already has."
+
 // docsUtilities is step 7a. The bundled utility versions are the one part of
 // the documentation a release always changes, and they are already written
 // down in dependencies.yaml, so the tool reads them rather than asking
@@ -94,8 +97,7 @@ var docsUtilities = &Step{
 	Kinds: []Kind{Minor},
 	Needs: []*Resource{githubRepo, githubDocsRepo},
 	Doc: Doc{
-		Applies: "Minor releases. A patch ships the documentation its line already has, " +
-			"unless a bundled utility moved.",
+		Applies: minorDocs,
 		Check: "The release branch of your fork of {docsRepo}, or {docsRepo}'s own " +
 			"main branch once the documentation is merged, has " +
 			"bundled-utilities-version-info/v{version}.md, the reference page " +
