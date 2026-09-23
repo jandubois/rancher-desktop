@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"maps"
 	"os"
 	"path/filepath"
 	"slices"
@@ -414,9 +415,23 @@ func TestDocsReferenceWaitsForTheBundledUtilities(t *testing.T) {
 	}
 }
 
-func TestDocsReferenceWaitsForAMarkOnThePage(t *testing.T) {
+// cleanMachineAnswers is every command 7b runs on a machine that is ready to
+// regenerate the page, with the page reporting the release.
+func cleanMachineAnswers(t *testing.T) map[string]string {
+	t.Helper()
+
 	page := strings.Replace(string(documentedPage(t)), "v1.24.0,", testRelease.Tag()+",", 1)
-	run := docsRun(t, &fakeTools{output: referenceAnswers(page)})
+
+	answers := docsAnswers()
+	maps.Copy(answers, referenceAnswers(page))
+	answers["rdctl list-settings"] = "{}\n"
+	answers[snapshotQuery] = "\n"
+
+	return answers
+}
+
+func TestDocsReferenceWaitsForAMarkOnThePage(t *testing.T) {
+	run := docsRun(t, &fakeTools{output: cleanMachineAnswers(t)})
 
 	status := run.Status(context.Background(), docsReference)
 	if status.State != Available || !strings.Contains(status.Detail, "nobody has marked it done") {
@@ -427,7 +442,7 @@ func TestDocsReferenceWaitsForAMarkOnThePage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	marked := docsRun(t, &fakeTools{output: referenceAnswers(page)})
+	marked := docsRun(t, &fakeTools{output: cleanMachineAnswers(t)})
 	marked.Confirmations = run.Confirmations
 
 	if status := marked.Status(context.Background(), docsReference); status.State != Done {

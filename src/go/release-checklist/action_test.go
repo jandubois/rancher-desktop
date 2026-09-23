@@ -124,6 +124,37 @@ func TestActionRefusesAStepThatIsNotAvailable(t *testing.T) {
 	}
 }
 
+func TestActionAsksThePreconditionAgainBeforeRunning(t *testing.T) {
+	step := twoCommands()
+
+	asked := 0
+	step.Precondition = func(context.Context, *Run) (Answer, error) {
+		asked++
+		if asked == 1 {
+			return Answer{OK: true}, nil
+		}
+
+		return Answer{Detail: "this machine holds snapshots"}, nil
+	}
+
+	run := testRun(t, Minor)
+	tools := &fakeTools{anyCommand: true}
+	run.Tools = tools
+
+	if status := run.Status(context.Background(), step); status.State != Available {
+		t.Fatalf("the step read %s before anything changed", status.State)
+	}
+
+	err := RunAction(context.Background(), step, run, strings.NewReader("y\n"), io.Discard)
+	if err == nil || !strings.Contains(err.Error(), "holds snapshots") {
+		t.Fatalf("a precondition that stopped holding gave %v", err)
+	}
+
+	if len(tools.calls) != 0 {
+		t.Errorf("ran %v although the precondition no longer held", tools.calls)
+	}
+}
+
 func TestArgumentsWithSpacesAreShownQuoted(t *testing.T) {
 	operation := command("", "git", "commit", "--message", "Bump version to 1.25.0")
 	if want := `git commit --message "Bump version to 1.25.0"`; operation.Description != want {

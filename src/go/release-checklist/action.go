@@ -27,6 +27,19 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 		return fmt.Errorf("step %s is %s: %s", step.ID, status.State, status.Detail)
 	}
 
+	// The status is from the last refresh, and a precondition can stop holding
+	// between then and now, so it is asked again at the moment of running.
+	if step.Precondition != nil {
+		ready, err := step.Precondition(ctx, run)
+		if err != nil {
+			return err
+		}
+
+		if !ready.OK {
+			return fmt.Errorf("step %s cannot run now: %s", step.ID, ready.Detail)
+		}
+	}
+
 	operations, err := step.Action.Plan(ctx, run)
 	if err != nil {
 		return err

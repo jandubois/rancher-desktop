@@ -7,6 +7,7 @@ package main
 import (
 	"context"
 	"errors"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -133,6 +134,46 @@ func TestCheckAndPreconditionDecideTheRemainingStates(t *testing.T) {
 		if status := Evaluate(context.Background(), step, testRun(t, Minor)); status.State != want {
 			t.Errorf("wanted %s, got %s: %s", want, status.State, status.Detail)
 		}
+	}
+}
+
+// judgedStep is a step whose check has passed and whose work takes a
+// person's judgment, with a precondition the test controls.
+func judgedStep(precondition Answer) *Step {
+	step := answering(Answer{OK: true, Detail: "the page reports 1.25.0"}, precondition, []Kind{Minor}, nil)
+	step.Confirms = func(context.Context, *Run) (string, error) { return "the page", nil }
+
+	return step
+}
+
+func TestAJudgedStepWaitsForItsPreconditionBeforeItIsAvailable(t *testing.T) {
+	run := testRun(t, Minor)
+
+	step := judgedStep(Answer{Detail: "this machine holds snapshots"})
+	if status := Evaluate(context.Background(), step, run); status.State != Blocked {
+		t.Errorf("a judged step whose precondition fails is %s: %s", status.State, status.Detail)
+	}
+
+	step = judgedStep(Answer{OK: true})
+	if status := Evaluate(context.Background(), step, run); status.State != Available {
+		t.Errorf("a judged step whose precondition holds is %s: %s", status.State, status.Detail)
+	}
+
+	// A mark settles the step whatever the machine looks like afterwards.
+	marked, err := confirmationsAt(filepath.Join(t.TempDir(), confirmationsFile))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	run.Confirmations = marked
+	step = judgedStep(Answer{Detail: "this machine holds snapshots"})
+
+	if err := Mark(context.Background(), step, run); err != nil {
+		t.Fatal(err)
+	}
+
+	if status := Evaluate(context.Background(), step, run); status.State != Done {
+		t.Errorf("a marked step is %s: %s", status.State, status.Detail)
 	}
 }
 

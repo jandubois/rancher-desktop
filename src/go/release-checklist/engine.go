@@ -279,27 +279,35 @@ func Evaluate(ctx context.Context, step *Step, run *Run) Status {
 		return judged(ctx, step, run, answer)
 	}
 
+	return ready(ctx, step, run, answer.Detail)
+}
+
+// ready is the status of a step whose work is still to do: available once its
+// precondition holds, and until then waiting or blocked on whatever the
+// precondition names. A step with no precondition is available as it is.
+func ready(ctx context.Context, step *Step, run *Run, detail string) Status {
 	if step.Precondition == nil {
-		return Status{State: Available, Detail: answer.Detail}
+		return Status{State: Available, Detail: detail}
 	}
 
-	ready, err := step.Precondition(ctx, run)
+	answer, err := step.Precondition(ctx, run)
 
 	switch {
 	case err != nil:
 		return Status{State: Unknown, Detail: err.Error()}
-	case ready.OK:
-		return Status{State: Available, Detail: answer.Detail}
-	case ready.Waiting:
-		return Status{State: Waiting, Detail: ready.Detail}
+	case answer.OK:
+		return Status{State: Available, Detail: detail}
+	case answer.Waiting:
+		return Status{State: Waiting, Detail: answer.Detail}
 	default:
-		return Status{State: Blocked, Detail: ready.Detail}
+		return Status{State: Blocked, Detail: answer.Detail}
 	}
 }
 
 // judged is the status of a step whose check has passed but whose work takes
 // judgment. The step is done once a person has marked the text the check
-// read, and available again when that text changes.
+// read, and back to needing its precondition when nobody has, or when that
+// text has changed since.
 func judged(ctx context.Context, step *Step, run *Run, answer Answer) Status {
 	subject, err := step.Confirms(ctx, run)
 	if err != nil {
@@ -310,11 +318,11 @@ func judged(ctx context.Context, step *Step, run *Run, answer Answer) Status {
 
 	switch {
 	case !marked:
-		return Status{State: Available, Detail: answer.Detail + "; nobody has marked it done"}
+		return ready(ctx, step, run, answer.Detail+"; nobody has marked it done")
 	case confirmation.Digest != digestOf(subject):
-		return Status{State: Available, Detail: fmt.Sprintf(
+		return ready(ctx, step, run, fmt.Sprintf(
 			"%s; what you marked done on %s has changed",
-			answer.Detail, markedOn(confirmation))}
+			answer.Detail, markedOn(confirmation)))
 	default:
 		return Status{State: Done, Detail: fmt.Sprintf(
 			"%s; marked done on %s", answer.Detail, markedOn(confirmation))}
