@@ -345,12 +345,15 @@ func restoreHostSettings(was, now []byte) ([]byte, error) {
 
 	for _, field := range hostSettings {
 		at, reported := generatedAt[field]
-		if !reported {
-			continue
-		}
-
 		source, shown := documentedAt[field]
-		if !shown {
+
+		switch {
+		case !reported && shown:
+			return nil, fmt.Errorf("the regenerated %s shows no %s, though the page it replaces does; "+
+				"read what the script wrote under %s", rdctlReferencePage, field, listSettingsCommand)
+		case !reported:
+			continue
+		case !shown:
 			return nil, fmt.Errorf("%s shows no %s, so the page would report this machine's own",
 				rdctlReferencePage, field)
 		}

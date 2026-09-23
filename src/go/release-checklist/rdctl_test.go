@@ -505,18 +505,22 @@ func TestDocsReferenceWaitsForAMarkOnThePage(t *testing.T) {
 	}
 }
 
-func TestRestoreHostSettingsPassesOverAFieldTheGenerationDropped(t *testing.T) {
+// TestRestoreHostSettingsRefusesAFieldTheGenerationDropped covers a
+// list-settings that failed while the script ran. The script ignores the
+// command's exit status, so the block it writes leaves out settings the page
+// showed.
+func TestRestoreHostSettingsRefusesAFieldTheGenerationDropped(t *testing.T) {
 	documented := documentedPage(t)
 	generated := generatedPage(t, documented)
 	without := strings.Replace(string(generated), `    "memoryInGB": 4,`+"\n", "", 1)
 
-	restored, err := restoreHostSettings(documented, []byte(without))
-	if err != nil {
-		t.Fatal(err)
+	_, err := restoreHostSettings(documented, []byte(without))
+	if err == nil {
+		t.Fatal("restoring accepted a regenerated page with no memoryInGB")
 	}
 
-	if strings.Contains(string(restored), "memoryInGB") {
-		t.Error("a setting the generation dropped came back")
+	if !strings.Contains(err.Error(), "virtualMachine.memoryInGB") {
+		t.Errorf("the failure did not name the field: %v", err)
 	}
 }
 
