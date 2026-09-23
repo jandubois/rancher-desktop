@@ -156,6 +156,35 @@ func TestForkHasItsOwnRemote(t *testing.T) {
 	}
 }
 
+func TestOnlyAMissingForkMeansThereIsNoFork(t *testing.T) {
+	const parentQuery = "gh api repos/me/rancher-desktop --jq .parent.full_name"
+
+	answers := func(stderr string) *fakeTools {
+		return &fakeTools{
+			output: map[string]string{
+				"git remote --verbose":    remoteOutput,
+				"gh api user --jq .login": "me\n",
+			},
+			stderr: map[string]string{parentQuery: stderr},
+		}
+	}
+
+	repo := newRepository(context.Background(), "", "rancher-sandbox/rancher-desktop", answers("gh: Not Found (HTTP 404)"))
+
+	owner, _, err := repo.PushTarget(context.Background())
+	if err != nil || owner != "rancher-sandbox" {
+		t.Errorf("with no fork the push target is %q, %v", owner, err)
+	}
+
+	// A lookup that failed for any other reason says nothing about the fork,
+	// and guessing would send a branch to the repository itself.
+	repo = newRepository(context.Background(), "", "rancher-sandbox/rancher-desktop", answers("gh: API rate limit exceeded (HTTP 403)"))
+
+	if owner, _, err = repo.PushTarget(context.Background()); err == nil {
+		t.Errorf("a failed fork lookup made %q the push target", owner)
+	}
+}
+
 func TestReleaseStateReadsDraftPublishedAndMissing(t *testing.T) {
 	const view = "gh release view %s --repo rancher-sandbox/rancher-desktop --json " + releaseFields
 

@@ -447,15 +447,22 @@ func (r *repository) PushTarget(ctx context.Context) (string, string, error) {
 	_, name, _ := strings.Cut(r.repo, "/")
 	fork := login + "/" + name
 
+	// Only a missing repository means there is no fork. Any other failure
+	// says nothing about it, and guessing would send a branch to the release
+	// repository itself.
 	parent, err := r.run.run(ctx, "gh", "api", "repos/"+fork, "--jq", ".parent.full_name")
-	if err == nil && strings.TrimSpace(string(parent)) == r.repo {
+
+	var failure *commandFailure
+
+	switch {
+	case err == nil && strings.EqualFold(strings.TrimSpace(string(parent)), r.repo):
 		r.pushOwner, r.pushURL = login, remoteURL(ctx, r.dir, fork, r.run)
-
-		return r.pushOwner, r.pushURL, nil
+	case err == nil, errors.As(err, &failure) && failure.missing():
+		r.pushOwner, _, _ = strings.Cut(r.repo, "/")
+		r.pushURL = r.url
+	default:
+		return "", "", fmt.Errorf("looking for your fork of %s: %w", r.repo, err)
 	}
-
-	r.pushOwner, _, _ = strings.Cut(r.repo, "/")
-	r.pushURL = r.url
 
 	return r.pushOwner, r.pushURL, nil
 }
