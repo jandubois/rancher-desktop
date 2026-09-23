@@ -23,10 +23,11 @@ const (
 	testDocsFile = docsVersionDir + "/v1.25.0.md"
 )
 
-// docsDependencies is dependencies.yaml cut to what this step reads: three
-// bundled utilities, and the two guest images with the release URLs their
-// nerdctl pins are read from.
-const docsDependencies = `WSLDistro:
+// docsDependencies is dependencies.yaml cut to every bundled utility and the
+// two guest images, with the release URLs their nerdctl pins are read from.
+const docsDependencies = `ECRCredentialHelper:
+  version: 0.12.0
+WSLDistro:
   assets:
     - platform: wsl
       url: https://github.com/rancher-sandbox/rancher-desktop-wsl-distro/releases/download/v0.100/distro-0.100.tar
@@ -39,10 +40,26 @@ alpineLimaISO:
   version:
     alpineVersion: 3.24.1
     isoVersion: 0.2.47.rd9
+certManager:
+  version: 1.21.2
+dockerBuildx:
+  version: 0.37.1
 dockerCLI:
   version: 29.8.1
+dockerCompose:
+  version: 5.5.1
+dockerProvidedCredentialHelpers:
+  version: 0.9.9
 helm:
   version: 4.3.0
+kuberlr:
+  version: 0.8.0
+spinCLI:
+  version: 4.1.0
+spinOperator:
+  version: 0.6.1
+spinShim:
+  version: 0.26.0
 trivy:
   version: 0.74.0
 `
@@ -58,7 +75,19 @@ const (
 // docsVersionFileText is the version file a release manager writes. It holds
 // one utility per line, sorted by name, each ending in the break the site's
 // table cell needs.
-const docsVersionFileText = "docker: 29.8.1 <br/>\nhelm: 4.3.0 <br/>\nnerdctl: 2.2.2 <br/>\ntrivy: 0.74.0 <br/>\n"
+const docsVersionFileText = "amazon-ecr-credential-helper: 0.12.0 <br/>\n" +
+	"cert-manager: 1.21.2 <br/>\n" +
+	"docker: 29.8.1 <br/>\n" +
+	"docker-buildx: 0.37.1 <br/>\n" +
+	"docker-compose: 5.5.1 <br/>\n" +
+	"docker-credential-helpers: 0.9.9 <br/>\n" +
+	"helm: 4.3.0 <br/>\n" +
+	"kuberlr: 0.8.0 <br/>\n" +
+	"nerdctl: 2.2.2 <br/>\n" +
+	"spin: 4.1.0 <br/>\n" +
+	"spin-operator: 0.6.1 <br/>\n" +
+	"spin-shim: 0.26.0 <br/>\n" +
+	"trivy: 0.74.0 <br/>\n"
 
 // docsReferenceText is the page that imports the version files, cut to the
 // imports and the table the check reads.
@@ -208,6 +237,18 @@ func TestDocsUtilitiesIsAvailableWithNoVersionFile(t *testing.T) {
 
 	if status.State != Available || !strings.Contains(status.Detail, "has no v1.25.0.md") {
 		t.Errorf("a missing file was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestDocsUtilitiesRefusesAUtilityDependenciesLacks(t *testing.T) {
+	answers := docsAnswers()
+	answers[fileQuery(testRepo, testBranch, dependenciesFile)] =
+		strings.Replace(docsDependencies, "dockerCompose:\n  version: 5.5.1\n", "", 1)
+
+	status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities)
+
+	if status.State != Unknown || !strings.Contains(status.Detail, testBranch+" has no version for dockerCompose") {
+		t.Errorf("a utility missing from %s was %s: %s", dependenciesFile, status.State, status.Detail)
 	}
 }
 
@@ -366,7 +407,7 @@ func TestTheDocsActionCutsFromMainAndPushesToTheFork(t *testing.T) {
 	want := []string{
 		"git fetch https://github.com/" + testDocsRepo + " " + defaultBranch,
 		"check 1234abc of " + defaultBranch + " out in " + dir,
-		"write " + docsVersionDir + "/v1.25.0.md, listing the 4 utilities 1.25.0 bundles",
+		"write " + docsVersionDir + "/v1.25.0.md, listing the 13 utilities 1.25.0 bundles",
 		"drop " + docsVersionDir + "/v1.22.0.md, so the page lists 3 releases",
 		"list v1.25.0, v1.24.0, and v1.23.0 in " + docsReferencePage,
 		"git add --all -- " + docsVersionDir + " " + docsReferencePage,

@@ -247,10 +247,16 @@ func bundledVersions(ctx context.Context, run *Run) (map[string]string, error) {
 
 	bundled := make(map[string]string, len(bundledUtilities)+1)
 
+	// Skipping a utility that dependencies.yaml lacks would take it out of
+	// the version file and blame the documentation for listing it.
 	for _, utility := range bundledUtilities {
-		if version, has := versions[utility.key]; has {
-			bundled[utility.name] = version
+		version, has := versions[utility.key]
+		if !has {
+			return nil, fmt.Errorf("%s at %s has no version for %s; if %s was renamed or removed, update the tool's bundledUtilities",
+				dependenciesFile, ref, utility.key, utility.name)
 		}
+
+		bundled[utility.name] = version
 	}
 
 	nerdctl, err := nerdctlVersion(ctx, run, dependencies)
