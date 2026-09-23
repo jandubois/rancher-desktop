@@ -127,5 +127,10 @@ func chooseRelease(ctx context.Context, facts repoFacts) (*Release, error) {
 		return nil, fmt.Errorf("VERSION: %w", err)
 	}
 
-	return &Release{Version: version, Kind: version.Kind()}, nil
+	finished, err := facts.TagInMain(ctx, version.Tag())
+	if err != nil {
+		return nil, err
+	}
+
+	return &Release{Version: version, Kind: version.Kind(), Finished: finished}, nil
 }

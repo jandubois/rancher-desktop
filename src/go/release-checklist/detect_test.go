@@ -151,3 +151,28 @@ func TestDetectPassesOverBurnedVersions(t *testing.T) {
 		t.Errorf("drove %s, which is burned", release.Version)
 	}
 }
+
+func TestAVersionOverrideWhoseTagIsInMainIsFinished(t *testing.T) {
+	facts := &fakeRepo{inMain: map[string]bool{"v1.24.0": true}}
+
+	t.Setenv("VERSION", "1.24.0")
+
+	release, err := chooseRelease(context.Background(), facts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !release.Finished {
+		t.Error("a release whose tag is in main is not finished")
+	}
+
+	t.Setenv("VERSION", "1.24.1")
+
+	if release, err = chooseRelease(context.Background(), facts); err != nil {
+		t.Fatal(err)
+	}
+
+	if release.Finished {
+		t.Error("a release whose tag is not in main is finished")
+	}
+}

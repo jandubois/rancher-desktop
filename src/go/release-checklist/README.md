@@ -59,6 +59,10 @@ an older line:
 
     VERSION=1.23.2 yarn release
 
+A release whose tag is already in `main` is finished. Its checks still read,
+so the checklist of a past release can be looked at, but its actions refuse
+to run.
+
 ## What the states mean
 
 | State | Meaning |

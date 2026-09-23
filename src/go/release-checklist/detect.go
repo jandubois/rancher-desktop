@@ -27,6 +27,9 @@ type Release struct {
 	// Published is true once the release is out of draft and only its
 	// post-publish steps are left.
 	Published bool
+	// Finished is true once the tag is in main, which detection never picks
+	// and VERSION can name. Its checks still read; its actions refuse.
+	Finished bool
 	// Warnings are facts about the repository that the dashboard shows
 	// beside the release, because they change what the next steps mean.
 	Warnings []string
@@ -37,6 +40,21 @@ func (r *Release) Branch() string { return r.Version.Line().Branch() }
 
 // Tag is the release's git tag.
 func (r *Release) Tag() string { return r.Version.Tag() }
+
+// State is the release's kind and how far along it is, for the line that
+// names the release being driven.
+func (r *Release) State() string {
+	state := string(r.Kind)
+
+	switch {
+	case r.Finished:
+		state += ", finished"
+	case r.Published:
+		state += ", published"
+	}
+
+	return state
+}
 
 // Detect finds the release in progress. It starts from the highest release
 // branch, because that is where a release is worked on, and asks what has

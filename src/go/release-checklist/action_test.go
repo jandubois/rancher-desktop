@@ -176,6 +176,22 @@ func TestActionRefusesToRunFromAnUncommittedTree(t *testing.T) {
 	}
 }
 
+func TestActionRefusesAFinishedRelease(t *testing.T) {
+	run := testRun(t, Minor)
+	run.Release.Finished = true
+	tools := &fakeTools{anyCommand: true}
+	run.Tools = tools
+
+	err := RunAction(context.Background(), twoCommands(), run, strings.NewReader("y\n"), io.Discard)
+	if err == nil || !strings.Contains(err.Error(), "finished") {
+		t.Fatalf("a finished release gave %v", err)
+	}
+
+	if len(tools.calls) != 0 {
+		t.Errorf("a finished release ran %v", tools.calls)
+	}
+}
+
 func TestArgumentsWithSpacesAreShownQuoted(t *testing.T) {
 	operation := command("", "git", "commit", "--message", "Bump version to 1.25.0")
 	if want := `git commit --message "Bump version to 1.25.0"`; operation.Description != want {

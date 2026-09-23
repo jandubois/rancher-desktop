@@ -351,12 +351,7 @@ func (d *dashboard) instructionsView() string {
 func (d *dashboard) header() string {
 	release := d.run.Release
 
-	state := string(release.Kind)
-	if release.Published {
-		state += ", published"
-	}
-
-	left := fmt.Sprintf(" %s · %s · %s", release.Version, state, d.run.Profile.Name)
+	left := fmt.Sprintf(" %s · %s · %s", release.Version, release.State(), d.run.Profile.Name)
 
 	if warnings := len(release.Warnings); warnings > 0 {
 		left += fmt.Sprintf("  ! %s", strings.Join(release.Warnings, "; "))

@@ -23,6 +23,10 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 		return fmt.Errorf("step %s has no automation; its instructions say how to do it", step.ID)
 	}
 
+	if run.Release.Finished {
+		return fmt.Errorf("release %s is finished, its tag being in main, so its steps are read-only", run.Release.Version)
+	}
+
 	if status := run.Status(ctx, step); status.State != Available {
 		return fmt.Errorf("step %s is %s: %s", step.ID, status.State, status.Detail)
 	}
