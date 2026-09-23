@@ -101,7 +101,8 @@ var docsUtilities = &Step{
 			"bundled-utilities-version-info/v{version}.md, the reference page " +
 			"imports it and shows it in its table, and the file lists the " +
 			"versions {version} bundles.",
-		Precondition: "gh can push to {docsRepo}, and the release branch exists.",
+		Precondition: "gh can push to your fork of {docsRepo} (to {docsRepo} itself " +
+			"when you have none), and the release branch exists.",
 		Instructions: "Write the bundled utility versions for {version} into the " +
 			"documentation:\n\n" +
 			"1. Add docs/bundled-utilities-version-info/v{version}.md, one utility " +
@@ -121,8 +122,9 @@ var docsUtilities = &Step{
 	Check:        checkDocsUtilities,
 	Precondition: docsUtilitiesReady,
 	Action: &Action{
-		Title: "Push the bundled utility versions for {version} to {branch} of your documentation fork",
-		Plan:  planDocsUtilities,
+		Title:  "Push the bundled utility versions for {version} to {branch} of your documentation fork",
+		Writes: []*Resource{githubDocsFork},
+		Plan:   planDocsUtilities,
 	},
 }
 

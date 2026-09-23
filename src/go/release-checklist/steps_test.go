@@ -34,6 +34,7 @@ func checklistRun(t *testing.T, version Version, branches map[Line]string, tools
 		tools.output = map[string]string{}
 	}
 
+	tools.output["gh api repos/"+testRepo+" --jq .permissions.pull"] = "true\n"
 	tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "true\n"
 
 	url := "https://github.com/" + testRepo + ".git"
@@ -77,10 +78,16 @@ func TestVersionBumpIsDoneWhenTheBranchCarriesTheVersion(t *testing.T) {
 
 func TestVersionBumpWaitsForTheReleaseBranch(t *testing.T) {
 	version := Version{Major: 1, Minor: 25}
-	tools := &fakeTools{stderr: map[string]string{
-		"gh api repos/" + testRepo + "/contents/package.json?ref=release-1.25 " +
-			"--header Accept: application/vnd.github.raw": "gh: No commit found for the ref release-1.25 (HTTP 404)",
-	}}
+	tools := &fakeTools{
+		output: map[string]string{
+			"gh api user --jq .login":                                "me\n",
+			"gh api repos/me/rancher-desktop --jq .parent.full_name": "someone/else\n",
+		},
+		stderr: map[string]string{
+			"gh api repos/" + testRepo + "/contents/package.json?ref=release-1.25 " +
+				"--header Accept: application/vnd.github.raw": "gh: No commit found for the ref release-1.25 (HTTP 404)",
+		},
+	}
 
 	// A minor with no release branch: step 1 is available, so the bump has
 	// nothing to bump.
@@ -213,6 +220,39 @@ func TestTagIsDoneWhenItNamesACommitCarryingTheVersion(t *testing.T) {
 
 	if status := run.Status(context.Background(), tagRelease); status.State != Done {
 		t.Errorf("the tag was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestATagIsDoneForSomeoneWhoCanOnlyRead(t *testing.T) {
+	answers := readyToTag(packageRunJSON("completed", "success"))
+	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
+
+	tools := &fakeTools{output: answers}
+	run := tagRun(t, tools, map[Version]string{testRelease: testHead})
+	tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "false\n"
+
+	if status := run.Status(context.Background(), tagRelease); status.State != Done {
+		t.Errorf("the tag was %s: %s", status.State, status.Detail)
+	}
+
+	// The tag step's read probe answers nothing for the draft step's push
+	// probe, though both reach the same repository.
+	if status := run.Status(context.Background(), draftRelease); status.State != Blocked {
+		t.Errorf("the draft release was %s: %s", status.State, status.Detail)
+	}
+}
+
+// Only someone who can push sees a draft release, so a step whose check reads
+// it cannot tell a missing release from a hidden one.
+func TestStepsReadingTheDraftNeedPushAccess(t *testing.T) {
+	for _, step := range []*Step{draftRelease, releaseNotes, linuxAssets, windowsAssets} {
+		tools := &fakeTools{}
+		run := checklistRun(t, testRelease, map[Line]string{testRelease.Line(): testHead}, tools)
+		tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "false\n"
+
+		if status := run.Status(context.Background(), step); status.State != Blocked {
+			t.Errorf("step %s was %s for someone who cannot push: %s", step.ID, status.State, status.Detail)
+		}
 	}
 }
 

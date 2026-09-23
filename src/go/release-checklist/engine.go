@@ -61,8 +61,8 @@ type Step struct {
 	// Kinds are the release kinds the step applies to. Every step names its
 	// own, so a step that names none runs for no release at all.
 	Kinds []Kind
-	// Needs are the systems outside this machine that the step reads or
-	// writes. The engine probes each one before the check runs.
+	// Needs are the systems outside this machine that the step's check
+	// reads. The engine probes each one before the check runs.
 	Needs []*Resource
 	// Doc is the prose for the detail pane and the README.
 	Doc Doc
@@ -71,7 +71,8 @@ type Step struct {
 	// notices work done by hand or out of order.
 	Check func(context.Context, *Run) (Answer, error)
 	// Precondition reports whether the step can run now. A nil precondition
-	// means the resources in Needs are all it takes.
+	// means reaching the resources in Needs and the action's Writes is all it
+	// takes.
 	Precondition func(context.Context, *Run) (Answer, error)
 	// Confirms is the text somebody marks done for this step, read from the
 	// system the step checks. A step with one is done only once a person has
@@ -106,6 +107,10 @@ type Facts struct {
 type Action struct {
 	// Title says what running the action does.
 	Title string
+	// Writes are the systems the action changes. The engine probes each one
+	// before it calls the step available, so someone without the access finds
+	// the step blocked, with the fix, before anything runs.
+	Writes []*Resource
 	// Summary shows what the action would change, above the operations and
 	// the question. An action whose operations speak for themselves has
 	// none.
@@ -178,7 +183,10 @@ type Run struct {
 	// Settings are the paths on this machine a step works in.
 	Settings Settings
 
-	probed     map[string]Status
+	// probed holds each resource's answer for this refresh. It is keyed by
+	// resource rather than name, since a repository's read and push probes
+	// share its name.
+	probed     map[*Resource]Status
 	statuses   map[string]Status
 	evaluating map[string]bool
 	docs       *repository
@@ -208,7 +216,7 @@ func newRun(release *Release, profile *Profile, repo *repository) *Run {
 		Profile:    profile,
 		Repo:       repo,
 		Tools:      repo.run,
-		probed:     map[string]Status{},
+		probed:     map[*Resource]Status{},
 		statuses:   map[string]Status{},
 		evaluating: map[string]bool{},
 	}
@@ -265,10 +273,8 @@ func Evaluate(ctx context.Context, step *Step, run *Run) Status {
 		return state
 	}
 
-	for _, resource := range step.Needs {
-		if status := run.probe(ctx, resource); status.State != Done {
-			return status
-		}
+	if status, found := run.unreachable(ctx, step.Needs); found {
+		return status
 	}
 
 	answer, err := step.Check(ctx, run)
@@ -287,10 +293,17 @@ func Evaluate(ctx context.Context, step *Step, run *Run) Status {
 	return ready(ctx, step, run, answer.Detail)
 }
 
-// ready is the status of a step whose work is still to do: available once its
-// precondition holds, and until then waiting or blocked on whatever the
-// precondition names. A step with no precondition is available as it is.
+// ready is the status of a step whose work is still to do. It is available
+// once its action can reach what it writes and its precondition holds, and
+// until then blocked or waiting on whichever fails. A step with no action and
+// no precondition is available as it is.
 func ready(ctx context.Context, step *Step, run *Run, detail string) Status {
+	if step.Action != nil {
+		if status, found := run.unreachable(ctx, step.Action.Writes); found {
+			return status
+		}
+	}
+
 	if step.Precondition == nil {
 		return Status{State: Available, Detail: detail}
 	}
@@ -401,19 +414,31 @@ func (s *Step) skip(run *Run) (Status, bool) {
 // probe answers whether a resource is reachable with the access the steps
 // need. A resource is probed once per refresh, however many steps need it.
 func (r *Run) probe(ctx context.Context, resource *Resource) Status {
-	if status, ok := r.probed[resource.Name]; ok {
+	if status, ok := r.probed[resource]; ok {
 		return status
 	}
 
 	status := r.runProbe(ctx, resource)
 
 	if r.probed == nil {
-		r.probed = map[string]Status{}
+		r.probed = map[*Resource]Status{}
 	}
 
-	r.probed[resource.Name] = status
+	r.probed[resource] = status
 
 	return status
+}
+
+// unreachable is the probe status of the first resource that does not answer
+// with the access a step needs, if any does not.
+func (r *Run) unreachable(ctx context.Context, resources []*Resource) (Status, bool) {
+	for _, resource := range resources {
+		if status := r.probe(ctx, resource); status.State != Done {
+			return status, true
+		}
+	}
+
+	return Status{}, false
 }
 
 func (r *Run) runProbe(ctx context.Context, resource *Resource) Status {

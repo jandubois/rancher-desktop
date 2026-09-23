@@ -119,7 +119,8 @@ func headQuery(repo, branch string) string {
 func docsAnswers() map[string]string {
 	return map[string]string{
 		"git remote --verbose": "",
-		"gh api repos/" + testDocsRepo + " --jq .permissions.push":                        "true\n",
+		"gh api repos/" + testDocsRepo + " --jq .permissions.pull":                        "true\n",
+		"gh api repos/" + testDocsFork + " --jq .permissions.push":                        "true\n",
 		"gh api user --jq .login":                                                         testLogin + "\n",
 		"gh api repos/" + testDocsFork + " --jq .parent.full_name":                        testDocsRepo + "\n",
 		headQuery(testDocsFork, testBranch):                                               testHead + "\n",
@@ -146,6 +147,34 @@ func TestDocsUtilitiesIsDoneWhenTheDocsListWhatTheReleaseBundles(t *testing.T) {
 
 	if status := run.Status(context.Background(), docsUtilities); status.State != Done {
 		t.Errorf("the docs step was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestDocsUtilitiesNeedsNoPushAccessToTheDocsRepo(t *testing.T) {
+	answers := docsAnswers()
+	answers["gh api repos/"+testDocsRepo+" --jq .permissions.push"] = "false\n"
+
+	if status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities); status.State != Done {
+		t.Errorf("the docs step was %s: %s", status.State, status.Detail)
+	}
+
+	answers[fileQuery(testDocsFork, testBranch, testDocsFile)] =
+		strings.Replace(docsVersionFileText, "helm: 4.3.0", "helm: 4.2.3", 1)
+
+	if status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities); status.State != Available {
+		t.Errorf("a stale version was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestDocsUtilitiesIsBlockedWithoutPushAccessToTheFork(t *testing.T) {
+	answers := docsAnswers()
+	answers["gh api repos/"+testDocsFork+" --jq .permissions.push"] = "false\n"
+	answers[fileQuery(testDocsFork, testBranch, testDocsFile)] =
+		strings.Replace(docsVersionFileText, "helm: 4.3.0", "helm: 4.2.3", 1)
+
+	status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities)
+	if status.State != Blocked || !strings.Contains(status.Detail, testDocsFork) {
+		t.Errorf("a fork refusing the push left the docs step %s: %s", status.State, status.Detail)
 	}
 }
 

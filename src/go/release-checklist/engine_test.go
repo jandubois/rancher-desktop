@@ -122,6 +122,33 @@ func TestDeniedAccessBlocksTheStep(t *testing.T) {
 	}
 }
 
+func TestAnActionIsBlockedWhereItCannotWrite(t *testing.T) {
+	denied := newCountingResource(Answer{Detail: "no push access"}, nil)
+
+	undone := answering(Answer{Detail: "not there"}, Answer{OK: true}, []Kind{Minor}, nil)
+	undone.Action = &Action{Writes: []*Resource{denied.resource}}
+
+	status := Evaluate(context.Background(), undone, testRun(t, Minor))
+	if status.State != Blocked || status.Detail != "no push access" {
+		t.Errorf("a step whose action cannot write was %s: %s", status.State, status.Detail)
+	}
+
+	done := answering(Answer{OK: true}, Answer{OK: true}, []Kind{Minor}, nil)
+	done.Action = &Action{Writes: []*Resource{denied.resource}}
+
+	if status := Evaluate(context.Background(), done, testRun(t, Minor)); status.State != Done {
+		t.Errorf("done work whose action cannot write was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestEveryActionNamesWhatItWrites(t *testing.T) {
+	for _, step := range checklist {
+		if step.Action != nil && len(step.Action.Writes) == 0 {
+			t.Errorf("the action of step %s names nothing it writes", step.ID)
+		}
+	}
+}
+
 func TestCheckAndPreconditionDecideTheRemainingStates(t *testing.T) {
 	cases := map[State]*Step{
 		Done:      answering(Answer{OK: true, Detail: "already there"}, Answer{}, []Kind{Minor}, nil),

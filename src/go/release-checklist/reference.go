@@ -6,6 +6,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -59,15 +60,24 @@ func gathers(step *Step) string {
 }
 
 // reaches names the systems a step touches, so a reader can see what it can
-// reach before running it.
+// reach before running it. A repository's read and push probes share its
+// name, so each name appears once.
 func reaches(step *Step) string {
-	if len(step.Needs) == 0 {
-		return "nothing outside this machine."
+	resources := step.Needs
+	if step.Action != nil {
+		resources = append(slices.Clone(step.Needs), step.Action.Writes...)
 	}
 
-	named := make([]string, 0, len(step.Needs))
-	for _, resource := range step.Needs {
-		named = append(named, resource.Name)
+	var named []string
+
+	for _, resource := range resources {
+		if !slices.Contains(named, resource.Name) {
+			named = append(named, resource.Name)
+		}
+	}
+
+	if len(named) == 0 {
+		return "nothing outside this machine."
 	}
 
 	return strings.Join(named, ", ") + "."

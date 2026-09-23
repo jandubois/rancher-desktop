@@ -123,9 +123,14 @@ which setting and where to write it.
 
 The tool stores no credentials. Everything that needs authentication runs
 through a command line tool that keeps its own: `gh` for GitHub, and `git` for
-the refs and the worktrees. Each step declares which systems it reaches, the
-tool probes each one once per run, and a step whose tool is missing is
-`blocked`, with the address to install it from.
+the refs and the worktrees. Each step declares which systems its check reads
+and which its action writes, and the tool probes each one once per run. A
+check needs to read the repository, and needs push access only where it reads
+the draft release, which only someone who can push sees. An action needs push
+access to the repository it writes to, which is your fork for the version bump
+and the documentation steps, and the release repository for the rest. A step
+is `blocked` when its tool is missing, with the address to install it from, or
+when gh lacks the access, with the command that fixes it.
 
 ## What it keeps on this machine
 
@@ -190,7 +195,7 @@ checklist, so the steps below are not consecutive.
 
 - **Applies to:** Minor releases. A patch is cut from the branch its line already has.
 - **Done when:** {repo} has the branch {branch}.
-- **Waits for:** gh can push to {repo}.
+- **Waits for:** nothing.
 - **Reaches:** GitHub repo.
 - **Runs:** nothing. Follow the instructions.
 - **Gathers:** nothing. The instructions are all the step needs.
@@ -205,8 +210,8 @@ Check the head commit's subject, date and checks first. It is what the release s
 
 - **Applies to:** Every release.
 - **Done when:** package.json on {branch} says {version}.
-- **Waits for:** gh can push to {repo}, the release branch step is done or does not apply, and no pull request from your bump-to-{version} branch is open.
-- **Reaches:** GitHub repo.
+- **Waits for:** gh can push to your fork of {repo} (to {repo} itself when you have none), the release branch step is done or does not apply, and no pull request from your bump-to-{version} branch is open.
+- **Reaches:** GitHub repo, GitHub fork.
 - **Runs:** Open a pull request bumping package.json to {version}.
 - **Gathers:** nothing. The instructions are all the step needs.
 
@@ -250,8 +255,8 @@ The file is untracked and nothing ignores it, so keep it out of your commits. Pr
 
 - **Applies to:** Minor releases. A patch ships the documentation its line already has, unless a bundled utility moved.
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it and shows it in its table, and the file lists the versions {version} bundles.
-- **Waits for:** gh can push to {docsRepo}, and the release branch exists.
-- **Reaches:** GitHub repo, GitHub docs repo.
+- **Waits for:** gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), and the release branch exists.
+- **Reaches:** GitHub repo, GitHub docs repo, GitHub docs fork.
 - **Runs:** Push the bundled utility versions for {version} to {branch} of your documentation fork.
 - **Gathers:** nothing. The instructions are all the step needs.
 
@@ -269,8 +274,8 @@ Commit it to a release-{line} branch of your fork of {docsRepo} with a sign-off.
 
 - **Applies to:** Minor releases. A patch ships the documentation its line already has, unless an rdctl command changed.
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has references/rdctl-command-reference.md reporting {version}, and you have marked the page done. Editing it afterwards puts the step back to available.
-- **Waits for:** gh can push to {docsRepo}, the bundled utilities step is done, Rancher Desktop is running, and this machine holds no snapshots and no extensions.
-- **Reaches:** GitHub docs repo.
+- **Waits for:** gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), the bundled utilities step is done, Rancher Desktop is running, and this machine holds no snapshots and no extensions.
+- **Reaches:** GitHub docs repo, GitHub docs fork.
 - **Runs:** Push the rdctl command reference for {version} to {branch} of your documentation fork.
 - **Gathers:** nothing. The instructions are all the step needs.
 

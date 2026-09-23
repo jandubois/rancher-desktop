@@ -204,6 +204,20 @@ func TestForkHasItsOwnRemote(t *testing.T) {
 	}
 }
 
+func TestTheForkProbeAsksAboutTheFork(t *testing.T) {
+	tools := &fakeTools{output: map[string]string{
+		"git remote --verbose":                                   remoteOutput,
+		"gh api user --jq .login":                                "me\n",
+		"gh api repos/me/rancher-desktop --jq .parent.full_name": "rancher-sandbox/rancher-desktop\n",
+		"gh api repos/me/rancher-desktop --jq .permissions.push": "true\n",
+	}}
+	run := &Run{Repo: repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools), Tools: tools}
+
+	if answer, err := githubFork.Probe(context.Background(), run); err != nil || !answer.OK {
+		t.Errorf("the fork probe answered %+v, %v", answer, err)
+	}
+}
+
 func TestOnlyAMissingForkMeansThereIsNoFork(t *testing.T) {
 	const parentQuery = "gh api repos/me/rancher-desktop --jq .parent.full_name"
 

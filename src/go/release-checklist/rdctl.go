@@ -87,7 +87,8 @@ var docsReference = &Step{
 			"references/rdctl-command-reference.md reporting {version}, and you have " +
 			"marked the page done. Editing it afterwards puts the step back to " +
 			"available.",
-		Precondition: "gh can push to {docsRepo}, the bundled utilities step is done, " +
+		Precondition: "gh can push to your fork of {docsRepo} (to {docsRepo} itself " +
+			"when you have none), the bundled utilities step is done, " +
 			"Rancher Desktop is running, and this machine holds no snapshots and no extensions.",
 		Instructions: "Regenerate the rdctl command reference for {version}:\n\n" +
 			"1. Start Rancher Desktop, so the commands the page runs are answered by " +
@@ -112,6 +113,7 @@ var docsReference = &Step{
 	Confirms:     referenceInDocs,
 	Action: &Action{
 		Title:   "Push the rdctl command reference for {version} to {branch} of your documentation fork",
+		Writes:  []*Resource{githubDocsFork},
 		Summary: referenceSummary,
 		Plan:    planDocsReference,
 	},

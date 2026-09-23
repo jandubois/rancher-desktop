@@ -210,7 +210,8 @@ func TestRestoreValueKeepsTheGeneratedComma(t *testing.T) {
 func referenceAnswers(page string) map[string]string {
 	return map[string]string{
 		"git remote --verbose": "",
-		"gh api repos/" + testDocsRepo + " --jq .permissions.push": "true\n",
+		"gh api repos/" + testDocsRepo + " --jq .permissions.pull": "true\n",
+		"gh api repos/" + testDocsFork + " --jq .permissions.push": "true\n",
 		"gh api user --jq .login":                                  testLogin + "\n",
 		"gh api repos/" + testDocsFork + " --jq .parent.full_name": testDocsRepo + "\n",
 		headQuery(testDocsFork, testBranch):                        testHead + "\n",

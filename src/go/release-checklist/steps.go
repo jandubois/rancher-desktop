@@ -44,7 +44,7 @@ var releaseBranch = &Step{
 	Doc: Doc{
 		Applies:      "Minor releases. A patch is cut from the branch its line already has.",
 		Check:        "{repo} has the branch {branch}.",
-		Precondition: "gh can push to {repo}.",
+		Precondition: "nothing.",
 		Instructions: "Push the head of main to the new branch:\n\n" +
 			"    git push <url of {repo}> <head of main>:refs/heads/{branch}\n\n" +
 			"Check the head commit's subject, date and checks first. It is what " +
@@ -72,7 +72,8 @@ var versionBump = &Step{
 	Doc: Doc{
 		Applies: everyRelease,
 		Check:   "package.json on {branch} says {version}.",
-		Precondition: "gh can push to {repo}, the release branch step is done " +
+		Precondition: "gh can push to your fork of {repo} (to {repo} itself when you " +
+			"have none), the release branch step is done " +
 			"or does not apply, and no pull request from your bump-to-{version} " +
 			"branch is open.",
 		Instructions: "Set the `version` field of package.json on {branch} to " +
@@ -110,8 +111,9 @@ var versionBump = &Step{
 		return bumpUnderReview(ctx, run)
 	},
 	Action: &Action{
-		Title: "Open a pull request bumping package.json to {version}",
-		Plan:  planVersionBump,
+		Title:  "Open a pull request bumping package.json to {version}",
+		Writes: []*Resource{githubFork},
+		Plan:   planVersionBump,
 	},
 }
 
@@ -201,7 +203,7 @@ var draftRelease = &Step{
 	ID:    "5",
 	Title: "Draft release",
 	Kinds: []Kind{Minor, Patch},
-	Needs: []*Resource{githubRepo},
+	Needs: []*Resource{githubRepoPush},
 	Doc: Doc{
 		Applies:      everyRelease,
 		Check:        "A release named {tag} exists in {repo}, as a draft or published.",
@@ -233,7 +235,7 @@ var releaseNotes = &Step{
 	ID:    "6",
 	Title: "Release notes",
 	Kinds: []Kind{Minor, Patch},
-	Needs: []*Resource{githubRepo},
+	Needs: []*Resource{githubRepoPush},
 	Doc: Doc{
 		Applies: everyRelease,
 		Check: "{tag} has notes, they are the ones in release-notes.md when this " +
@@ -266,6 +268,7 @@ var releaseNotes = &Step{
 	},
 	Action: &Action{
 		Title:   "Put release-notes.md into the notes of {tag}",
+		Writes:  []*Resource{githubRepoPush},
 		Summary: notesChange,
 		Plan:    planReleaseNotes,
 	},
@@ -370,8 +373,9 @@ var tagRelease = &Step{
 		return packageRun(ctx, run, branch, head)
 	},
 	Action: &Action{
-		Title: "Push {tag} to {repo}",
-		Plan:  planTag,
+		Title:  "Push {tag} to {repo}",
+		Writes: []*Resource{githubRepoPush},
+		Plan:   planTag,
 	},
 }
 
@@ -463,8 +467,9 @@ var packageBuild = &Step{
 		return Answer{OK: true}, nil
 	},
 	Action: &Action{
-		Title: "Rerun the failed jobs of the package run for {tag}",
-		Plan:  planRerunPackage,
+		Title:  "Rerun the failed jobs of the package run for {tag}",
+		Writes: []*Resource{githubRepoPush},
+		Plan:   planRerunPackage,
 	},
 }
 
@@ -492,7 +497,7 @@ var linuxAssets = &Step{
 	ID:    "11",
 	Title: "Linux assets",
 	Kinds: []Kind{Minor, Patch},
-	Needs: []*Resource{githubRepo},
+	Needs: []*Resource{githubRepoPush},
 	Doc: Doc{
 		Applies: everyRelease,
 		Check:   "{tag} has rancher-desktop-linux-{tag}.zip and its .sha512sum.",
@@ -515,6 +520,7 @@ var linuxAssets = &Step{
 	Precondition: linuxAssetsReady,
 	Action: &Action{
 		Title:   "Upload the Linux zip and its checksum to {tag}",
+		Writes:  []*Resource{githubRepoPush},
 		Summary: linuxDownloadSize,
 		Plan:    planLinuxAssets,
 	},
@@ -526,7 +532,7 @@ var windowsAssets = &Step{
 	ID:    "14",
 	Title: "Windows assets",
 	Kinds: []Kind{Minor, Patch},
-	Needs: []*Resource{githubRepo},
+	Needs: []*Resource{githubRepoPush},
 	Doc: Doc{
 		Applies: everyRelease,
 		Check:   "{tag} has Rancher.Desktop.Setup.{version}.msi and its .sha512sum.",
