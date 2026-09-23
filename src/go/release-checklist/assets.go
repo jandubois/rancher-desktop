@@ -15,6 +15,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -102,10 +103,16 @@ func planLinuxAssets(ctx context.Context, run *Run) ([]Operation, error) {
 		return nil, err
 	}
 
-	missing := absentAssets(assets, name, name+checksumSuffix)
+	names := []string{name, name + checksumSuffix}
+
+	missing := absentAssets(assets, names...)
 	if len(missing) == 0 {
 		return nil, fmt.Errorf("%s already has %s and its checksum", tag, name)
 	}
+
+	kept := slices.DeleteFunc(names, func(asset string) bool {
+		return slices.Contains(missing, asset)
+	})
 
 	dir, err := downloadDir(run)
 	if err != nil {
@@ -114,7 +121,7 @@ func planLinuxAssets(ctx context.Context, run *Run) ([]Operation, error) {
 
 	upload := append([]string{"release", "upload", tag, "--repo", run.Repo.repo}, under(dir, missing)...)
 
-	return []Operation{
+	operations := []Operation{
 		command("", "gh", "run", "download", build.ID, "--repo", run.Repo.repo,
 			"--name", linuxArtifact, "--dir", dir),
 		{
@@ -131,14 +138,30 @@ func planLinuxAssets(ctx context.Context, run *Run) ([]Operation, error) {
 				return writeChecksum(filepath.Join(dir, name))
 			},
 		},
+	}
+
+	// A package run that ran again can build other bytes, and a checksum
+	// from one build does not cover the zip from another. Once such a pair
+	// is on the release the step reports done, so the check comes before the
+	// upload.
+	if len(kept) > 0 {
+		operations = append(operations, Operation{
+			Description: "check " + strings.Join(kept, " and ") + " on " + tag + " against the local copy",
+			Do: func(ctx context.Context, run *Run) error {
+				return verifyAgainstRelease(ctx, run, dir, kept)
+			},
+		})
+	}
+
+	return append(operations,
 		command("", "gh", upload...),
-		{
+		Operation{
 			Description: "check what GitHub stored against what was uploaded",
 			Do: func(ctx context.Context, run *Run) error {
-				return verifyUploaded(ctx, run, dir, missing)
+				return verifyAgainstRelease(ctx, run, dir, missing)
 			},
 		},
-	}, nil
+	), nil
 }
 
 // windowsAsset is what the signed installer is called on the release.
@@ -389,13 +412,14 @@ func writeChecksum(path string) error {
 	return os.WriteFile(path+checksumSuffix, []byte(line), 0o644)
 }
 
-// verifyUploaded checks what GitHub stored against what was sent. GitHub
-// reports each asset's sha256, so a file that arrived short is caught here
-// instead of by whoever downloads the release.
-func verifyUploaded(ctx context.Context, run *Run, dir string, names []string) error {
+// verifyAgainstRelease checks the release's copy of each named file against
+// the one in dir. GitHub reports each asset's sha256, so a file that arrived
+// short, or one the release has from another build, is caught here instead
+// of by whoever downloads the release.
+func verifyAgainstRelease(ctx context.Context, run *Run, dir string, names []string) error {
 	tag := run.Release.Tag()
 
-	assets, err := run.Repo.AssetsAfterUpload(ctx, tag)
+	assets, err := run.Repo.ReleaseAssetsNow(ctx, tag)
 	if err != nil {
 		return err
 	}
@@ -412,7 +436,7 @@ func verifyUploaded(ctx context.Context, run *Run, dir string, names []string) e
 		}
 
 		if asset.Digest != "sha256:"+sum {
-			return fmt.Errorf("%s on %s is %s, and the file uploaded is sha256:%s",
+			return fmt.Errorf("%s on %s is %s, and the local copy is sha256:%s; delete the release's copy and run the step again",
 				name, tag, asset.Digest, sum)
 		}
 	}

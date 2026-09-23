@@ -319,10 +319,10 @@ func (r *repository) ReleaseAssets(ctx context.Context, tag string) ([]releaseAs
 	return view.Assets, nil
 }
 
-// AssetsAfterUpload are the files attached to a release, read again. The
-// tool cached the release before the upload, so the cached copy still shows
-// it without the files.
-func (r *repository) AssetsAfterUpload(ctx context.Context, tag string) ([]releaseAsset, error) {
+// ReleaseAssetsNow are the files attached to a release, read again. The
+// cache holds the release as the refresh found it, which is out of date once
+// an action has uploaded to it or spent minutes downloading.
+func (r *repository) ReleaseAssetsNow(ctx context.Context, tag string) ([]releaseAsset, error) {
 	delete(r.releases, tag)
 
 	return r.ReleaseAssets(ctx, tag)

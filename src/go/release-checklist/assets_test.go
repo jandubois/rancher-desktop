@@ -83,6 +83,25 @@ func inACacheOfItsOwn(t *testing.T) {
 	t.Setenv("LocalAppData", home)
 }
 
+// downloaded writes content to the release's download directory under the
+// name the build gives the Linux zip, as gh unpacks it from the package run.
+func downloaded(t *testing.T, run *Run, content []byte) {
+	t.Helper()
+
+	dir, err := downloadDir(run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.WriteFile(filepath.Join(dir, "rancher-desktop-1.25.0-linux.zip"), content, 0o644); err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestLinuxAssetsAreDoneWhenTheReleaseHasBoth(t *testing.T) {
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip), stored(testZip+checksumSuffix)),
@@ -292,7 +311,7 @@ func TestAnUploadThatArrivedShortIsCaught(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err := verifyUploaded(context.Background(), run, dir, []string{testZip})
+	err := verifyAgainstRelease(context.Background(), run, dir, []string{testZip})
 	if err == nil {
 		t.Fatal("a release holding other bytes than the ones uploaded passed")
 	}
@@ -315,8 +334,70 @@ func TestAnUploadThatArrivedWholePasses(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := verifyUploaded(context.Background(), run, dir, []string{testZip}); err != nil {
+	if err := verifyAgainstRelease(context.Background(), run, dir, []string{testZip}); err != nil {
 		t.Errorf("a file GitHub stored whole was reported short: %v", err)
+	}
+}
+
+func TestAChecksumFromAnotherBuildNeverReachesTheRelease(t *testing.T) {
+	inACacheOfItsOwn(t)
+
+	// The package run ran again and built other bytes than the zip the
+	// release already has.
+	run := uploadRun(t,
+		draftWithAssets(t, stored(testZip)),
+		artifactsJSON(linuxArtifact, false))
+	tools := run.Tools.(*fakeTools)
+	tools.anyCommand = true
+	downloaded(t, run, []byte("a build"))
+
+	operations, err := planLinuxAssets(context.Background(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = perform(run, operations)
+	if err == nil {
+		t.Fatal("the action finished with a checksum that does not cover the zip on the release")
+	}
+
+	if want := stored(testZip).Digest; !strings.Contains(err.Error(), want) {
+		t.Errorf("the failure does not give the release's digest: %v", err)
+	}
+
+	for _, call := range tools.calls {
+		if strings.HasPrefix(call, "gh release upload") {
+			t.Errorf("a checksum was uploaded for a zip it does not cover: %s", call)
+		}
+	}
+}
+
+func TestAChecksumIsUploadedForTheZipTheReleaseHas(t *testing.T) {
+	inACacheOfItsOwn(t)
+
+	content := []byte("a build")
+	zip := releaseAsset{Name: testZip, State: uploaded, Digest: fmt.Sprintf("sha256:%x", sha256.Sum256(content))}
+
+	run := uploadRun(t,
+		draftWithAssets(t, zip),
+		artifactsJSON(linuxArtifact, false))
+	tools := run.Tools.(*fakeTools)
+	tools.anyCommand = true
+	downloaded(t, run, content)
+
+	operations, err := planLinuxAssets(context.Background(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// gh answers every read from here on with both files, as it would after
+	// the upload; the check before the upload looks only at the zip.
+	line := fmt.Sprintf("%x  %s\n", sha512.Sum512(content), testZip)
+	checksum := releaseAsset{Name: testZip + checksumSuffix, State: uploaded, Digest: fmt.Sprintf("sha256:%x", sha256.Sum256([]byte(line)))}
+	tools.output["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = draftWithAssets(t, zip, checksum)
+
+	if err := perform(run, operations); err != nil {
+		t.Errorf("uploading the checksum of the zip the release has failed: %v", err)
 	}
 }
 
