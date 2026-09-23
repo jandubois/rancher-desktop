@@ -203,7 +203,7 @@ Check the head commit's subject, date and checks first. It is what the release s
 
 - **Applies to:** Every release.
 - **Done when:** package.json on {branch} says {version}.
-- **Waits for:** gh can push to {repo}, and the release branch step is done or does not apply.
+- **Waits for:** gh can push to {repo}, the release branch step is done or does not apply, and no pull request from your bump-to-{version} branch is open.
 - **Reaches:** GitHub repo.
 - **Runs:** Open a pull request bumping package.json to {version}.
 - **Gathers:** nothing. The instructions are all the step needs.

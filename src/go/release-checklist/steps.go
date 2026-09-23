@@ -72,8 +72,9 @@ var versionBump = &Step{
 	Doc: Doc{
 		Applies: everyRelease,
 		Check:   "package.json on {branch} says {version}.",
-		Precondition: "gh can push to {repo}, and the release branch step is " +
-			"done or does not apply.",
+		Precondition: "gh can push to {repo}, the release branch step is done " +
+			"or does not apply, and no pull request from your bump-to-{version} " +
+			"branch is open.",
 		Instructions: "Set the `version` field of package.json on {branch} to " +
 			"{version}, commit it with a sign-off, push the commit to a branch " +
 			"of your own, and open a pull request against {branch} titled " +
@@ -96,14 +97,17 @@ var versionBump = &Step{
 			return Answer{}, err
 		}
 
-		if version == run.Release.Version {
-			return Answer{OK: true, Detail: fmt.Sprintf("package.json on %s says %s", branch, version)}, nil
-		}
-
-		return Answer{Detail: bumpPending(ctx, run, version)}, nil
+		return Answer{
+			OK:     version == run.Release.Version,
+			Detail: fmt.Sprintf("package.json on %s says %s", branch, version),
+		}, nil
 	},
 	Precondition: func(ctx context.Context, run *Run) (Answer, error) {
-		return waitFor(ctx, run, releaseBranch), nil
+		if ready := waitFor(ctx, run, releaseBranch); !ready.OK {
+			return ready, nil
+		}
+
+		return bumpUnderReview(ctx, run)
 	},
 	Action: &Action{
 		Title: "Open a pull request bumping package.json to {version}",
@@ -111,22 +115,25 @@ var versionBump = &Step{
 	},
 }
 
-// bumpPending says what the branch says today, and names the pull request
-// that would change it, so the wait for a reviewer is visible.
-func bumpPending(ctx context.Context, run *Run, found Version) string {
-	still := fmt.Sprintf("package.json on %s says %s", run.Release.Branch(), found)
-
+// bumpUnderReview holds the step while its pull request is open. Running the
+// action again would push a fresh bump commit over the one on the pull
+// request's branch, and git refuses that push.
+func bumpUnderReview(ctx context.Context, run *Run) (Answer, error) {
 	owner, _, err := run.Repo.PushTarget(ctx)
 	if err != nil {
-		return still
+		return Answer{}, err
 	}
 
 	number, err := run.Repo.OpenPR(ctx, owner, bumpBranch(run.Release.Version))
-	if err != nil || number == 0 {
-		return still
+	if err != nil {
+		return Answer{}, err
 	}
 
-	return fmt.Sprintf("PR #%d is open; %s", number, still)
+	if number != 0 {
+		return Answer{Waiting: true, Detail: fmt.Sprintf("under review in PR #%d", number)}, nil
+	}
+
+	return Answer{OK: true}, nil
 }
 
 // bumpBranch is the branch the bump commit is pushed to.

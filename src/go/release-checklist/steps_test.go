@@ -90,15 +90,8 @@ func TestVersionBumpWaitsForTheReleaseBranch(t *testing.T) {
 
 func TestPatchSkipsTheReleaseBranchAndStillBumps(t *testing.T) {
 	version := Version{Major: 1, Minor: 24, Patch: 1}
-	tools := &fakeTools{output: map[string]string{
-		"gh api repos/" + testRepo + "/contents/package.json?ref=release-1.24 " +
-			"--header Accept: application/vnd.github.raw": manifest,
-		"gh api user --jq .login":                                                                "me\n",
-		"gh api repos/me/rancher-desktop --jq .parent.full_name":                                 "someone/else\n",
-		"gh api repos/" + testRepo + "/pulls?state=open&head=me:bump-to-1.24.1 --jq .[0].number": "",
-	}}
-
-	run := checklistRun(t, version, map[Line]string{{Major: 1, Minor: 24}: "beef"}, tools)
+	run := checklistRun(t, version, map[Line]string{{Major: 1, Minor: 24}: "beef"},
+		&fakeTools{output: bumpAnswers("")})
 
 	// Step 1 is skipped for a patch, and a skipped step satisfies what
 	// follows it, so the bump is available rather than blocked.
@@ -108,6 +101,43 @@ func TestPatchSkipsTheReleaseBranchAndStillBumps(t *testing.T) {
 
 	if status := run.Status(context.Background(), versionBump); status.State != Available {
 		t.Errorf("the bump was %s: %s", status.State, status.Detail)
+	}
+}
+
+// bumpAnswers is what the tools answer for the 1.24.1 bump while package.json
+// on the release branch still says 1.24.0. pr is what the pull request lookup
+// prints.
+func bumpAnswers(pr string) map[string]string {
+	return map[string]string{
+		contentsQuery("release-1.24"):                            manifest,
+		"gh api user --jq .login":                                "me\n",
+		"gh api repos/me/rancher-desktop --jq .parent.full_name": "someone/else\n",
+		"gh api repos/" + testRepo + "/pulls?state=open&head=me:bump-to-1.24.1 --jq .[0].number": pr,
+	}
+}
+
+func TestVersionBumpWaitsForItsOpenPullRequest(t *testing.T) {
+	version := Version{Major: 1, Minor: 24, Patch: 1}
+	run := checklistRun(t, version, map[Line]string{{Major: 1, Minor: 24}: "beef"},
+		&fakeTools{output: bumpAnswers("42\n")})
+
+	status := run.Status(context.Background(), versionBump)
+	if status.State != Waiting || !strings.Contains(status.Detail, "#42") {
+		t.Errorf("the bump with its pull request open was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestVersionBumpReportsAFailedPullRequestLookup(t *testing.T) {
+	version := Version{Major: 1, Minor: 24, Patch: 1}
+	answers := bumpAnswers("")
+	query := "gh api repos/" + testRepo + "/pulls?state=open&head=me:bump-to-1.24.1 --jq .[0].number"
+	delete(answers, query)
+
+	tools := &fakeTools{output: answers, stderr: map[string]string{query: "gh: Server Error (HTTP 502)"}}
+	run := checklistRun(t, version, map[Line]string{{Major: 1, Minor: 24}: "beef"}, tools)
+
+	if status := run.Status(context.Background(), versionBump); status.State != Unknown {
+		t.Errorf("the bump whose pull request lookup failed was %s: %s", status.State, status.Detail)
 	}
 }
 
