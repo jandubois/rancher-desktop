@@ -7,11 +7,24 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os/exec"
 	"strings"
+	"time"
 )
+
+// capturedTimeout bounds each command whose output the tool captures, so a gh
+// or git call that never answers cannot hold a check or an operation forever.
+// Commands that stream to the terminal have no timeout, because the person
+// watching can stop them.
+var capturedTimeout = 2 * time.Minute
+
+// outputWaitAfterExit is how long a captured command's output is still read
+// once the command exits or is killed, since a child it started can hold it
+// open.
+const outputWaitAfterExit = time.Second
 
 // commander runs the command line tools the steps drive. Everything that
 // needs credentials goes through one of them, so the credentials stay in
@@ -76,14 +89,24 @@ func (t tools) run(ctx context.Context, name string, args ...string) ([]byte, er
 func (tools) runIn(ctx context.Context, dir, name string, args ...string) ([]byte, error) {
 	var stdout, stderr bytes.Buffer
 
+	ctx, cancel := context.WithTimeout(ctx, capturedTimeout)
+	defer cancel()
+
 	// The command and its arguments come from the step definitions and the
 	// profile, and never reach a shell, so nothing is word-split or globbed.
 	cmd := exec.CommandContext(ctx, name, args...)
 	cmd.Dir = dir
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
+	cmd.WaitDelay = outputWaitAfterExit
 
-	if err := cmd.Run(); err != nil {
+	// ErrWaitDelay means the command succeeded and a child it left behind
+	// still held the output.
+	if err := cmd.Run(); err != nil && !errors.Is(err, exec.ErrWaitDelay) {
+		if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+			err = fmt.Errorf("no answer within %s", capturedTimeout)
+		}
+
 		return stdout.Bytes(), &commandFailure{
 			Command: strings.Join(append([]string{name}, args...), " "),
 			Stderr:  strings.TrimSpace(stderr.String()),
