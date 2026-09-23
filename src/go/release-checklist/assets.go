@@ -119,7 +119,19 @@ func planLinuxAssets(ctx context.Context, run *Run) ([]Operation, error) {
 		return nil, err
 	}
 
-	upload := append([]string{"release", "upload", tag, "--repo", run.Repo.repo}, under(dir, missing)...)
+	upload := []string{"release", "upload", tag, "--repo", run.Repo.repo}
+
+	// GitHub keeps the name of a file whose upload stopped partway, and gh
+	// refuses to upload under a name the release has unless given --clobber,
+	// which deletes that file first.
+	if slices.ContainsFunc(missing, func(asset string) bool {
+		_, found := findAsset(assets, asset)
+		return found
+	}) {
+		upload = append(upload, "--clobber")
+	}
+
+	upload = append(upload, under(dir, missing)...)
 
 	operations := []Operation{
 		command("", "gh", "run", "download", build.ID, "--repo", run.Repo.repo,

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -229,6 +230,44 @@ func TestUploadingSendsOnlyWhatTheReleaseIsMissing(t *testing.T) {
 	// Sending the zip again would upload the whole file for nothing.
 	if len(sent) != 1 || sent[0] != testZip+checksumSuffix {
 		t.Errorf("the upload sends %v, and the release lacks only the checksum", sent)
+	}
+}
+
+func TestUploadingReplacesAFileGitHubNeverFinishedReceiving(t *testing.T) {
+	inACacheOfItsOwn(t)
+
+	half := releaseAsset{Name: testZip + checksumSuffix, State: "open"}
+
+	// gh refuses to upload under a name the release already has, whatever
+	// state that file is in, unless given --clobber, which deletes the file
+	// first.
+	for name, test := range map[string]struct {
+		release string
+		clobber bool
+	}{
+		"checksum half uploaded": {draftWithAssets(t, stored(testZip), half), true},
+		"checksum absent":        {draftWithAssets(t, stored(testZip)), false},
+	} {
+		t.Run(name, func(t *testing.T) {
+			run := uploadRun(t, test.release, artifactsJSON(linuxArtifact, false))
+
+			operations, err := planLinuxAssets(context.Background(), run)
+			if err != nil {
+				t.Fatal(err)
+			}
+
+			upload := slices.IndexFunc(operations, func(operation Operation) bool {
+				return strings.HasPrefix(operation.Description, "gh release upload")
+			})
+			if upload < 0 {
+				t.Fatal("the plan uploads nothing")
+			}
+
+			if slices.Contains(operations[upload].Args, "--clobber") != test.clobber {
+				t.Errorf("the upload is %s, and it should pass --clobber only when the release lists a file it sends",
+					operations[upload].Description)
+			}
+		})
 	}
 }
 

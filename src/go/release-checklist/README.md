@@ -171,8 +171,9 @@ branch head to `refs/tags/vX.Y.Z` in the release repository, which starts the
 build every release asset comes from. The package build step reruns the jobs of
 that build that failed. The Linux assets step takes that build's Linux zip,
 gives it the name the release uses, writes its checksum and uploads what the
-release does not have. Each step says under **Runs:** what its automation does,
-and names the system it reaches.
+release does not have in full, replacing a file whose upload stopped partway.
+Each step says under **Runs:** what its automation does, and names the system
+it reaches.
 
 ## Step reference
 
