@@ -18,7 +18,9 @@ import (
 const defaultBranch = "main"
 
 // errNotFound is GitHub answering that a branch, file or release is not
-// there, which is an answer a check reads rather than a failure.
+// there, which is an answer a check reads rather than a failure. A lookup
+// wraps it with what it looked for, so the error a caller passes on names
+// the missing file, branch or release.
 var errNotFound = errors.New("not found")
 
 // ReleaseState is what GitHub knows about the release for a tag.
@@ -241,26 +243,27 @@ const uploaded = "uploaded"
 // releaseFor reads the release for a tag, or errNotFound when no release
 // names it.
 func (r *repository) releaseFor(ctx context.Context, tag string) (*releaseView, error) {
-	if view, cached := r.releases[tag]; cached {
-		if view == nil {
-			return nil, errNotFound
+	view, cached := r.releases[tag]
+	if !cached {
+		var err error
+
+		view, err = r.readRelease(ctx, tag)
+		if err != nil && !errors.Is(err, errNotFound) {
+			return nil, err
 		}
 
-		return view, nil
+		if r.releases == nil {
+			r.releases = map[string]*releaseView{}
+		}
+
+		r.releases[tag] = view
 	}
 
-	view, err := r.readRelease(ctx, tag)
-	if err != nil && !errors.Is(err, errNotFound) {
-		return nil, err
+	if view == nil {
+		return nil, fmt.Errorf("reading the release %s: %w", tag, errNotFound)
 	}
 
-	if r.releases == nil {
-		r.releases = map[string]*releaseView{}
-	}
-
-	r.releases[tag] = view
-
-	return view, err
+	return view, nil
 }
 
 func (r *repository) readRelease(ctx context.Context, tag string) (*releaseView, error) {
@@ -360,7 +363,7 @@ func fileAtRef(ctx context.Context, run commander, repo, ref, path string) ([]by
 	if err != nil {
 		var failure *commandFailure
 		if errors.As(err, &failure) && failure.missing() {
-			return nil, errNotFound
+			err = errNotFound
 		}
 
 		return nil, fmt.Errorf("reading %s at %s of %s: %w", path, ref, repo, err)
@@ -378,7 +381,7 @@ func (r *repository) FilesAtRef(ctx context.Context, ref, dir string) ([]string,
 	if err != nil {
 		var failure *commandFailure
 		if errors.As(err, &failure) && failure.missing() {
-			return nil, errNotFound
+			err = errNotFound
 		}
 
 		return nil, fmt.Errorf("listing %s at %s of %s: %w", dir, ref, r.repo, err)
@@ -404,7 +407,7 @@ func (r *repository) BranchHead(ctx context.Context, branch string) (string, err
 	if err != nil {
 		var failure *commandFailure
 		if errors.As(err, &failure) && failure.missing() {
-			return "", errNotFound
+			err = errNotFound
 		}
 
 		return "", fmt.Errorf("reading the head of %s in %s: %w", branch, r.repo, err)

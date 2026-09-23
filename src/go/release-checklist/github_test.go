@@ -305,3 +305,62 @@ func TestGitHubsNotThereAnswersAreReadAsAnswers(t *testing.T) {
 		t.Errorf("a missing branch gave %v", err)
 	}
 }
+
+func TestANotThereAnswerNamesWhatWasLookedUp(t *testing.T) {
+	const name = "rancher-sandbox/rancher-desktop"
+
+	run := &fakeTools{stderr: map[string]string{
+		"gh api repos/" + name + "/contents/dependencies.yaml?ref=v1.24.0 " +
+			"--header Accept: application/vnd.github.raw": "gh: Not Found (HTTP 404)",
+		"gh api repos/" + name + "/contents/docs/versions?ref=main --jq .[].name": "gh: Not Found (HTTP 404)",
+		"gh api repos/" + name + "/branches/release-1.25 --jq .commit.sha":        "gh: Branch not found (HTTP 404)",
+		"gh release view v1.25.0 --repo " + name + " --json " + releaseFields:     "release not found",
+	}}
+	repo := &repository{repo: name, run: run}
+	ctx := context.Background()
+
+	release := func() error {
+		_, err := repo.ReleaseNotes(ctx, "v1.25.0")
+
+		return err
+	}
+
+	lookups := []struct {
+		names []string
+		read  func() error
+	}{
+		{[]string{"dependencies.yaml", "v1.24.0", name}, func() error {
+			_, err := repo.FileAtRef(ctx, "v1.24.0", "dependencies.yaml")
+
+			return err
+		}},
+		{[]string{"docs/versions", "main", name}, func() error {
+			_, err := repo.FilesAtRef(ctx, "main", "docs/versions")
+
+			return err
+		}},
+		{[]string{"release-1.25", name}, func() error {
+			_, err := repo.BranchHead(ctx, "release-1.25")
+
+			return err
+		}},
+		{[]string{"v1.25.0"}, release},
+		// The release is cached by now, and the cache knows it is missing.
+		{[]string{"v1.25.0"}, release},
+	}
+
+	for _, lookup := range lookups {
+		err := lookup.read()
+		if !errors.Is(err, errNotFound) {
+			t.Errorf("looking up %v gave %v", lookup.names, err)
+
+			continue
+		}
+
+		for _, looked := range lookup.names {
+			if !strings.Contains(err.Error(), looked) {
+				t.Errorf("%q does not name %s", err, looked)
+			}
+		}
+	}
+}
