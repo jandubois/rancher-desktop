@@ -71,6 +71,19 @@ func importName(version Version) string {
 	return fmt.Sprintf("Version%d%d", version.Major, version.Minor)
 }
 
+// importLine is the line that imports a release's version file into the
+// reference page, as the action writes it.
+func importLine(version Version) string {
+	return fmt.Sprintf("import %s from '%s';", importName(version), versionImportPath(version))
+}
+
+// releaseRow matches the table row that shows a release, however it is
+// padded.
+func releaseRow(version Version) *regexp.Regexp {
+	return regexp.MustCompile(`^\| +` + regexp.QuoteMeta(version.Tag()) +
+		` +\| +<` + importName(version) + ` */> +\|$`)
+}
+
 // docsUtilities is step 7a. The bundled utility versions are the one part of
 // the documentation a release always changes, and they are already written
 // down in dependencies.yaml, so the tool reads them rather than asking
@@ -86,7 +99,8 @@ var docsUtilities = &Step{
 		Check: "The release branch of your fork of {docsRepo}, or {docsRepo}'s own " +
 			"main branch once the documentation is merged, has " +
 			"bundled-utilities-version-info/v{version}.md, the reference page " +
-			"imports it, and the file lists the versions {version} bundles.",
+			"imports it and shows it in its table, and the file lists the " +
+			"versions {version} bundles.",
 		Precondition: "gh can push to {docsRepo}, and the release branch exists.",
 		Instructions: "Write the bundled utility versions for {version} into the " +
 			"documentation:\n\n" +
@@ -149,9 +163,16 @@ func checkDocsUtilities(ctx context.Context, run *Run) (Answer, error) {
 		return Answer{}, err
 	}
 
-	if !strings.Contains(string(page), versionFileName(version)) {
+	lines := strings.Split(string(page), "\n")
+
+	if !slices.Contains(lines, importLine(version)) {
 		return Answer{Detail: fmt.Sprintf("%s in %s does not import %s",
 			docsReferencePage, where, name)}, nil
+	}
+
+	if !slices.ContainsFunc(lines, releaseRow(version).MatchString) {
+		return Answer{Detail: fmt.Sprintf("%s in %s has no row for %s",
+			docsReferencePage, where, version.Tag())}, nil
 	}
 
 	bundled, err := bundledVersions(ctx, run)
@@ -669,8 +690,7 @@ func rewriteReferencePage(page []byte, window []Version) ([]byte, error) {
 
 	imports := make([]string, 0, len(window))
 	for _, version := range slices.SortedFunc(slices.Values(window), CompareVersions) {
-		imports = append(imports, fmt.Sprintf("import %s from '%s';",
-			importName(version), versionImportPath(version)))
+		imports = append(imports, importLine(version))
 	}
 
 	rows := make([]string, 0, len(window))

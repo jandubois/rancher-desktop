@@ -61,10 +61,17 @@ const (
 const docsVersionFileText = "docker: 29.8.1 <br/>\nhelm: 4.3.0 <br/>\nnerdctl: 2.2.2 <br/>\ntrivy: 0.74.0 <br/>\n"
 
 // docsReferenceText is the page that imports the version files, cut to the
-// import the check reads.
+// imports and the table the check reads.
 const docsReferenceText = "---\ntitle: Bundled Utilities\n---\n\n" +
 	"import Version124 from '../bundled-utilities-version-info/v1.24.0.md';\n" +
-	"import Version125 from '../bundled-utilities-version-info/v1.25.0.md';\n"
+	"import Version125 from '../bundled-utilities-version-info/v1.25.0.md';\n\n" +
+	"| Rancher Desktop Version | Dependency Versions |\n" +
+	"|-------------------------|---------------------|\n" +
+	testReferenceRow +
+	"| v1.24.0                 | <Version124 />      |\n"
+
+// testReferenceRow is the test release's row of the table.
+const testReferenceRow = "| v1.25.0                 | <Version125 />      |\n"
 
 // fileQuery is the command that reads a file from a repository at a ref.
 func fileQuery(repo, ref, path string) string {
@@ -152,14 +159,37 @@ func TestDocsUtilitiesIsAvailableWhenAVersionIsStale(t *testing.T) {
 }
 
 func TestDocsUtilitiesIsAvailableWhenTheReferencePageDoesNotImportTheFile(t *testing.T) {
+	// An import of another file puts that release's versions in the row, and
+	// an import under another name leaves the row's <Version125 /> with
+	// nothing to show.
+	for name, page := range map[string]string{
+		"another file": strings.Replace(docsReferenceText, "v1.25.0.md", "v1.23.0.md", 1),
+		"another name": strings.Replace(docsReferenceText, "import Version125", "import Utilities125", 1),
+	} {
+		t.Run(name, func(t *testing.T) {
+			answers := docsAnswers()
+			answers[fileQuery(testDocsFork, testBranch, docsReferencePage)] = page
+
+			status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities)
+
+			if status.State != Available || !strings.Contains(status.Detail, "does not import") {
+				t.Errorf("an unimported file was %s: %s", status.State, status.Detail)
+			}
+		})
+	}
+}
+
+func TestDocsUtilitiesIsAvailableWhenTheTableHasNoRowForTheRelease(t *testing.T) {
 	answers := docsAnswers()
 	answers[fileQuery(testDocsFork, testBranch, docsReferencePage)] =
-		strings.Replace(docsReferenceText, "v1.25.0.md", "v1.23.0.md", 1)
+		strings.Replace(docsReferenceText, testReferenceRow, "", 1)
 
+	// The site shows only the releases the table has a row for, so an import
+	// alone leaves the release off the page.
 	status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities)
 
-	if status.State != Available || !strings.Contains(status.Detail, "does not import") {
-		t.Errorf("an unimported file was %s: %s", status.State, status.Detail)
+	if status.State != Available || !strings.Contains(status.Detail, "no row for v1.25.0") {
+		t.Errorf("a release missing from the table was %s: %s", status.State, status.Detail)
 	}
 }
 

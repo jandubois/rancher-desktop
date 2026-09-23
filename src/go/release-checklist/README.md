@@ -246,7 +246,7 @@ The file is untracked and nothing ignores it, so keep it out of your commits. Pr
 ### 7a. Docs: bundled utilities
 
 - **Applies to:** Minor releases. A patch ships the documentation its line already has, unless a bundled utility moved.
-- **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it, and the file lists the versions {version} bundles.
+- **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it and shows it in its table, and the file lists the versions {version} bundles.
 - **Waits for:** gh can push to {docsRepo}, and the release branch exists.
 - **Reaches:** GitHub repo, GitHub docs repo.
 - **Runs:** Push the bundled utility versions for {version} to {branch} of your documentation fork.
