@@ -286,7 +286,7 @@ var tagRelease = &Step{
 	Needs: []*Resource{githubRepo},
 	Doc: Doc{
 		Applies: everyRelease,
-		Check:   "{tag} names a commit of {repo} whose package.json says {version}.",
+		Check:   "{tag} names a commit on {branch} whose package.json says {version}.",
 		Precondition: "gh can push to {repo}, the version bump and the draft release are " +
 			"done, {branch} has a commit main does not, and the package run for the " +
 			"head of {branch} succeeded.",
@@ -320,6 +320,19 @@ var tagRelease = &Step{
 		if version != run.Release.Version {
 			return Answer{Detail: fmt.Sprintf(
 				"%s is at %.7s, whose package.json says %s", tag, commit, version)}, nil
+		}
+
+		// A release is finished once its tag is in main. A tag off the branch is
+		// either there already or out of reach of the merge-back.
+		branch := run.Release.Branch()
+
+		onBranch, err := run.Repo.InBranch(ctx, commit, branch)
+		if err != nil {
+			return Answer{}, err
+		}
+
+		if !onBranch {
+			return Answer{Detail: fmt.Sprintf("%s is at %.7s, which %s does not have", tag, commit, branch)}, nil
 		}
 
 		return Answer{OK: true, Detail: fmt.Sprintf("%s is at %.7s", tag, commit)}, nil

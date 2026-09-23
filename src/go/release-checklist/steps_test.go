@@ -168,14 +168,22 @@ func packageRunJSON(status, conclusion string) string {
 
 // readyToTag answers every command a release whose bump and draft are done
 // asks, with its release branch head carrying the version, absent from main,
-// and built by the package run the caller describes.
+// and built by the package run the caller describes. A tag at that head is on
+// the release branch.
 func readyToTag(build string) map[string]string {
 	return map[string]string{
 		contentsQuery(testBranch): strings.Replace(manifest, "1.24.0", "1.25.0", 1),
 		"gh release view v1.25.0 --repo " + testRepo + " --json " + releaseFields:       "{\"isDraft\":true}",
 		"gh api repos/" + testRepo + "/compare/" + testHead + "...main --jq .behind_by": "2\n",
 		runsQuery(testBranch): build,
+		branchQuery(testHead): "0\n",
 	}
+}
+
+// branchQuery is the command that counts the commits a commit has that the
+// release branch does not.
+func branchQuery(commit string) string {
+	return "gh api repos/" + testRepo + "/compare/" + commit + "..." + testBranch + " --jq .behind_by"
 }
 
 // tagRun is a refresh of a release ready to be tagged, with the tags the
@@ -197,6 +205,21 @@ func TestTagIsDoneWhenItNamesACommitCarryingTheVersion(t *testing.T) {
 
 	if status := run.Status(context.Background(), tagRelease); status.State != Done {
 		t.Errorf("the tag was %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestATagOffTheReleaseBranchIsNotDone(t *testing.T) {
+	const offBranch = "cafecafecafecafecafecafecafecafecafecafe"
+
+	answers := readyToTag(packageRunJSON("completed", "success"))
+	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
+	answers[branchQuery(offBranch)] = "1\n"
+
+	run := tagRun(t, &fakeTools{output: answers}, map[Version]string{testRelease: offBranch})
+
+	status := run.Status(context.Background(), tagRelease)
+	if status.State != Blocked || !strings.Contains(status.Detail, "burn") {
+		t.Errorf("a tag off the release branch was %s: %s", status.State, status.Detail)
 	}
 }
 

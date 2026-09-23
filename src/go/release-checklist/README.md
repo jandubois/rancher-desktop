@@ -286,7 +286,7 @@ Press `m` once the page is the one to ship.
 ### 9. Tag
 
 - **Applies to:** Every release.
-- **Done when:** {tag} names a commit of {repo} whose package.json says {version}.
+- **Done when:** {tag} names a commit on {branch} whose package.json says {version}.
 - **Waits for:** gh can push to {repo}, the version bump and the draft release are done, {branch} has a commit main does not, and the package run for the head of {branch} succeeded.
 - **Reaches:** GitHub repo.
 - **Runs:** Push {tag} to {repo}.
