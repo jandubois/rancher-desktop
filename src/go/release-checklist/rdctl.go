@@ -270,6 +270,7 @@ func planDocsReference(ctx context.Context, run *Run) ([]Operation, error) {
 	}
 
 	version := run.Release.Version
+	commit := command(dir, "git", "commit", "--signoff", "--message", referenceCommitMessage(version), "--", rdctlReferencePage)
 
 	return []Operation{
 		command(clone, "git", "fetch", docs.url, ref),
@@ -288,9 +289,32 @@ func planDocsReference(ctx context.Context, run *Run) ([]Operation, error) {
 			},
 		},
 		command(dir, "git", "add", "--", rdctlReferencePage),
-		command(dir, "git", "commit", "--signoff", "--message", referenceCommitMessage(version), "--", rdctlReferencePage),
+		{
+			Description: commit.Description + ", if the page changed",
+			Do: func(ctx context.Context, run *Run) error {
+				return commitIfChanged(ctx, run, &commit)
+			},
+		},
 		command(dir, "git", "push", fork.pushURL, "HEAD:refs/heads/"+run.Release.Branch()),
 	}, nil
+}
+
+// commitIfChanged commits the page when it differs from the page in the
+// checked-out commit. The step stays available until somebody marks the page,
+// so the action can run again after its push and regenerate the page it pushed.
+func commitIfChanged(ctx context.Context, run *Run, commit *Operation) error {
+	staged, err := run.Tools.runIn(ctx, commit.Dir, "git", "diff", "--cached", "--name-only", "--", rdctlReferencePage)
+	if err != nil {
+		return err
+	}
+
+	if strings.TrimSpace(string(staged)) == "" {
+		return nil
+	}
+
+	_, err = run.Tools.runIn(ctx, commit.Dir, commit.Command, commit.Args...)
+
+	return err
 }
 
 // referenceCommitMessage is the subject the documentation's history uses for

@@ -348,3 +348,36 @@ func TestAStagedPageFromAFailedRunStaysOutOfTheNextCommit(t *testing.T) {
 		t.Errorf("the bundled utilities commit took the staged page with it:\n%s", changed)
 	}
 }
+
+func TestRegeneratingTheReferenceFromTheSameBuildPushesNothingNew(t *testing.T) {
+	s := newDocsSandbox(t)
+	run, tools := sandboxRun(t, s)
+
+	operations, err := planDocsUtilities(context.Background(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := perform(run, operations); err != nil {
+		t.Fatal(err)
+	}
+
+	// The step stays available until somebody marks the page, so the action
+	// can run again after its push and regenerate the page it pushed.
+	for range 2 {
+		forkBranchExists(t, s, tools)
+
+		if operations, err = planDocsReference(context.Background(), run); err != nil {
+			t.Fatal(err)
+		}
+
+		if err := perform(run, operations); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	subjects := s.inFork(t, "log", "--format=%s", testBranch)
+	if commits := strings.Count(subjects, referenceCommitMessage(testRelease)); commits != 1 {
+		t.Errorf("the fork has %d reference commits:\n%s", commits, subjects)
+	}
+}
