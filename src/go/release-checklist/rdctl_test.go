@@ -369,7 +369,7 @@ func TestPlanDocsReferenceRunsTheScriptAndPushesToTheFork(t *testing.T) {
 
 	for _, want := range []string{
 		script + " " + testRelease.String(),
-		"git commit --signoff --message " + quote(referenceCommitMessage(testRelease)),
+		"git commit --signoff --message " + quote(referenceCommitMessage(testRelease)) + " -- " + rdctlReferencePage,
 		"git push " + quote("https://github.com/"+testDocsFork+".git") +
 			" HEAD:refs/heads/" + testBranch,
 	} {

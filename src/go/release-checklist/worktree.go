@@ -50,9 +50,16 @@ func worktreeAt(ctx context.Context, run *Run, clone, path, commit string) error
 		return fmt.Errorf("pruning worktrees: %w", err)
 	}
 
+	// A worktree left by a failed attempt still holds that attempt's changes,
+	// staged or not, and the next commit would take them along. The tool owns
+	// the worktree, so it starts every attempt from the planned commit alone.
 	if _, err := os.Stat(path); err == nil {
-		if _, err := run.Tools.runIn(ctx, path, "git", "checkout", "--detach", commit); err != nil {
+		if _, err := run.Tools.runIn(ctx, path, "git", "checkout", "--force", "--detach", commit); err != nil {
 			return fmt.Errorf("checking out %s in %s: %w", commit, path, err)
+		}
+
+		if _, err := run.Tools.runIn(ctx, path, "git", "clean", "-d", "--force"); err != nil {
+			return fmt.Errorf("cleaning %s: %w", path, err)
 		}
 
 		return nil

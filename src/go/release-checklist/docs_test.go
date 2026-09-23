@@ -338,7 +338,7 @@ func TestTheDocsActionCutsFromMainAndPushesToTheFork(t *testing.T) {
 		"drop " + docsVersionDir + "/v1.22.0.md, so the page lists 3 releases",
 		"list v1.25.0, v1.24.0, and v1.23.0 in " + docsReferencePage,
 		"git add --all -- " + docsVersionDir + " " + docsReferencePage,
-		`git commit --signoff --message "Update bundled utilities for 1.25.0"`,
+		`git commit --signoff --message "Update bundled utilities for 1.25.0" -- ` + docsVersionDir + " " + docsReferencePage,
 		"git push https://github.com/" + testDocsFork + "/ HEAD:refs/heads/" + testBranch,
 	}
 

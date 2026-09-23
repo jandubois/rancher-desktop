@@ -261,7 +261,7 @@ func planDocsReference(ctx context.Context, run *Run) ([]Operation, error) {
 			},
 		},
 		command(dir, "git", "add", "--", rdctlReferencePage),
-		command(dir, "git", "commit", "--signoff", "--message", referenceCommitMessage(version)),
+		command(dir, "git", "commit", "--signoff", "--message", referenceCommitMessage(version), "--", rdctlReferencePage),
 		command(dir, "git", "push", fork.url, "HEAD:refs/heads/"+run.Release.Branch()),
 	}, nil
 }

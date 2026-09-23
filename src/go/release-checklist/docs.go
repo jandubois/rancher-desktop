@@ -546,7 +546,7 @@ func planDocsUtilities(ctx context.Context, run *Run) ([]Operation, error) {
 			},
 		},
 		command(dir, "git", "add", "--all", "--", docsVersionDir, docsReferencePage),
-		command(dir, "git", "commit", "--signoff", "--message", docsCommitMessage(version)),
+		command(dir, "git", "commit", "--signoff", "--message", docsCommitMessage(version), "--", docsVersionDir, docsReferencePage),
 		command(dir, "git", "push", fork.url, "HEAD:refs/heads/"+run.Release.Branch()),
 	), nil
 }
