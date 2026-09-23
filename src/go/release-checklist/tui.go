@@ -75,6 +75,9 @@ type dashboard struct {
 	statuses   map[string]Status
 	refreshed  time.Time
 	refreshing bool
+	// reads is the number of the latest read started. Only its answer is
+	// shown, because a slow read can finish after a later one.
+	reads int
 	// failure is why the last refresh gave nothing to show.
 	failure error
 	// notice is what the last key press or action left to say.
@@ -88,6 +91,8 @@ type dashboard struct {
 
 // checklistRead carries a finished refresh back to the dashboard.
 type checklistRead struct {
+	// read is the number startRead gave the read.
+	read     int
 	run      *Run
 	statuses map[string]Status
 	at       time.Time
@@ -108,9 +113,8 @@ type factsGathered struct {
 
 func newDashboard(ctx context.Context, profile *Profile) *dashboard {
 	return &dashboard{
-		ctx:        ctx,
-		refresh:    func(ctx context.Context) (*Run, error) { return refresh(ctx, profile) },
-		refreshing: true,
+		ctx:     ctx,
+		refresh: func(ctx context.Context) (*Run, error) { return refresh(ctx, profile) },
 	}
 }
 
@@ -124,15 +128,15 @@ func showDashboard(ctx context.Context, profile *Profile) error {
 	return err
 }
 
-func (d *dashboard) Init() tea.Cmd { return d.read() }
+func (d *dashboard) Init() tea.Cmd { return d.startRead() }
 
 // read finds the release and every step's state. The checks reach GitHub, so
 // they run as a command rather than on the drawing path.
-func (d *dashboard) read() tea.Cmd {
+func (d *dashboard) read(number int) tea.Cmd {
 	return func() tea.Msg {
 		run, err := d.refresh(d.ctx)
 		if err != nil {
-			return checklistRead{at: time.Now(), err: err}
+			return checklistRead{read: number, at: time.Now(), err: err}
 		}
 
 		statuses := make(map[string]Status, len(checklist))
@@ -140,7 +144,7 @@ func (d *dashboard) read() tea.Cmd {
 			statuses[step.ID] = run.Status(d.ctx, step)
 		}
 
-		return checklistRead{run: run, statuses: statuses, at: time.Now()}
+		return checklistRead{read: number, run: run, statuses: statuses, at: time.Now()}
 	}
 }
 
@@ -149,8 +153,10 @@ func (d *dashboard) Update(message tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		d.width, d.height = message.Width, message.Height
 	case checklistRead:
-		d.run, d.statuses, d.refreshed = message.run, message.statuses, message.at
-		d.failure, d.refreshing = message.err, false
+		if message.read == d.reads {
+			d.run, d.statuses, d.refreshed = message.run, message.statuses, message.at
+			d.failure, d.refreshing = message.err, false
+		}
 	case stepChanged:
 		d.notice = ""
 		if message.err != nil {
@@ -210,9 +216,10 @@ func (d *dashboard) press(key tea.KeyMsg) (tea.Model, tea.Cmd) {
 }
 
 func (d *dashboard) startRead() tea.Cmd {
+	d.reads++
 	d.refreshing = true
 
-	return d.read()
+	return d.read(d.reads)
 }
 
 // runSelected hands the terminal to the selected step's automation. The

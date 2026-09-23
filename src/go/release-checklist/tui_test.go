@@ -8,6 +8,7 @@ import (
 	"bufio"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"path/filepath"
 	"regexp"
@@ -257,6 +258,29 @@ func TestQuitting(t *testing.T) {
 
 	if message := command(); message != (tea.QuitMsg{}) {
 		t.Errorf("q sent %T, want tea.QuitMsg", message)
+	}
+}
+
+// TestAReadOvertakenByALaterOneIsDropped covers two reads finishing out of
+// order, as they can when r is pressed while a slow read is still out.
+func TestAReadOvertakenByALaterOneIsDropped(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+
+	reads := 0
+	dash.refresh = func(context.Context) (*Run, error) {
+		reads++
+
+		return nil, fmt.Errorf("read %d failed", reads)
+	}
+
+	first, second := press(dash, "r"), press(dash, "r")
+	older, newer := first(), second()
+
+	dash.Update(newer)
+	dash.Update(older)
+
+	if view := plain(dash.View()); !strings.Contains(view, "read 2 failed") {
+		t.Errorf("the first read replaced the second:\n%s", view)
 	}
 }
 
