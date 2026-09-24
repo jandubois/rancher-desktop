@@ -51,11 +51,11 @@ var bumpedDependencies = strings.NewReplacer(
 // titled to read as a first contribution, which only the heading it sits
 // under tells apart from one.
 const generatedNotes = `## What's Changed
-* Give the General page boxes a sharp edge by @jandubois in https://github.com/me/rancher-desktop/pull/10702
-* @nobody made their first contribution in 2019 by @jandubois in https://github.com/me/rancher-desktop/pull/10701
+* Fix a typo on the Troubleshooting page by @regular in https://github.com/me/rancher-desktop/pull/102
+* @nobody made their first contribution in 2019 by @regular in https://github.com/me/rancher-desktop/pull/101
 
 ## New Contributors
-* @voidmatcha made their first contribution in https://github.com/me/rancher-desktop/pull/10557
+* @newcomer made their first contribution in https://github.com/me/rancher-desktop/pull/103
 
 **Full Changelog**: https://github.com/me/rancher-desktop/compare/v1.24.0...v1.25.0
 `
@@ -130,22 +130,22 @@ func TestABurnedVersionIsNotWrittenAgainst(t *testing.T) {
 func TestOnlyTheFirstContributionsAreRead(t *testing.T) {
 	named := parseNewContributors(generatedNotes)
 
-	if len(named) != 1 || named[0].Login != "voidmatcha" {
+	if len(named) != 1 || named[0].Login != "newcomer" {
 		t.Fatalf("the drafted notes gave %+v", named)
 	}
 
-	if !strings.HasSuffix(named[0].PR, "/10557") {
+	if !strings.HasSuffix(named[0].PR, "/103") {
 		t.Errorf("the pull request came out as %q", named[0].PR)
 	}
 }
 
 func TestSomebodyWhoContributedBeforeIsNotCredited(t *testing.T) {
 	section := contributorSection([]contributor{
-		{Login: "voidmatcha", PR: "https://example.invalid/10557"},
+		{Login: "newcomer", PR: "https://example.invalid/103"},
 		{Login: "olddog", PR: "https://example.invalid/10600", Earlier: true},
 	}, previousTagged)
 
-	if !strings.Contains(section, "Thank you to our new contributor: @voidmatcha!") {
+	if !strings.Contains(section, "Thank you to our new contributor: @newcomer!") {
 		t.Errorf("the section credits nobody:\n%s", section)
 	}
 
@@ -168,7 +168,7 @@ func factsAnswers() map[string]string {
 			"--field tag_name=v1.25.0 --field previous_tag_name=v1.24.0 " +
 			"--field target_commitish=" + testBranch + " --jq .body": generatedNotes,
 		"gh api repos/" + testRepo + "/commits/v1.24.0 --jq .commit.committer.date": previousDate + "\n",
-		"gh api repos/" + testRepo + "/commits?author=voidmatcha&until=" + previousDate +
+		"gh api repos/" + testRepo + "/commits?author=newcomer&until=" + previousDate +
 			"&per_page=1 --jq length": "0\n",
 		"gh api --paginate repos/" + testRepo + "/milestones?state=all&per_page=100 " +
 			"--jq .[] | select(.title == \"1.25\") | .number": "61\n",
@@ -204,7 +204,7 @@ func TestTheNotesFactsArePastedStraightIntoTheNotes(t *testing.T) {
 		"* docker `29.5.3` → `29.6.2`",
 		"* helm `4.2.1` → `4.2.3`",
 		"Unchanged:\n* kuberlr `0.7.0`",
-		"Thank you to our new contributor: @voidmatcha!",
+		"Thank you to our new contributor: @newcomer!",
 		"compare/v1.24.0...v1.25.0",
 		"milestone/61?closed=1",
 	} {
