@@ -69,8 +69,10 @@ func stepReference(steps []*Step) string {
 	return strings.TrimRight(out.String(), "\n") + "\n"
 }
 
-// runs says what the step's automation does. The tool shows every command it
-// would run, filled in with this release's values, before it runs any of
+// runs says what the step's automation does, by its action's title. The
+// commands exist only once Plan has a release, since Plan can look up the
+// push target or build paths from the version. The tool shows every command
+// it would run, filled in with this release's values, before it runs any of
 // them. The wording suits both places it appears, above the instructions in
 // the README and in the dashboard pane that keeps them behind a key.
 func runs(step *Step) string {

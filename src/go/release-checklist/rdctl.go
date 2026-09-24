@@ -176,6 +176,7 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 		return Answer{}, fmt.Errorf("reading this machine's snapshots: %w", err)
 	}
 
+	// With no snapshots, rdctl prints nothing, not even an empty JSON list.
 	if len(bytes.TrimSpace(snapshots)) > 0 {
 		return Answer{Detail: "this machine holds snapshots, and the page would list " +
 			"them with their timestamps"}, nil
@@ -215,9 +216,11 @@ func referenceInDocs(ctx context.Context, run *Run) (string, error) {
 }
 
 // referenceSummary names the build the page will be generated from, and what
-// generating it does to this machine. The script writes the release's version
-// into the page whatever answers, so a release candidate produces a page that
-// names the release and shows that candidate's output.
+// generating it does to this machine. A step's status drops the precondition's
+// detail once the precondition holds, so the build goes here. The script
+// writes the release's version into the page whatever answers, so a release
+// candidate produces a page that names the release and shows that candidate's
+// output.
 func referenceSummary(ctx context.Context, run *Run) (string, error) {
 	tag := run.Release.Version.Tag()
 

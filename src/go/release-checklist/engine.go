@@ -39,12 +39,13 @@ type Status struct {
 	Detail string
 }
 
-// Answer is what a check or a precondition reports.
+// Answer is what a check, a precondition or a resource probe reports.
 type Answer struct {
 	// OK is true when the check found the work done, or when every
 	// precondition holds.
 	OK bool
-	// Detail is the line to show, whether OK or not.
+	// Detail is the line to show. A step shows its check's detail, or a
+	// precondition's or resource probe's while that one fails.
 	Detail string
 	// Waiting marks a precondition that nobody can satisfy by hand because
 	// a process outside the tool is still running.

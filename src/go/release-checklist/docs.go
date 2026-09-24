@@ -367,7 +367,8 @@ type releaseSource struct{ repo, tag string }
 
 // guestImageSources is the repository and tag each guest image was released
 // from, read out of the download URL dependencies.yaml already has, so no step
-// has to name the guest image repositories.
+// has to name the guest image repositories. dependencies.yaml has held those
+// URLs since v1.24.0, so an older release's file yields an empty map.
 func guestImageSources(dependencies []byte) (map[string]releaseSource, error) {
 	var file map[string]*struct {
 		Assets []struct {
