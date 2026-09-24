@@ -88,7 +88,8 @@ back to `available`.
 A profile names every system outside this machine that a release touches: the
 repositories, the documentation site, the OBS projects, the screenshot bucket
 and the upgrade responder. Step code never spells these out, so one switch
-points a whole release at a fork.
+points a whole release at a fork. [REHEARSAL.md](REHEARSAL.md) describes how
+to rehearse a release with one.
 
 The production profile is built into the binary, and plain `yarn release` uses
 it. The tool reads any other profile from the user's config directory, at
