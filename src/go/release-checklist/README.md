@@ -133,9 +133,9 @@ access to the repository it writes to, which is your fork for the version bump
 and the documentation steps, and the release repository for the rest. A step is
 `blocked` when its tool is missing, with the address to install it from, or
 when gh lacks the access, with the command that fixes it. But no step declares
-the Rancher Desktop on this machine. Step 7b's precondition asks rdctl whether
-Rancher Desktop is running, so a missing rdctl blocks the step with the message
-a stopped Rancher Desktop gets.
+the Rancher Desktop on this machine, so step 7b's precondition checks it
+instead. The step is `blocked` when rdctl is not on PATH or Rancher Desktop
+does not answer it.
 
 ## What it keeps on this machine
 

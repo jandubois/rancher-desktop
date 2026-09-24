@@ -162,6 +162,10 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 		return waiting, nil
 	}
 
+	if !run.Tools.installed("rdctl") {
+		return Answer{Detail: "rdctl is not on PATH; Rancher Desktop installs it"}, nil
+	}
+
 	if _, err := run.Tools.run(ctx, "rdctl", "list-settings"); err != nil {
 		return Answer{Detail: "Rancher Desktop is not answering rdctl; the page is " +
 			"generated from the running build"}, nil

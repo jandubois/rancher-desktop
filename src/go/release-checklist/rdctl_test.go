@@ -309,6 +309,19 @@ func TestDocsReferenceWaitsForARespondingBackend(t *testing.T) {
 	}
 }
 
+func TestDocsReferenceNamesAMissingRdctl(t *testing.T) {
+	tools := &fakeTools{output: docsAnswers(), absent: map[string]bool{"rdctl": true}}
+
+	answer, err := docsReferenceReady(context.Background(), docsRun(t, tools))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if answer.OK || !strings.Contains(answer.Detail, "rdctl is not on PATH") {
+		t.Errorf("a machine without rdctl answered %v: %s", answer.OK, answer.Detail)
+	}
+}
+
 func TestDocsReferenceBlocksWhileTheMachineHoldsSnapshots(t *testing.T) {
 	answers := docsAnswers()
 	answers["rdctl list-settings"] = "{}\n"
