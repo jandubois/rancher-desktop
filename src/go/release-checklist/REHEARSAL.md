@@ -33,6 +33,7 @@ trigger `isv:Rancher:dev`.
   works. The tool finds a repository's remote by its URL and pushes to its
   public HTTPS URL when the clone has none, so git needs credentials for
   github.com over HTTPS, which `gh auth setup-git` gives it.
+- An SSH key on your GitHub account, for the one-time copy in step 3.
 
 ## Setting it up once
 
@@ -46,6 +47,11 @@ the upstream instead. The names below are examples.
    repositories in it, `<org>/rancher-desktop-rehearsal` and
    `<org>/docs-rehearsal`. Workflows in public repositories run free.
 
+   GitHub restricts OAuth apps in a new organization, and gh signs in as
+   one, so gh cannot change the organization's repositories yet. Under the
+   organization's Settings, Third-party Access, OAuth app policy, click
+   Remove restrictions.
+
 2. The copy pushes every branch, and GitHub runs the push workflows for each
    branch a push creates. Turn Actions off in both:
 
@@ -54,12 +60,14 @@ the upstream instead. The names below are examples.
 
 3. Copy both repositories, with every branch and tag. A bare clone has only
    those; a mirror clone also fetches the pull request refs, which GitHub
-   refuses on the push.
+   refuses on the push. Push over SSH. The copy adds every workflow file,
+   and over HTTPS GitHub refuses that from a token without the `workflow`
+   scope, which gh does not request when you sign in.
 
        git clone --bare https://github.com/rancher-sandbox/rancher-desktop.git
-       git -C rancher-desktop.git push --mirror https://github.com/<org>/rancher-desktop-rehearsal.git
+       git -C rancher-desktop.git push --mirror git@github.com:<org>/rancher-desktop-rehearsal.git
        git clone --bare https://github.com/rancher-sandbox/docs.rancherdesktop.io.git
-       git -C docs.rancherdesktop.io.git push --mirror https://github.com/<org>/docs-rehearsal.git
+       git -C docs.rancherdesktop.io.git push --mirror git@github.com:<org>/docs-rehearsal.git
 
 4. Turn Actions back on in the code repository only. Every push to
    `release-1.99` and step 9's tag start the package workflow, and steps 9, 10
