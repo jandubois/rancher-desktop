@@ -277,6 +277,8 @@ func (r *repository) releaseFor(ctx context.Context, tag string) (*releaseView, 
 	return view, nil
 }
 
+// readRelease asks gh for the release, because GitHub's releases/tags endpoint
+// returns published releases only, and gh also finds a draft by its tag.
 func (r *repository) readRelease(ctx context.Context, tag string) (*releaseView, error) {
 	output, err := r.run.run(ctx, "gh", "release", "view", tag, "--repo", r.repo, "--json", releaseFields)
 	if err != nil {
