@@ -317,7 +317,8 @@ func TestDocsReferenceNamesAMissingRdctl(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if answer.OK || !strings.Contains(answer.Detail, "rdctl is not on PATH") {
+	if answer.OK || !strings.Contains(answer.Detail, "rdctl is not on PATH") ||
+		!strings.Contains(answer.Detail, "~/.rd/bin") {
 		t.Errorf("a machine without rdctl answered %v: %s", answer.OK, answer.Detail)
 	}
 }

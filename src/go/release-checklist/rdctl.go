@@ -163,7 +163,7 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 	}
 
 	if !run.Tools.installed("rdctl") {
-		return Answer{Detail: "rdctl is not on PATH; Rancher Desktop installs it"}, nil
+		return Answer{Detail: "rdctl is not on PATH; Rancher Desktop puts it in ~/.rd/bin"}, nil
 	}
 
 	if _, err := run.Tools.run(ctx, "rdctl", "list-settings"); err != nil {
