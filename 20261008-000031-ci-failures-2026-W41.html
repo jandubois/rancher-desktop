@@ -221,10 +221,10 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <h1>CI Failures: 2026-W41</h1>
 
     <table class="meta-table">
-      <tr><td>Date</td><td>2026-10-07 19:58</td></tr>
+      <tr><td>Date</td><td>2026-10-08 00:00</td></tr>
       <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
-      <tr><td>Period</td><td>2026-W41 (Sat 2026-10-03 – Fri 2026-10-09), in progress through Wed 2026-10-07 19:58Z</td></tr>
-      <tr><td>Verdict</td><td><span class="verdict">237 failed jobs</span> &mdash; 230 on <code>main</code>, 9 known flakes, 8 proven, 222 quarantined</td></tr>
+      <tr><td>Period</td><td>2026-W41 (Sat 2026-10-03 – Fri 2026-10-09), in progress through Thu 2026-10-08 00:00Z</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">237 failed jobs</span> &mdash; 230 on <code>main</code>, 9 known flakes, 10 proven, 222 quarantined</td></tr>
     </table>
 
     <hr>
@@ -239,12 +239,12 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
         <tr><td>failed jobs</td><td>237</td><td>413</td><td>▼ -176</td><td>416.2</td></tr>
         <tr><td>on <code>main</code></td><td>230</td><td>403</td><td>▼ -173</td><td>396.0</td></tr>
         <tr><td>known flakes</td><td>9</td><td>37</td><td>▼ -28</td><td>31.2</td></tr>
-        <tr><td>proven flakes (re-run went green)</td><td>8</td><td>10</td><td>▼ -2</td><td>13.0</td></tr>
+        <tr><td>proven flakes (re-run went green)</td><td>10</td><td>12</td><td>▼ -2</td><td>13.5</td></tr>
         <tr><td>unrecognized</td><td>222</td><td>373</td><td>▼ -151</td><td>382.8</td></tr>
         <tr><td>quarantined (counted, never analyzed)</td><td>222</td><td>370</td><td>▼ -148</td><td>374.8</td></tr>
         <tr><td>awaiting analysis (<code>main</code>)</td><td>0</td><td>0</td><td>—</td><td>0.0</td></tr>
-        <tr><td>jobs run (outside the quarantine)</td><td>731</td><td>1615</td><td>▼ -884</td><td>1469.2</td></tr>
-        <tr><td>failure rate</td><td>2.1%</td><td>2.7%</td><td>▼ -0.6pp</td><td>2.8%</td></tr>
+        <tr><td>jobs run (outside the quarantine)</td><td>758</td><td>1615</td><td>▼ -857</td><td>1469.2</td></tr>
+        <tr><td>failure rate</td><td>2.0%</td><td>2.7%</td><td>▼ -0.7pp</td><td>2.8%</td></tr>
       </tbody>
     </table>
     <p>This week is still running, so its counts cover only part of it and read low against the full weeks beside them. Compare the failure rate instead.</p>
@@ -253,7 +253,7 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <h2 id="assessment">Assessment <a href="#assessment" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
-    <p>This week so far fails at the usual rate overall, 2.1% of 731 jobs against 2.7% last week and 2.8% over the four weeks before, but nearly all of it fell on one day. Saturday through Tuesday lost only the daily Dependabot scan, while Wednesday 10-07 failed 13 of 410 jobs, the most in a day since the 09-28 lockfile break. Six of those were Windows e2e jobs whose runner lost contact with GitHub, against five in the fourteen days before, and five of the six died 45 to 46 minutes into <code>yarn test:e2e</code>, past the slowest green run this week (40 minutes). This is the flake to root-cause, since RD2&#39;s Windows BATS jobs lost four runners on 10-05 and 10-06 too, a dead runner doesn&#39;t leave a log, and each lost job ran 49 to 66 minutes before GitHub gave up on it. Four more were connection timeouts from macOS runners, to www.electronjs.org at 16:35 UTC and to github.com at 17:13 and 17:14, on a day GitHub declared two Actions incidents; they don&#39;t need a fix, and the seven <code>main</code> push failures since 09-28 that were re-run today all passed. Separately, the Dependabot npm scan will keep failing daily until upstream releases the fix in yarnpkg/berry#7282 (for <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/7281" class="gh-ref" data-title="Kubernetes Error: unable to get local issuer certificate" data-state="open" data-type="issue">#7281</a>), so an <code>ignore</code> for @yarnpkg/core 4.9.2 and @yarnpkg/cli 4.18.1 in dependabot.yml would quiet it until then.</p>
+    <p>This week so far fails at the usual rate, 2.0% of 758 jobs against 2.7% last week and 2.8% over the four weeks before. Nearly all of it fell on Wednesday 10-07, which failed 13 jobs, while Saturday through Tuesday lost only the daily Dependabot scan, and that scan will keep failing until yarnpkg/berry#7282 ships. Six of Wednesday&#39;s failures were Windows e2e jobs whose runner lost contact with GitHub, and four of the six have since passed on a re-run of the same commit. A lost runner doesn&#39;t leave a log, and the losses look like a GitHub infrastructure problem, so re-running stays the fix. Four more were macOS jobs that timed out connecting to www.electronjs.org at 16:35 UTC and to github.com at 17:14 and 17:15, and all four passed on a re-run. <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11102" class="gh-ref" data-title="download: retry transient network failures" data-state="merged" data-type="pr">#11102</a>, merged Wednesday night, makes the download helper retry that connect timeout, but node-gyp fetches the Electron headers itself, so a connect timeout to www.electronjs.org can still fail a job.</p>
     </div>
     <hr>
     <h2 id="known-flakes">Known flakes <a href="#known-flakes" class="pilcrow">&#182;</a></h2>
@@ -263,16 +263,16 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
       <thead><tr><th>flake</th><th>jobs</th><th><code>main</code></th><th>prev wk</th><th>Δ</th><th>4-wk avg</th><th>fix</th><th>what it is</th></tr></thead>
       <tbody>
         <tr><td><code>dependabot-yarnpkg-core-got-patch-enoent</code></td><td>3</td><td>3</td><td>1</td><td>▲ +2</td><td>0.2</td><td>—</td><td>Dependabot&#39;s bumps to @yarnpkg/core 4.9.2 and to @yarnpkg/cli 4.18.1, which requires it, die with ENOENT on a <code>got</code> patch file that only Yarn&#39;s own repo has. Not a flake: the npm scan has failed every run since 2026-10-02. It opens its other PRs before it dies, so only these two bumps are blocked. Upstream fix: yarnpkg/berry#7282.</td></tr>
-        <tr><td><code>postinstall-fetch-aborted</code></td><td>3</td><td>3</td><td>6</td><td>▼ -3</td><td>3.0</td><td>—</td><td>A yarn postinstall download died in undici with no HTTP status. The widest flake RD1 has: 53 jobs over 27 branches, 22 of them proven by a green re-run of the same commit.</td></tr>
+        <tr><td><code>postinstall-fetch-aborted</code></td><td>3</td><td>3</td><td>6</td><td>▼ -3</td><td>3.0</td><td>PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11102" class="gh-ref" data-title="download: retry transient network failures" data-state="merged" data-type="pr">#11102</a></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s widest flake, seen in Package, Test, both e2e workflows and the nightly checks.</td></tr>
         <tr><td><code>jest-unawaited-resolves-vs-afterEach-cleanup</code></td><td>1</td><td>0</td><td>0</td><td>▲ +1</td><td>0.0</td><td>PR <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11101" class="gh-ref" data-title="Await async jest assertions and lint specs for floating promises" data-state="open" data-type="pr">#11101</a></td><td>an un-awaited <code>.resolves</code> assertion outlived its test and raced afterEach&#39;s temp-directory cleanup, so the helper saw ENOENT and returned the opposite boolean</td></tr>
-        <tr><td><code>node-gyp-electron-headers-download</code></td><td>1</td><td>0</td><td>0</td><td>▲ +1</td><td>0.2</td><td>—</td><td>node-gyp could not download the Electron headers while rebuilding native-reg, so yarn postinstall failed. DNS (ENOTFOUND) on 2026-06-04 and 2026-08-24, ETIMEDOUT on 2026-07-29, a connect timeout on 2026-10-07; macOS and Linux both.</td></tr>
+        <tr><td><code>node-gyp-electron-headers-download</code></td><td>1</td><td>0</td><td>0</td><td>▲ +1</td><td>0.2</td><td>—</td><td>node-gyp could not download the Electron headers while rebuilding native-reg, so yarn postinstall failed. The download has died on DNS (ENOTFOUND), ETIMEDOUT and connect timeouts, on macOS and Linux both.</td></tr>
         <tr><td><code>postinstall-install-timeout</code></td><td>1</td><td>0</td><td>0</td><td>▲ +1</td><td>0.0</td><td>—</td><td>yarn postinstall timed out after 10 minutes with dependencies still downloading or building; the log marks those <code>(started)</code>. Both jobs through 2026-10-07 passed on a re-run of the same commit.</td></tr>
       </tbody>
     </table>
     <p>Silent this period (fired in the previous 4 weeks): <code>dmgbuild-detach-busy</code>, <code>e2e-preferences-window-wait-timeout</code>, <code>e2e-suite-global-timeout-on-hung-teardown</code>, <code>electron-builder-download-5xx</code>, <code>github-artifact-upload-unreachable</code>, <code>github-ip-allow-list-403</code>, <code>go-proxy-module-fetch</code>, <code>guestagent-httptest-shared-transport-closed</code>, <code>postinstall-download-5xx</code>, <code>postinstall-rdctl-codegen-crash</code>, <code>win-signing-artifact-timeout</code>, <code>yarn-lockfile-immutable-drift</code>. For the rest, either the fix landed or the matcher rotted — check which.</p>
     </div>
     <hr>
-    <h2 id="proven-flakes-8">Proven flakes (8) <a href="#proven-flakes-8" class="pilcrow">&#182;</a></h2>
+    <h2 id="proven-flakes-10">Proven flakes (10) <a href="#proven-flakes-10" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-neutral">
     <p>These failed, and the identical job then passed on a re-run of the same commit. The code did not change, so the failure was never the developer&#39;s diff.</p>
@@ -280,12 +280,14 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
       <thead><tr><th>when</th><th>job</th><th>branch</th><th>job name</th><th>what failed</th><th>matcher</th><th>went green after</th></tr></thead>
       <tbody>
         <tr><td>Wed 07 09:53</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37603718214/job/112734103267">112734103267</a></td><td><code>dependabot/go_modules/src/go/wsl-helper/github.com/go-openapi/strfmt-0.27.3</code></td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><strong>none — write one</strong></td><td>5.7h</td></tr>
+        <tr><td>Wed 07 16:27</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37652114838/job/112897881395">112897881395</a></td><td><code>main</code></td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><strong>none — write one</strong></td><td>2.6h</td></tr>
         <tr><td>Wed 07 16:29</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37652402552/job/112898837303">112898837303</a></td><td><code>dependabot/npm_and_yarn/shell-quote-1.12.0</code></td><td><code>test</code></td><td>an un-awaited <code>.resolves</code> assertion outlived its test and raced after…</td><td><code>jest-unawaited-resolves-vs-afterEach-cleanup</code></td><td>0.6h</td></tr>
         <tr><td>Wed 07 16:29</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37652409644/job/112898993141">112898993141</a></td><td><code>dependabot/npm_and_yarn/shell-quote-1.12.0</code></td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><strong>none — write one</strong></td><td>0.1h</td></tr>
         <tr><td>Wed 07 16:30</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37652632911/job/112899732937">112899732937</a></td><td><code>dependabot/npm_and_yarn/http-cache-semantics-4.3.0</code></td><td><code>package (mac, x86_64, macos-15-intel)</code></td><td>node-gyp could not download the Electron headers while rebuilding nat…</td><td><code>node-gyp-electron-headers-download</code></td><td>0.6h</td></tr>
         <tr><td>Wed 07 17:10</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657037574/job/112914710029">112914710029</a></td><td><code>main</code></td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><strong>none — write one</strong></td><td>0.8h</td></tr>
-        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657080877/job/112914867640">112914867640</a></td><td><code>main</code></td><td><code>package (mac, x86_64, macos-15-intel)</code></td><td>A yarn postinstall download died in undici with no HTTP status. The w…</td><td><code>postinstall-fetch-aborted</code></td><td>1.6h</td></tr>
-        <tr><td>Wed 07 17:12</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657211157/job/112915250613">112915250613</a></td><td><code>main</code></td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. The w…</td><td><code>postinstall-fetch-aborted</code></td><td>1.6h</td></tr>
+        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657080877/job/112914867640">112914867640</a></td><td><code>main</code></td><td><code>package (mac, x86_64, macos-15-intel)</code></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s…</td><td><code>postinstall-fetch-aborted</code></td><td>1.6h</td></tr>
+        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657129648/job/112914967050">112914967050</a></td><td><code>main</code></td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s…</td><td><code>postinstall-fetch-aborted</code></td><td>2.7h</td></tr>
+        <tr><td>Wed 07 17:12</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657211157/job/112915250613">112915250613</a></td><td><code>main</code></td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s…</td><td><code>postinstall-fetch-aborted</code></td><td>1.6h</td></tr>
         <tr><td>Wed 07 17:23</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37658636291/job/112920276486">112920276486</a></td><td><code>await-async-jest-assertions</code></td><td><code>package (win, windows-latest)</code></td><td>yarn postinstall timed out after 10 minutes with dependencies still d…</td><td><code>postinstall-install-timeout</code></td><td>0.1h</td></tr>
       </tbody>
     </table>
@@ -321,7 +323,7 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
         <tr><td><strong>total failed</strong></td><td>422</td><td>462</td><td>394</td><td>396</td><td>413</td><td>237</td></tr>
       </tbody>
     </table>
-    <p>Every column but the last is a complete week, Saturday to Friday, numbered by the ISO week of its Monday. The last column is the week in progress, through Wed 2026-10-07 19:58Z, so its counts read low.</p>
+    <p>Every column but the last is a complete week, Saturday to Friday, numbered by the ISO week of its Monday. The last column is the week in progress, through Thu 2026-10-08 00:00Z, so its counts read low.</p>
     </div>
     <hr>
     <h2 id="failures-on-main-8-plus-222-quarantined">Failures on `main` (8, plus 222 quarantined) <a href="#failures-on-main-8-plus-222-quarantined" class="pilcrow">&#182;</a></h2>
@@ -333,11 +335,11 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
         <tr><td>Mon 05 09:51</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37292822685/job/111707024631">111707024631</a></td><td>Dependabot Updates</td><td><code>Dependabot</code></td><td>Dependabot&#39;s bumps to @yarnpkg/core 4.9.2 and to @yarnpkg/cli 4.18.1,…</td><td><code>dependabot-yarnpkg-core-got-patch-enoent</code></td></tr>
         <tr><td>Tue 06 09:52</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37445917652/job/112210590600">112210590600</a></td><td>Dependabot Updates</td><td><code>Dependabot</code></td><td>Dependabot&#39;s bumps to @yarnpkg/core 4.9.2 and to @yarnpkg/cli 4.18.1,…</td><td><code>dependabot-yarnpkg-core-got-patch-enoent</code></td></tr>
         <tr><td>Wed 07 09:51</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37603509202/job/112733338235">112733338235</a></td><td>Dependabot Updates</td><td><code>Dependabot</code></td><td>Dependabot&#39;s bumps to @yarnpkg/core 4.9.2 and to @yarnpkg/cli 4.18.1,…</td><td><code>dependabot-yarnpkg-core-got-patch-enoent</code></td></tr>
-        <tr><td>Wed 07 16:27</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37652114838/job/112897881395">112897881395</a></td><td>e2e tests on Windows</td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><em>no log</em></td></tr>
+        <tr><td>Wed 07 16:27</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37652114838/job/112897881395">112897881395</a></td><td>e2e tests on Windows</td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><strong>proven flake — needs matcher</strong></td></tr>
         <tr><td>Wed 07 17:10</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657037574/job/112914710029">112914710029</a></td><td>e2e tests on Windows</td><td><code>e2e-tests</code></td><td><em>log expired</em></td><td><strong>proven flake — needs matcher</strong></td></tr>
-        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657080877/job/112914867640">112914867640</a></td><td>Package</td><td><code>package (mac, x86_64, macos-15-intel)</code></td><td>A yarn postinstall download died in undici with no HTTP status. The w…</td><td><code>postinstall-fetch-aborted</code> ✓</td></tr>
-        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657129648/job/112914967050">112914967050</a></td><td>Test</td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. The w…</td><td><code>postinstall-fetch-aborted</code></td></tr>
-        <tr><td>Wed 07 17:12</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657211157/job/112915250613">112915250613</a></td><td>Test</td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. The w…</td><td><code>postinstall-fetch-aborted</code> ✓</td></tr>
+        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657080877/job/112914867640">112914867640</a></td><td>Package</td><td><code>package (mac, x86_64, macos-15-intel)</code></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s…</td><td><code>postinstall-fetch-aborted</code> ✓</td></tr>
+        <tr><td>Wed 07 17:11</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657129648/job/112914967050">112914967050</a></td><td>Test</td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s…</td><td><code>postinstall-fetch-aborted</code> ✓</td></tr>
+        <tr><td>Wed 07 17:12</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/actions/runs/37657211157/job/112915250613">112915250613</a></td><td>Test</td><td><code>lint (macos-latest)</code></td><td>A yarn postinstall download died in undici with no HTTP status. RD1&#39;s…</td><td><code>postinstall-fetch-aborted</code> ✓</td></tr>
       </tbody>
     </table>
     </div>
