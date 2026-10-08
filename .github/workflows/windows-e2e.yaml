@@ -24,8 +24,13 @@ jobs:
           persist-credentials: false
       - uses: $/.github/actions/setup-environment
       - uses: $/.github/actions/yarn-install
+      # When GitHub loses a job's runner, the job log is gone, and only the
+      # step left in progress shows where the runner died. A separate build
+      # step tells a death during the build from one during the tests.
+      - name: Build for e2e Tests
+        run: yarn test:e2e --build-only
       - name: Run e2e Tests
-        run: yarn test:e2e
+        run: yarn test:e2e --skip-build
         env:
           RD_DEBUG_ENABLED: '1'
       - name: Upload failure reports

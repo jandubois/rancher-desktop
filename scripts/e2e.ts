@@ -1,5 +1,6 @@
 /**
- * This script runs the end-to-end tests.
+ * This script runs the end-to-end tests. With `--build-only` it stops after
+ * the build; with `--skip-build` it tests the existing build.
  */
 
 'use strict';
@@ -120,13 +121,18 @@ class E2ETestRunner extends events.EventEmitter {
       }
       process.env.RD_TEST = process.env.npm_lifecycle_event || 'e2e'; // May include "screenshots"
 
-      // Start the renderer process and wait for it to complete the build.
-      await this.buildRenderer();
+      if (!process.argv.includes('--skip-build')) {
+        // Start the renderer process and wait for it to complete the build.
+        await this.buildRenderer();
 
-      await buildUtils.wait(
-        () => buildUtils.buildMain(),
-        () => buildUtils.buildPreload(),
-      );
+        await buildUtils.wait(
+          () => buildUtils.buildMain(),
+          () => buildUtils.buildPreload(),
+        );
+      }
+      if (process.argv.includes('--build-only')) {
+        return;
+      }
       await isCiOrDevelopmentTimeout();
       await this.startTestProcess();
     } finally {
@@ -161,7 +167,7 @@ function escapeUnescapedBackslashes(s: string): string {
 }
 
 /**
- * The first 2 args are internal for yarn/npm and shouldn't be passed to playwright. Same with `--serial`.
+ * The first 2 args are internal for yarn/npm and shouldn't be passed to playwright. Same with `--serial`, `--build-only` and `--skip-build`.
  * Now playwright treats paths as regexes, meaning that unescaped backslashes will normally be treated
  * as meta-regex-characters and will be unlikely to match files. This wasn't an issue in the NPM world,
  * because on Windows npm escaped each backslash: `.\e2e\foo.spec.ts` showed up as .\\e2e\\foo.spec.ts`.
@@ -181,7 +187,7 @@ function escapeUnescapedBackslashes(s: string): string {
  * @param args
  */
 function processArgsForPlaywright(args: string[]): string[] {
-  args = process.argv.slice(2).filter(x => x !== '--serial');
+  args = process.argv.slice(2).filter(x => !['--serial', '--build-only', '--skip-build'].includes(x));
   if (process.platform !== 'win32') {
     return args;
   }
