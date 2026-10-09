@@ -7,6 +7,10 @@ inputs:
     default: ''
     description: >-
       (Linux only) The user to use to set up `pass`
+  update-wsl:
+    default: 'true'
+    description: >-
+      (Windows only) Whether to update WSL to its latest release
 
 runs:
   using: composite
@@ -20,7 +24,7 @@ runs:
       | Stop-Service
 
   - name: "Windows: Update any pre-installed WSL"
-    if: runner.os == 'Windows'
+    if: runner.os == 'Windows' && inputs.update-wsl != 'false'
     shell: pwsh
     run: |
       # Sometimes this results in a HTTP 403 for some reason; in that case, we

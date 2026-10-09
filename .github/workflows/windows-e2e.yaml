@@ -1,7 +1,13 @@
 name: e2e tests on Windows
+run-name: e2e tests on Windows${{ github.event.inputs.update-wsl == 'false' && ' (no WSL update)' || '' }}
 
 on:
   workflow_dispatch:
+    inputs:
+      update-wsl:
+        description: Update WSL to its latest release
+        type: boolean
+        default: true
   push:
     branches-ignore:
     - 'dependabot/**'
@@ -23,16 +29,24 @@ jobs:
         with:
           persist-credentials: false
       - uses: $/.github/actions/setup-environment
+        with:
+          update-wsl: ${{ inputs.update-wsl }}
       - uses: $/.github/actions/yarn-install
       # When GitHub loses a job's runner, the job log is gone, and only the
       # step left in progress shows where the runner died. A separate build
       # step tells a death during the build from one during the tests.
       - name: Build for e2e Tests
         run: yarn test:e2e --build-only
+      # Lost runners go silent early in this step. Stop it before Playwright
+      # starts, since the tests would add only time and RD's own WSL work.
       - name: Run e2e Tests
-        run: yarn test:e2e --skip-build
+        run: yarn test:e2e --skip-build --skip-tests
         env:
           RD_DEBUG_ENABLED: '1'
+      # Keep the job running, so that a runner lost just after the shortened
+      # test step still fails the job.
+      - name: Hold the runner
+        run: Start-Sleep -Seconds 120
       - name: Upload failure reports
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()

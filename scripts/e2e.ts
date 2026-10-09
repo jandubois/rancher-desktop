@@ -1,6 +1,7 @@
 /**
  * This script runs the end-to-end tests. With `--build-only` it stops after
- * the build; with `--skip-build` it tests the existing build.
+ * the build; with `--skip-build` it tests the existing build; with
+ * `--skip-tests` it stops before starting Playwright.
  */
 
 'use strict';
@@ -134,6 +135,9 @@ class E2ETestRunner extends events.EventEmitter {
         return;
       }
       await isCiOrDevelopmentTimeout();
+      if (process.argv.includes('--skip-tests')) {
+        return;
+      }
       await this.startTestProcess();
     } finally {
       this.exit();
