@@ -1,0 +1,24 @@
+name: Lost runner clock
+
+on:
+  push:
+    branches:
+    - lost-runner-clock
+
+permissions: {}
+
+jobs:
+  cut-network:
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        minutes: [5, 15]
+    runs-on: windows-latest
+    steps:
+      # A shutdown lets the runner fail the job and report it. A network cut
+      # leaves GitHub hearing nothing, as with a lost runner.
+      - name: Cut the network after ${{ matrix.minutes }} minutes
+        run: |
+          Start-Sleep -Seconds (60 * ${{ matrix.minutes }})
+          Get-NetAdapter | Disable-NetAdapter -Confirm:$false
