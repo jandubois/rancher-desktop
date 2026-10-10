@@ -22,8 +22,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Start the resource sampler
-        run: Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile', '-File', '.github/lost-runner/sampler.ps1', "$env:RUNNER_TEMP\samples.tsv"
+      - name: Start the resource sampler and process tracer
+        run: |
+          Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile', '-File', '.github/lost-runner/sampler.ps1', "$env:RUNNER_TEMP\samples.tsv"
+          Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile', '-File', '.github/lost-runner/tracer.ps1', "$env:RUNNER_TEMP\starts.tsv"
       - uses: $/.github/actions/setup-environment
       - uses: $/.github/actions/yarn-install
       - name: Build for e2e Tests
@@ -39,7 +41,9 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: samples-e2e-${{ matrix.run }}
-          path: ${{ runner.temp }}/samples.tsv
+          path: |
+            ${{ runner.temp }}/samples.tsv
+            ${{ runner.temp }}/starts.tsv
 
   package:
     timeout-minutes: 60
@@ -56,9 +60,11 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Start the resource sampler
+      - name: Start the resource sampler and process tracer
         shell: powershell
-        run: Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile', '-File', '.github/lost-runner/sampler.ps1', "$env:RUNNER_TEMP\samples.tsv"
+        run: |
+          Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile', '-File', '.github/lost-runner/sampler.ps1', "$env:RUNNER_TEMP\samples.tsv"
+          Start-Process pwsh -WindowStyle Hidden -ArgumentList '-NoProfile', '-File', '.github/lost-runner/tracer.ps1', "$env:RUNNER_TEMP\starts.tsv"
       - uses: $/.github/actions/yarn-install
       - run: yarn build
       - name: Hold the runner
@@ -68,4 +74,6 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: samples-package-${{ matrix.run }}
-          path: ${{ runner.temp }}/samples.tsv
+          path: |
+            ${{ runner.temp }}/samples.tsv
+            ${{ runner.temp }}/starts.tsv

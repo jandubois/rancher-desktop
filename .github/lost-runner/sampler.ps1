@@ -1,5 +1,6 @@
-# Every ~2 s until the process is killed, append a line of resource counters
-# and the five largest processes to the TSV file named by the first argument.
+# Every ~2 s until the process is killed, append a line of resource counters,
+# the five largest processes, and the watched ones to the TSV file named by
+# the first argument.
 param([string]$Out)
 
 $counters = '\Processor(_Total)\% Processor Time', '\System\Processor Queue Length',
@@ -7,11 +8,14 @@ $counters = '\Processor(_Total)\% Processor Time', '\System\Processor Queue Leng
   '\Memory\Pages/sec', '\PhysicalDisk(_Total)\Avg. Disk Queue Length',
   '\Network Interface(*)\Bytes Total/sec'
 
+# The top five misses these unless they grow large, so track them by name.
+$watchedNames = '^(WindowsTerminal|OpenConsole|conhost|wsl.*|vmmem.*|msiexec)$'
+
 function Sum($samples, $pattern) {
   ($samples | Where-Object Path -like $pattern | Measure-Object CookedValue -Sum).Sum
 }
 
-"time`tcpu_pct`tcpu_queue`tavail_mb`tcommit_mb`tcommit_limit_mb`tpages_s`tdisk_queue`tnet_kb_s`tnode_count`tnode_private_mb`ttop5_ws_mb" |
+"time`tcpu_pct`tcpu_queue`tavail_mb`tcommit_mb`tcommit_limit_mb`tpages_s`tdisk_queue`tnet_kb_s`tnode_count`tnode_private_mb`ttop5_ws_mb`twatched" |
   Set-Content $Out
 while ($true) {
   try {
@@ -20,6 +24,8 @@ while ($true) {
     $node = @($procs | Where-Object ProcessName -eq 'node')
     $top = $procs | Sort-Object WorkingSet64 -Descending | Select-Object -First 5 |
       ForEach-Object { '{0}:{1}' -f $_.ProcessName, [int]($_.WorkingSet64 / 1MB) }
+    $watched = $procs | Where-Object ProcessName -match $watchedNames | Group-Object ProcessName |
+      ForEach-Object { '{0}:{1}:{2}' -f $_.Name, $_.Count, [int](($_.Group | Measure-Object WorkingSet64 -Sum).Sum / 1MB) }
     @(
       (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
       [int](Sum $s '*\% processor time')
@@ -33,6 +39,7 @@ while ($true) {
       $node.Count
       [int](($node | Measure-Object PrivateMemorySize64 -Sum).Sum / 1MB)
       $top -join ' '
+      $watched -join ' '
     ) -join "`t" | Add-Content $Out
   } catch {
     "$((Get-Date).ToUniversalTime().ToString('o'))`terror: $_" | Add-Content $Out
