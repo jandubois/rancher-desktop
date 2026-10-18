@@ -130,15 +130,20 @@ func chooseRelease(ctx context.Context, facts repoFacts) (*Release, error) {
 		return nil, fmt.Errorf("VERSION: %w", err)
 	}
 
-	finished, err := facts.TagInMain(ctx, version.Tag())
-	if err != nil {
-		return nil, err
-	}
-
 	refs, err := facts.Refs(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &Release{Version: version, Kind: refs.KindOf(version), Finished: finished}, nil
+	release := &Release{Version: version, Kind: refs.KindOf(version)}
+
+	// A release with no tag is unfinished, and GitHub answers a compare
+	// against a missing tag with 404.
+	if _, tagged := refs.Tags[version]; tagged {
+		if release.Finished, err = facts.TagInMain(ctx, version.Tag()); err != nil {
+			return nil, err
+		}
+	}
+
+	return release, nil
 }

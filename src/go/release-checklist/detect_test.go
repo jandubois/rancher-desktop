@@ -6,6 +6,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"strings"
 	"testing"
 )
@@ -28,7 +30,14 @@ func (f *fakeRepo) ReleaseState(_ context.Context, tag string) (ReleaseState, er
 	return ReleaseMissing, nil
 }
 
+// TagInMain answers as GitHub's compare does, which fails with 404 for a tag
+// the repository does not have.
 func (f *fakeRepo) TagInMain(_ context.Context, tag string) (bool, error) {
+	version, err := ParseVersion(tag)
+	if _, tagged := f.refs.Tags[version]; err != nil || !tagged {
+		return false, fmt.Errorf("comparing %s with main: gh: Not Found (HTTP 404)", tag)
+	}
+
 	return f.inMain[tag], nil
 }
 
@@ -175,6 +184,39 @@ func TestAVersionOverrideWhoseTagIsInMainIsFinished(t *testing.T) {
 
 	if release.Finished {
 		t.Error("a release whose tag is not in main is finished")
+	}
+}
+
+func TestAVersionOverrideWithNoTagIsUnfinished(t *testing.T) {
+	const (
+		url     = "https://github.com/rancher-sandbox/rancher-desktop.git"
+		compare = "gh api repos/rancher-sandbox/rancher-desktop/compare/v1.23.2...main --jq .behind_by"
+	)
+
+	captured, err := os.ReadFile("testdata/ls-remote.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	tools := &fakeTools{
+		output: map[string]string{
+			"git ls-remote " + url + " refs/heads/release-* refs/tags/v*": string(captured),
+		},
+		// GitHub's answer to a compare against a tag it does not have.
+		stderr: map[string]string{compare: "gh: Not Found (HTTP 404)"},
+	}
+	repo := &repository{repo: "rancher-sandbox/rancher-desktop", url: url, run: tools}
+
+	// The captured refs end the 1.23 line at v1.23.1.
+	t.Setenv("VERSION", "1.23.2")
+
+	release, err := chooseRelease(context.Background(), repo)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if release.Finished {
+		t.Error("a release with no tag is finished")
 	}
 }
 
