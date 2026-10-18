@@ -467,7 +467,8 @@ func (r *repository) MainHead(ctx context.Context) (*Commit, error) {
 // Fork is the repository the user's own branches go to, which a check reads
 // to find work that is pushed but not yet merged. A user with no fork gets
 // the repository itself, which is what a profile that already points at a
-// fork needs.
+// fork needs. A repository of the user's with the same name that is not a
+// fork of this one is an error.
 func (r *repository) Fork(ctx context.Context) (*repository, error) {
 	if r.fork != nil {
 		return r.fork, nil
@@ -495,8 +496,10 @@ func (r *repository) Fork(ctx context.Context) (*repository, error) {
 		if err != nil {
 			return nil, err
 		}
-	case err == nil, errors.As(err, &failure) && failure.missing():
+	case err == nil && strings.EqualFold(fork, r.repo), errors.As(err, &failure) && failure.missing():
 		r.fork = r
+	case err == nil:
+		return nil, fmt.Errorf("%s is not a fork of %s, and the checklist looks for your fork only under that name", fork, r.repo)
 	default:
 		return nil, fmt.Errorf("looking for your fork of %s: %w", r.repo, err)
 	}

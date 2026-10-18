@@ -276,6 +276,32 @@ func TestTheDocsActionsPushToTheForkAndLeaveTheCloneAlone(t *testing.T) {
 	}
 }
 
+func TestTheDocsActionsRefuseARepositoryThatIsNotTheFork(t *testing.T) {
+	s := newDocsSandbox(t)
+	run, tools := sandboxRun(t, s)
+	tools.output["gh api repos/"+testDocsFork+" --jq .parent.full_name"] = "someone/docs.rancherdesktop.io\n"
+	// The docs repository can be pushed to, has no release branch yet, and
+	// has a push URL, so only the fork lookup keeps the action from pushing
+	// there.
+	tools.output["gh api repos/"+testDocsRepo+" --jq .permissions.push"] = "true\n"
+	tools.stderr[headQuery(testDocsRepo, testBranch)] = "gh: Branch not found (HTTP 404)"
+	tools.output["git remote --verbose"] = strings.Replace(docsRemoteOutput,
+		"DISABLED", "https://github.com/"+testDocsRepo, 1)
+
+	operations, err := planDocsUtilities(context.Background(), run)
+	if err == nil {
+		err = perform(run, operations)
+	}
+
+	if err == nil {
+		t.Error("the action succeeded with no fork to push to")
+	}
+
+	if refs := s.git(t, s.upstream, "for-each-ref", "refs/heads/"+testBranch); refs != "" {
+		t.Errorf("the action pushed to the docs repository:\n%s", refs)
+	}
+}
+
 func TestADocsActionRetriesAfterAFailedCommit(t *testing.T) {
 	s := newDocsSandbox(t)
 	run, _ := sandboxRun(t, s)

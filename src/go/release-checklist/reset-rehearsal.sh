@@ -59,9 +59,9 @@ read_profile() {
 }
 
 # fork_of prints where the tool pushes a step's own branch, which is the user's
-# fork of a repository, or the repository itself when the user has none. A
-# repository of the user's with the same name that is not a fork of it is
-# never touched.
+# fork of a repository, or the repository itself when the user owns it or does
+# not have a fork. A repository of the user's with the same name that is not a
+# fork of it stops the reset, as it stops the tool.
 fork_of() {
     local candidate="$login/${1#*/}" parent
     if ! parent=$(gh api "repos/$candidate" --jq .parent.full_name 2>&1); then
@@ -69,10 +69,17 @@ fork_of() {
         echo "$1"
         return
     fi
-    if [[ $(lowercase "$parent") == $(lowercase "$1") ]]; then
+    parent=$(lowercase "${parent}")
+    local lowered_candidate
+    lowered_candidate=$(lowercase "${candidate}")
+    local lowered_repo
+    lowered_repo=$(lowercase "$1")
+    if [[ ${parent} == "${lowered_repo}" ]]; then
         echo "$candidate"
-    else
+    elif [[ ${lowered_candidate} == "${lowered_repo}" ]]; then
         echo "$1"
+    else
+        die "${candidate} is not a fork of $1, and the checklist looks for your fork only under that name."
     fi
 }
 

@@ -247,6 +247,20 @@ func TestOnlyAMissingForkMeansThereIsNoFork(t *testing.T) {
 	}
 }
 
+func TestARepositoryOfTheSameNameThatIsNotTheForkIsRefused(t *testing.T) {
+	run := &fakeTools{output: map[string]string{
+		"git remote --verbose":                                   remoteOutput,
+		"gh api user --jq .login":                                "me\n",
+		"gh api repos/me/rancher-desktop --jq .parent.full_name": "someone/rancher-desktop\n",
+	}}
+
+	repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", run)
+
+	if owner, _, err := repo.PushTarget(context.Background()); err == nil {
+		t.Errorf("a fork of someone else's fork made %q the push target", owner)
+	}
+}
+
 func TestReleaseStateReadsDraftPublishedAndMissing(t *testing.T) {
 	const view = "gh release view %s --repo rancher-sandbox/rancher-desktop --json " + releaseFields
 

@@ -39,9 +39,9 @@ trigger `isv:Rancher:dev`.
 
 Pick an organization for the rehearsal, called `<org>` below, and names for
 its two repositories that no repository in your own account has. The tool
-looks for your fork as `<your login>/<upstream name>`, and when a repository
-of yours by that name is not a fork of the upstream, it sends your branches to
-the upstream instead. The names below are examples.
+looks for your fork as `<your login>/<upstream name>`, and refuses to push
+your branches when a repository of yours by that name is not a fork of the
+upstream. The names below are examples.
 
 1. Create the organization on the free plan, and two empty public
    repositories in it, `<org>/rancher-desktop-rehearsal` and
