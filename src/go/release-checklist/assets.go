@@ -171,6 +171,25 @@ func planLinuxAssets(ctx context.Context, run *Run) ([]Operation, error) {
 	upload = append(upload, under(dir, missing)...)
 
 	operations := []Operation{
+		{
+			// gh refuses to unpack over a file that exists, so a zip that an
+			// earlier attempt left behind would fail every retry.
+			Description: "remove " + builtLinuxZip + " left by an earlier download",
+			Do: func(context.Context, *Run) error {
+				built, err := filepath.Glob(filepath.Join(dir, builtLinuxZip))
+				if err != nil {
+					return err
+				}
+
+				for _, path := range built {
+					if err := os.Remove(path); err != nil {
+						return err
+					}
+				}
+
+				return nil
+			},
+		},
 		command("", "gh", "run", "download", build.ID, "--repo", run.Repo.repo,
 			"--name", linuxArtifact, "--dir", dir),
 		{

@@ -28,11 +28,20 @@ type fakeTools struct {
 	// that ran more than once keeps every one, so a caller passing the right
 	// directory once covers for one passing the wrong one.
 	ranIn map[string][]string
+	// effects is what a command line does beside its answer, for a command
+	// whose result is a file, such as gh run download.
+	effects map[string]func() error
 }
 
 func (f *fakeTools) run(_ context.Context, name string, args ...string) ([]byte, error) {
 	line := strings.Join(append([]string{name}, args...), " ")
 	f.calls = append(f.calls, line)
+
+	if effect, ok := f.effects[line]; ok {
+		if err := effect(); err != nil {
+			return nil, err
+		}
+	}
 
 	if stderr, ok := f.stderr[line]; ok {
 		return nil, &commandFailure{Command: line, Stderr: stderr, Err: errExit}

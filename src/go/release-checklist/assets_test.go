@@ -9,6 +9,7 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -92,8 +93,8 @@ func inACacheOfItsOwn(t *testing.T) {
 	t.Setenv("LocalAppData", home)
 }
 
-// downloaded writes content to the release's download directory under the
-// name the build gives the Linux zip, as gh unpacks it from the package run.
+// downloaded makes the step's gh run download write content where gh unpacks
+// the Linux zip, under the name the build gives it.
 func downloaded(t *testing.T, run *Run, content []byte) {
 	t.Helper()
 
@@ -102,12 +103,18 @@ func downloaded(t *testing.T, run *Run, content []byte) {
 		t.Fatal(err)
 	}
 
-	if err := os.MkdirAll(dir, 0o755); err != nil {
-		t.Fatal(err)
+	tools := run.Tools.(*fakeTools)
+	if tools.effects == nil {
+		tools.effects = map[string]func() error{}
 	}
 
-	if err := os.WriteFile(filepath.Join(dir, "rancher-desktop-1.25.0-linux.zip"), content, 0o644); err != nil {
-		t.Fatal(err)
+	line := strings.Join([]string{"gh", "run", "download", testRunID, "--repo", testRepo, "--name", linuxArtifact, "--dir", dir}, " ")
+	tools.effects[line] = func() error {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return err
+		}
+
+		return os.WriteFile(filepath.Join(dir, "rancher-desktop-1.25.0-linux.zip"), content, 0o644)
 	}
 }
 
@@ -267,6 +274,63 @@ func TestTheLinuxAssetsGoFromTheTagsPackageRunToItsRelease(t *testing.T) {
 
 	if !slices.EqualFunc(planned, want, slices.Equal) {
 		t.Errorf("the step runs gh with\n%q\n\nwant\n%q", planned, want)
+	}
+}
+
+func TestARetryDownloadsOverAZipAnEarlierDownloadLeftHalfWritten(t *testing.T) {
+	inACacheOfItsOwn(t)
+
+	run := uploadRun(t,
+		draftWithAssets(t, stored(testZip)),
+		artifactsJSON(linuxArtifact, false))
+
+	operations, err := planLinuxAssets(context.Background(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	dir, err := downloadDir(run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	stale := filepath.Join(dir, "rancher-desktop-1.25.0-linux.zip")
+	if matched, _ := filepath.Match(builtLinuxZip, filepath.Base(stale)); !matched {
+		t.Fatalf("%s does not match %s", stale, builtLinuxZip)
+	}
+
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	if err := os.WriteFile(stale, []byte("half"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	ran := 0
+
+	for _, operation := range operations {
+		if operation.Command == "gh" && operation.Args[0] == "run" {
+			break
+		}
+
+		if operation.Do == nil {
+			t.Fatalf("%q runs a command before the download", operation.Description)
+		}
+
+		if err := operation.Do(context.Background(), run); err != nil {
+			t.Fatal(err)
+		}
+
+		ran++
+	}
+
+	if _, err := os.Stat(stale); !errors.Is(err, os.ErrNotExist) {
+		t.Errorf("%s is still there for gh to refuse to unpack over (%v)", stale, err)
+	}
+
+	if ran == 0 {
+		t.Error("nothing runs before the download")
 	}
 }
 
