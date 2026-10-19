@@ -581,3 +581,60 @@ func TestTheVersionBumpRetriesAfterAFailedPullRequest(t *testing.T) {
 		t.Errorf("the retry did not open the pull request; it ran\n%s", strings.Join(fake.calls, "\n"))
 	}
 }
+
+func TestAWorktreeStartsFromThePlannedCommitWhateverTheLastAttemptLeft(t *testing.T) {
+	s := newGitSandbox(t, sandboxUpstream, testRepo, func(seed string) {
+		if err := os.WriteFile(filepath.Join(seed, "file"), []byte("a\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	})
+
+	first := s.head
+	if err := os.WriteFile(filepath.Join(s.clone, "file"), []byte("b\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	s.git(t, s.clone, "commit", "--quiet", "--all", "--message", "second")
+	second := s.git(t, s.clone, "rev-parse", "HEAD")
+
+	run := &Run{Tools: &realGit{fake: &fakeTools{}, env: s.env}}
+	path := filepath.Join(t.TempDir(), "cache", "worktree")
+
+	checkOut := func(commit string) {
+		t.Helper()
+
+		if err := worktreeAt(t.Context(), run, s.clone, path, commit); err != nil {
+			t.Fatal(err)
+		}
+
+		if head := s.git(t, path, "rev-parse", "HEAD"); head != commit {
+			t.Errorf("the worktree is at %.7s, want %.7s", head, commit)
+		}
+	}
+
+	checkOut(first)
+
+	// A failed attempt leaves a new file and an edited one behind.
+	untracked := filepath.Join(path, "untracked")
+	for _, file := range []string{untracked, filepath.Join(path, "file")} {
+		if err := os.WriteFile(file, []byte("failed attempt\n"), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	checkOut(second)
+
+	if status := s.git(t, path, "status", "--porcelain"); status != "" {
+		t.Errorf("the reused worktree holds the failed attempt's changes:\n%s", status)
+	}
+
+	if _, err := os.Stat(untracked); !os.IsNotExist(err) {
+		t.Errorf("the failed attempt's untracked file survived: %v", err)
+	}
+
+	if err := os.RemoveAll(path); err != nil {
+		t.Fatal(err)
+	}
+
+	checkOut(first)
+}
