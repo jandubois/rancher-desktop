@@ -6,7 +6,6 @@ package main
 
 import (
 	"maps"
-	"os"
 	"path/filepath"
 	"reflect"
 	"strings"
@@ -190,21 +189,40 @@ func inAConfigOfItsOwn(t *testing.T) {
 
 func TestProfileRefusesANameThatDiffersFromProductionOnlyInCase(t *testing.T) {
 	inAConfigOfItsOwn(t)
+	writeProfile(t, "Production", "name: Production\ngithub:\n  repo: example-org/rancher-desktop-rehearsal\n")
 
-	dir, err := ProfileDir("Production")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if err := os.MkdirAll(dir, 0o700); err != nil {
-		t.Fatal(err)
-	}
-	yaml := "name: Production\ngithub:\n  repo: example-org/rancher-desktop-rehearsal\n"
-	if err := os.WriteFile(filepath.Join(dir, "profile.yaml"), []byte(yaml), 0o600); err != nil {
-		t.Fatal(err)
-	}
-
-	_, err = LoadProfile("Production")
+	_, err := LoadProfile("Production")
 	if err == nil || !strings.Contains(err.Error(), "only in case") {
 		t.Errorf("loading the profile %q gave %v", "Production", err)
+	}
+}
+
+func TestLoadProfileChecksTheProfileOnDisk(t *testing.T) {
+	const repo = "  repo: example-org/rancher-desktop-rehearsal\n"
+
+	for _, tc := range []struct {
+		yaml string
+		want string
+	}{
+		// The name matches and the repository passes the owner check, so only
+		// the reused OBS project can be refused.
+		{"name: rehearsal\ngithub:\n" + repo + "obs:\n  stableProject: isv:Rancher:stable\n", "obs.stableProject"},
+		{"name: other\ngithub:\n" + repo, `names the profile "other", not "rehearsal"`},
+		// A profile of its own loads, so the errors above come from the checks.
+		{"name: rehearsal\ngithub:\n" + repo, ""},
+	} {
+		inAConfigOfItsOwn(t)
+		writeProfile(t, "rehearsal", tc.yaml)
+
+		profile, err := LoadProfile("rehearsal")
+		if tc.want == "" {
+			if err != nil {
+				t.Errorf("a profile of its own gave %v", err)
+			} else if profile.Name != "rehearsal" || profile.GitHub.Repo != "example-org/rancher-desktop-rehearsal" {
+				t.Errorf("a profile of its own loaded as %+v", profile)
+			}
+		} else if err == nil || !strings.Contains(err.Error(), tc.want) {
+			t.Errorf("loading %q gave %v, want an error containing %s", tc.yaml, err, tc.want)
+		}
 	}
 }
