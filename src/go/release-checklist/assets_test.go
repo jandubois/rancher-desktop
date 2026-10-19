@@ -231,7 +231,7 @@ func TestLinuxAssetsWaitForSomewhereToUploadTo(t *testing.T) {
 	}
 }
 
-func TestUploadingSendsOnlyWhatTheReleaseIsMissing(t *testing.T) {
+func TestTheLinuxAssetsGoFromTheTagsPackageRunToItsRelease(t *testing.T) {
 	inACacheOfItsOwn(t)
 
 	run := uploadRun(t,
@@ -243,23 +243,30 @@ func TestUploadingSendsOnlyWhatTheReleaseIsMissing(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	var sent []string
+	dir, err := downloadDir(run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Without --repo gh picks the repository from the clone it runs in, and
+	// without --name and --dir it downloads every artifact into that clone.
+	want := [][]string{
+		{"run", "download", testRunID, "--repo", testRepo, "--name", linuxArtifact, "--dir", dir},
+		// The release already has the zip, and sending it again would upload
+		// the whole file for nothing.
+		{"release", "upload", "v1.25.0", "--repo", testRepo, filepath.Join(dir, testZip+checksumSuffix)},
+	}
+
+	var planned [][]string
 
 	for _, operation := range operations {
-		if operation.Command != "gh" || len(operation.Args) == 0 || operation.Args[0] != "release" {
-			continue
-		}
-
-		for _, argument := range operation.Args {
-			if strings.HasSuffix(argument, ".zip") || strings.HasSuffix(argument, checksumSuffix) {
-				sent = append(sent, filepath.Base(argument))
-			}
+		if operation.Command == "gh" {
+			planned = append(planned, operation.Args)
 		}
 	}
 
-	// Sending the zip again would upload the whole file for nothing.
-	if len(sent) != 1 || sent[0] != testZip+checksumSuffix {
-		t.Errorf("the upload sends %v, and the release lacks only the checksum", sent)
+	if !slices.EqualFunc(planned, want, slices.Equal) {
+		t.Errorf("the step runs gh with\n%q\n\nwant\n%q", planned, want)
 	}
 }
 
