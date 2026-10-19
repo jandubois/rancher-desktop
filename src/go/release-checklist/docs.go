@@ -574,12 +574,7 @@ func planDocsUtilities(ctx context.Context, run *Run) ([]Operation, error) {
 
 	operations := []Operation{
 		command(clone, "git", "fetch", change.repo.url, change.ref),
-		{
-			Description: fmt.Sprintf("check %.7s of %s out in %s", change.head, change.ref, dir),
-			Do: func(ctx context.Context, run *Run) error {
-				return worktreeAt(ctx, run, clone, dir, change.head)
-			},
-		},
+		checkOutWorktree(clone, dir, change.ref, change.head),
 		{
 			Description: fmt.Sprintf("write %s, listing the %d utilities %s bundles",
 				versionFilePath(version), len(change.bundled), version),

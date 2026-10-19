@@ -247,12 +247,7 @@ func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
 
 	return []Operation{
 		command("", "git", "fetch", run.Repo.url, branch),
-		{
-			Description: fmt.Sprintf("check %.7s out in %s", head, dir),
-			Do: func(ctx context.Context, run *Run) error {
-				return worktreeAt(ctx, run, "", dir, head)
-			},
-		},
+		checkOutWorktree("", dir, branch, head),
 		{
 			Description: "set the version in package.json to " + run.Release.Version.String(),
 			Do: func(context.Context, *Run) error {

@@ -461,7 +461,7 @@ func TestTheDocsActionCutsFromMainAndPushesToTheFork(t *testing.T) {
 
 	want := []string{
 		"git fetch https://github.com/" + testDocsRepo + " " + defaultBranch,
-		"check 1234abc of " + defaultBranch + " out in " + dir,
+		"check 1234abc of " + defaultBranch + " out in " + dir + ", resetting any earlier attempt",
 		"write " + docsVersionDir + "/v1.25.0.md, listing the 13 utilities 1.25.0 bundles",
 		"drop " + docsVersionDir + "/v1.22.0.md, so the page lists 3 releases",
 		"list v1.25.0, v1.24.0, and v1.23.0 in " + docsReferencePage,

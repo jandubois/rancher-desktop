@@ -40,6 +40,18 @@ func worktreePath(run *Run, name string) (string, error) {
 	return filepath.Join(cache, name), nil
 }
 
+// checkOutWorktree plans checking a commit of a ref out with worktreeAt. Its
+// description warns that an existing worktree loses an earlier attempt's
+// changes and untracked files.
+func checkOutWorktree(clone, path, ref, commit string) Operation {
+	return Operation{
+		Description: fmt.Sprintf("check %.7s of %s out in %s, resetting any earlier attempt", commit, ref, path),
+		Do: func(ctx context.Context, run *Run) error {
+			return worktreeAt(ctx, run, clone, path, commit)
+		},
+	}
+}
+
 // worktreeAt checks a commit of a clone out at a path under the release's
 // cache directory. The clone never changes branch, so a failed action cannot
 // leave it on a bump branch. An empty clone is the one the tool runs in.

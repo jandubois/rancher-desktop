@@ -287,12 +287,7 @@ func planDocsReference(ctx context.Context, run *Run) ([]Operation, error) {
 
 	return []Operation{
 		command(clone, "git", "fetch", docs.url, ref),
-		{
-			Description: fmt.Sprintf("check %.7s of %s out in %s", head, ref, dir),
-			Do: func(ctx context.Context, run *Run) error {
-				return worktreeAt(ctx, run, clone, dir, head)
-			},
-		},
+		checkOutWorktree(clone, dir, ref, head),
 		command(dir, filepath.Join(dir, rdctlReferenceScript), version.String()),
 		{
 			Description: fmt.Sprintf("restore %s in %s, which report this machine",
