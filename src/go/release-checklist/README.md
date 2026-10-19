@@ -266,7 +266,7 @@ Write the notes in release-notes.md at the top of your clone, then put them into
 
 Start from the previous release's notes, which `gh release view <previous tag> --repo {repo}` prints, and keep the same sections: the installer links for {version}, the new contributors, what changed for the user, the bundled utilities that moved, and the compare link. Write what a user sees and leave internal work out.
 
-Press `f` to write this release's facts out as sections to paste. nerdctl and containerd are not among them, because they ship in the guest ISO rather than in dependencies.yaml.
+Press `f` to write this release's facts out as sections to paste. containerd is not among them, because the notes leave it out.
 
 The file is untracked and nothing ignores it, so keep it out of your commits. Press `m` once the notes on the release are the ones to ship.
 

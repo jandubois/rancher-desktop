@@ -268,12 +268,12 @@ func bundledVersions(ctx context.Context, run *Run) (map[string]string, error) {
 		return nil, err
 	}
 
-	versions, err := dependencyVersions(dependencies)
+	versions, err := pinnedVersions(ctx, run, dependencies)
 	if err != nil {
 		return nil, err
 	}
 
-	bundled := make(map[string]string, len(bundledUtilities)+1)
+	bundled := make(map[string]string, len(bundledUtilities))
 
 	// Skipping a utility that dependencies.yaml lacks would take it out of
 	// the version file and blame the documentation for listing it.
@@ -286,13 +286,6 @@ func bundledVersions(ctx context.Context, run *Run) (map[string]string, error) {
 
 		bundled[utility.name] = version
 	}
-
-	nerdctl, err := nerdctlVersion(ctx, run, dependencies)
-	if err != nil {
-		return nil, err
-	}
-
-	bundled["nerdctl"] = nerdctl
 
 	return bundled, nil
 }

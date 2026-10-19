@@ -15,15 +15,24 @@ import (
 
 // dependenciesYAML is dependencies.yaml cut to the shapes that matter: a
 // version under a name, a quoted one, a tool no user reads the version of,
-// and the guest ISO, whose version is a mapping rather than a string.
+// and the guest ISO, whose version is a mapping rather than a string. Both
+// guest images have a release URL, which names the repository and tag that
+// their nerdctl pin is read from.
 const dependenciesYAML = `ECRCredentialHelper:
   assets:
     - platform: linux
       url: https://example.invalid/0.12.0/docker-credential-ecr-login
   version: 0.12.0
 WSLDistro:
+  assets:
+    - platform: wsl
+      url: https://github.com/rancher-sandbox/rancher-desktop-wsl-distro/releases/download/v0.99/distro-0.99.tar
   version: "0.99"
 alpineLimaISO:
+  assets:
+    - arch: amd64
+      platform: linux
+      url: https://github.com/rancher-sandbox/alpine-lima/releases/download/v0.2.47.rd9/alpine-lima-rd-3.24.1-x86_64.iso
   version:
     alpineVersion: 3.24.1
     isoVersion: 0.2.47.rd9
@@ -38,11 +47,14 @@ kuberlr:
 `
 
 // bumpedDependencies is the same file after a release bumped two of the
-// tools and the version of Electron the build uses.
+// tools, the version of Electron the build uses, and both guest images, whose
+// new releases pin a newer nerdctl.
 var bumpedDependencies = strings.NewReplacer(
 	"version: 29.5.3", "version: 29.6.2",
 	"version: 4.2.1", "version: 4.2.3",
 	"version: 42.3.3", "version: 43.1.1",
+	"0.99", "0.100",
+	"0.2.47.rd9", "0.2.48.rd9",
 ).Replace(dependenciesYAML)
 
 // generatedNotes is GitHub's drafted body, cut to the two shapes the parser
@@ -85,8 +97,8 @@ func TestAVersionThatIsNotOneIsLeftOut(t *testing.T) {
 }
 
 func TestTheUtilitiesComeOutInTheOrderTheNotesUse(t *testing.T) {
-	before := map[string]string{"helm": "4.2.1", "dockerCLI": "29.5.3", "trivy": "0.71.1", "kuberlr": "0.7.0"}
-	after := map[string]string{"helm": "4.2.3", "dockerCLI": "29.6.2", "trivy": "0.71.1", "kuberlr": "0.7.0"}
+	before := map[string]string{"helm": "4.2.1", "dockerCLI": "29.5.3", "trivy": "0.71.1", "kuberlr": "0.7.0", "nerdctl": "2.2.2"}
+	after := map[string]string{"helm": "4.2.3", "dockerCLI": "29.6.2", "trivy": "0.71.1", "kuberlr": "0.7.0", "nerdctl": "2.2.2"}
 
 	moved, same := utilityChanges(before, after)
 
@@ -94,7 +106,7 @@ func TestTheUtilitiesComeOutInTheOrderTheNotesUse(t *testing.T) {
 		t.Errorf("the tools that moved came out as %q, not %q", moved, want)
 	}
 
-	if want := []string{"* kuberlr `0.7.0`", "* trivy `0.71.1`"}; !slices.Equal(same, want) {
+	if want := []string{"* kuberlr `0.7.0`", "* nerdctl `2.2.2`", "* trivy `0.71.1`"}; !slices.Equal(same, want) {
 		t.Errorf("the tools that stayed came out as %q, not %q", same, want)
 	}
 }
@@ -172,6 +184,10 @@ func factsAnswers() map[string]string {
 			"&per_page=1 --jq length": "0\n",
 		"gh api --paginate repos/" + testRepo + "/milestones?state=all&per_page=100 " +
 			"--jq .[] | select(.title == \"1.25\") | .number": "61\n",
+		fileQuery("rancher-sandbox/alpine-lima", "v0.2.47.rd9", "Makefile"):               limaMakefile,
+		fileQuery("rancher-sandbox/rancher-desktop-wsl-distro", "v0.99", "versions.env"):  wslVersions,
+		fileQuery("rancher-sandbox/alpine-lima", "v0.2.48.rd9", "Makefile"):               strings.ReplaceAll(limaMakefile, "2.2.2", "2.2.3"),
+		fileQuery("rancher-sandbox/rancher-desktop-wsl-distro", "v0.100", "versions.env"): strings.ReplaceAll(wslVersions, "2.2.2", "2.2.3"),
 	}
 }
 
@@ -203,6 +219,7 @@ func TestTheNotesFactsArePastedStraightIntoTheNotes(t *testing.T) {
 		"## Updates to Bundled Utilities (from Rancher Desktop 1.24.0)",
 		"* docker `29.5.3` → `29.6.2`",
 		"* helm `4.2.1` → `4.2.3`",
+		"* nerdctl `2.2.2` → `2.2.3`",
 		"Unchanged:\n* kuberlr `0.7.0`",
 		"Thank you to our new contributor: @newcomer!",
 		"compare/v1.24.0...v1.25.0",

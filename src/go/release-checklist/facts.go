@@ -22,14 +22,15 @@ const factsFile = "release-notes-facts.md"
 const dependenciesFile = "pkg/rancher-desktop/assets/dependencies.yaml"
 
 // bundledUtility is a tool the release notes name. The key is its entry in
-// dependencies.yaml and the name is what a user calls it, and the two differ
-// for most of them.
+// dependencies.yaml (nerdctlKey for nerdctl), and the name is what a user
+// calls it. The two differ for most of them.
 type bundledUtility struct{ key, name string }
 
 // bundledUtilities are the tools the notes list, in the order the notes list
-// them. Everything else in dependencies.yaml builds Rancher Desktop rather
-// than shipping inside it, so no user reads its version. nerdctl and
-// containerd come from the guest ISO, so they are not here.
+// them. The notes leave out the rest of dependencies.yaml, such as
+// golangci-lint, which builds Rancher Desktop, and Electron, Lima and the
+// guest images, which it runs on. containerd ships in the guest images, but
+// the notes leave it out too.
 var bundledUtilities = []bundledUtility{
 	{"dockerCLI", "docker"},
 	{"dockerCompose", "docker-compose"},
@@ -37,6 +38,7 @@ var bundledUtilities = []bundledUtility{
 	{"dockerProvidedCredentialHelpers", "docker-credential-helpers"},
 	{"helm", "helm"},
 	{"kuberlr", "kuberlr"},
+	{nerdctlKey, "nerdctl"},
 	{"trivy", "trivy"},
 	{"ECRCredentialHelper", "amazon-ecr-credential-helper"},
 	{"spinCLI", "spin"},
@@ -44,6 +46,11 @@ var bundledUtilities = []bundledUtility{
 	{"spinOperator", "spin-operator"},
 	{"certManager", "cert-manager"},
 }
+
+// nerdctlKey is nerdctl's key in the versions that pinnedVersions returns. No
+// dependencies.yaml entry has this key, because nerdctl ships in the guest
+// images, whose repositories pin its version.
+const nerdctlKey = "nerdctl"
 
 // firstContribution reads a line of GitHub's New Contributors list.
 var firstContribution = regexp.MustCompile(`^\* @(\S+) made their first contribution in (\S+)`)
@@ -81,6 +88,24 @@ func dependencyVersions(content []byte) (map[string]string, error) {
 			versions[name] = entry.Version.Value
 		}
 	}
+
+	return versions, nil
+}
+
+// pinnedVersions is the version of each tool in a dependencies.yaml, by key,
+// plus nerdctl's, read from the pins of the guest images that the file names.
+func pinnedVersions(ctx context.Context, run *Run, content []byte) (map[string]string, error) {
+	versions, err := dependencyVersions(content)
+	if err != nil {
+		return nil, err
+	}
+
+	nerdctl, err := nerdctlVersion(ctx, run, content)
+	if err != nil {
+		return nil, err
+	}
+
+	versions[nerdctlKey] = nerdctl
 
 	return versions, nil
 }
@@ -231,8 +256,8 @@ func gatherNotesFacts(ctx context.Context, run *Run) (string, error) {
 		"# Release notes facts for " + version.String(),
 		fmt.Sprintf("Read from %s on %s, comparing %s with %s.",
 			run.Repo.repo, time.Now().Local().Format(time.DateOnly), previous.Tag(), branch),
-		"nerdctl and containerd ship in the guest ISO, so neither version is " +
-			"here; containerd's is readable only from a running VM. The CVEs a " +
+		"containerd is not here, because the notes leave it out and its " +
+			"version is readable only from a running VM. The CVEs a " +
 			"bump fixes take judgment, so they are not here either.",
 		utilities,
 		contributorSection(named, previous),
@@ -250,7 +275,7 @@ func utilitySection(ctx context.Context, run *Run, previous Version, branch stri
 		return "", err
 	}
 
-	before, err := dependencyVersions(was)
+	before, err := pinnedVersions(ctx, run, was)
 	if err != nil {
 		return "", err
 	}
@@ -260,7 +285,7 @@ func utilitySection(ctx context.Context, run *Run, previous Version, branch stri
 		return "", err
 	}
 
-	after, err := dependencyVersions(is)
+	after, err := pinnedVersions(ctx, run, is)
 	if err != nil {
 		return "", err
 	}

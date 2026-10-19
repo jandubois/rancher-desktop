@@ -382,8 +382,7 @@ var releaseNotes = &Step{
 			"changed for the user, the bundled utilities that moved, and the compare " +
 			"link. Write what a user sees and leave internal work out.\n\n" +
 			"Press `f` to write this release's facts out as sections to paste. " +
-			"nerdctl and containerd are not among them, because they ship in the " +
-			"guest ISO rather than in dependencies.yaml.\n\n" +
+			"containerd is not among them, because the notes leave it out.\n\n" +
 			"The file is untracked and nothing ignores it, so keep it out of your " +
 			"commits. Press `m` once the notes on the release are the ones to ship.",
 	},
