@@ -83,8 +83,16 @@ type gitSandbox struct {
 func (s *gitSandbox) git(t *testing.T, dir string, args ...string) string {
 	t.Helper()
 
+	return runGit(t, dir, s.env, args...)
+}
+
+// runGit runs git in dir and returns its trimmed output. A nil env passes on
+// this process's environment.
+func runGit(t *testing.T, dir string, env []string, args ...string) string {
+	t.Helper()
+
 	cmd := exec.CommandContext(t.Context(), "git", args...)
-	cmd.Dir, cmd.Env = dir, s.env
+	cmd.Dir, cmd.Env = dir, env
 
 	out, err := cmd.CombinedOutput()
 	if err != nil {
