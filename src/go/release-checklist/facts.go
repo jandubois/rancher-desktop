@@ -153,11 +153,11 @@ func utilityChanges(before, after map[string]string) (moved, same []string) {
 		case !has:
 			moved = append(moved, fmt.Sprintf("* %s is gone from %s", utility.name, dependenciesFile))
 		case !had:
-			moved = append(moved, fmt.Sprintf("* %s `%s` is new", utility.name, now))
+			moved = append(moved, fmt.Sprintf("* %s %s is new", utility.name, codeSpan(now)))
 		case was != now:
-			moved = append(moved, fmt.Sprintf("* %s `%s` → `%s`", utility.name, was, now))
+			moved = append(moved, fmt.Sprintf("* %s %s → %s", utility.name, codeSpan(was), codeSpan(now)))
 		default:
-			same = append(same, fmt.Sprintf("* %s `%s`", utility.name, now))
+			same = append(same, fmt.Sprintf("* %s %s", utility.name, codeSpan(now)))
 		}
 	}
 
@@ -387,6 +387,9 @@ func milestoneTitle(release *Release) string {
 
 	return release.Version.String()
 }
+
+// codeSpan marks text as code in Markdown.
+func codeSpan(text string) string { return "`" + text + "`" }
 
 // nameList joins names the way a sentence does.
 func nameList(names []string) string {
