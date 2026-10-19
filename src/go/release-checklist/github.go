@@ -458,6 +458,13 @@ func (r *repository) MainHead(ctx context.Context) (*Commit, error) {
 	}
 
 	head := answer.Commit
+
+	// The release branch push uses this SHA as its source, and git reads an
+	// empty source as a request to delete the branch.
+	if head.SHA == "" {
+		return nil, fmt.Errorf("reading the head of %s in %s: the answer does not name a commit", defaultBranch, r.repo)
+	}
+
 	subject, _, _ := strings.Cut(head.Commit.Message, "\n")
 	r.mainHead = &Commit{SHA: head.SHA, Subject: subject, Date: head.Commit.Committer.Date}
 

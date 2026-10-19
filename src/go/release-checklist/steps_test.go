@@ -176,6 +176,18 @@ func TestReleaseBranchStartsAtTheCommitTheConfirmationShows(t *testing.T) {
 	}
 }
 
+func TestReleaseBranchRefusesAMainHeadWithNoCommit(t *testing.T) {
+	tools := &fakeTools{output: map[string]string{
+		"gh api repos/" + testRepo + "/branches/main": `{"name":"main","commit":{}}`,
+	}}
+	run := checklistRun(t, testRelease, map[Line]string{}, tools)
+
+	// An empty source turns the push into a delete of the release branch.
+	if ops, err := planReleaseBranch(context.Background(), run); err == nil || ops != nil {
+		t.Errorf("a main head with no commit planned %v, error %v", ops, err)
+	}
+}
+
 // bumpAnswers is what the tools answer for the 1.24.1 bump while package.json
 // on the release branch still says 1.24.0. pr is what the pull request lookup
 // prints.
