@@ -548,6 +548,10 @@ func TestRestoreHostSettingsRefusesAFieldTheGenerationDropped(t *testing.T) {
 	if !strings.Contains(err.Error(), "virtualMachine.memoryInGB") {
 		t.Errorf("the failure did not name the field: %v", err)
 	}
+
+	if !strings.Contains(err.Error(), "hostSettings") {
+		t.Errorf("the failure did not point at the tool's hostSettings: %v", err)
+	}
 }
 
 func TestNormalizeReferenceReadsThePageAtTheCheckedOutCommit(t *testing.T) {

@@ -387,7 +387,8 @@ func restoreHostSettings(was, now []byte) ([]byte, error) {
 		switch {
 		case !reported && shown:
 			return nil, fmt.Errorf("the regenerated %s shows no %s, though the page it replaces does; "+
-				"read what the script wrote under %s", rdctlReferencePage, field, listSettingsCommand)
+				"read what the script wrote under %s; if Rancher Desktop removed %s, take it out of the tool's hostSettings",
+				rdctlReferencePage, field, listSettingsCommand, field)
 		case !reported:
 			continue
 		case !shown:
