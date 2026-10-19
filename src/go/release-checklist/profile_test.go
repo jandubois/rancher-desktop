@@ -5,11 +5,62 @@
 package main
 
 import (
+	"maps"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 )
+
+// filledProfile walks Profile by reflection, gives every resource field a
+// value of its own, and returns those values keyed by the path that
+// Resources() uses for each. A field added to Profile reaches this walk even
+// when Resources() forgets it.
+func filledProfile(t *testing.T) (*Profile, map[string]string) {
+	t.Helper()
+
+	profile := &Profile{Name: "filled"}
+	values := map[string]string{}
+
+	var walk func(v reflect.Value, prefix string)
+	walk = func(v reflect.Value, prefix string) {
+		for i := range v.NumField() {
+			field := v.Type().Field(i)
+			path := prefix + field.Tag.Get("yaml")
+			if path == "name" {
+				continue
+			}
+
+			value := v.Field(i)
+			if value.Kind() == reflect.Pointer && value.Type().Elem().Kind() == reflect.Struct {
+				value.Set(reflect.New(value.Type().Elem()))
+				value = value.Elem()
+			}
+
+			switch value.Kind() {
+			case reflect.String:
+				value.SetString("value-of-" + path)
+				values[path] = value.String()
+			case reflect.Struct:
+				walk(value, path+".")
+			default:
+				t.Fatalf("Profile field %s is a %s; teach both this walk and Resources() about it", path, value.Kind())
+			}
+		}
+	}
+	walk(reflect.ValueOf(profile).Elem(), "")
+
+	return profile, values
+}
+
+func TestResourcesNamesEveryProfileField(t *testing.T) {
+	profile, want := filledProfile(t)
+
+	if got := profile.Resources(); !maps.Equal(got, want) {
+		t.Errorf("Resources() gave %v, want %v", got, want)
+	}
+}
 
 func TestProductionProfileNamesTheRealResources(t *testing.T) {
 	profile, err := LoadProfile(productionName)
@@ -17,12 +68,10 @@ func TestProductionProfileNamesTheRealResources(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	_, fields := filledProfile(t)
+
 	resources := profile.Resources()
-	for _, field := range []string{
-		"github.repo", "github.docsRepo", "docs.site",
-		"obs.devProject", "obs.stableProject",
-		"screenshots.bucket", "responder.url",
-	} {
+	for field := range fields {
 		if resources[field] == "" {
 			t.Errorf("the production profile names no %s", field)
 		}
@@ -42,29 +91,36 @@ func TestProfileRefusesToReuseAProductionResource(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// A fork profile that changed the repositories but forgot the OBS
-	// project would publish into the real one.
-	fork, err := parseProfile([]byte(""+
-		"name: fork\n"+
-		"github:\n"+
-		"  repo: me/rancher-desktop\n"+
-		"  docsRepo: me/docs.rancherdesktop.io\n"+
-		"obs:\n"+
-		"  devProject: home:me:rd-release-dev\n"+
-		"  stableProject: isv:Rancher:stable\n"), "test")
-	if err != nil {
-		t.Fatal(err)
-	}
+	for _, tc := range []struct {
+		obs   string
+		field string
+	}{
+		// A fork profile that changed the repositories but forgot the OBS
+		// project would publish into the real one.
+		{"  devProject: home:me:rd-release-dev\n  stableProject: isv:Rancher:stable\n", "obs.stableProject"},
+		// Production's stable project is just as real under another field.
+		{"  devProject: isv:Rancher:stable\n  stableProject: home:me:rd-release-stable\n", "obs.devProject"},
+		// A fork with OBS projects of its own passes.
+		{"  devProject: home:me:rd-release-dev\n  stableProject: home:me:rd-release-stable\n", ""},
+	} {
+		fork, err := parseProfile([]byte(""+
+			"name: fork\n"+
+			"github:\n"+
+			"  repo: me/rancher-desktop\n"+
+			"  docsRepo: me/docs.rancherdesktop.io\n"+
+			"obs:\n"+tc.obs), "test")
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	err = fork.RefuseProductionResources(production)
-	if err == nil || !strings.Contains(err.Error(), "obs.stableProject") {
-		t.Errorf("reusing the production project gave %v", err)
-	}
-
-	fork.OBS.StableProject = "home:me:rd-release-stable"
-
-	if err := fork.RefuseProductionResources(production); err != nil {
-		t.Errorf("a fork of its own gave %v", err)
+		err = fork.RefuseProductionResources(production)
+		if tc.field == "" {
+			if err != nil {
+				t.Errorf("a fork of its own gave %v", err)
+			}
+		} else if err == nil || !strings.Contains(err.Error(), tc.field) {
+			t.Errorf("reusing the production project as %s gave %v", tc.field, err)
+		}
 	}
 }
 
