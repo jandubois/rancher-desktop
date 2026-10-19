@@ -73,6 +73,10 @@ func LoadProfile(name string) (*Profile, error) {
 		return parseProfile(productionYAML, "the built-in production profile")
 	}
 
+	if strings.EqualFold(name, productionName) {
+		return nil, fmt.Errorf("profile %q differs from %q only in case, so the two would share directories on a file system that ignores case", name, productionName)
+	}
+
 	dir, err := ProfileDir(name)
 	if err != nil {
 		return nil, err

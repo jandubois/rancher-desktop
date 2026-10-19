@@ -5,6 +5,8 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -116,5 +118,37 @@ func TestProfileRefusesEveryRepositoryOfProductionsOwner(t *testing.T) {
 		if err == nil || !strings.Contains(err.Error(), field) {
 			t.Errorf("a rancher-sandbox repository as %s gave %v", field, err)
 		}
+	}
+}
+
+// inAConfigOfItsOwn points the user's config directory at a temporary one,
+// on every platform.
+func inAConfigOfItsOwn(t *testing.T) {
+	t.Helper()
+
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+	t.Setenv("XDG_CONFIG_HOME", filepath.Join(home, ".config"))
+	t.Setenv("AppData", home)
+}
+
+func TestProfileRefusesANameThatDiffersFromProductionOnlyInCase(t *testing.T) {
+	inAConfigOfItsOwn(t)
+
+	dir, err := ProfileDir("Production")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	yaml := "name: Production\ngithub:\n  repo: example-org/rancher-desktop-rehearsal\n"
+	if err := os.WriteFile(filepath.Join(dir, "profile.yaml"), []byte(yaml), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = LoadProfile("Production")
+	if err == nil || !strings.Contains(err.Error(), "only in case") {
+		t.Errorf("loading the profile %q gave %v", "Production", err)
 	}
 }
