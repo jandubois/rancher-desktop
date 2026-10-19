@@ -24,9 +24,13 @@ const (
 	gutter = 2
 	// labelWidth lines the detail pane's values up in one column.
 	labelWidth = 12
-	// detailPaneLines is how many screen lines of a step's detail the pane
-	// shows, so a long error cannot push the list off the screen.
+	// detailPaneLines is how many screen lines of a step's state entry the
+	// pane shows, so a long error cannot push the list off the screen.
 	detailPaneLines = 8
+	// paneHeight is the fewest lines that the whole detail pane takes, padded
+	// with blank lines, so the rule above it stays put as the selection moves.
+	// TestTheRuleUnderTheListStaysPut fails when a step's pane outgrows it.
+	paneHeight = 12
 	// clock is the time of the last refresh, which is all the reader needs
 	// to tell a fresh checklist from one left on screen over lunch.
 	clock = "15:04"
@@ -385,7 +389,12 @@ func (d *dashboard) View() string {
 
 	above := []string{d.header(), rule}
 
-	below := append([]string{rule}, d.detail()...)
+	pane := d.detail()
+	for len(pane) < paneHeight {
+		pane = append(pane, "")
+	}
+
+	below := append([]string{rule}, pane...)
 	below = append(below, "")
 	below = append(below, d.footerLines()...)
 	below = append(below, d.noticeLines()...)

@@ -530,6 +530,39 @@ func TestAMultiLineDetailKeepsTheDashboardOnItsScreen(t *testing.T) {
 	}
 }
 
+// TestTheRuleUnderTheListStaysPut walks every step, so a step whose pane
+// outgrows paneHeight fails here rather than making the screen jump.
+func TestTheRuleUnderTheListStaysPut(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+	first := -1
+
+	for _, step := range checklist {
+		selectStep(t, dash, step.ID)
+
+		rules := 0
+		for number, line := range strings.Split(plain(dash.View()), "\n") {
+			if strings.HasPrefix(line, "─") {
+				rules++
+			}
+
+			if rules == 2 {
+				if first < 0 {
+					first = number
+				} else if number != first {
+					t.Errorf("with step %s selected, the rule under the list is on line %d, not %d",
+						step.ID, number+1, first+1)
+				}
+
+				break
+			}
+		}
+	}
+
+	if first < 0 {
+		t.Fatal("the dashboard draws no rule under the list")
+	}
+}
+
 func TestADetailOneLineOverThePaneShowsThatLine(t *testing.T) {
 	lines := make([]string, detailPaneLines+1)
 	for index := range lines {
