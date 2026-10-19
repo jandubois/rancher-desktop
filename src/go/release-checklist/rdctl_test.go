@@ -323,19 +323,39 @@ func TestDocsReferenceNamesAMissingRdctl(t *testing.T) {
 	}
 }
 
-func TestDocsReferenceBlocksWhileTheMachineHoldsSnapshots(t *testing.T) {
+func TestDocsReferenceNamesTheSnapshotsThatBlockIt(t *testing.T) {
+	// One object per line, as rdctl snapshot list --json prints it.
+	example := `{"created":"2026-09-19T18:23:00.412337-07:00","name":"example_snapshot","description":""}` + "\n"
+	other := `{"created":"2026-09-19T18:24:00Z","name":"before upgrade","description":""}` + "\n"
+
+	for _, tc := range []struct{ output, want string }{
+		{example, "snapshot example_snapshot; rdctl snapshot delete example_snapshot removes it"},
+		{example + other, `snapshots example_snapshot, "before upgrade"; rdctl snapshot delete removes one by name`},
+	} {
+		answers := docsAnswers()
+		answers["rdctl list-settings"] = "{}\n"
+		answers[snapshotQuery] = tc.output
+
+		answer, err := docsReferenceReady(context.Background(),
+			docsRun(t, &fakeTools{output: answers}))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if answer.OK || !strings.Contains(answer.Detail, tc.want) {
+			t.Errorf("a machine with snapshots answered %v: %s", answer.OK, answer.Detail)
+		}
+	}
+}
+
+func TestDocsReferenceFailsOnSnapshotsItCannotDecode(t *testing.T) {
 	answers := docsAnswers()
 	answers["rdctl list-settings"] = "{}\n"
-	answers[snapshotQuery] = `[{"name":"before-the-upgrade","created":"2026-09-19T18:23:00Z"}]` + "\n"
+	answers[snapshotQuery] = "not json\n"
 
-	answer, err := docsReferenceReady(context.Background(),
-		docsRun(t, &fakeTools{output: answers}))
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if answer.OK || !strings.Contains(answer.Detail, "holds snapshots") {
-		t.Errorf("a machine with snapshots answered %v: %s", answer.OK, answer.Detail)
+	if _, err := docsReferenceReady(context.Background(),
+		docsRun(t, &fakeTools{output: answers})); err == nil {
+		t.Error("undecodable snapshot output was not an error")
 	}
 }
 
@@ -356,20 +376,38 @@ func TestDocsReferenceIsReadyOnACleanMachine(t *testing.T) {
 	}
 }
 
-// TestDocsReferenceBlocksWhileTheMachineHasExtensions covers the page's
-// extension list, which shows every extension this machine has.
-func TestDocsReferenceBlocksWhileTheMachineHasExtensions(t *testing.T) {
-	answers := cleanMachineAnswers(t)
-	answers[extensionQuery] = "Extension IDs\n\ndocker/logs-explorer-extension:0.2.2\n"
+// TestDocsReferenceNamesTheExtensionsThatBlockIt covers the page's extension
+// list, which shows every extension this machine has.
+func TestDocsReferenceNamesTheExtensionsThatBlockIt(t *testing.T) {
+	for _, tc := range []struct{ output, want string }{
+		{"Extension IDs\n\ndocker/logs-explorer-extension:0.2.2\n",
+			"extension docker/logs-explorer-extension:0.2.2; " +
+				"rdctl extension uninstall docker/logs-explorer-extension:0.2.2 removes it"},
+		{"Extension IDs\n\na:1\nb:2\n",
+			"extensions a:1, b:2; rdctl extension uninstall removes one by name"},
+	} {
+		answers := cleanMachineAnswers(t)
+		answers[extensionQuery] = tc.output
 
-	answer, err := docsReferenceReady(context.Background(),
-		docsRun(t, &fakeTools{output: answers}))
-	if err != nil {
-		t.Fatal(err)
+		answer, err := docsReferenceReady(context.Background(),
+			docsRun(t, &fakeTools{output: answers}))
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if answer.OK || !strings.Contains(answer.Detail, tc.want) {
+			t.Errorf("a machine with extensions answered %v: %s", answer.OK, answer.Detail)
+		}
 	}
+}
 
-	if answer.OK || !strings.Contains(answer.Detail, "extensions") {
-		t.Errorf("a machine with an extension answered %v: %s", answer.OK, answer.Detail)
+func TestDocsReferenceFailsOnExtensionsItCannotRead(t *testing.T) {
+	answers := cleanMachineAnswers(t)
+	answers[extensionQuery] = "Installed extensions:\ndocker/logs-explorer-extension:0.2.2\n"
+
+	if _, err := docsReferenceReady(context.Background(),
+		docsRun(t, &fakeTools{output: answers})); err == nil {
+		t.Error("an extension list in an unknown format was not an error")
 	}
 }
 

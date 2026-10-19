@@ -7,8 +7,10 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -181,10 +183,13 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 		return Answer{}, fmt.Errorf("reading this machine's snapshots: %w", err)
 	}
 
-	// With no snapshots, rdctl prints nothing, not even an empty JSON list.
-	if len(bytes.TrimSpace(snapshots)) > 0 {
-		return Answer{Detail: "this machine holds snapshots, and the page would list " +
-			"them with their timestamps"}, nil
+	names, err := snapshotNames(snapshots)
+	if err != nil {
+		return Answer{}, fmt.Errorf("reading this machine's snapshots: %w", err)
+	}
+
+	if len(names) > 0 {
+		return Answer{Detail: blockingDetail("snapshot", names, "rdctl snapshot delete")}, nil
 	}
 
 	extensions, err := run.Tools.run(ctx, "rdctl", "extension", "ls")
@@ -192,12 +197,68 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 		return Answer{}, fmt.Errorf("reading this machine's extensions: %w", err)
 	}
 
-	if string(bytes.TrimSpace(extensions)) != noExtensionsInstalled {
-		return Answer{Detail: "this machine has extensions installed, and the page " +
-			"would list them beside its own example"}, nil
+	ids, err := extensionIDs(extensions)
+	if err != nil {
+		return Answer{}, fmt.Errorf("reading this machine's extensions: %w", err)
+	}
+
+	if len(ids) > 0 {
+		return Answer{Detail: blockingDetail("extension", ids, "rdctl extension uninstall")}, nil
 	}
 
 	return Answer{OK: true}, nil
+}
+
+// blockingDetail names what on this machine the page's examples would show,
+// and the command that removes it.
+func blockingDetail(noun string, names []string, remove string) string {
+	shown := make([]string, 0, len(names))
+	for _, name := range names {
+		shown = append(shown, quote(name))
+	}
+
+	if len(shown) == 1 {
+		return fmt.Sprintf("the page's examples would show this machine's %s %s; %s %s removes it",
+			noun, shown[0], remove, shown[0])
+	}
+
+	return fmt.Sprintf("the page's examples would show this machine's %ss %s; %s removes one by name",
+		noun, strings.Join(shown, ", "), remove)
+}
+
+// snapshotNames reads rdctl snapshot list --json, which prints one object
+// per snapshot and, with none, nothing at all, not even an empty JSON list.
+func snapshotNames(output []byte) ([]string, error) {
+	var names []string
+
+	decoder := json.NewDecoder(bytes.NewReader(output))
+	for {
+		var snapshot struct{ Name string }
+		if err := decoder.Decode(&snapshot); errors.Is(err, io.EOF) {
+			return names, nil
+		} else if err != nil {
+			return nil, err
+		}
+
+		names = append(names, snapshot.Name)
+	}
+}
+
+// extensionIDs reads rdctl extension ls, which prints a header, a blank line,
+// then one id:version per line.
+func extensionIDs(output []byte) ([]string, error) {
+	text := strings.TrimSpace(string(output))
+	if text == noExtensionsInstalled {
+		return nil, nil
+	}
+
+	header, list, found := strings.Cut(text, "\n")
+	ids := strings.Fields(list)
+	if !found || header != "Extension IDs" || len(ids) == 0 {
+		return nil, fmt.Errorf("rdctl extension ls printed %q", text)
+	}
+
+	return ids, nil
 }
 
 // referenceInDocs is the page a person marks done. A change to it, whether
