@@ -439,6 +439,61 @@ func TestTagIsBlockedWhileThePackageRunIsRed(t *testing.T) {
 	}
 }
 
+func TestTagNeedsABranchHeadReadyToTag(t *testing.T) {
+	tests := []struct {
+		name   string
+		answer string
+		build  string
+		state  State
+		detail string
+	}{
+		{
+			name:   "the head is already in main",
+			answer: "0\n",
+			build:  packageRunJSON("completed", "success"),
+			state:  Blocked,
+			detail: "the head of " + testBranch + " is already in main",
+		},
+		{
+			name:   "the head has no package run",
+			answer: "2\n",
+			build:  `{"total_count":0,"workflow_runs":[]}`,
+			state:  Waiting,
+			detail: "no package run for " + testBranch + " yet",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			answers := readyToTag(tt.build)
+			answers["gh api repos/"+testRepo+"/compare/"+testHead+"...main --jq .behind_by"] = tt.answer
+
+			run := tagRun(t, &fakeTools{output: answers}, map[Version]string{})
+
+			status := run.Status(context.Background(), tagRelease)
+			if status.State != tt.state || !strings.Contains(status.Detail, tt.detail) {
+				t.Errorf("the tag was %s (%s), want %s (%s)", status.State, status.Detail, tt.state, tt.detail)
+			}
+		})
+	}
+}
+
+// TestTagNeedsTheReleaseBranch guards the push source, because git reads a
+// push with an empty source as a request to delete the tag.
+func TestTagNeedsTheReleaseBranch(t *testing.T) {
+	run := tagRun(t, &fakeTools{}, map[Version]string{})
+	run.Refs.Branches = map[Line]string{}
+
+	operations, err := planTag(t.Context(), run)
+	if err == nil || !strings.Contains(err.Error(), "has no "+testBranch+" branch to tag") {
+		t.Errorf("planning the tag with no branch returned %v", err)
+	}
+
+	if len(operations) != 0 {
+		t.Errorf("the tag planned %d operations with no branch to push", len(operations))
+	}
+}
+
 func TestTagGoesToTheReleaseRepositoryNotTheClonesOrigin(t *testing.T) {
 	tools := &fakeTools{output: readyToTag(packageRunJSON("completed", "success")), anyCommand: true}
 	run := tagRun(t, tools, map[Version]string{})
