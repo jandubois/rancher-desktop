@@ -237,6 +237,31 @@ func TestTheNotesFactsArePastedStraightIntoTheNotes(t *testing.T) {
 	}
 }
 
+func TestATaggedReleaseIsComparedAtItsTag(t *testing.T) {
+	// After the tag, the branch moved on with a helm bump for the next patch.
+	answers := factsAnswers()
+	answers[dependenciesQuery(testRelease.Tag())] = strings.ReplaceAll(bumpedDependencies, "version: 4.2.3", "version: 4.2.1")
+	answers[dependenciesQuery(testBranch)] = strings.ReplaceAll(bumpedDependencies, "version: 4.2.3", "version: 4.2.4")
+
+	run := factsRun(t, answers)
+	run.Refs.Tags[testRelease] = "bbb"
+
+	facts, err := gatherNotesFacts(t.Context(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for _, want := range []string{"comparing v1.24.0 with v1.25.0", "* docker `29.5.3` → `29.6.2`"} {
+		if !strings.Contains(facts, want) {
+			t.Errorf("the facts do not hold %q:\n%s", want, facts)
+		}
+	}
+
+	if strings.Contains(facts, "4.2.4") {
+		t.Errorf("the facts report the branch's helm, not the tag's:\n%s", facts)
+	}
+}
+
 func TestTheChangelogSaysWhenThereIsNoMilestoneToLink(t *testing.T) {
 	answers := factsAnswers()
 	answers["gh api --paginate repos/"+testRepo+"/milestones?state=all&per_page=100 "+

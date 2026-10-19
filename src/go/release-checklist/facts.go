@@ -237,11 +237,19 @@ func gatherNotesFacts(ctx context.Context, run *Run) (string, error) {
 		return "", fmt.Errorf("%s has no release before %s to compare with", run.Repo.repo, version)
 	}
 
-	utilities, err := utilitySection(ctx, run, previous, branch)
+	// Once the release is tagged, the branch moves on to the next patch, so
+	// only the tag still holds what the release ships.
+	shipped := branch
+	if _, tagged := run.Refs.Tags[version]; tagged {
+		shipped = run.Release.Tag()
+	}
+
+	utilities, err := utilitySection(ctx, run, previous, shipped)
 	if err != nil {
 		return "", err
 	}
 
+	// GitHub drafts from the tag once it exists, whatever the target says.
 	named, err := newContributors(ctx, run, previous, branch)
 	if err != nil {
 		return "", err
@@ -255,7 +263,7 @@ func gatherNotesFacts(ctx context.Context, run *Run) (string, error) {
 	return strings.Join([]string{
 		"# Release notes facts for " + version.String(),
 		fmt.Sprintf("Read from %s on %s, comparing %s with %s.",
-			run.Repo.repo, time.Now().Local().Format(time.DateOnly), previous.Tag(), branch),
+			run.Repo.repo, time.Now().Local().Format(time.DateOnly), previous.Tag(), shipped),
 		"containerd is not here, because the notes leave it out and its " +
 			"version is readable only from a running VM. The CVEs a " +
 			"bump fixes take judgment, so they are not here either.",
@@ -266,10 +274,10 @@ func gatherNotesFacts(ctx context.Context, run *Run) (string, error) {
 }
 
 // utilitySection lists how the bundled utilities moved, between the previous
-// release's tag and the release branch. The tag wins over the previous
-// release's published notes, which can disagree with it when a bump arrived
-// after the prose was written.
-func utilitySection(ctx context.Context, run *Run, previous Version, branch string) (string, error) {
+// release's tag and shipped, the ref that holds the release. The tag wins
+// over the previous release's published notes, which can disagree with it
+// when a bump arrived after the prose was written.
+func utilitySection(ctx context.Context, run *Run, previous Version, shipped string) (string, error) {
 	was, err := run.Repo.FileAtRef(ctx, previous.Tag(), dependenciesFile)
 	if err != nil {
 		return "", err
@@ -280,7 +288,7 @@ func utilitySection(ctx context.Context, run *Run, previous Version, branch stri
 		return "", err
 	}
 
-	is, err := run.Repo.FileAtRef(ctx, branch, dependenciesFile)
+	is, err := run.Repo.FileAtRef(ctx, shipped, dependenciesFile)
 	if err != nil {
 		return "", err
 	}
