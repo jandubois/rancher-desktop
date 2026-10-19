@@ -118,6 +118,24 @@ func TestTheHeaderKeepsItsWidthWhileReading(t *testing.T) {
 	}
 }
 
+func TestTheHeaderCutsAWarningToKeepTheRefreshTime(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+	dash.run.Release.Warnings = []string{"release-1.25 has commits past v1.25.0; they go into 1.25.1 unless the tag is burned"}
+	header := plain(dash.header())
+
+	if width := lipgloss.Width(header); width >= dash.width {
+		t.Errorf("the header is %d columns on a %d-column screen: %q", width, dash.width, header)
+	}
+
+	if want := "refreshed " + dash.refreshed.Format(clock); !strings.HasSuffix(header, want) {
+		t.Errorf("the header does not end with %q: %q", want, header)
+	}
+
+	if !strings.Contains(header, "! release-1.25") {
+		t.Errorf("the header lost the start of the warning: %q", header)
+	}
+}
+
 func TestTheLegendNamesEveryState(t *testing.T) {
 	view := plain(dashboardShowing(t, nil).View())
 

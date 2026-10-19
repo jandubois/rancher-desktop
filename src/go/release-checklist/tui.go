@@ -435,6 +435,12 @@ func (d *dashboard) header() string {
 		right = "reading…"
 	}
 
+	// Cut a long warning to keep the refresh time on screen; --status prints the
+	// warning whole.
+	if room := d.width - lipgloss.Width(right) - 2; lipgloss.Width(left) > room {
+		left = lipgloss.NewStyle().MaxWidth(max(room-1, 0)).Render(left) + "…"
+	}
+
 	pad := max(d.width-lipgloss.Width(left)-lipgloss.Width(right)-1, 1)
 
 	return left + strings.Repeat(" ", pad) + dim.Render(right)
