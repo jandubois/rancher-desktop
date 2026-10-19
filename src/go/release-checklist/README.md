@@ -274,7 +274,7 @@ The file is untracked and nothing ignores it, so keep it out of your commits. Pr
 
 - **Applies to:** Minor releases. A patch ships the documentation its line already has.
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has bundled-utilities-version-info/v{version}.md, the reference page imports it and shows it in its table, and the file lists the versions {version} bundles.
-- **Waits for:** gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), and the release branch exists.
+- **Waits for:** settings.yaml names your clone of {docsRepo} in docsClone, gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), and the release branch exists.
 - **Reaches:** GitHub repo, GitHub docs repo, GitHub docs fork.
 - **Runs:** Push the bundled utility versions for {version} to {branch} of your documentation fork.
 - **Gathers:** nothing. The instructions are all the step needs.
@@ -293,7 +293,7 @@ Commit it to a release-{line} branch of your fork of {docsRepo} with a sign-off.
 
 - **Applies to:** Minor releases. A patch ships the documentation its line already has.
 - **Done when:** The release branch of your fork of {docsRepo}, or {docsRepo}'s own main branch once the documentation is merged, has references/rdctl-command-reference.md reporting {version}, and you have marked the page done. Editing it afterwards puts the step back to available.
-- **Waits for:** gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), the bundled utilities step is done, Rancher Desktop is running, and this machine holds no snapshots and no extensions.
+- **Waits for:** settings.yaml names your clone of {docsRepo} in docsClone, gh can push to your fork of {docsRepo} (to {docsRepo} itself when you have none), the bundled utilities step is done, Rancher Desktop is running, and this machine holds no snapshots and no extensions.
 - **Reaches:** GitHub docs repo, GitHub docs fork.
 - **Runs:** Push the rdctl command reference for {version} to {branch} of your documentation fork.
 - **Gathers:** nothing. The instructions are all the step needs.

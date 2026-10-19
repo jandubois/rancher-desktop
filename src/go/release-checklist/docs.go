@@ -103,7 +103,8 @@ var docsUtilities = &Step{
 			"bundled-utilities-version-info/v{version}.md, the reference page " +
 			"imports it and shows it in its table, and the file lists the " +
 			"versions {version} bundles.",
-		Precondition: "gh can push to your fork of {docsRepo} (to {docsRepo} itself " +
+		Precondition: "settings.yaml names your clone of {docsRepo} in docsClone, " +
+			"gh can push to your fork of {docsRepo} (to {docsRepo} itself " +
 			"when you have none), and the release branch exists.",
 		Instructions: "Write the bundled utility versions for {version} into the " +
 			"documentation:\n\n" +
@@ -133,7 +134,30 @@ var docsUtilities = &Step{
 // docsUtilitiesReady holds the step until the release has a branch to read
 // dependencies.yaml from.
 func docsUtilitiesReady(ctx context.Context, run *Run) (Answer, error) {
+	if answer, err := docsCloneSet(run); err != nil || !answer.OK {
+		return answer, err
+	}
+
 	return waitFor(ctx, run, releaseBranch), nil
+}
+
+// docsCloneSet blocks a documentation step while settings.yaml does not name
+// a clone to work in. The steps check it before anything else, so the
+// missing setting shows while they still wait on an earlier step.
+func docsCloneSet(run *Run) (Answer, error) {
+	if run.Settings.DocsClone != "" {
+		return Answer{OK: true}, nil
+	}
+
+	// docsCloneDir also fails when it cannot work out where settings.yaml
+	// belongs, and that is an error to report, not a setting to write.
+	if _, err := SettingsPath(run.Profile.Name); err != nil {
+		return Answer{}, err
+	}
+
+	_, err := docsCloneDir(run)
+
+	return Answer{Detail: err.Error()}, nil
 }
 
 // checkDocsUtilities reports whether the documentation lists the versions

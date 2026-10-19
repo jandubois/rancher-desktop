@@ -86,7 +86,8 @@ var docsReference = &Step{
 			"references/rdctl-command-reference.md reporting {version}, and you have " +
 			"marked the page done. Editing it afterwards puts the step back to " +
 			"available.",
-		Precondition: "gh can push to your fork of {docsRepo} (to {docsRepo} itself " +
+		Precondition: "settings.yaml names your clone of {docsRepo} in docsClone, " +
+			"gh can push to your fork of {docsRepo} (to {docsRepo} itself " +
 			"when you have none), the bundled utilities step is done, " +
 			"Rancher Desktop is running, and this machine holds no snapshots and no extensions.",
 		Instructions: "Regenerate the rdctl command reference for {version}:\n\n" +
@@ -158,6 +159,10 @@ func checkDocsReference(ctx context.Context, run *Run) (Answer, error) {
 // bundled utilities, and until this machine can generate a page that describes
 // the release rather than itself.
 func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
+	if answer, err := docsCloneSet(run); err != nil || !answer.OK {
+		return answer, err
+	}
+
 	if waiting := waitFor(ctx, run, docsUtilities); !waiting.OK {
 		return waiting, nil
 	}

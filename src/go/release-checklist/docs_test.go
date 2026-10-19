@@ -138,6 +138,7 @@ func docsRun(t *testing.T, tools *fakeTools) *Run {
 
 	run := checklistRun(t, testRelease, map[Line]string{testRelease.Line(): testHead}, tools)
 	run.Profile.GitHub.DocsRepo = testDocsRepo
+	run.Settings.DocsClone = "/clones/docs"
 
 	return run
 }
@@ -175,6 +176,31 @@ func TestDocsUtilitiesIsBlockedWithoutPushAccessToTheFork(t *testing.T) {
 	status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities)
 	if status.State != Blocked || !strings.Contains(status.Detail, testDocsFork) {
 		t.Errorf("a fork refusing the push left the docs step %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestTheDocsStepsAreBlockedWithoutAClonePath(t *testing.T) {
+	staleUtilities := docsAnswers()
+	staleUtilities[fileQuery(testDocsFork, testBranch, testDocsFile)] =
+		strings.Replace(docsVersionFileText, "helm: 4.3.0", "helm: 4.2.3", 1)
+
+	for _, test := range []struct {
+		step    *Step
+		answers map[string]string
+	}{
+		{docsUtilities, staleUtilities},
+		{docsReference, cleanMachineAnswers(t)},
+	} {
+		inAConfigOfItsOwn(t)
+
+		run := docsRun(t, &fakeTools{output: test.answers})
+		run.Settings.DocsClone = ""
+
+		status := run.Status(context.Background(), test.step)
+		if status.State != Blocked || !strings.Contains(status.Detail, "docsClone") ||
+			!strings.Contains(status.Detail, settingsFile) {
+			t.Errorf("%s with no clone path was %s: %s", test.step.Title, status.State, status.Detail)
+		}
 	}
 }
 
