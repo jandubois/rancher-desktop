@@ -410,13 +410,19 @@ func (d *dashboard) View() string {
 func (d *dashboard) instructionsView() string {
 	step := checklist[d.selected]
 
-	lines := []string{d.header(), "", d.title(step), ""}
-	lines = append(lines, d.wrap(fill(step.Doc.Instructions, d.run))...)
-	lines = append(lines, "")
-	lines = append(lines, d.footerLines()...)
-	lines = append(lines, d.noticeLines()...)
+	above := []string{d.header(), "", d.title(step), ""}
+	below := append([]string{""}, d.footerLines()...)
+	below = append(below, d.noticeLines()...)
 
-	return strings.Join(lines, "\n")
+	// A view taller than the screen loses its top lines, header first.
+	instructions := d.wrap(fill(step.Doc.Instructions, d.run))
+	if room := d.height - len(above) - len(below); len(instructions) > room {
+		kept := max(room-1, 0)
+		instructions = append(instructions[:kept],
+			d.wrap(fmt.Sprintf("… %d more lines; README.md's step reference has them all", len(instructions)-kept))...)
+	}
+
+	return strings.Join(slices.Concat(above, instructions, below), "\n")
 }
 
 // header names the release being driven and when the checklist was read, so

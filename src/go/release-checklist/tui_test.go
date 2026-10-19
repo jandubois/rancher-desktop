@@ -534,6 +534,31 @@ func TestTheDashboardFitsItsScreen(t *testing.T) {
 				lines, dash.height, notice)
 		}
 	}
+
+	dash.notice = ""
+	dash.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
+	press(dash, "i")
+
+	cut := false
+
+	for _, step := range checklist {
+		selectStep(t, dash, step.ID)
+
+		view := plain(dash.View())
+		if lines := strings.Count(view, "\n") + 1; lines > dash.height {
+			t.Errorf("step %s's instructions drew %d lines on a %d line screen", step.ID, lines, dash.height)
+		}
+
+		if first, _, _ := strings.Cut(view, "\n"); first != plain(dash.header()) {
+			t.Errorf("step %s's instructions do not open with the header:\n%s", step.ID, view)
+		}
+
+		cut = cut || strings.Contains(view, "README.md's step reference has them all")
+	}
+
+	if !cut {
+		t.Error("no step's instructions overflow an 80x24 screen, so nothing tests the cut")
+	}
 }
 
 func TestAMultiLineDetailKeepsTheDashboardOnItsScreen(t *testing.T) {
