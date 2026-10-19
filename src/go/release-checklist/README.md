@@ -103,7 +103,9 @@ Two rules keep a rehearsal away from the real release:
 - A profile other than production must name resources of its own. The tool
   compares every resource field with production's at startup and refuses to
   run when one matches, naming the field. A fork profile that forgot to change
-  its OBS project cannot publish into the real one.
+  its OBS project cannot publish into the real one. The tool also refuses any
+  repository of production's owner, since GitHub redirects a repository's old
+  names to its current one.
 - A section left out turns its steps off. A step whose system the profile
   does not name is `skipped`, so a profile with no `obs` section runs the
   release without the OBS steps.

@@ -164,11 +164,23 @@ func (p *Profile) Resources() map[string]string {
 }
 
 // RefuseProductionResources fails when a profile that is not production names
-// a resource production uses, naming the field. A fork profile that forgot to
-// change stableProject cannot publish into the real one.
+// a resource production uses or a repository of production's owner, naming
+// the field. A fork profile that forgot to change stableProject cannot
+// publish into the real one.
 func (p *Profile) RefuseProductionResources(production *Profile) error {
 	if p.Name == productionName {
 		return nil
+	}
+
+	// GitHub redirects a renamed repository's old name to the new one, so
+	// any repository of production's owner may be production's own.
+	productionOwner, _, _ := strings.Cut(production.GitHub.Repo, "/")
+
+	for field, repo := range map[string]string{"github.repo": p.GitHub.Repo, "github.docsRepo": p.GitHub.DocsRepo} {
+		if owner, _, _ := strings.Cut(repo, "/"); strings.EqualFold(owner, productionOwner) {
+			return fmt.Errorf("profile %q: %s is %q, and only production may name a repository of %s",
+				p.Name, field, repo, productionOwner)
+		}
 	}
 
 	shared := production.Resources()

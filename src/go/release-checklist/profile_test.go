@@ -95,3 +95,26 @@ func TestProfileRefusesAProductionRepositoryWrittenInAnotherCase(t *testing.T) {
 		t.Errorf("the production repository in capitals gave %v", err)
 	}
 }
+
+func TestProfileRefusesEveryRepositoryOfProductionsOwner(t *testing.T) {
+	production, err := LoadProfile(productionName)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	for field, github := range map[string]string{
+		// GitHub redirects rancher-sandbox/rd to the production repository.
+		"github.repo":     "  repo: rancher-sandbox/rd\n",
+		"github.docsRepo": "  repo: example-org/rancher-desktop-rehearsal\n  docsRepo: Rancher-Sandbox/docs\n",
+	} {
+		profile, err := parseProfile([]byte("name: rehearsal\ngithub:\n"+github), "test")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = profile.RefuseProductionResources(production)
+		if err == nil || !strings.Contains(err.Error(), field) {
+			t.Errorf("a rancher-sandbox repository as %s gave %v", field, err)
+		}
+	}
+}
