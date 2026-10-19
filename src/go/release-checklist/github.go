@@ -139,7 +139,9 @@ func newRepository(ctx context.Context, clone, repo string, run commander) (*rep
 // repository, or the repository's public URL for both when no remote fetches
 // from it. A repository is read in the clone it is checked out in, because a
 // URL the user has already pushed to needs no credentials set up a second
-// time.
+// time. A remote on GitHub's own host wins over one on another host, such as
+// a mirror on another forge. Another host still counts when no remote is on
+// GitHub's, because an SSH config alias names GitHub under a host of its own.
 func remoteURLs(ctx context.Context, clone, repo string, run commander) (string, string, error) {
 	output, err := run.runIn(ctx, clone, "git", "remote", "--verbose")
 	if err != nil {
@@ -171,9 +173,12 @@ func remoteURLs(ctx context.Context, clone, repo string, run commander) (string,
 		}
 	}
 
-	for _, name := range names {
-		if found := remotes[name]; sameRepo(found.fetch, repo) {
-			return found.fetch, found.push, nil
+	for _, onGitHub := range []bool{true, false} {
+		for _, name := range names {
+			found := remotes[name]
+			if sameRepo(found.fetch, repo) && (!onGitHub || isGitHubHost(repoHost(found.fetch))) {
+				return found.fetch, found.push, nil
+			}
 		}
 	}
 
@@ -209,6 +214,27 @@ func repoPath(url string) string {
 	}
 
 	return trimmed
+}
+
+// repoHost is the host a git remote URL names, without its user or port, or
+// empty for a local path.
+func repoHost(url string) string {
+	var host string
+
+	if _, rest, found := strings.Cut(url, "://"); found {
+		host, _, _ = strings.Cut(rest, "/")
+		host, _, _ = strings.Cut(host[strings.LastIndex(host, "@")+1:], ":")
+	} else if before, _, found := strings.Cut(url, ":"); found && !strings.Contains(before, "/") {
+		host = before[strings.LastIndex(before, "@")+1:]
+	}
+
+	return host
+}
+
+// isGitHubHost reports whether a host is github.com, or ssh.github.com, which
+// serves SSH over port 443.
+func isGitHubHost(host string) bool {
+	return strings.EqualFold(host, "github.com") || strings.EqualFold(host, "ssh.github.com")
 }
 
 func (r *repository) Refs(ctx context.Context) (*Refs, error) {

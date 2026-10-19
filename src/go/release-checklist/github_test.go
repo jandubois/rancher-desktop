@@ -138,6 +138,19 @@ func TestRemoteIsFoundByURLNotByName(t *testing.T) {
 	}
 }
 
+func TestRepoHostDropsTheUserAndThePort(t *testing.T) {
+	for url, want := range map[string]string{
+		"ssh://git@ssh.github.com:443/owner/name.git": "ssh.github.com",
+		"https://me@github.com/owner/name":            "github.com",
+		"git@github.com:owner/name.git":               "github.com",
+		"../rancher-desktop-2":                        "",
+	} {
+		if host := repoHost(url); host != want {
+			t.Errorf("repoHost(%q) is %q, want %q", url, host, want)
+		}
+	}
+}
+
 // TestAPartialCloneRemoteIsFound covers a remote cloned with a filter, whose
 // fetch line names the filter after the URL.
 func TestAPartialCloneRemoteIsFound(t *testing.T) {
@@ -149,6 +162,34 @@ func TestAPartialCloneRemoteIsFound(t *testing.T) {
 	repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools)
 	if repo.pushURL != "git@github.com:rancher-sandbox/rancher-desktop.git" {
 		t.Errorf("pushes to %q, not the partial clone's own push URL", repo.pushURL)
+	}
+}
+
+func TestARemoteOnGitHubWinsOverAMirrorOnAnotherHost(t *testing.T) {
+	for _, test := range []struct{ name, remotes, url string }{
+		{
+			"a mirror listed first",
+			"gitlab\tgit@gitlab.com:rancher-sandbox/rancher-desktop.git (fetch)\n" +
+				"gitlab\tgit@gitlab.com:rancher-sandbox/rancher-desktop.git (push)\n" +
+				"upstream\tgit@github.com:rancher-sandbox/rancher-desktop.git (fetch)\n" +
+				"upstream\tgit@github.com:rancher-sandbox/rancher-desktop.git (push)\n",
+			"git@github.com:rancher-sandbox/rancher-desktop.git",
+		},
+		{
+			"only an ssh config alias",
+			"origin\tgit@github-work:rancher-sandbox/rancher-desktop.git (fetch)\n" +
+				"origin\tgit@github-work:rancher-sandbox/rancher-desktop.git (push)\n",
+			"git@github-work:rancher-sandbox/rancher-desktop.git",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			tools := &fakeTools{output: map[string]string{"git remote --verbose": test.remotes}}
+
+			repo := repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools)
+			if repo.url != test.url {
+				t.Errorf("fetches from %q, not %q", repo.url, test.url)
+			}
+		})
 	}
 }
 
