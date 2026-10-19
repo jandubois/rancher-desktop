@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -70,15 +71,16 @@ func (r *realGit) runTo(ctx context.Context, dir string, out io.Writer, name str
 
 func (r *realGit) installed(string) bool { return true }
 
-// docsSandbox is a documentation repository, a fork of it, and a clone of the
-// repository with the fork as origin, the way gh sets a contributor up.
-type docsSandbox struct {
+// gitSandbox is a repository, a fork of it, and a clone of the repository,
+// all under a temporary directory, with an environment whose git reaches the
+// repository and the fork by their GitHub URLs.
+type gitSandbox struct {
 	env                   []string
 	upstream, fork, clone string
 	head                  string
 }
 
-func (s *docsSandbox) git(t *testing.T, dir string, args ...string) string {
+func (s *gitSandbox) git(t *testing.T, dir string, args ...string) string {
 	t.Helper()
 
 	cmd := exec.CommandContext(t.Context(), "git", args...)
@@ -93,34 +95,42 @@ func (s *docsSandbox) git(t *testing.T, dir string, args ...string) string {
 }
 
 // inFork runs git against the bare fork.
-func (s *docsSandbox) inFork(t *testing.T, args ...string) string {
+func (s *gitSandbox) inFork(t *testing.T, args ...string) string {
 	t.Helper()
 
 	return s.git(t, "", append([]string{"--git-dir", s.fork}, args...)...)
 }
 
-func newDocsSandbox(t *testing.T) *docsSandbox {
+// newGitSandbox seeds the repository and the fork with one commit of the
+// files that populate writes into the seed directory, and puts the branches
+// at it.
+func newGitSandbox(t *testing.T, upstreamRepo, forkRepo string, populate func(seed string), branches ...string) *gitSandbox {
 	t.Helper()
 
-	if runtime.GOOS == "windows" {
-		t.Skip("the stand-in generation script needs sh")
-	}
-
 	root := t.TempDir()
-	s := &docsSandbox{
+	s := &gitSandbox{
 		upstream: filepath.Join(root, "upstream.git"),
 		fork:     filepath.Join(root, "fork.git"),
 		clone:    filepath.Join(root, "clone"),
 	}
 
 	// The tool pushes and fetches by GitHub URL; git rewrites those to the
-	// bare repositories here, and refuses every other protocol.
-	config := fmt.Sprintf("[user]\n\tname = Test Person\n\temail = test@example.invalid\n"+
-		"[url %q]\n\tinsteadOf = https://github.com/%s/\n"+
-		"[url %q]\n\tinsteadOf = https://github.com/%s\n"+
-		"[init]\n\tdefaultBranch = %s\n", s.fork, testDocsFork, s.upstream, testDocsRepo, defaultBranch)
+	// bare repositories here, and refuses every other protocol. git applies
+	// the longest matching prefix, so each spelling that a remote or the
+	// public URL can take gets a rule of its own.
+	var config strings.Builder
+
+	config.WriteString("[user]\n\tname = Test Person\n\temail = test@example.invalid\n")
+	fmt.Fprintf(&config, "[init]\n\tdefaultBranch = %s\n", defaultBranch)
+
+	for repo, path := range map[string]string{forkRepo: s.fork, upstreamRepo: s.upstream} {
+		for _, suffix := range []string{"", "/", ".git"} {
+			fmt.Fprintf(&config, "[url %q]\n\tinsteadOf = https://github.com/%s%s\n", path, repo, suffix)
+		}
+	}
+
 	configFile := filepath.Join(root, "gitconfig")
-	if err := os.WriteFile(configFile, []byte(config), 0o644); err != nil {
+	if err := os.WriteFile(configFile, []byte(config.String()), 0o644); err != nil {
 		t.Fatal(err)
 	}
 
@@ -134,6 +144,41 @@ func newDocsSandbox(t *testing.T) *docsSandbox {
 		"GIT_ALLOW_PROTOCOL=file", "GIT_TERMINAL_PROMPT=0")
 
 	seed := filepath.Join(root, "seed")
+	if err := os.MkdirAll(seed, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	populate(seed)
+
+	s.git(t, seed, "init", "--quiet")
+	s.git(t, seed, "add", ".")
+	s.git(t, seed, "commit", "--quiet", "--message", "seed")
+
+	for _, branch := range branches {
+		s.git(t, seed, "branch", branch)
+	}
+
+	s.head = s.git(t, seed, "rev-parse", "HEAD")
+	s.git(t, root, "clone", "--quiet", "--bare", seed, s.upstream)
+	s.git(t, root, "clone", "--quiet", "--bare", seed, s.fork)
+	s.git(t, root, "clone", "--quiet", s.upstream, s.clone)
+
+	return s
+}
+
+// docsSandbox is a documentation repository, a fork of it, and a clone of the
+// repository with the fork as origin, the way gh sets a contributor up.
+type docsSandbox struct {
+	*gitSandbox
+}
+
+func newDocsSandbox(t *testing.T) *docsSandbox {
+	t.Helper()
+
+	if runtime.GOOS == "windows" {
+		t.Skip("the stand-in generation script needs sh")
+	}
+
 	files := map[string][]byte{
 		docsReferencePage:  readTestdata(t, "bundled-utilities-after.md"),
 		rdctlReferencePage: readTestdata(t, "rdctl-command-reference.md"),
@@ -148,31 +193,25 @@ func newDocsSandbox(t *testing.T) *docsSandbox {
 		files[filepath.Join(docsVersionDir, "v"+version+".md")] = []byte("docker: " + version + " <br/>\n")
 	}
 
-	for name, content := range files {
-		path := filepath.Join(seed, name)
-		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
-			t.Fatal(err)
-		}
+	populate := func(seed string) {
+		for name, content := range files {
+			path := filepath.Join(seed, name)
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				t.Fatal(err)
+			}
 
-		mode := os.FileMode(0o644)
-		if name == rdctlReferenceScript {
-			mode = 0o755
-		}
+			mode := os.FileMode(0o644)
+			if name == rdctlReferenceScript {
+				mode = 0o755
+			}
 
-		if err := os.WriteFile(path, content, mode); err != nil {
-			t.Fatal(err)
+			if err := os.WriteFile(path, content, mode); err != nil {
+				t.Fatal(err)
+			}
 		}
 	}
 
-	s.git(t, seed, "init", "--quiet")
-	s.git(t, seed, "add", ".")
-	s.git(t, seed, "commit", "--quiet", "--message", "seed")
-	s.head = s.git(t, seed, "rev-parse", "HEAD")
-	s.git(t, root, "clone", "--quiet", "--bare", seed, s.upstream)
-	s.git(t, root, "clone", "--quiet", "--bare", seed, s.fork)
-	s.git(t, root, "clone", "--quiet", s.upstream, s.clone)
-
-	return s
+	return &docsSandbox{newGitSandbox(t, testDocsRepo, testDocsFork, populate)}
 }
 
 func readTestdata(t *testing.T, name string) []byte {
@@ -405,5 +444,118 @@ func TestRegeneratingTheReferenceFromTheSameBuildPushesNothingNew(t *testing.T) 
 	subjects := s.inFork(t, "log", "--format=%s", testBranch)
 	if commits := strings.Count(subjects, referenceCommitMessage(testRelease)); commits != 1 {
 		t.Errorf("the fork has %d reference commits:\n%s", commits, subjects)
+	}
+}
+
+// sandboxUpstream is the release repository that the code sandbox stands in
+// for, under a name other than production's, so that a command that gets past
+// the fake cannot reach production. The fork is testRepo.
+const sandboxUpstream = "rancher/rancher-desktop"
+
+// sandboxRemoteOutput is what the fake answers for `git remote --verbose` in
+// the tool's own clone, with the fork as origin and the release repository as
+// upstream.
+const sandboxRemoteOutput = "origin\thttps://github.com/" + testRepo + ".git (fetch)\n" +
+	"origin\thttps://github.com/" + testRepo + ".git (push)\n" +
+	"upstream\thttps://github.com/" + sandboxUpstream + ".git (fetch)\n" +
+	"upstream\thttps://github.com/" + sandboxUpstream + ".git (push)\n"
+
+// newCodeSandbox is a release repository whose release branch has the
+// previous release's package.json, a fork of it, and the tool's own clone.
+// Step 4 works in the tool's own clone, the current directory, so the test
+// moves there and keeps the release's worktrees in a cache of its own.
+func newCodeSandbox(t *testing.T) *gitSandbox {
+	t.Helper()
+
+	populate := func(seed string) {
+		if err := os.WriteFile(filepath.Join(seed, "package.json"), []byte(manifest), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	s := newGitSandbox(t, sandboxUpstream, testRepo, populate, testBranch)
+
+	t.Chdir(s.clone)
+	inACacheOfItsOwn(t)
+
+	return s
+}
+
+// bumpRun reads the test release afresh, as the dashboard does before it runs
+// a step's action, with git real and gh answered by the fake.
+func bumpRun(t *testing.T, s *gitSandbox, fake *fakeTools, extraEnv ...string) *Run {
+	t.Helper()
+
+	tools := &realGit{fake: fake, env: append(slices.Clone(s.env), extraEnv...)}
+
+	repo, err := newRepository(t.Context(), "", sandboxUpstream, tools)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	run := newRun(&Release{Version: testRelease, Kind: Minor},
+		&Profile{Name: "sandbox", GitHub: GitHubResources{Repo: sandboxUpstream}}, repo)
+	run.Tools = tools
+	run.Refs = &Refs{Branches: map[Line]string{testRelease.Line(): s.head}, Tags: map[Version]string{}}
+
+	return run
+}
+
+func TestTheVersionBumpRetriesAfterAFailedPullRequest(t *testing.T) {
+	s := newCodeSandbox(t)
+
+	prCreate := "gh pr create --repo " + sandboxUpstream + " --base " + testBranch +
+		" --head " + testLogin + ":bump-to-1.25.0 --title Bump version to 1.25.0" +
+		" --body The release branch carries the version it ships."
+	forkPackage := fileQuery(testRepo, "bump-to-1.25.0", "package.json")
+
+	fake := &fakeTools{
+		output: map[string]string{
+			"git remote --verbose": sandboxRemoteOutput,
+			"gh api repos/" + sandboxUpstream + " --jq .permissions.pull": "true\n",
+			"gh api repos/" + testRepo + " --jq .permissions.push":        "true\n",
+			"gh api user --jq .login":                                     testLogin + "\n",
+			"gh api repos/" + testRepo + " --jq .parent.full_name":        sandboxUpstream + "\n",
+			fileQuery(sandboxUpstream, testBranch, "package.json"):        manifest,
+			"gh api repos/" + sandboxUpstream + "/pulls?state=open&head=" + testLogin +
+				":bump-to-1.25.0 --jq .[0].number": "\n",
+		},
+		stderr: map[string]string{
+			forkPackage: "gh: No commit found for the ref bump-to-1.25.0 (HTTP 404)",
+			prCreate:    "pull request create failed: GraphQL: was submitted too quickly (createPullRequest)",
+		},
+	}
+
+	// Each attempt commits at a date of its own. A retry within the same
+	// second would make the same commit again, whose push changes nothing.
+	first := bumpRun(t, s, fake, "GIT_AUTHOR_DATE=2030-01-01T00:00:00Z", "GIT_COMMITTER_DATE=2030-01-01T00:00:00Z")
+	if err := RunAction(context.Background(), versionBump, first, strings.NewReader("y\n"), io.Discard); err == nil {
+		t.Fatal("the failed pull request was reported as success")
+	}
+
+	pushed := s.inFork(t, "rev-parse", "bump-to-1.25.0")
+	if content := s.inFork(t, "show", "bump-to-1.25.0:package.json"); !strings.Contains(content, `"version": "1.25.0"`) {
+		t.Fatalf("the fork's bump-to-1.25.0 holds\n%s", content)
+	}
+
+	// gh answers what it would after the push, and opens the pull request.
+	delete(fake.stderr, forkPackage)
+	fake.output[forkPackage] = s.inFork(t, "show", "bump-to-1.25.0:package.json")
+	delete(fake.stderr, prCreate)
+	fake.output[prCreate] = "https://github.com/" + sandboxUpstream + "/pull/1\n"
+
+	second := bumpRun(t, s, fake, "GIT_AUTHOR_DATE=2030-01-01T00:10:00Z", "GIT_COMMITTER_DATE=2030-01-01T00:10:00Z")
+
+	var out strings.Builder
+	if err := RunAction(context.Background(), versionBump, second, strings.NewReader("y\n"), &out); err != nil {
+		t.Fatalf("the retry failed: %v\n%s", err, out.String())
+	}
+
+	if head := s.inFork(t, "rev-parse", "bump-to-1.25.0"); head != pushed {
+		t.Errorf("the fork's bump-to-1.25.0 moved from %.7s to %.7s", pushed, head)
+	}
+
+	if !containsCall(fake.calls, prCreate) {
+		t.Errorf("the retry did not open the pull request; it ran\n%s", strings.Join(fake.calls, "\n"))
 	}
 }

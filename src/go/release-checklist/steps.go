@@ -145,16 +145,11 @@ var versionBump = &Step{
 	Check: func(ctx context.Context, run *Run) (Answer, error) {
 		branch := run.Release.Branch()
 
-		content, err := run.Repo.FileAtRef(ctx, branch, "package.json")
+		version, err := packageVersionAt(ctx, run.Repo, branch)
 		if errors.Is(err, errNotFound) {
 			return Answer{Detail: branch + " has no package.json"}, nil
 		}
 
-		if err != nil {
-			return Answer{}, err
-		}
-
-		version, err := readPackageVersion(content)
 		if err != nil {
 			return Answer{}, err
 		}
@@ -179,8 +174,8 @@ var versionBump = &Step{
 }
 
 // bumpUnderReview holds the step while its pull request is open. Running the
-// action again would push a fresh bump commit over the one on the pull
-// request's branch, and git refuses that push.
+// action again would find the bump on the fork and only open the pull request,
+// and GitHub refuses a second one from the same branch.
 func bumpUnderReview(ctx context.Context, run *Run) (Answer, error) {
 	owner, _, err := run.Repo.PushTarget(ctx)
 	if err != nil {
@@ -202,6 +197,17 @@ func bumpUnderReview(ctx context.Context, run *Run) (Answer, error) {
 // bumpBranch is the branch the bump commit is pushed to.
 func bumpBranch(version Version) string { return "bump-to-" + version.String() }
 
+// packageVersionAt is the version that package.json declares at a ref. A
+// missing file or ref is errNotFound.
+func packageVersionAt(ctx context.Context, repo *repository, ref string) (Version, error) {
+	content, err := repo.FileAtRef(ctx, ref, "package.json")
+	if err != nil {
+		return Version{}, err
+	}
+
+	return readPackageVersion(content)
+}
+
 func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
 	branch := run.Release.Branch()
 	head := run.Refs.Branches[run.Release.Version.Line()]
@@ -217,6 +223,27 @@ func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
 	}
 
 	title := "Bump version to " + run.Release.Version.String()
+	openPR := command("", "gh", "pr", "create", "--repo", run.Repo.repo,
+		"--base", branch, "--head", owner+":"+bumpBranch(run.Release.Version),
+		"--title", title, "--body", "The release branch carries the version it ships.")
+
+	// A bump whose pull request never opened, or closed unmerged, is still on
+	// the fork, and git refuses to push a fresh commit over it without force.
+	// That commit already sets the release's version, so the pull request
+	// opens from it.
+	fork, err := run.Repo.Fork(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	pushed, err := packageVersionAt(ctx, fork, bumpBranch(run.Release.Version))
+
+	switch {
+	case err == nil && pushed == run.Release.Version:
+		return []Operation{openPR}, nil
+	case err != nil && !errors.Is(err, errNotFound):
+		return nil, err
+	}
 
 	return []Operation{
 		command("", "git", "fetch", run.Repo.url, branch),
@@ -234,9 +261,7 @@ func planVersionBump(ctx context.Context, run *Run) ([]Operation, error) {
 		},
 		command(dir, "git", "commit", "--signoff", "--message", title, "--", "package.json"),
 		command(dir, "git", "push", forkURL, "HEAD:refs/heads/"+bumpBranch(run.Release.Version)),
-		command("", "gh", "pr", "create", "--repo", run.Repo.repo,
-			"--base", branch, "--head", owner+":"+bumpBranch(run.Release.Version),
-			"--title", title, "--body", "The release branch carries the version it ships."),
+		openPR,
 	}, nil
 }
 
@@ -417,12 +442,7 @@ var tagRelease = &Step{
 			return Answer{Detail: "no " + tag + " in " + run.Profile.GitHub.Repo}, nil
 		}
 
-		content, err := run.Repo.FileAtRef(ctx, tag, "package.json")
-		if err != nil {
-			return Answer{}, err
-		}
-
-		version, err := readPackageVersion(content)
+		version, err := packageVersionAt(ctx, run.Repo, tag)
 		if err != nil {
 			return Answer{}, err
 		}
