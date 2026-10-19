@@ -385,22 +385,25 @@ func (d *dashboard) View() string {
 		return d.instructionsView()
 	}
 
-	rule := dim.Render(strings.Repeat("─", max(d.width-gutter, 1)))
-
-	above := []string{d.header(), rule}
+	above := []string{d.header(), ""}
 
 	pane := d.detail()
 	for len(pane) < paneHeight {
 		pane = append(pane, "")
 	}
 
-	below := append([]string{rule}, pane...)
+	below := append([]string{""}, pane...)
 	below = append(below, "")
 	below = append(below, d.footerLines()...)
 	below = append(below, d.noticeLines()...)
 	below = append(below, "", d.legend())
 
-	rows := d.rows(max(d.height-len(above)-len(below), 1))
+	height := max(d.height-len(above)-len(below), 1)
+	first, end := d.window(height)
+	above[1] = d.rule(first, "↑")
+	below[0] = d.rule(len(checklist)-end, "↓")
+
+	rows := d.rows(height)
 
 	return strings.Join(slices.Concat(above, rows, below), "\n")
 }
@@ -452,6 +455,29 @@ func (d *dashboard) header() string {
 	return left + strings.Repeat(" ", pad) + dim.Render(right)
 }
 
+// rule is the line above or below the list. It names how many steps the list
+// hides on the side that the arrow points to, so a short screen cannot hide
+// steps silently.
+func (d *dashboard) rule(hidden int, arrow string) string {
+	width := max(d.width-gutter, 1)
+	line := strings.Repeat("─", width)
+
+	if hidden > 0 {
+		label := fmt.Sprintf("── %s %d more ", arrow, hidden)
+		line = label + strings.Repeat("─", max(width-lipgloss.Width(label), 0))
+	}
+
+	return dim.Render(lipgloss.NewStyle().MaxWidth(width).Render(line))
+}
+
+// window is the range of steps that the list shows in height rows, scrolled
+// to keep the selected one in view.
+func (d *dashboard) window(height int) (first, end int) {
+	first = max(d.selected-height+1, 0)
+
+	return first, min(first+height, len(checklist))
+}
+
 // rows renders the steps that fit, scrolled to keep the selected one in view.
 func (d *dashboard) rows(height int) []string {
 	titles := 0
@@ -459,10 +485,10 @@ func (d *dashboard) rows(height int) []string {
 		titles = max(titles, lipgloss.Width(step.Title))
 	}
 
-	first := max(d.selected-height+1, 0)
+	first, end := d.window(height)
 	rows := make([]string, 0, height)
 
-	for index := first; index < min(first+height, len(checklist)); index++ {
+	for index := first; index < end; index++ {
 		rows = append(rows, d.row(checklist[index], index == d.selected, titles))
 	}
 

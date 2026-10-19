@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"slices"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -683,5 +684,74 @@ func TestTheDashboardNamesTheFactsItGathered(t *testing.T) {
 
 	if want := filepath.Join("~", "Caches", factsFile); !strings.Contains(plain(dash.View()), want) {
 		t.Errorf("the dashboard does not name %s:\n%s", want, plain(dash.View()))
+	}
+}
+
+// listShown counts the step rows between the two rules around the list, and
+// reads the number of hidden steps that each rule names, 0 where it names none.
+func listShown(t *testing.T, dash *dashboard) (above, shown, below int) {
+	t.Helper()
+
+	count := regexp.MustCompile(`[↑↓] (\d+) more`)
+	read := func(rule string) int {
+		match := count.FindStringSubmatch(rule)
+		if match == nil {
+			return 0
+		}
+
+		number, err := strconv.Atoi(match[1])
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		return number
+	}
+
+	rules := 0
+	for _, line := range strings.Split(plain(dash.View()), "\n") {
+		switch {
+		case strings.HasPrefix(line, "─") && rules == 0:
+			above = read(line)
+			rules++
+		case strings.HasPrefix(line, "─"):
+			return above, shown, read(line)
+		case rules == 1 && strings.TrimSpace(line) != "":
+			shown++
+		}
+	}
+
+	t.Fatal("the dashboard draws no two rules around the list")
+
+	return 0, 0, 0
+}
+
+func TestTheRulesCountTheStepsTheListHides(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+	dash.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
+
+	for _, selected := range []int{0, len(checklist) - 2, len(checklist) - 1} {
+		dash.selected = selected
+		above, shown, below := listShown(t, dash)
+
+		if above+shown+below != len(checklist) {
+			t.Errorf("with step %s selected, the rules count %d above and %d below the %d rows shown, not %d steps",
+				checklist[selected].ID, above, below, shown, len(checklist))
+		}
+
+		switch {
+		case selected == 0 && above != 0:
+			t.Errorf("with the first step selected, the rule counts %d steps above it", above)
+		case selected == len(checklist)-1 && below != 0:
+			t.Errorf("with the last step selected, the rule counts %d steps below it", below)
+		case selected == len(checklist)-2 && (above == 0 || below == 0):
+			t.Errorf("with step %s selected, the rules count %d above and %d below; want both",
+				checklist[selected].ID, above, below)
+		}
+	}
+
+	dash.Update(tea.WindowSizeMsg{Width: 100, Height: 40})
+
+	if above, _, below := listShown(t, dash); above != 0 || below != 0 {
+		t.Errorf("with every step on screen, the rules count %d above and %d below", above, below)
 	}
 }
