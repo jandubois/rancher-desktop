@@ -373,10 +373,11 @@ var releaseNotes = &Step{
 		Gather: gatherNotesFacts,
 	},
 	Action: &Action{
-		Title:   "Put release-notes.md into the notes of {tag}",
-		Writes:  []*Resource{githubRepoPush},
-		Summary: notesChange,
-		Plan:    planReleaseNotes,
+		Title:     "Put release-notes.md into the notes of {tag}",
+		Writes:    []*Resource{githubRepoPush},
+		Summary:   notesChange,
+		Plan:      planReleaseNotes,
+		DraftOnly: true,
 	},
 }
 
@@ -625,10 +626,11 @@ var linuxAssets = &Step{
 	Check:        checkLinuxAssets,
 	Precondition: linuxAssetsReady,
 	Action: &Action{
-		Title:   "Upload the Linux zip and its checksum to {tag}, replacing a partial upload",
-		Writes:  []*Resource{githubRepoPush},
-		Summary: linuxDownloadSize,
-		Plan:    planLinuxAssets,
+		Title:     "Upload the Linux zip and its checksum to {tag}, replacing a partial upload",
+		Writes:    []*Resource{githubRepoPush},
+		Summary:   linuxDownloadSize,
+		Plan:      planLinuxAssets,
+		DraftOnly: true,
 	},
 }
 

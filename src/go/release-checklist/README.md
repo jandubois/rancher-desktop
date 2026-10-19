@@ -63,7 +63,8 @@ an older line:
 
 A release whose tag is already in `main` is finished. Its checks still read,
 so the checklist of a past release can be looked at, but its actions refuse
-to run.
+to run. Once a release is published, steps 6 and 11 refuse to run too, so
+they cannot replace the notes or assets that shipped.
 
 ## What the states mean
 

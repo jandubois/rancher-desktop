@@ -119,6 +119,9 @@ type Action struct {
 	// Plan builds the operations for this release. It runs before the user
 	// confirms anything, so it must change nothing itself.
 	Plan func(context.Context, *Run) ([]Operation, error)
+	// DraftOnly marks an action that can replace what a GitHub release
+	// ships, so RunAction refuses it once the release is published.
+	DraftOnly bool
 }
 
 // Operation is one piece of an action.

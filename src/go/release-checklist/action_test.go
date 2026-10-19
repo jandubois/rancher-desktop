@@ -192,6 +192,47 @@ func TestActionRefusesAFinishedRelease(t *testing.T) {
 	}
 }
 
+func TestADraftOnlyActionRefusesAPublishedRelease(t *testing.T) {
+	run := testRun(t, Minor)
+	run.Release.Published = true
+	tools := &fakeTools{anyCommand: true}
+	run.Tools = tools
+	step := twoCommands()
+	step.Action.DraftOnly = true
+
+	err := RunAction(context.Background(), step, run, strings.NewReader("y\n"), io.Discard)
+	if err == nil || !strings.Contains(err.Error(), "published") {
+		t.Fatalf("a published release gave %v", err)
+	}
+
+	if len(tools.calls) != 0 {
+		t.Errorf("a published release ran %v", tools.calls)
+	}
+}
+
+func TestAnActionNotDraftOnlyRunsOnAPublishedRelease(t *testing.T) {
+	// Steps 19 to 28 act on a published release.
+	run := testRun(t, Minor)
+	run.Release.Published = true
+	run.Tools = &fakeTools{anyCommand: true}
+
+	if err := RunAction(context.Background(), twoCommands(), run, strings.NewReader("y\n"), io.Discard); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestOnlyTheNotesAndLinuxAssetsAreDraftOnly(t *testing.T) {
+	for _, step := range checklist {
+		if step.Action == nil {
+			continue
+		}
+
+		if want := step == releaseNotes || step == linuxAssets; step.Action.DraftOnly != want {
+			t.Errorf("step %s has DraftOnly %t", step.ID, step.Action.DraftOnly)
+		}
+	}
+}
+
 func TestArgumentsWithSpacesAreShownQuoted(t *testing.T) {
 	operation := command("", "git", "commit", "--message", "Bump version to 1.25.0")
 	if want := `git commit --message "Bump version to 1.25.0"`; operation.Description != want {
