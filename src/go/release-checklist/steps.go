@@ -628,7 +628,7 @@ var linuxAssets = &Step{
 	Doc: Doc{
 		Applies: everyRelease,
 		Check:   "{tag} has rancher-desktop-linux-{tag}.zip and its .sha512sum.",
-		Precondition: "gh can push to {repo}, the draft release exists, {tag} is pushed, " +
+		Precondition: "gh " + ghDigestsVersion.String() + " or later can push to {repo}, the draft release exists, {tag} is pushed, " +
 			"and the package run for {tag} has built its Linux zip.",
 		Instructions: "Take the Linux build from the package run for {tag}:\n\n" +
 			"    gh run download <run id> --repo {repo} --name \"Rancher Desktop-linux.zip\" --dir <dir>\n\n" +

@@ -58,9 +58,13 @@ func checkLinuxAssets(ctx context.Context, run *Run) (Answer, error) {
 	return assetsPresent(ctx, run, "the Linux zip and its checksum", zip, zip+checksumSuffix)
 }
 
-// linuxAssetsReady holds the step until there is a release to upload to and
-// a build to upload from.
+// linuxAssetsReady holds the step until gh reports asset digests, there is a
+// release to upload to and there is a build to upload from.
 func linuxAssetsReady(ctx context.Context, run *Run) (Answer, error) {
+	if answer, err := ghReportsDigests(ctx, run); err != nil || !answer.OK {
+		return answer, err
+	}
+
 	if ready := waitFor(ctx, run, draftRelease, tagRelease); !ready.OK {
 		return ready, nil
 	}
@@ -68,6 +72,39 @@ func linuxAssetsReady(ctx context.Context, run *Run) (Answer, error) {
 	_, answer, err := builtArtifact(ctx, run, linuxArtifact)
 
 	return answer, err
+}
+
+// ghDigestsVersion is the first gh that reports release asset digests, which
+// step 11 checks its upload against.
+var ghDigestsVersion = Version{Major: 2, Minor: 74}
+
+// ghReportsDigests holds the step while the installed gh is older than
+// ghDigestsVersion, or while its version cannot be read.
+func ghReportsDigests(ctx context.Context, run *Run) (Answer, error) {
+	output, err := run.Tools.run(ctx, "gh", "--version")
+	if err != nil {
+		return Answer{}, err
+	}
+
+	// The first line reads "gh version 2.102.0 (2026-09-30)".
+	line, _, _ := strings.Cut(string(output), "\n")
+
+	fields := strings.Fields(line)
+	if len(fields) < 3 || fields[0] != "gh" || fields[1] != "version" {
+		return Answer{Detail: fmt.Sprintf("cannot read gh's version from %q", line)}, nil
+	}
+
+	installed, err := ParseVersion(fields[2])
+	if err != nil {
+		return Answer{Detail: fmt.Sprintf("cannot read gh's version from %q", line)}, nil
+	}
+
+	if CompareVersions(installed, ghDigestsVersion) < 0 {
+		return Answer{Detail: fmt.Sprintf("gh %s does not report release asset digests; %s or later does",
+			installed, ghDigestsVersion)}, nil
+	}
+
+	return Answer{OK: true}, nil
 }
 
 // linuxDownloadSize says what the download will cost before the action

@@ -59,6 +59,13 @@ func stored(name string) releaseAsset {
 	return releaseAsset{Name: name, State: uploaded, Digest: "sha256:" + strings.Repeat("a", 64)}
 }
 
+// ghBeforeDigests and ghWithDigests are what gh --version prints for the
+// last gh without asset digests and for one long after.
+const (
+	ghBeforeDigests = "gh version 2.73.0 (2025-05-19)\nhttps://github.com/cli/cli/releases/tag/v2.73.0\n"
+	ghWithDigests   = "gh version 2.102.0 (2026-09-30)\nhttps://github.com/cli/cli/releases/tag/v2.102.0\n"
+)
+
 // uploadRun is a refresh of a release whose tag is pushed, carrying the
 // assets and the package run artifacts it is given.
 func uploadRun(t *testing.T, release, artifacts string) *Run {
@@ -69,6 +76,7 @@ func uploadRun(t *testing.T, release, artifacts string) *Run {
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = release
 	answers[runsQuery("v1.25.0")] = packageRunJSON("completed", "success")
 	answers[artifactsQuery(testRunID)] = artifacts
+	answers["gh --version"] = ghWithDigests
 
 	return tagRun(t, &fakeTools{output: answers}, map[Version]string{testRelease: testHead})
 }
@@ -128,6 +136,26 @@ func TestLinuxAssetsAreAvailableWhileTheChecksumIsMissing(t *testing.T) {
 	}
 }
 
+func TestLinuxAssetsAreBlockedByAGhThatReportsNoDigests(t *testing.T) {
+	run := uploadRun(t,
+		draftWithAssets(t, stored(testZip)),
+		artifactsJSON(linuxArtifact, false))
+	run.Tools.(*fakeTools).output["gh --version"] = ghBeforeDigests
+
+	// The upload is checked against the digests gh reports, so an older gh
+	// would fail every check and leave the bytes unverified.
+	status := run.Status(context.Background(), linuxAssets)
+	if status.State != Blocked {
+		t.Fatalf("a gh without asset digests was %s: %s", status.State, status.Detail)
+	}
+
+	for _, version := range []string{"2.73.0", "2.74.0"} {
+		if !strings.Contains(status.Detail, version) {
+			t.Errorf("the detail does not name %s: %s", version, status.Detail)
+		}
+	}
+}
+
 func TestAnAssetStillArrivingIsNotOnTheRelease(t *testing.T) {
 	half := releaseAsset{Name: testZip + checksumSuffix, State: "starting"}
 
@@ -169,6 +197,7 @@ func TestLinuxAssetsWaitWhileTheRunIsStillBuilding(t *testing.T) {
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = draftWithAssets(t)
 	answers[runsQuery("v1.25.0")] = packageRunJSON("in_progress", "")
 	answers[artifactsQuery(testRunID)] = `{"total_count":0,"artifacts":[]}`
+	answers["gh --version"] = ghWithDigests
 
 	run := tagRun(t, &fakeTools{output: answers}, map[Version]string{testRelease: testHead})
 
@@ -184,6 +213,7 @@ func TestLinuxAssetsWaitForSomewhereToUploadTo(t *testing.T) {
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = ""
 	answers[runsQuery("v1.25.0")] = packageRunJSON("completed", "success")
 	answers[artifactsQuery(testRunID)] = artifactsJSON(linuxArtifact, false)
+	answers["gh --version"] = ghWithDigests
 
 	tools := &fakeTools{output: answers, stderr: map[string]string{
 		"gh release view v1.25.0 --repo " + testRepo + " --json " + releaseFields: "release not found",

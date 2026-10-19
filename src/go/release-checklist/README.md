@@ -139,7 +139,9 @@ and the documentation steps, and the release repository for the rest. A step is
 when gh lacks the access, with the command that fixes it. But no step declares
 the Rancher Desktop on this machine, so step 7b's precondition checks it
 instead. The step is `blocked` when rdctl is not on PATH or Rancher Desktop
-does not answer it.
+does not answer it. Step 11's precondition also checks gh's version, because
+the step verifies its upload against the release asset digests that older
+versions of gh do not report.
 
 ## What it keeps on this machine
 
@@ -340,7 +342,7 @@ Every release asset comes from that run. Rerun the jobs that failed if it does n
 
 - **Applies to:** Every release.
 - **Done when:** {tag} has rancher-desktop-linux-{tag}.zip and its .sha512sum.
-- **Waits for:** gh can push to {repo}, the draft release exists, {tag} is pushed, and the package run for {tag} has built its Linux zip.
+- **Waits for:** gh 2.74.0 or later can push to {repo}, the draft release exists, {tag} is pushed, and the package run for {tag} has built its Linux zip.
 - **Reaches:** GitHub repo.
 - **Runs:** Upload the Linux zip and its checksum to {tag}, replacing a partial upload.
 - **Gathers:** nothing. The instructions are all the step needs.
