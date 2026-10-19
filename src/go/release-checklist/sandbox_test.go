@@ -293,6 +293,28 @@ func TestTheDocsActionsPushToTheForkAndLeaveTheCloneAlone(t *testing.T) {
 		t.Errorf("the fork's version directory lists\n%s\nwant\n%s", listed, want)
 	}
 
+	if content := s.inFork(t, "show", testBranch+":"+testDocsFile); content+"\n" != docsVersionFileText {
+		t.Errorf("the pushed version file holds\n%s\nwant\n%s", content, docsVersionFileText)
+	}
+
+	page := s.inFork(t, "show", testBranch+":"+docsReferencePage)
+	for _, want := range []string{
+		"import Version123 from '../bundled-utilities-version-info/v1.23.0.md';",
+		"import Version124 from '../bundled-utilities-version-info/v1.24.0.md';",
+		"import Version125 from '../bundled-utilities-version-info/v1.25.0.md';",
+		"| v1.25.0                 | <Version125 />      |",
+		"| v1.24.0                 | <Version124 />      |",
+		"| v1.23.0                 | <Version123 />      |",
+	} {
+		if !strings.Contains(page, want) {
+			t.Errorf("the pushed reference page lacks %q", want)
+		}
+	}
+
+	if strings.Contains(page, "Version122") {
+		t.Error("the pushed reference page still lists v1.22.0")
+	}
+
 	forkBranchExists(t, s, tools)
 
 	if operations, err = planDocsReference(context.Background(), run); err != nil {
@@ -303,7 +325,7 @@ func TestTheDocsActionsPushToTheForkAndLeaveTheCloneAlone(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	page := s.inFork(t, "show", testBranch+":"+rdctlReferencePage)
+	page = s.inFork(t, "show", testBranch+":"+rdctlReferencePage)
 	for _, want := range []string{`"memoryInGB": 6`, "client version: v1.25.0"} {
 		if !strings.Contains(page, want) {
 			t.Errorf("the pushed page lacks %q", want)
