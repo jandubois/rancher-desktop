@@ -236,7 +236,7 @@ func referenceSummary(ctx context.Context, run *Run) (string, error) {
 
 	match := reportedVersion.FindSubmatch(output)
 	if match == nil {
-		return "", errors.New("rdctl version reports no client version")
+		return "", fmt.Errorf("cannot read the rdctl client version from %q", bytes.TrimSpace(output))
 	}
 
 	build := string(match[1])

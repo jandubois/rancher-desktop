@@ -398,6 +398,16 @@ func TestReferenceSummaryNamesABuildThatIsNotTheRelease(t *testing.T) {
 	}
 }
 
+func TestReferenceSummaryQuotesAVersionItCannotRead(t *testing.T) {
+	answers := referenceAnswers("")
+	answers["rdctl version"] = "rdctl client version: 1.24.0, targeting server version: v1\n"
+
+	_, err := referenceSummary(context.Background(), docsRun(t, &fakeTools{output: answers}))
+	if err == nil || !strings.Contains(err.Error(), "rdctl client version: 1.24.0") {
+		t.Errorf("the failure did not quote what rdctl printed: %v", err)
+	}
+}
+
 func TestReferenceSummarySaysWhatRegeneratingDoesToThisMachine(t *testing.T) {
 	answers := referenceAnswers("")
 	answers["rdctl version"] = "rdctl client version: " + testRelease.Tag() + ", targeting server version: v1\n"
