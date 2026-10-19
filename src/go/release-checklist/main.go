@@ -143,6 +143,16 @@ func chooseRelease(ctx context.Context, facts repoFacts) (*Release, error) {
 		if release.Finished, err = facts.TagInMain(ctx, version.Tag()); err != nil {
 			return nil, err
 		}
+
+		state, err := facts.ReleaseState(ctx, version.Tag())
+		if err != nil {
+			return nil, err
+		}
+
+		release.Published = state == ReleasePublished
+		if !release.Published {
+			release.Warnings = commitsPastTag(refs, version)
+		}
 	}
 
 	return release, nil

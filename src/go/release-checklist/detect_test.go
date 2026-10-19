@@ -245,3 +245,37 @@ func TestAVersionOverrideIsAPatchOnceItsLineHasATag(t *testing.T) {
 		t.Errorf("1.25.1 after v1.25.0 was a %s release", release.Kind)
 	}
 }
+
+func TestAVersionOverrideNamingAPublishedReleaseIsPublished(t *testing.T) {
+	v1250 := Version{Major: 1, Minor: 25}
+	facts := branched(t, v1250.Line(), map[Version]string{v1250: "beef"}, "beef")
+	facts.releases["v1.25.0"] = ReleasePublished
+
+	t.Setenv("VERSION", "1.25.0")
+
+	release, err := chooseRelease(context.Background(), facts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !release.Published || release.Finished {
+		t.Errorf("a published release not in main was published %t, finished %t", release.Published, release.Finished)
+	}
+}
+
+func TestAVersionOverrideNamingADraftBehindItsBranchWarns(t *testing.T) {
+	v1250 := Version{Major: 1, Minor: 25}
+	facts := branched(t, v1250.Line(), map[Version]string{v1250: "beef"}, "cafe")
+	facts.releases["v1.25.0"] = ReleaseDraft
+
+	t.Setenv("VERSION", "1.25.0")
+
+	release, err := chooseRelease(context.Background(), facts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(release.Warnings) != 1 || !strings.Contains(release.Warnings[0], "commits past v1.25.0") {
+		t.Errorf("a draft behind its branch warned %q", release.Warnings)
+	}
+}

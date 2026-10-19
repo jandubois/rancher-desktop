@@ -100,6 +100,22 @@ func Detect(ctx context.Context, facts repoFacts) (*Release, error) {
 	}, nil
 }
 
+// commitsPastTag warns when the release branch has commits past the tag,
+// which an unpublished release leaves out. It stays quiet when the branch is
+// gone.
+func commitsPastTag(refs *Refs, tag Version) []string {
+	line := tag.Line()
+
+	head, branched := refs.Branches[line]
+	if !branched || head == refs.Tags[tag] {
+		return nil
+	}
+
+	return []string{fmt.Sprintf(
+		"%s has commits past %s; they go into %s unless the tag is burned",
+		line.Branch(), tag.Tag(), tag.NextPatch())}
+}
+
 func target(ctx context.Context, facts repoFacts, refs *Refs, line Line) (Version, bool, []string, error) {
 	tag, tagged := refs.HighestTag(line)
 	if !tagged {
@@ -114,14 +130,7 @@ func target(ctx context.Context, facts repoFacts, refs *Refs, line Line) (Versio
 	aheadOfTag := refs.Branches[line] != refs.Tags[tag]
 
 	if state != ReleasePublished {
-		var warnings []string
-		if aheadOfTag {
-			warnings = append(warnings, fmt.Sprintf(
-				"%s has commits past %s; they go into %s unless the tag is burned",
-				line.Branch(), tag.Tag(), tag.NextPatch()))
-		}
-
-		return tag, false, warnings, nil
+		return tag, false, commitsPastTag(refs, tag), nil
 	}
 
 	inMain, err := facts.TagInMain(ctx, tag.Tag())
