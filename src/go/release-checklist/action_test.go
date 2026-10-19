@@ -14,6 +14,11 @@ import (
 // cleanTreeQuery is what every action asks before it plans anything.
 const cleanTreeQuery = "git status --porcelain --untracked-files=no"
 
+// untrackedToolQuery is what every action asks next, about untracked files in
+// the tool's source directory, where go run compiles the .go files into the
+// tool.
+const untrackedToolQuery = "git status --porcelain --untracked-files=all -- :(top)src/go/release-checklist"
+
 // twoCommands is a step whose automation runs two commands, for the tests
 // about what an action shows and what it runs.
 func twoCommands() *Step {
@@ -62,8 +67,8 @@ func TestActionShowsEveryOperationAndRunsNothingWhenDeclined(t *testing.T) {
 		}
 	}
 
-	if len(tools.calls) != 1 {
-		t.Errorf("declining ran %v", tools.calls[1:])
+	if len(tools.calls) != 2 {
+		t.Errorf("declining ran %v", tools.calls[2:])
 	}
 }
 
@@ -76,7 +81,7 @@ func TestActionRunsTheOperationsInOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	want := []string{cleanTreeQuery, "git fetch origin", "git push origin HEAD:refs/tags/v1.25.0"}
+	want := []string{cleanTreeQuery, untrackedToolQuery, "git fetch origin", "git push origin HEAD:refs/tags/v1.25.0"}
 	if len(tools.calls) != len(want) {
 		t.Fatalf("ran %v", tools.calls)
 	}
@@ -102,8 +107,8 @@ func TestActionStopsAtTheFirstFailure(t *testing.T) {
 	}
 
 	// The push would otherwise tag a commit the fetch never brought over.
-	if len(tools.calls) != 2 {
-		t.Errorf("ran %v after the failure", tools.calls[2:])
+	if len(tools.calls) != 3 {
+		t.Errorf("ran %v after the failure", tools.calls[3:])
 	}
 }
 
@@ -159,20 +164,30 @@ func TestActionAsksThePreconditionAgainBeforeRunning(t *testing.T) {
 }
 
 func TestActionRefusesToRunFromAnUncommittedTree(t *testing.T) {
-	run := testRun(t, Minor)
-	tools := &fakeTools{
-		anyCommand: true,
-		output:     map[string]string{cleanTreeQuery: " M src/go/release-checklist/steps.go\n"},
-	}
-	run.Tools = tools
+	for _, tc := range []struct {
+		name, query, status, want string
+		calls                     int
+	}{
+		{"tracked change", cleanTreeQuery, " M src/go/release-checklist/steps.go\n", "uncommitted", 1},
+		{"untracked tool source", untrackedToolQuery, "?? src/go/release-checklist/extra.go\n", "extra.go", 2},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			run := testRun(t, Minor)
+			tools := &fakeTools{
+				anyCommand: true,
+				output:     map[string]string{tc.query: tc.status},
+			}
+			run.Tools = tools
 
-	err := RunAction(context.Background(), twoCommands(), run, strings.NewReader("y\n"), io.Discard)
-	if err == nil || !strings.Contains(err.Error(), "uncommitted") {
-		t.Fatalf("an uncommitted tree gave %v", err)
-	}
+			err := RunAction(context.Background(), twoCommands(), run, strings.NewReader("y\n"), io.Discard)
+			if err == nil || !strings.Contains(err.Error(), tc.want) {
+				t.Fatalf("%q gave %v", tc.status, err)
+			}
 
-	if len(tools.calls) != 1 {
-		t.Errorf("ran %v from an uncommitted tree", tools.calls[1:])
+			if len(tools.calls) != tc.calls {
+				t.Errorf("ran %v from an uncommitted tree", tools.calls[tc.calls:])
+			}
+		})
 	}
 }
 

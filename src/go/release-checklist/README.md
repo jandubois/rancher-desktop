@@ -173,8 +173,9 @@ Nothing without a confirmation. `--run` prints every operation the step would
 perform, filled in with this release's values, and runs them only after you
 answer yes. It stops at the first failure, because the operations after it
 would build on work that did not happen. An action also refuses to start
-from a clone with uncommitted changes, since `yarn release` runs whatever is
-in the working tree, and only committed code should touch a release.
+from a clone with uncommitted changes or with untracked files in
+`src/go/release-checklist`, since `yarn release` runs whatever is in the
+working tree, and only committed code should touch a release.
 
 <!-- The table below is generated from the step actions. -->
 

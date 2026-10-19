@@ -320,7 +320,7 @@ func TestTheConfirmationAndTheWaitShareOneReader(t *testing.T) {
 // stops the dashboard painting over what the operations printed.
 func TestAnActionKeepsTheTerminalUntilTheReaderLeaves(t *testing.T) {
 	run := testRun(t, Minor)
-	run.Tools = &fakeTools{output: map[string]string{cleanTreeQuery: ""}}
+	run.Tools = &fakeTools{output: map[string]string{cleanTreeQuery: "", untrackedToolQuery: ""}}
 	step := answering(Answer{}, Answer{OK: true}, []Kind{Minor}, nil)
 	step.Action = &Action{
 		Title: "Do nothing at all",

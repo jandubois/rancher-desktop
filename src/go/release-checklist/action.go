@@ -98,9 +98,17 @@ func RunAction(ctx context.Context, step *Step, run *Run, in io.Reader, out io.W
 	return nil
 }
 
+// toolSourceDir is the directory of the tool's source, relative to the clone
+// root. yarn release compiles the tool from this directory with go run.
+const toolSourceDir = "src/go/release-checklist"
+
 // treeIsCommitted refuses to act from a clone with uncommitted changes. The
 // tool is compiled from the working tree, so a clean tree is what makes the
-// code that touches a release the code that is committed.
+// code that touches a release the code that is committed. Tracked changes
+// anywhere in the clone count, and so does any untracked file in the tool's
+// source directory, where go run compiles the .go files into the tool.
+// Untracked files elsewhere are allowed, because the notes step expects an
+// untracked release-notes.md at the clone root.
 func treeIsCommitted(ctx context.Context, run *Run) error {
 	output, err := run.Tools.run(ctx, "git", "status", "--porcelain", "--untracked-files=no")
 	if err != nil {
@@ -109,6 +117,15 @@ func treeIsCommitted(ctx context.Context, run *Run) error {
 
 	if changed := strings.TrimSpace(string(output)); changed != "" {
 		return fmt.Errorf("the clone has uncommitted changes, and an action runs the code in the working tree; commit or stash them first:\n%s", changed)
+	}
+
+	output, err = run.Tools.run(ctx, "git", "status", "--porcelain", "--untracked-files=all", "--", ":(top)"+toolSourceDir)
+	if err != nil {
+		return fmt.Errorf("checking for untracked files in %s: %w", toolSourceDir, err)
+	}
+
+	if untracked := strings.TrimSpace(string(output)); untracked != "" {
+		return fmt.Errorf("%s has untracked files, and go run compiles any .go file there into the tool; commit or remove them first:\n%s", toolSourceDir, untracked)
 	}
 
 	return nil
