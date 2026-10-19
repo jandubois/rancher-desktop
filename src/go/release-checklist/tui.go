@@ -435,7 +435,7 @@ func (d *dashboard) header() string {
 		right = "reading…"
 	}
 
-	pad := max(d.width-lipgloss.Width(left)-len(right)-1, 1)
+	pad := max(d.width-lipgloss.Width(left)-lipgloss.Width(right)-1, 1)
 
 	return left + strings.Repeat(" ", pad) + dim.Render(right)
 }

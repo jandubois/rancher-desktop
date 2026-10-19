@@ -18,6 +18,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // colours matches what a style adds around the words. Stripping it lets a
@@ -104,6 +105,16 @@ func TestTheHeaderNamesTheReleaseAndTheProfile(t *testing.T) {
 
 	if want := "1.25.0 · minor · test"; !strings.Contains(view, want) {
 		t.Errorf("the header does not name %q:\n%s", want, view)
+	}
+}
+
+func TestTheHeaderKeepsItsWidthWhileReading(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+	refreshed := lipgloss.Width(plain(dash.header()))
+	dash.refreshing = true
+
+	if reading := lipgloss.Width(plain(dash.header())); reading != refreshed {
+		t.Errorf("the header is %d columns while reading, %d after a refresh", reading, refreshed)
 	}
 }
 
