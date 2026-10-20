@@ -24,36 +24,39 @@ lowercase() {
 # Go's os.UserConfigDir and os.UserCacheDir name.
 find_store() {
     case $(uname -s) in # BSD uname doesn't support long option `--kernel-name`
-        Darwin)
-            config_dir="$HOME/Library/Application Support/rancher-desktop-release/$profile"
-            cache_dir="$HOME/Library/Caches/rancher-desktop-release/$profile"
-            ;;
-        Linux)
-            config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/rancher-desktop-release/$profile"
-            cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/rancher-desktop-release/$profile"
-            ;;
-        *) die "reset-rehearsal.sh runs on macOS and Linux only." ;;
+    Darwin)
+        config_dir="${HOME}/Library/Application Support/rancher-desktop-release/${profile}"
+        cache_dir="${HOME}/Library/Caches/rancher-desktop-release/${profile}"
+        ;;
+    Linux)
+        config_dir="${XDG_CONFIG_HOME:-${HOME}/.config}/rancher-desktop-release/${profile}"
+        cache_dir="${XDG_CACHE_HOME:-${HOME}/.cache}/rancher-desktop-release/${profile}"
+        ;;
+    *) die "reset-rehearsal.sh runs on macOS and Linux only." ;;
     esac
 }
 
 # read_profile sets the repositories and the documentation clone the profile
 # names, and refuses any repository of the real release.
 read_profile() {
-    local file="$config_dir/profile.yaml" settings="$config_dir/settings.yaml" named
-    [[ -f $file ]] || die "There is no profile at $file."
+    local file="${config_dir}/profile.yaml"
+    local settings="${config_dir}/settings.yaml"
+    local named
+    [[ -f ${file} ]] || die "There is no profile at ${file}."
 
     repo=$(yq -r '.github.repo // ""' "${file}")
     docs_repo=$(yq -r '.github.docsRepo // ""' "${file}")
-    [[ -n $repo ]] || die "$file names no github.repo."
+    [[ -n ${repo} ]] || die "${file} names no github.repo."
 
-    for named in "$repo" "$docs_repo"; do
-        case $(lowercase "$named") in
-            rancher-sandbox/*) die "$file names $named, a repository of the real release." ;;
+    for named in "${repo}" "${docs_repo}"; do
+        case $(lowercase "${named}") in
+        rancher-sandbox/*) die "${file} names ${named}, a repository of the real release." ;;
+        *) ;;
         esac
     done
 
     docs_clone=""
-    if [[ -f $settings ]]; then
+    if [[ -f ${settings} ]]; then
         docs_clone=$(yq -r '.docsClone // ""' "${settings}")
     fi
 }
@@ -63,9 +66,10 @@ read_profile() {
 # not have a fork. A repository of the user's with the same name that is not a
 # fork of it stops the reset, as it stops the tool.
 fork_of() {
-    local candidate="$login/${1#*/}" parent
-    if ! parent=$(gh api "repos/$candidate" --jq .parent.full_name 2>&1); then
-        [[ $parent == *"HTTP 404"* ]] || die "Looking for your fork of $1: $parent"
+    local candidate="${login}/${1#*/}"
+    local parent
+    if ! parent=$(gh api "repos/${candidate}" --jq .parent.full_name 2>&1); then
+        [[ ${parent} == *"HTTP 404"* ]] || die "Looking for your fork of $1: ${parent}"
         echo "$1"
         return
     fi
@@ -75,7 +79,7 @@ fork_of() {
     local lowered_repo
     lowered_repo=$(lowercase "$1")
     if [[ ${parent} == "${lowered_repo}" ]]; then
-        echo "$candidate"
+        echo "${candidate}"
     elif [[ ${lowered_candidate} == "${lowered_repo}" ]]; then
         echo "$1"
     else
@@ -99,11 +103,11 @@ ref_named() {
 act() {
     local description=$1
     shift
-    if [[ $mode == list ]]; then
+    if [[ ${mode} == list ]]; then
         [[ ${found} == yes ]] || echo "Resetting the rehearsal of profile ${profile} will:"
-        echo "  $description"
+        echo "  ${description}"
     else
-        echo "$description"
+        echo "${description}"
         "$@"
     fi
     found=yes
@@ -115,79 +119,87 @@ reset() {
     mode=$1
     found=no
 
-    local prs releases refs ref tags tag number clone
-    prs=$(gh pr list --repo "$repo" --state open --base "release-$line" --json number --jq '.[].number')
-    for number in $prs; do
-        act "close pull request #$number in $repo" gh pr close "$number" --repo "$repo"
+    local prs
+    local releases
+    local refs
+    local ref
+    local tags
+    local tag
+    local number
+    local clone
+    prs=$(gh pr list --repo "${repo}" --state open --base "release-${line}" --json number --jq '.[].number')
+    for number in ${prs}; do
+        act "close pull request #${number} in ${repo}" gh pr close "${number}" --repo "${repo}"
     done
-    if [[ -n $docs_repo ]]; then
-        prs=$(gh pr list --repo "$docs_repo" --state open --head "release-$line" --json number --jq '.[].number')
-        for number in $prs; do
-            act "close pull request #$number in $docs_repo" gh pr close "$number" --repo "$docs_repo"
+    if [[ -n ${docs_repo} ]]; then
+        prs=$(gh pr list --repo "${docs_repo}" --state open --head "release-${line}" --json number --jq '.[].number')
+        for number in ${prs}; do
+            act "close pull request #${number} in ${docs_repo}" gh pr close "${number}" --repo "${docs_repo}"
         done
     fi
 
-    releases=$(gh release list --repo "$repo" --limit 1000 --json tagName \
-        --jq ".[].tagName | select(startswith(\"v$line.\") or startswith(\"burned-v$line.\"))")
-    for tag in $releases; do
-        act "delete the release $tag in $repo" gh release delete "$tag" --repo "$repo" --yes
+    releases=$(gh release list --repo "${repo}" --limit 1000 --json tagName \
+        --jq ".[].tagName | select(startswith(\"v${line}.\") or startswith(\"burned-v${line}.\"))")
+    for tag in ${releases}; do
+        act "delete the release ${tag} in ${repo}" gh release delete "${tag}" --repo "${repo}" --yes
     done
 
-    refs=$(refs_with_prefix "$repo" "refs/tags/v$line.")
-    refs+=$'\n'$(ref_named "$repo" "refs/heads/release-$line")
-    for ref in $refs; do
-        act "delete $ref in $repo" gh api --method DELETE "repos/$repo/git/$ref" --silent
+    refs=$(refs_with_prefix "${repo}" "refs/tags/v${line}.")
+    refs+=$'\n'$(ref_named "${repo}" "refs/heads/release-${line}")
+    for ref in ${refs}; do
+        act "delete ${ref} in ${repo}" gh api --method DELETE "repos/${repo}/git/${ref}" --silent
     done
-    refs=$(refs_with_prefix "$fork" "refs/heads/bump-to-$line.")
-    for ref in $refs; do
-        act "delete $ref in $fork" gh api --method DELETE "repos/$fork/git/$ref" --silent
+    refs=$(refs_with_prefix "${fork}" "refs/heads/bump-to-${line}.")
+    for ref in ${refs}; do
+        act "delete ${ref} in ${fork}" gh api --method DELETE "repos/${fork}/git/${ref}" --silent
     done
-    if [[ -n $docs_repo ]]; then
-        refs=$(ref_named "$docs_fork" "refs/heads/release-$line")
-        for ref in $refs; do
-            act "delete $ref in $docs_fork" gh api --method DELETE "repos/$docs_fork/git/$ref" --silent
+    if [[ -n ${docs_repo} ]]; then
+        refs=$(ref_named "${docs_fork}" "refs/heads/release-${line}")
+        for ref in ${refs}; do
+            act "delete ${ref} in ${docs_fork}" gh api --method DELETE "repos/${docs_fork}/git/${ref}" --silent
         done
     fi
 
     for clone in "${clones[@]}"; do
-        tags=$(git -C "$clone" tag --list "v$line.*")
-        for tag in $tags; do
-            act "delete the tag $tag in $clone" git -C "$clone" tag --delete "$tag"
+        tags=$(git -C "${clone}" tag --list "v${line}.*")
+        for tag in ${tags}; do
+            act "delete the tag ${tag} in ${clone}" git -C "${clone}" tag --delete "${tag}"
         done
     done
-    if [[ -d $cache_dir ]]; then
-        act "delete $cache_dir, with the worktrees and downloads in it" rm -rf "$cache_dir"
+    if [[ -d ${cache_dir} ]]; then
+        act "delete ${cache_dir}, with the worktrees and downloads in it" rm -rf "${cache_dir}"
         for clone in "${clones[@]}"; do
-            act "prune the worktrees $clone no longer has" git -C "$clone" worktree prune
+            act "prune the worktrees ${clone} no longer has" git -C "${clone}" worktree prune
         done
     fi
-    if [[ -f $config_dir/confirmations.yaml ]]; then
-        act "delete the steps marked done, in $config_dir/confirmations.yaml" \
-            rm -f "$config_dir/confirmations.yaml"
+    if [[ -f ${config_dir}/confirmations.yaml ]]; then
+        act "delete the steps marked done, in ${config_dir}/confirmations.yaml" \
+            rm -f "${config_dir}/confirmations.yaml"
     fi
 }
 
 [[ $# -eq 1 ]] || die "Usage: $0 <profile>"
 profile=$1
-if [[ $(lowercase "$profile") == production ]]; then
+lowered_profile=$(lowercase "${profile}")
+if [[ ${lowered_profile} == production ]]; then
     die "The production profile is the real release; reset-rehearsal.sh resets rehearsals only."
 fi
 
 find_store
 read_profile
 clones=("$(git -C "$(dirname "$0")" rev-parse --show-toplevel)")
-if [[ -n $docs_clone ]]; then
-    clones+=("$docs_clone")
+if [[ -n ${docs_clone} ]]; then
+    clones+=("${docs_clone}")
 fi
 login=$(gh api user --jq .login)
-fork=$(fork_of "$repo")
+fork=$(fork_of "${repo}")
 docs_fork=""
-if [[ -n $docs_repo ]]; then
-    docs_fork=$(fork_of "$docs_repo")
+if [[ -n ${docs_repo} ]]; then
+    docs_fork=$(fork_of "${docs_repo}")
 fi
 
 reset list
-if [[ $found == no ]]; then
+if [[ ${found} == no ]]; then
     echo "The rehearsal of profile ${profile} has nothing to reset."
     exit
 fi
