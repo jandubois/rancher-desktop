@@ -308,3 +308,21 @@ func TestAProfileThatHasMarkedNothingHasNoFile(t *testing.T) {
 		t.Error("a store with no file behind it answered that a step is marked")
 	}
 }
+
+// A file that does not parse, read as one with no marks, would let the next
+// mark overwrite it and lose every mark in it.
+func TestConfirmationsThatDoNotParseAreAnError(t *testing.T) {
+	inAConfigOfItsOwn(t)
+
+	dir, err := ProfileDir("rehearsal")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	path := filepath.Join(dir, confirmationsFile)
+	writeFile(t, path, "1.25.0: [\n")
+
+	if _, err := loadConfirmations("rehearsal"); err == nil || !strings.Contains(err.Error(), path) {
+		t.Errorf("an unparsable %s gave %v", path, err)
+	}
+}

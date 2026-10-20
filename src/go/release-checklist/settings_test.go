@@ -67,3 +67,21 @@ func TestSettingsRefuseAFieldNobodyReads(t *testing.T) {
 		t.Errorf("a misspelled setting gave %v", err)
 	}
 }
+
+// A step that lacks a setting tells the user to write it in the file that
+// SettingsPath names, so LoadSettings must read that file.
+func TestLoadSettingsReadsTheProfilesFile(t *testing.T) {
+	inAConfigOfItsOwn(t)
+
+	path, err := SettingsPath("rehearsal")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	writeFile(t, path, "docsClone: /home/me/git/docs\n")
+
+	settings, err := LoadSettings("rehearsal")
+	if err != nil || settings.DocsClone != "/home/me/git/docs" {
+		t.Errorf("the profile's settings read %+v, %v", settings, err)
+	}
+}
