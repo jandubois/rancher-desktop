@@ -274,6 +274,17 @@ func TestTheForkProbeAsksAboutTheFork(t *testing.T) {
 	}
 }
 
+func TestNoAnswerAboutAccessGrantsNone(t *testing.T) {
+	for _, answer := range []string{"null", `{"push":true}`} {
+		tools := &fakeTools{output: map[string]string{permissionsQuery(testRepo): answer}}
+
+		granted, err := access(context.Background(), &Run{Tools: tools}, testRepo, "pull")
+		if err != nil || granted.OK {
+			t.Errorf("pull access with permissions %s answered %+v, %v", answer, granted, err)
+		}
+	}
+}
+
 func TestOnlyAMissingForkMeansThereIsNoFork(t *testing.T) {
 	const parentQuery = "gh api repos/me/rancher-desktop --jq .parent.full_name"
 
