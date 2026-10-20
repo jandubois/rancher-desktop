@@ -383,6 +383,25 @@ func TestTagInMainReadsTheCommitsMainIsMissing(t *testing.T) {
 	}
 }
 
+func TestOneEarlierCommitCountsAsHavingCommitted(t *testing.T) {
+	// The query asks for one commit at most, so 1 is the largest count it
+	// can return.
+	run := &fakeTools{output: map[string]string{
+		"gh api repos/rancher-sandbox/rancher-desktop/commits?author=octocat&until=2026-09-01T00:00:00Z&per_page=1 " +
+			"--jq length": "1\n",
+	}}
+	repo := &repository{repo: "rancher-sandbox/rancher-desktop", run: run}
+
+	committed, err := repo.CommittedBefore(context.Background(), "octocat", "2026-09-01T00:00:00Z")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !committed {
+		t.Error("one earlier commit reads as none")
+	}
+}
+
 func TestGitHubsNotThereAnswersAreReadAsAnswers(t *testing.T) {
 	const file = "gh api repos/rancher-sandbox/rancher-desktop/contents/package.json?ref=release-1.25 " +
 		"--header Accept: application/vnd.github.raw"
