@@ -44,6 +44,7 @@ var bundledUtilities = []bundledUtility{
 	{"spinCLI", "spin"},
 	{"spinShim", "spin-shim"},
 	{"spinOperator", "spin-operator"},
+	{"spinKubePlugin", "spin-plugin-kube"},
 	{"certManager", "cert-manager"},
 }
 

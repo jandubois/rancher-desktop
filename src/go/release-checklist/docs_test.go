@@ -56,6 +56,8 @@ kuberlr:
   version: 0.8.0
 spinCLI:
   version: 4.1.0
+spinKubePlugin:
+  version: 0.4.0
 spinOperator:
   version: 0.6.1
 spinShim:
@@ -86,6 +88,7 @@ const docsVersionFileText = "amazon-ecr-credential-helper: 0.12.0 <br/>\n" +
 	"nerdctl: 2.2.2 <br/>\n" +
 	"spin: 4.1.0 <br/>\n" +
 	"spin-operator: 0.6.1 <br/>\n" +
+	"spin-plugin-kube: 0.4.0 <br/>\n" +
 	"spin-shim: 0.26.0 <br/>\n" +
 	"trivy: 0.74.0 <br/>\n"
 
@@ -498,7 +501,7 @@ func TestTheDocsActionCutsFromMainAndPushesToTheFork(t *testing.T) {
 	want := []string{
 		"git fetch https://github.com/" + testDocsRepo + " " + defaultBranch,
 		"check 1234abc of " + defaultBranch + " out in " + dir + ", resetting any earlier attempt",
-		"write " + docsVersionDir + "/v1.25.0.md, listing the 13 utilities 1.25.0 bundles",
+		"write " + docsVersionDir + "/v1.25.0.md, listing the 14 utilities 1.25.0 bundles",
 		"drop " + docsVersionDir + "/v1.22.0.md, so the page lists 3 releases",
 		"list v1.25.0, v1.24.0, and v1.23.0 in " + docsReferencePage,
 		"git add --all -- " + docsVersionDir + " " + docsReferencePage,
