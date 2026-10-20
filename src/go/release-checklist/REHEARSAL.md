@@ -87,6 +87,17 @@ upstream. The names below are examples.
 
        gh api --method PUT repos/<org>/rancher-desktop-rehearsal/actions/permissions -F enabled=true
 
+   Then turn off four of the workflows that run on a schedule, so they do
+   not compete with the package runs for runners:
+
+       for workflow in bats.yaml macM1-e2e.yaml codeql.yaml scorecard.yml; do
+           gh workflow disable "$workflow" --repo <org>/rancher-desktop-rehearsal
+       done
+
+   The other scheduled workflows do their work only in rancher-sandbox or in
+   a repository with a `RUN_WORKFLOW_FROM_WORKFLOW` secret, which the
+   rehearsal repository does not have.
+
 5. Fork both into your account:
 
        gh repo fork <org>/rancher-desktop-rehearsal --clone=false
