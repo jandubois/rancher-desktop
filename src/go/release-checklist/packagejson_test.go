@@ -9,8 +9,9 @@ import (
 	"testing"
 )
 
-// manifest has the shape of the repository's own package.json: the version
-// on its own line, five spaces of neighbours around it.
+// manifest stands in for the repository's package.json. It has fields on
+// both sides of the version, one of them an object, so a version change
+// that touched anything else would show.
 const manifest = `{
   "name": "rancher-desktop",
   "private": true,
