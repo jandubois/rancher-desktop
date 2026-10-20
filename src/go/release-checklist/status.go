@@ -28,8 +28,8 @@ func printStatus(ctx context.Context, out io.Writer, run *Run) {
 	}
 }
 
-// printHeader names the release being driven, so a run against a fork profile
-// cannot be mistaken for one against the real thing.
+// printHeader names the release being driven, so a run against a rehearsal
+// profile cannot be mistaken for one against the real thing.
 func printHeader(out io.Writer, release *Release, profile *Profile) {
 	fmt.Fprintf(out, "%s · %s · %s\n", release.Version, release.State(), profile.Name)
 

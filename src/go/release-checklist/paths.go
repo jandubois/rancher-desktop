@@ -15,8 +15,8 @@ const storeDir = "rancher-desktop-release"
 
 // ProfileDir is where one profile keeps the files that belong to it: the
 // profile itself, the user's settings for it, and the steps confirmed by
-// hand. Keying by profile means a rehearsal on a fork cannot mark a step of
-// the real release done.
+// hand. Keying by profile means a rehearsal cannot mark a step of the real
+// release done.
 func ProfileDir(profile string) (string, error) {
 	dir, err := os.UserConfigDir()
 	if err != nil {

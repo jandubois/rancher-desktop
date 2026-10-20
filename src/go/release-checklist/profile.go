@@ -23,7 +23,8 @@ var productionYAML []byte
 
 // Profile names every resource outside this machine that a release touches.
 // Step code never spells out a repository, an OBS project or a bucket; it
-// reads them here, so one profile switch points a whole release at a fork.
+// reads them here, so one profile switch points a whole release at a
+// rehearsal's own systems.
 //
 // A section left out turns its steps off: a profile with no obs section
 // skips the OBS steps rather than failing them.
@@ -67,7 +68,7 @@ type ResponderTarget struct {
 
 // LoadProfile reads the named profile. The production profile is built into
 // the binary; every other name comes from the user's config directory, so a
-// fork profile with personal accounts in it never reaches the repository.
+// rehearsal profile with personal accounts in it never reaches the repository.
 func LoadProfile(name string) (*Profile, error) {
 	if name == productionName {
 		return parseProfile(productionYAML, "the built-in production profile")
@@ -169,7 +170,7 @@ func (p *Profile) Resources() map[string]string {
 
 // RefuseProductionResources fails when a profile that is not production names
 // a resource production uses or a repository of production's owner, naming
-// the field. A fork profile that forgot to change stableProject cannot
+// the field. A rehearsal profile that forgot to change stableProject cannot
 // publish into the real one.
 func (p *Profile) RefuseProductionResources(production *Profile) error {
 	if p.Name == productionName {

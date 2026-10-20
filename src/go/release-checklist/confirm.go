@@ -45,8 +45,7 @@ type confirmations interface {
 }
 
 // confirmationStore keeps a profile's confirmations in the profile's own
-// directory, so a rehearsal on a fork cannot mark a step of the real release
-// done.
+// directory, so a rehearsal cannot mark a step of the real release done.
 type confirmationStore struct {
 	path string
 	// marked is keyed by version and then by step, the order somebody

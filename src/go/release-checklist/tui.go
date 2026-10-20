@@ -437,7 +437,7 @@ func (d *dashboard) instructionsView() string {
 }
 
 // header names the release being driven and when the checklist was read, so
-// a run against a fork profile cannot be mistaken for the real thing.
+// a run against a rehearsal profile cannot be mistaken for the real thing.
 func (d *dashboard) header() string {
 	release := d.run.Release
 
