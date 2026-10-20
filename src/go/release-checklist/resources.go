@@ -13,14 +13,14 @@ import (
 
 // githubRepo is the repository the release is cut from. Its probe asks only
 // to read, so done work shows as done to anyone who can see it.
-var githubRepo = githubResource("GitHub repo", hasRepo,
+var githubRepo = githubResource("GitHub repo", nil,
 	func(ctx context.Context, run *Run) (Answer, error) {
 		return access(ctx, run, run.Profile.GitHub.Repo, "pull")
 	})
 
 // githubRepoPush is the release repository for a step that changes it, or
 // whose check reads the draft release, which only someone who can push sees.
-var githubRepoPush = githubResource("GitHub repo", hasRepo,
+var githubRepoPush = githubResource("GitHub repo", nil,
 	func(ctx context.Context, run *Run) (Answer, error) {
 		return access(ctx, run, run.Profile.GitHub.Repo, "push")
 	})
@@ -71,9 +71,6 @@ func githubResource(name string, configured func(*Profile) bool,
 		Probe:      probe,
 	}
 }
-
-// hasRepo reports whether the profile names a release repository.
-func hasRepo(p *Profile) bool { return p.GitHub.Repo != "" }
 
 // access reports whether the user gh is signed in as holds a permission on a
 // repository, pull to read it or push to change it.

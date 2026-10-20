@@ -84,6 +84,13 @@ func TestProfileRejectsFieldsItDoesNotKnow(t *testing.T) {
 	}
 }
 
+func TestProfileRefusesToLoadWithoutARepository(t *testing.T) {
+	_, err := parseProfile([]byte("name: fork\ngithub:\n  docsRepo: me/docs.rancherdesktop.io\n"), "test")
+	if err == nil || !strings.Contains(err.Error(), "github.repo") {
+		t.Errorf("a profile with no github.repo gave %v", err)
+	}
+}
+
 func TestProfileRefusesToReuseAProductionResource(t *testing.T) {
 	production, err := LoadProfile(productionName)
 	if err != nil {
