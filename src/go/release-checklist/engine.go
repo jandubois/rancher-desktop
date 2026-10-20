@@ -48,7 +48,8 @@ type Answer struct {
 	// precondition's or resource probe's while that one fails.
 	Detail string
 	// Waiting marks a precondition that nobody can satisfy by hand because
-	// a process outside the tool is still running.
+	// a process outside the tool is still running. Evaluate reads it only
+	// from a precondition, and ignores it in a check's or a probe's answer.
 	Waiting bool
 }
 
