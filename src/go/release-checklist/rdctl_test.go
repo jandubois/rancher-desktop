@@ -209,9 +209,9 @@ func TestRestoreValueKeepsTheGeneratedComma(t *testing.T) {
 // repositories are read at their public URLs.
 func referenceAnswers(page string) map[string]string {
 	return map[string]string{
-		"git remote --verbose": "",
-		"gh api repos/" + testDocsRepo + " --jq .permissions.pull": "true\n",
-		"gh api repos/" + testDocsFork + " --jq .permissions.push": "true\n",
+		"git remote --verbose":                                     "",
+		permissionsQuery(testDocsRepo):                             `{"pull":true}`,
+		permissionsQuery(testDocsFork):                             `{"push":true}`,
 		"gh api user --jq .login":                                  testLogin + "\n",
 		"gh api repos/" + testDocsFork + " --jq .parent.full_name": testDocsRepo + "\n",
 		headQuery(testDocsFork, testBranch):                        testHead + "\n",
@@ -624,5 +624,24 @@ func TestNormalizeReferenceReadsThePageAtTheCheckedOutCommit(t *testing.T) {
 
 	if !slices.Equal(changed, want) {
 		t.Errorf("normalizing left %q, want %q", changed, want)
+	}
+}
+
+func TestAMarkCoversThePageTheRefreshRead(t *testing.T) {
+	page := strings.Replace(string(documentedPage(t)), "v1.24.0,", testRelease.Tag()+",", 1)
+	tools := &fakeTools{output: referenceAnswers(page)}
+	run := docsRun(t, tools)
+
+	run.Status(context.Background(), docsReference)
+
+	tools.output[fileQuery(testDocsFork, testBranch, rdctlReferencePage)] = "a page pushed since\n"
+
+	if err := Mark(context.Background(), docsReference, run); err != nil {
+		t.Fatal(err)
+	}
+
+	confirmation, marked := run.Confirmation(docsReference.ID)
+	if !marked || confirmation.Digest != digestOf(page) {
+		t.Errorf("the mark covers %+v, not the page the refresh read", confirmation)
 	}
 }

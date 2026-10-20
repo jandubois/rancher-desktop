@@ -30,9 +30,10 @@ const (
 	testArtifactSize = 705811481
 )
 
-// artifactsQuery is the command that lists what a run built.
-func artifactsQuery(runID string) string {
-	return "gh api repos/" + testRepo + "/actions/runs/" + runID + "/artifacts?per_page=100"
+// artifactsQuery is the command that lists what the package run testRunID
+// built.
+func artifactsQuery() string {
+	return "gh api repos/" + testRepo + "/actions/runs/" + testRunID + "/artifacts?per_page=100"
 }
 
 // artifactsJSON is what GitHub answers for a run that built one artifact, in
@@ -76,7 +77,7 @@ func uploadRun(t *testing.T, release, artifacts string) *Run {
 	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = release
 	answers[runsQuery("v1.25.0")] = packageRunJSON("completed", "success")
-	answers[artifactsQuery(testRunID)] = artifacts
+	answers[artifactsQuery()] = artifacts
 	answers["gh --version"] = ghWithDigests
 
 	return tagRun(t, &fakeTools{output: answers}, map[Version]string{testRelease: testHead})
@@ -203,7 +204,7 @@ func TestLinuxAssetsWaitWhileTheRunIsStillBuilding(t *testing.T) {
 	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = draftWithAssets(t)
 	answers[runsQuery("v1.25.0")] = packageRunJSON("in_progress", "")
-	answers[artifactsQuery(testRunID)] = `{"total_count":0,"artifacts":[]}`
+	answers[artifactsQuery()] = `{"total_count":0,"artifacts":[]}`
 	answers["gh --version"] = ghWithDigests
 
 	run := tagRun(t, &fakeTools{output: answers}, map[Version]string{testRelease: testHead})
@@ -219,7 +220,7 @@ func TestLinuxAssetsWaitForSomewhereToUploadTo(t *testing.T) {
 	answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
 	answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] = ""
 	answers[runsQuery("v1.25.0")] = packageRunJSON("completed", "success")
-	answers[artifactsQuery(testRunID)] = artifactsJSON(linuxArtifact, false)
+	answers[artifactsQuery()] = artifactsJSON(linuxArtifact, false)
 	answers["gh --version"] = ghWithDigests
 
 	tools := &fakeTools{output: answers, stderr: map[string]string{

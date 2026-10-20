@@ -283,7 +283,7 @@ func (d *dashboard) actionFor(step *Step) *stepAction {
 }
 
 // markSelected marks the selected step done, or takes the mark off when it is
-// already marked for the text it would mark now. Reading that text reaches
+// already marked for the text it would mark now. Reading that text can reach
 // GitHub, so the mark is made in a command rather than on the drawing path.
 func (d *dashboard) markSelected() tea.Cmd {
 	if !d.ready() {

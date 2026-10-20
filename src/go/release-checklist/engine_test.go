@@ -7,7 +7,9 @@ package main
 import (
 	"context"
 	"errors"
+	"maps"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -215,6 +217,56 @@ func TestOneResourceIsProbedOncePerRefresh(t *testing.T) {
 
 	if counted.probes != 1 {
 		t.Errorf("three steps needing one resource probed it %d times", counted.probes)
+	}
+}
+
+func TestARefreshAsksGitHubEachQuestionOnce(t *testing.T) {
+	page := strings.Replace(string(documentedPage(t)), "v1.24.0,", testRelease.Tag()+",", 1)
+
+	for _, tagged := range []bool{false, true} {
+		inACacheOfItsOwn(t)
+
+		answers := readyToTag(packageRunJSON("completed", "success"))
+		maps.Copy(answers, docsAnswers())
+		maps.Copy(answers, referenceAnswers(page))
+		answers["gh release view v1.25.0 --repo "+testRepo+" --json "+releaseFields] =
+			`{"isDraft":true,"body":"some notes","assets":[]}`
+		answers["git rev-parse --show-toplevel"] = t.TempDir() + "\n"
+
+		if !tagged {
+			answers["gh api repos/"+testRepo+" --jq .parent.full_name"] = "someone/else\n"
+		} else {
+			answers[contentsQuery("v1.25.0")] = strings.Replace(manifest, "1.24.0", "1.25.0", 1)
+			answers[runsQuery("v1.25.0")] = packageRunJSON("completed", "success")
+			answers[artifactsQuery()] = `{"total_count":2,"artifacts":[` +
+				`{"name":"Rancher Desktop-linux.zip","expired":false,"size_in_bytes":1},` +
+				`{"name":"Rancher Desktop-win.zip","expired":false,"size_in_bytes":1}]}`
+			answers[fileQuery(testRepo, "v1.25.0", dependenciesFile)] = docsDependencies
+		}
+
+		tools := &fakeTools{output: answers, stderr: map[string]string{"rdctl list-settings": "not running"}}
+		run := docsRun(t, tools)
+		if tagged {
+			run.Refs.Tags = map[Version]string{testRelease: testHead}
+		}
+
+		for _, step := range checklist {
+			run.Status(context.Background(), step)
+		}
+
+		// Only gh calls ask GitHub; git and rdctl read this machine.
+		counts := map[string]int{}
+		for _, call := range tools.calls {
+			if strings.HasPrefix(call, "gh ") {
+				counts[call]++
+			}
+		}
+
+		for _, call := range slices.Sorted(maps.Keys(counts)) {
+			if count := counts[call]; count > 1 {
+				t.Errorf("tagged %v: %q ran %d times", tagged, call, count)
+			}
+		}
 	}
 }
 

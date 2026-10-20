@@ -118,9 +118,9 @@ func headQuery(repo, branch string) string {
 // no remotes, so both repositories are read at their public URLs.
 func docsAnswers() map[string]string {
 	return map[string]string{
-		"git remote --verbose": "",
-		"gh api repos/" + testDocsRepo + " --jq .permissions.pull":                        "true\n",
-		"gh api repos/" + testDocsFork + " --jq .permissions.push":                        "true\n",
+		"git remote --verbose":                                                            "",
+		permissionsQuery(testDocsRepo):                                                    `{"pull":true}`,
+		permissionsQuery(testDocsFork):                                                    `{"push":true}`,
 		"gh api user --jq .login":                                                         testLogin + "\n",
 		"gh api repos/" + testDocsFork + " --jq .parent.full_name":                        testDocsRepo + "\n",
 		headQuery(testDocsFork, testBranch):                                               testHead + "\n",
@@ -153,7 +153,7 @@ func TestDocsUtilitiesIsDoneWhenTheDocsListWhatTheReleaseBundles(t *testing.T) {
 
 func TestDocsUtilitiesNeedsNoPushAccessToTheDocsRepo(t *testing.T) {
 	answers := docsAnswers()
-	answers["gh api repos/"+testDocsRepo+" --jq .permissions.push"] = "false\n"
+	answers[permissionsQuery(testDocsRepo)] = `{"pull":true,"push":false}`
 
 	if status := docsRun(t, &fakeTools{output: answers}).Status(context.Background(), docsUtilities); status.State != Done {
 		t.Errorf("the docs step was %s: %s", status.State, status.Detail)
@@ -169,7 +169,7 @@ func TestDocsUtilitiesNeedsNoPushAccessToTheDocsRepo(t *testing.T) {
 
 func TestDocsUtilitiesIsBlockedWithoutPushAccessToTheFork(t *testing.T) {
 	answers := docsAnswers()
-	answers["gh api repos/"+testDocsFork+" --jq .permissions.push"] = "false\n"
+	answers[permissionsQuery(testDocsFork)] = `{"push":false}`
 	answers[fileQuery(testDocsFork, testBranch, testDocsFile)] =
 		strings.Replace(docsVersionFileText, "helm: 4.3.0", "helm: 4.2.3", 1)
 

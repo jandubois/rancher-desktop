@@ -222,6 +222,10 @@ func checkDocsUtilities(ctx context.Context, run *Run) (Answer, error) {
 // after a merge, so a check that read only the fork would show every finished
 // release as unfinished.
 func docsLocation(ctx context.Context, run *Run) (*repository, string, error) {
+	if run.docsHome != nil {
+		return run.docsHome, run.docsRef, nil
+	}
+
 	docs, err := run.Docs(ctx)
 	if err != nil {
 		return nil, "", err
@@ -238,12 +242,14 @@ func docsLocation(ctx context.Context, run *Run) (*repository, string, error) {
 
 	switch {
 	case err == nil:
-		return fork, branch, nil
+		run.docsHome, run.docsRef = fork, branch
 	case errors.Is(err, errNotFound):
-		return docs, defaultBranch, nil
+		run.docsHome, run.docsRef = docs, defaultBranch
 	default:
 		return nil, "", err
 	}
+
+	return run.docsHome, run.docsRef, nil
 }
 
 // docsFork is the user's fork of the documentation repository, or the

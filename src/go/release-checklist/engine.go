@@ -194,6 +194,13 @@ type Run struct {
 	statuses   map[string]Status
 	evaluating map[string]bool
 	docs       *repository
+	// docsHome and docsRef are where the release's documentation is, kept
+	// because two steps' checks and one step's confirmation ask for it.
+	docsHome *repository
+	docsRef  string
+	// permissions are what the user may do on each repository, kept because
+	// a repository's read and push probes both ask for them.
+	permissions map[string]map[string]bool
 }
 
 // Docs is the documentation repository, built when a step first asks for it
@@ -367,8 +374,8 @@ func (r *Run) Confirmation(step string) (Confirmation, bool) {
 }
 
 // Mark records that a person has judged a step done, or takes the mark off
-// when they mark it a second time. It reads the text at the moment of
-// marking, so the mark covers what they have in front of them.
+// when they mark it a second time. It reads the text through the refresh's
+// caches, so the mark covers the text behind the state on screen.
 func Mark(ctx context.Context, step *Step, run *Run) error {
 	if step.Confirms == nil {
 		return fmt.Errorf("step %s is settled by its check, so there is nothing to mark", step.ID)

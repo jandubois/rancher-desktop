@@ -124,7 +124,14 @@ type repository struct {
 	// artifacts caches what a run built, because every step that uploads an
 	// asset asks the same run about its own file.
 	artifacts map[string][]Artifact
+	// files caches file contents by ref and path, because a step's check and
+	// its confirmation read the same file, and a mark has to cover the text
+	// that the check read. A missing file is cached as nil.
+	files map[fileAt][]byte
 }
+
+// fileAt names a file at a ref.
+type fileAt struct{ ref, path string }
 
 func newRepository(ctx context.Context, clone, repo string, run commander) (*repository, error) {
 	fetch, push, err := remoteURLs(ctx, clone, repo, run)
@@ -390,7 +397,34 @@ func (r *repository) Root(ctx context.Context) (string, error) {
 // FileAtRef is a file's content at a branch, tag or commit, read through the
 // API so a check gives the same answer whatever the local clone has fetched.
 func (r *repository) FileAtRef(ctx context.Context, ref, path string) ([]byte, error) {
-	return fileAtRef(ctx, r.run, r.repo, ref, path)
+	key := fileAt{ref, path}
+
+	content, cached := r.files[key]
+	if !cached {
+		var err error
+
+		content, err = fileAtRef(ctx, r.run, r.repo, ref, path)
+		if err != nil && !errors.Is(err, errNotFound) {
+			return nil, err
+		}
+
+		// An empty file is kept apart from a missing one.
+		if err == nil && content == nil {
+			content = []byte{}
+		}
+
+		if r.files == nil {
+			r.files = map[fileAt][]byte{}
+		}
+
+		r.files[key] = content
+	}
+
+	if content == nil {
+		return nil, fmt.Errorf("reading %s at %s of %s: %w", path, ref, r.repo, errNotFound)
+	}
+
+	return content, nil
 }
 
 // fileAtRef reads a file from any repository. The guest image pins need that,

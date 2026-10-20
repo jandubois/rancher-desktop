@@ -5,9 +5,10 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
-	"strings"
 )
 
 // githubRepo is the repository the release is cut from. Its probe asks only
@@ -77,15 +78,41 @@ func hasRepo(p *Profile) bool { return p.GitHub.Repo != "" }
 // access reports whether the user gh is signed in as holds a permission on a
 // repository, pull to read it or push to change it.
 func access(ctx context.Context, run *Run, repo, permission string) (Answer, error) {
-	output, err := run.Tools.run(ctx, "gh", "api", "repos/"+repo, "--jq", ".permissions."+permission)
+	granted, err := permissions(ctx, run, repo)
 	if err != nil {
-		return Answer{}, fmt.Errorf("reading your access to %s: %w", repo, err)
+		return Answer{}, err
 	}
 
-	if strings.TrimSpace(string(output)) != "true" {
+	if !granted[permission] {
 		return Answer{Detail: fmt.Sprintf(
 			"no %s access to %s; run gh auth login as a user who has it", permission, repo)}, nil
 	}
 
 	return Answer{OK: true, Detail: permission + " access to " + repo}, nil
+}
+
+// permissions are what the user gh is signed in as may do on a repository, by
+// GitHub's names for them. A repository that reports none grants nothing.
+func permissions(ctx context.Context, run *Run, repo string) (map[string]bool, error) {
+	if granted, ok := run.permissions[repo]; ok {
+		return granted, nil
+	}
+
+	output, err := run.Tools.run(ctx, "gh", "api", "repos/"+repo, "--jq", ".permissions")
+	if err != nil {
+		return nil, fmt.Errorf("reading your access to %s: %w", repo, err)
+	}
+
+	var granted map[string]bool
+	if err := json.Unmarshal(output, &granted); err != nil {
+		return nil, fmt.Errorf("reading your access to %s from %q: %w", repo, bytes.TrimSpace(output), err)
+	}
+
+	if run.permissions == nil {
+		run.permissions = map[string]map[string]bool{}
+	}
+
+	run.permissions[repo] = granted
+
+	return granted, nil
 }

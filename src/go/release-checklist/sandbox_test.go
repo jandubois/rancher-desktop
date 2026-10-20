@@ -253,6 +253,19 @@ func forkBranchExists(t *testing.T, s *docsSandbox, tools *fakeTools) {
 	tools.output[headQuery(testDocsFork, testBranch)] = s.inFork(t, "rev-parse", testBranch) + "\n"
 }
 
+// nextRefresh is the run that the dashboard builds for the next key press. It
+// has the same release, profile, clones and answers, with nothing read yet.
+func nextRefresh(run *Run) *Run {
+	repo := &repository{repo: run.Repo.repo, url: run.Repo.url, pushURL: run.Repo.pushURL, dir: run.Repo.dir, run: run.Repo.run}
+	next := newRun(run.Release, run.Profile, repo)
+	next.Refs = run.Refs
+	next.Tools = run.Tools
+	next.Confirmations = run.Confirmations
+	next.Settings = run.Settings
+
+	return next
+}
+
 func perform(run *Run, operations []Operation) error {
 	var out bytes.Buffer
 
@@ -324,6 +337,7 @@ func TestTheDocsActionsPushToTheForkAndLeaveTheCloneAlone(t *testing.T) {
 	}
 
 	forkBranchExists(t, s, tools)
+	run = nextRefresh(run)
 
 	if operations, err = planDocsReference(context.Background(), run); err != nil {
 		t.Fatal(err)
@@ -352,7 +366,7 @@ func TestTheDocsActionsRefuseARepositoryThatIsNotTheFork(t *testing.T) {
 	// The docs repository can be pushed to, has no release branch yet, and
 	// has a push URL, so only the fork lookup keeps the action from pushing
 	// there.
-	tools.output["gh api repos/"+testDocsRepo+" --jq .permissions.push"] = "true\n"
+	tools.output[permissionsQuery(testDocsRepo)] = `{"pull":true,"push":true}`
 	tools.stderr[headQuery(testDocsRepo, testBranch)] = "gh: Branch not found (HTTP 404)"
 	tools.output["git remote --verbose"] = strings.Replace(docsRemoteOutput,
 		"DISABLED", "https://github.com/"+testDocsRepo, 1)
@@ -414,6 +428,7 @@ func TestAStagedPageFromAFailedRunStaysOutOfTheNextCommit(t *testing.T) {
 
 	forkBranchExists(t, s, tools)
 	tools.output[listQuery(testDocsFork, testBranch, docsVersionDir)] = "v1.23.0.md\nv1.24.0.md\nv1.25.0.md\n"
+	run = nextRefresh(run)
 
 	release := refuseCommits(t, s)
 
@@ -429,6 +444,7 @@ func TestAStagedPageFromAFailedRunStaysOutOfTheNextCommit(t *testing.T) {
 
 	// A utility moves, so the bundled utilities step runs again.
 	tools.output[fileQuery(testRepo, testBranch, dependenciesFile)] = strings.Replace(docsDependencies, "4.3.0", "4.3.1", 1)
+	run = nextRefresh(run)
 
 	if operations, err = planDocsUtilities(context.Background(), run); err != nil {
 		t.Fatal(err)
@@ -461,6 +477,7 @@ func TestRegeneratingTheReferenceFromTheSameBuildPushesNothingNew(t *testing.T) 
 	// can run again after its push and regenerate the page it pushed.
 	for range 2 {
 		forkBranchExists(t, s, tools)
+		run = nextRefresh(run)
 
 		if operations, err = planDocsReference(context.Background(), run); err != nil {
 			t.Fatal(err)
@@ -541,12 +558,12 @@ func TestTheVersionBumpRetriesAfterAFailedPullRequest(t *testing.T) {
 
 	fake := &fakeTools{
 		output: map[string]string{
-			"git remote --verbose": sandboxRemoteOutput,
-			"gh api repos/" + sandboxUpstream + " --jq .permissions.pull": "true\n",
-			"gh api repos/" + testRepo + " --jq .permissions.push":        "true\n",
-			"gh api user --jq .login":                                     testLogin + "\n",
-			"gh api repos/" + testRepo + " --jq .parent.full_name":        sandboxUpstream + "\n",
-			fileQuery(sandboxUpstream, testBranch, "package.json"):        manifest,
+			"git remote --verbose":                                 sandboxRemoteOutput,
+			permissionsQuery(sandboxUpstream):                      `{"pull":true}`,
+			permissionsQuery(testRepo):                             `{"push":true}`,
+			"gh api user --jq .login":                              testLogin + "\n",
+			"gh api repos/" + testRepo + " --jq .parent.full_name": sandboxUpstream + "\n",
+			fileQuery(sandboxUpstream, testBranch, "package.json"): manifest,
 			"gh api repos/" + sandboxUpstream + "/pulls?state=open&head=" + testLogin +
 				":bump-to-1.25.0 --jq .[0].number": "\n",
 		},

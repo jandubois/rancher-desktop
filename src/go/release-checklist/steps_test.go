@@ -35,8 +35,7 @@ func checklistRun(t *testing.T, version Version, branches map[Line]string, tools
 		tools.output = map[string]string{}
 	}
 
-	tools.output["gh api repos/"+testRepo+" --jq .permissions.pull"] = "true\n"
-	tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "true\n"
+	tools.output[permissionsQuery(testRepo)] = `{"pull":true,"push":true}`
 
 	url := "https://github.com/" + testRepo + ".git"
 	repo := &repository{repo: testRepo, url: url, pushURL: url, run: tools}
@@ -298,7 +297,7 @@ func TestATagIsDoneForSomeoneWhoCanOnlyRead(t *testing.T) {
 
 	tools := &fakeTools{output: answers}
 	run := tagRun(t, tools, map[Version]string{testRelease: testHead})
-	tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "false\n"
+	tools.output[permissionsQuery(testRepo)] = `{"pull":true,"push":false}`
 
 	if status := run.Status(context.Background(), tagRelease); status.State != Done {
 		t.Errorf("the tag was %s: %s", status.State, status.Detail)
@@ -317,7 +316,7 @@ func TestStepsReadingTheDraftNeedPushAccess(t *testing.T) {
 	for _, step := range []*Step{draftRelease, releaseNotes, linuxAssets, windowsAssets} {
 		tools := &fakeTools{}
 		run := checklistRun(t, testRelease, map[Line]string{testRelease.Line(): testHead}, tools)
-		tools.output["gh api repos/"+testRepo+" --jq .permissions.push"] = "false\n"
+		tools.output[permissionsQuery(testRepo)] = `{"pull":true,"push":false}`
 
 		if status := run.Status(context.Background(), step); status.State != Blocked {
 			t.Errorf("step %s was %s for someone who cannot push: %s", step.ID, status.State, status.Detail)

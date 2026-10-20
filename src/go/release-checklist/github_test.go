@@ -33,6 +33,12 @@ type fakeTools struct {
 	effects map[string]func() error
 }
 
+// permissionsQuery is the command that reads what the user may do on a
+// repository.
+func permissionsQuery(repo string) string {
+	return "gh api repos/" + repo + " --jq .permissions"
+}
+
 func (f *fakeTools) run(_ context.Context, name string, args ...string) ([]byte, error) {
 	line := strings.Join(append([]string{name}, args...), " ")
 	f.calls = append(f.calls, line)
@@ -259,7 +265,7 @@ func TestTheForkProbeAsksAboutTheFork(t *testing.T) {
 		"git remote --verbose":                                   remoteOutput,
 		"gh api user --jq .login":                                "me\n",
 		"gh api repos/me/rancher-desktop --jq .parent.full_name": "rancher-sandbox/rancher-desktop\n",
-		"gh api repos/me/rancher-desktop --jq .permissions.push": "true\n",
+		permissionsQuery("me/rancher-desktop"):                   `{"push":true}`,
 	}}
 	run := &Run{Repo: repositoryIn(t, "", "rancher-sandbox/rancher-desktop", tools), Tools: tools}
 
