@@ -18,23 +18,28 @@ import (
 	"testing"
 )
 
-// The tests in this file perform the docs actions with real git, against
-// bare repositories under a temporary directory that stand in for the
-// documentation repository and the user's fork. The fake still answers gh and
-// the clone's remote list, so nothing reaches the network, and
-// GIT_ALLOW_PROTOCOL=file makes sure of it. They cover what a fake commander
-// cannot: what a worktree holds after a failed attempt, and what a commit
-// takes with it.
+// The tests in this file perform the tool's actions with real git, against
+// bare repositories under a temporary directory that stand in for a GitHub
+// repository and the user's fork of it. The fake answers the clone's remote
+// list and every command but git and the generation script, so no test
+// reaches the network or runs the developer's rdctl, and
+// GIT_ALLOW_PROTOCOL=file keeps git itself off the network. Unlike a fake
+// commander, these tests see what a worktree holds after a failed attempt,
+// what a commit takes with it, and which commit a push sends.
 
-// realGit runs git and the generation script for real, and leaves gh and the
-// clone's remote list to the fake.
+// realGit runs git and the generation script for real, and leaves the clone's
+// remote list and every other command to the fake.
 type realGit struct {
 	fake *fakeTools
 	env  []string
 }
 
 func (r *realGit) isReal(name string, args []string) bool {
-	return name != "gh" && (name != "git" || len(args) == 0 || args[0] != "remote")
+	if name == "git" {
+		return len(args) == 0 || args[0] != "remote"
+	}
+
+	return filepath.IsAbs(name) && strings.HasSuffix(name, string(filepath.Separator)+filepath.FromSlash(rdctlReferenceScript))
 }
 
 func (r *realGit) run(ctx context.Context, name string, args ...string) ([]byte, error) {
@@ -69,7 +74,9 @@ func (r *realGit) runTo(ctx context.Context, dir string, out io.Writer, name str
 	return cmd.Run()
 }
 
-func (r *realGit) installed(string) bool { return true }
+func (r *realGit) installed(name string) bool {
+	return r.isReal(name, nil) || r.fake.installed(name)
+}
 
 // isolatedGitEnv is this process's environment for a git that does not
 // read the system config, takes its global config from the file it is
@@ -672,4 +679,78 @@ func TestAWorktreeStartsFromThePlannedCommitWhateverTheLastAttemptLeft(t *testin
 	}
 
 	checkOut(first)
+}
+
+// advanceUpstream adds an empty commit to a branch of the bare upstream and
+// returns it.
+func advanceUpstream(t *testing.T, s *gitSandbox, branch string) string {
+	t.Helper()
+
+	commit := s.git(t, "", "--git-dir", s.upstream, "commit-tree", "-p", branch, "-m", "moved", branch+"^{tree}")
+	s.git(t, "", "--git-dir", s.upstream, "update-ref", "refs/heads/"+branch, commit)
+
+	return commit
+}
+
+// upstreamRef is the commit that a ref of the bare upstream points at, or
+// nothing.
+func upstreamRef(t *testing.T, s *gitSandbox, ref string) string {
+	t.Helper()
+
+	return s.git(t, "", "--git-dir", s.upstream, "for-each-ref", "--format=%(objectname)", ref)
+}
+
+func TestTheReleaseBranchStartsAtTheCommitTheSummaryShowed(t *testing.T) {
+	s := newCodeSandbox(t)
+	// Step 1 creates the release branch.
+	s.git(t, "", "--git-dir", s.upstream, "update-ref", "-d", "refs/heads/"+testBranch)
+
+	// main moves on past the commit that the summary showed, and the clone
+	// has neither.
+	shown := advanceUpstream(t, s, defaultBranch)
+	latest := advanceUpstream(t, s, defaultBranch)
+
+	run := bumpRun(t, s, &fakeTools{output: map[string]string{
+		"git remote --verbose": sandboxRemoteOutput,
+		"gh api repos/" + sandboxUpstream + "/branches/main": `{"name":"main","commit":{"sha":"` + shown +
+			`","commit":{"committer":{"date":"2026-09-01T12:00:00Z"},"message":"shown"}}}`,
+	}})
+
+	operations, err := planReleaseBranch(t.Context(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := perform(run, operations); err != nil {
+		t.Fatal(err)
+	}
+
+	if branch := upstreamRef(t, s, "refs/heads/"+testBranch); branch != shown {
+		t.Errorf("%s is at %q, want %.7s, which the summary showed (main is at %.7s)", testBranch, branch, shown, latest)
+	}
+}
+
+func TestTheTagGoesOnTheCommitTheRefreshRead(t *testing.T) {
+	s := newCodeSandbox(t)
+
+	// The release branch moves on past the commit that the refresh read, and
+	// the clone has neither.
+	read := advanceUpstream(t, s, testBranch)
+	latest := advanceUpstream(t, s, testBranch)
+
+	run := bumpRun(t, s, &fakeTools{output: map[string]string{"git remote --verbose": sandboxRemoteOutput}})
+	run.Refs.Branches[testRelease.Line()] = read
+
+	operations, err := planTag(t.Context(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := perform(run, operations); err != nil {
+		t.Fatal(err)
+	}
+
+	if tag := upstreamRef(t, s, "refs/tags/"+testRelease.Tag()); tag != read {
+		t.Errorf("%s is at %q, want %.7s, which the refresh read (%s is at %.7s)", testRelease.Tag(), tag, read, testBranch, latest)
+	}
 }
