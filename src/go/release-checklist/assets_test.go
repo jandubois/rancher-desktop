@@ -129,6 +129,20 @@ func TestLinuxAssetsAreDoneWhenTheReleaseHasBoth(t *testing.T) {
 	}
 }
 
+func TestTheLinuxDownloadSizeIsInMiB(t *testing.T) {
+	run := uploadRun(t, draftWithAssets(t), artifactsJSON(linuxArtifact, false))
+
+	summary, err := linuxDownloadSize(context.Background(), run)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// testArtifactSize rounds to 673 in MiB and to 706 in MB.
+	if !strings.Contains(summary, " is 673 MiB,") {
+		t.Errorf("the summary is %q", summary)
+	}
+}
+
 func TestLinuxAssetsAreAvailableWhileTheChecksumIsMissing(t *testing.T) {
 	run := uploadRun(t,
 		draftWithAssets(t, stored(testZip)),
