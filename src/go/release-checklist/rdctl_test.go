@@ -134,6 +134,34 @@ func TestRestoreHostSettingsRefusesAFieldThePageNeverShowed(t *testing.T) {
 	}
 }
 
+func TestRestoreHostSettingsSkipsAFieldNeitherPageShows(t *testing.T) {
+	documented := []byte(strings.Replace(string(documentedPage(t)), `    "memoryInGB": 6,`+"\n", "", 1))
+
+	restored, err := restoreHostSettings(documented, generatedPage(t, documented))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	changed := differingLines(string(documented), string(restored))
+	want := []string{"    " + generatedKubernetes + ","}
+
+	if !slices.Equal(changed, want) {
+		t.Errorf("the restored page differs from the published one on %q, want %q", changed, want)
+	}
+}
+
+func TestSettingsBlockRefusesAPageWithoutOne(t *testing.T) {
+	unclosed := []string{"```console", listSettingsCommand, "{", "}"}
+	if _, err := settingsBlock(unclosed); err == nil || !strings.Contains(err.Error(), "is never closed") {
+		t.Errorf("a block with no closing fence gave %v", err)
+	}
+
+	missing := []string{"```console", "{", "}", "```"}
+	if _, err := settingsBlock(missing); err == nil || !strings.Contains(err.Error(), "shows no "+listSettingsCommand+" output") {
+		t.Errorf("a page without the command gave %v", err)
+	}
+}
+
 func TestSettingsBlockSkipsTheHelpOutput(t *testing.T) {
 	lines := strings.Split(string(documentedPage(t)), "\n")
 

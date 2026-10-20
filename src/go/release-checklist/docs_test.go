@@ -345,6 +345,30 @@ func TestNerdctlRefusesWhenTheGuestImagesDisagree(t *testing.T) {
 	}
 }
 
+func TestNerdctlRefusesAGuestImageWithNoRelease(t *testing.T) {
+	run := docsRun(t, &fakeTools{output: docsAnswers()})
+	dependencies := strings.Replace(docsDependencies,
+		"      url: https://github.com/rancher-sandbox/rancher-desktop-wsl-distro/releases/download/v0.100/distro-0.100.tar\n", "", 1)
+
+	_, err := nerdctlVersion(context.Background(), run, []byte(dependencies))
+	if err == nil || !strings.Contains(err.Error(), "names no release for WSLDistro") {
+		t.Errorf("a guest image with no release gave %v", err)
+	}
+}
+
+func TestNerdctlRefusesAPinFileWithNoVersion(t *testing.T) {
+	answers := docsAnswers()
+	answers[fileQuery("rancher-sandbox/rancher-desktop-wsl-distro", "v0.100", "versions.env")] =
+		strings.Replace(wslVersions, "NERDCTL_VERSION=v2.2.2\n", "", 1)
+
+	run := docsRun(t, &fakeTools{output: answers})
+
+	_, err := nerdctlVersion(context.Background(), run, []byte(docsDependencies))
+	if err == nil || !strings.Contains(err.Error(), "versions.env at v0.100 of rancher-sandbox/rancher-desktop-wsl-distro sets no NERDCTL_VERSION") {
+		t.Errorf("a pin file with no nerdctl version gave %v", err)
+	}
+}
+
 func TestReleaseURLNamesTheRepositoryAndTag(t *testing.T) {
 	source, ok := parseReleaseURL(
 		"https://github.com/rancher-sandbox/alpine-lima/releases/download/v0.2.47.rd9/alpine-lima-rd-3.24.1-x86_64.iso")

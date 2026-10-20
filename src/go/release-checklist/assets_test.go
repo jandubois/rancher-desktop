@@ -476,6 +476,15 @@ func TestAnUploadThatArrivedShortIsCaught(t *testing.T) {
 	}
 }
 
+func TestAFileTheReleaseDoesNotHaveIsCaught(t *testing.T) {
+	run := uploadRun(t, draftWithAssets(t), artifactsJSON(linuxArtifact, false))
+
+	err := verifyAgainstRelease(context.Background(), run, t.TempDir(), []string{testZip})
+	if err == nil || !strings.Contains(err.Error(), testZip) || !strings.Contains(err.Error(), "v1.25.0") {
+		t.Errorf("a file missing from the release gave %v", err)
+	}
+}
+
 func TestAnUploadThatArrivedWholePasses(t *testing.T) {
 	content := []byte("a build")
 	digest := fmt.Sprintf("sha256:%x", sha256.Sum256(content))
