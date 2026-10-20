@@ -537,24 +537,31 @@ func TestTheDashboardFitsItsScreen(t *testing.T) {
 	}
 
 	dash.notice = ""
-	dash.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
 	press(dash, "i")
 
 	cut := false
 
-	for _, step := range checklist {
-		selectStep(t, dash, step.ID)
+	// At 40 columns the marker wraps; at 6 lines no instruction line fits.
+	for _, size := range []tea.WindowSizeMsg{{Width: 80, Height: 24}, {Width: 40, Height: 24}, {Width: 80, Height: 6}} {
+		dash.Update(size)
 
-		view := plain(dash.View())
-		if lines := strings.Count(view, "\n") + 1; lines > dash.height {
-			t.Errorf("step %s's instructions drew %d lines on a %d line screen", step.ID, lines, dash.height)
+		for _, step := range checklist {
+			selectStep(t, dash, step.ID)
+
+			view := plain(dash.View())
+			if lines := strings.Count(view, "\n") + 1; lines > dash.height {
+				t.Errorf("at %dx%d, step %s's instructions drew %d lines", size.Width, size.Height, step.ID, lines)
+			}
+
+			if first, _, _ := strings.Cut(view, "\n"); first != plain(dash.header()) {
+				t.Errorf("at %dx%d, step %s's instructions do not open with the header:\n%s",
+					size.Width, size.Height, step.ID, view)
+			}
+
+			if size.Width == 80 && size.Height == 24 {
+				cut = cut || strings.Contains(view, "README.md's step reference has them all")
+			}
 		}
-
-		if first, _, _ := strings.Cut(view, "\n"); first != plain(dash.header()) {
-			t.Errorf("step %s's instructions do not open with the header:\n%s", step.ID, view)
-		}
-
-		cut = cut || strings.Contains(view, "README.md's step reference has them all")
 	}
 
 	if !cut {

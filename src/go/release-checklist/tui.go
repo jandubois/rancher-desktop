@@ -420,9 +420,17 @@ func (d *dashboard) instructionsView() string {
 	// A view taller than the screen loses its top lines, header first.
 	instructions := d.wrap(fill(step.Doc.Instructions, d.run))
 	if room := d.height - len(above) - len(below); len(instructions) > room {
-		kept := max(room-1, 0)
-		instructions = append(instructions[:kept],
-			d.wrap(fmt.Sprintf("… %d more lines; README.md's step reference has them all", len(instructions)-kept))...)
+		// A narrow screen wraps the marker, and a longer count can wrap it
+		// further, so leave room for the longest, which hides every line.
+		marker := func(kept int) []string {
+			return d.wrap(fmt.Sprintf("… %d more lines; README.md's step reference has them all", len(instructions)-kept))
+		}
+		kept := room - len(marker(0))
+		if kept < 0 {
+			instructions = nil
+		} else {
+			instructions = append(instructions[:kept], marker(kept)...)
+		}
 	}
 
 	return strings.Join(slices.Concat(above, instructions, below), "\n")
