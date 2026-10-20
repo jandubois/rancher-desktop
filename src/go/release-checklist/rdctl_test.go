@@ -359,6 +359,18 @@ func TestDocsReferenceFailsOnSnapshotsItCannotDecode(t *testing.T) {
 	}
 }
 
+func TestDocsReferenceFailsWhenTheSnapshotsCannotBeListed(t *testing.T) {
+	answers := docsAnswers()
+	answers["rdctl list-settings"] = "{}\n"
+	answers[extensionQuery] = noExtensions
+
+	tools := &fakeTools{output: answers, stderr: map[string]string{snapshotQuery: "Error: connection refused"}}
+
+	if answer, err := docsReferenceReady(context.Background(), docsRun(t, tools)); err == nil {
+		t.Errorf("a failed snapshot list answered %v: %s", answer.OK, answer.Detail)
+	}
+}
+
 func TestDocsReferenceIsReadyOnACleanMachine(t *testing.T) {
 	answers := docsAnswers()
 	answers["rdctl list-settings"] = "{}\n"
