@@ -42,8 +42,8 @@ read_profile() {
     local file="$config_dir/profile.yaml" settings="$config_dir/settings.yaml" named
     [[ -f $file ]] || die "There is no profile at $file."
 
-    repo=$(yq '.github.repo // ""' "$file")
-    docs_repo=$(yq '.github.docsRepo // ""' "$file")
+    repo=$(yq -r '.github.repo // ""' "${file}")
+    docs_repo=$(yq -r '.github.docsRepo // ""' "${file}")
     [[ -n $repo ]] || die "$file names no github.repo."
 
     for named in "$repo" "$docs_repo"; do
@@ -54,7 +54,7 @@ read_profile() {
 
     docs_clone=""
     if [[ -f $settings ]]; then
-        docs_clone=$(yq '.docsClone // ""' "$settings")
+        docs_clone=$(yq -r '.docsClone // ""' "${settings}")
     fi
 }
 
