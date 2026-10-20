@@ -325,7 +325,7 @@ func TestStepsReadingTheDraftNeedPushAccess(t *testing.T) {
 }
 
 func TestTheDraftReleaseStartsFromTheNotesSkeleton(t *testing.T) {
-	t.Setenv("HOME", t.TempDir())
+	inACacheOfItsOwn(t)
 
 	for version, title := range map[Version]string{
 		{Major: 1, Minor: 25}:           "Rancher Desktop 1.25",

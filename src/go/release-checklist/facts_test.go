@@ -292,9 +292,7 @@ func TestALinesFirstReleaseAfterABurnedOneLinksTheLinesMilestone(t *testing.T) {
 }
 
 func TestGatheringWritesUnderTheReleasesCacheDirectory(t *testing.T) {
-	home := t.TempDir()
-	t.Setenv("HOME", home)
-	t.Setenv("XDG_CACHE_HOME", filepath.Join(home, ".cache"))
+	inACacheOfItsOwn(t)
 
 	run := checklistRun(t, testRelease, nil, &fakeTools{})
 	step := &Step{ID: "6", Facts: &Facts{File: factsFile,
