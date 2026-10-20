@@ -86,10 +86,11 @@ back to `available`.
 
 ## Profiles
 
-A profile names every system outside this machine that a release touches: the
+A profile names the systems outside this machine that a release touches: the
 repositories, the documentation site, the OBS projects, the screenshot bucket
 and the upgrade responder. Step code never spells these out, so one switch
-points a whole release at a rehearsal's own systems.
+points a whole release at a rehearsal's own systems. A profile leaves out your
+forks, which the tool finds from your gh login.
 [REHEARSAL.md](REHEARSAL.md) describes how to rehearse a release.
 
 The production profile is built into the binary, and plain `yarn release` uses
