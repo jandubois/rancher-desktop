@@ -139,9 +139,9 @@ type Operation struct {
 	Do func(context.Context, *Run) error
 }
 
-// Doc is a step's prose. The placeholders {version}, {tag}, {branch}, {line},
-// {repo} and {docsRepo} stand for the release's own values, which the detail
-// pane fills in and the README keeps, so the README describes every release.
+// Doc is a step's prose. Its placeholders, listed in placeholders, stand for
+// the release's own values, which the detail pane fills in and the README
+// keeps, so the README describes every release.
 type Doc struct {
 	// Applies says which releases the step is for.
 	Applies string
@@ -475,14 +475,34 @@ func kinds(applies []Kind) string {
 	return strings.Join(named, " and ")
 }
 
+// placeholder is a word in a step's prose that stands for one of the
+// release's own values.
+type placeholder struct {
+	// Name is the placeholder as the prose writes it, braces included.
+	Name string
+	// Means says in the README what the placeholder stands for.
+	Means string
+	// Value reads the placeholder's value from the run.
+	Value func(*Run) string
+}
+
+// placeholders are the placeholders a step's prose may use, in the order the
+// README explains them.
+var placeholders = []placeholder{
+	{"{version}", "`1.25.0`", func(run *Run) string { return run.Release.Version.String() }},
+	{"{tag}", "`v1.25.0`", func(run *Run) string { return run.Release.Tag() }},
+	{"{branch}", "`release-1.25`", func(run *Run) string { return run.Release.Branch() }},
+	{"{line}", "`1.25`", func(run *Run) string { return run.Release.Version.Line().String() }},
+	{"{repo}", "the profile's repository", func(run *Run) string { return run.Profile.GitHub.Repo }},
+	{"{docsRepo}", "its documentation repository", func(run *Run) string { return run.Profile.GitHub.DocsRepo }},
+}
+
 // fill replaces a step's placeholders with the release's own values.
 func fill(text string, run *Run) string {
-	return strings.NewReplacer(
-		"{version}", run.Release.Version.String(),
-		"{tag}", run.Release.Tag(),
-		"{branch}", run.Release.Branch(),
-		"{line}", run.Release.Version.Line().String(),
-		"{repo}", run.Profile.GitHub.Repo,
-		"{docsRepo}", run.Profile.GitHub.DocsRepo,
-	).Replace(text)
+	pairs := make([]string, 0, 2*len(placeholders))
+	for _, placeholder := range placeholders {
+		pairs = append(pairs, placeholder.Name, placeholder.Value(run))
+	}
+
+	return strings.NewReplacer(pairs...).Replace(text)
 }

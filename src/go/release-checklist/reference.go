@@ -27,6 +27,11 @@ var readmeRegions = []readmeRegion{
 		Render: actionTable,
 	},
 	{
+		Begin:  "<!-- The sentence below is generated from the placeholder list. -->",
+		End:    "<!-- The generated sentence ends here. -->",
+		Render: placeholderSentence,
+	},
+	{
 		Begin:  "<!-- The reference below is generated from the step definitions. -->",
 		End:    "<!-- The generated reference ends here. -->",
 		Render: stepReference,
@@ -47,6 +52,17 @@ func actionTable(steps []*Step) string {
 	}
 
 	return out.String()
+}
+
+// placeholderSentence explains the placeholders for the README's step
+// reference, in one line.
+func placeholderSentence([]*Step) string {
+	meanings := make([]string, 0, len(placeholders))
+	for _, placeholder := range placeholders {
+		meanings = append(meanings, codeSpan(placeholder.Name)+" for "+placeholder.Means)
+	}
+
+	return "Placeholders stand for the release's own values: " + nameList(meanings) + ".\n"
 }
 
 // stepReference renders the checklist for the README. It keeps the

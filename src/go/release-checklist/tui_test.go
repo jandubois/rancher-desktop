@@ -183,12 +183,21 @@ func TestTheSelectionStopsAtBothEnds(t *testing.T) {
 }
 
 func TestTheDetailPaneFillsInTheRelease(t *testing.T) {
-	view := plain(dashboardShowing(t, nil).View())
+	unfilled := regexp.MustCompile(`\{[A-Za-z]+\}`)
+	dash := dashboardShowing(t, nil)
+	dash.Update(tea.WindowSizeMsg{Width: 200, Height: 400})
 
-	for _, placeholder := range []string{"{version}", "{tag}", "{branch}", "{line}", "{repo}"} {
-		if strings.Contains(view, placeholder) {
-			t.Errorf("the dashboard shows the placeholder %s instead of the release's own value:\n%s",
-				placeholder, view)
+	for _, step := range checklist {
+		selectStep(t, dash, step.ID)
+
+		for _, pane := range []string{"detail pane", "instructions view"} {
+			view := plain(dash.View())
+			if left := unfilled.FindAllString(view, -1); left != nil {
+				t.Errorf("step %s's %s shows the placeholders %v instead of the release's own values:\n%s",
+					step.ID, pane, left, view)
+			}
+
+			press(dash, "i")
 		}
 	}
 }

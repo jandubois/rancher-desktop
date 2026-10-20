@@ -221,9 +221,10 @@ func TestOneResourceIsProbedOncePerRefresh(t *testing.T) {
 func TestPlaceholdersAreFilledWithTheReleasesOwnValues(t *testing.T) {
 	run := testRun(t, Minor)
 	run.Profile.GitHub.Repo = "me/rancher-desktop"
+	run.Profile.GitHub.DocsRepo = "me/docs.rancherdesktop.io"
 
-	got := fill("{version} {tag} {branch} {line} {repo}", run)
-	if want := "1.25.0 v1.25.0 release-1.25 1.25 me/rancher-desktop"; got != want {
+	got := fill("{version} {tag} {branch} {line} {repo} {docsRepo}", run)
+	if want := "1.25.0 v1.25.0 release-1.25 1.25 me/rancher-desktop me/docs.rancherdesktop.io"; got != want {
 		t.Errorf("filled to %q", got)
 	}
 }

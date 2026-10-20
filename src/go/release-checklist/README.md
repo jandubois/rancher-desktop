@@ -202,11 +202,14 @@ step.
 
 ## Step reference
 
-Placeholders stand for the release's own values: `{version}` for `1.25.0`,
-`{tag}` for `v1.25.0`, `{branch}` for `release-1.25`, `{line}` for `1.25`,
-`{repo}` for the profile's repository, and `{docsRepo}` for its documentation
-repository. The step numbers come from the hand checklist, so the steps below
-are not consecutive.
+<!-- The sentence below is generated from the placeholder list. -->
+
+Placeholders stand for the release's own values: `{version}` for `1.25.0`, `{tag}` for `v1.25.0`, `{branch}` for `release-1.25`, `{line}` for `1.25`, `{repo}` for the profile's repository, and `{docsRepo}` for its documentation repository.
+
+<!-- The generated sentence ends here. -->
+
+The step numbers come from the hand checklist, so the steps below are not
+consecutive.
 
 <!-- The reference below is generated from the step definitions. -->
 
