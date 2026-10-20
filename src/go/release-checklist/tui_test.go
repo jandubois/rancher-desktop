@@ -109,6 +109,20 @@ func TestTheHeaderNamesTheReleaseAndTheProfile(t *testing.T) {
 	}
 }
 
+func TestTheHeaderNamesAFinishedAndAPublishedRelease(t *testing.T) {
+	dash := dashboardShowing(t, nil)
+
+	dash.run.Release.Finished = true
+	if header, want := plain(dash.header()), "minor, finished"; !strings.Contains(header, want) {
+		t.Errorf("the header does not name %q: %q", want, header)
+	}
+
+	dash.run.Release.Finished, dash.run.Release.Published = false, true
+	if header, want := plain(dash.header()), "minor, published"; !strings.Contains(header, want) {
+		t.Errorf("the header does not name %q: %q", want, header)
+	}
+}
+
 func TestTheHeaderKeepsItsWidthWhileReading(t *testing.T) {
 	dash := dashboardShowing(t, nil)
 	refreshed := lipgloss.Width(plain(dash.header()))
@@ -320,6 +334,20 @@ func TestAReadOvertakenByALaterOneIsDropped(t *testing.T) {
 
 	if view := plain(dash.View()); !strings.Contains(view, "read 2 failed") {
 		t.Errorf("the first read replaced the second:\n%s", view)
+	}
+}
+
+func TestTheReadShowsEachStepsOwnState(t *testing.T) {
+	inACacheOfItsOwn(t)
+
+	run := checklistRun(t, Version{Major: 1, Minor: 25, Patch: 1}, map[Line]string{testRelease.Line(): testHead}, &fakeTools{})
+	dash := newDashboard(t.Context(), run.Profile)
+	dash.refresh = func(context.Context) (*Run, error) { return run, nil }
+
+	dash.Update(dash.Init()())
+
+	if status := dash.statuses[releaseBranch.ID]; status.State != Skipped {
+		t.Errorf("step %s of a patch reads as %s: %s", releaseBranch.ID, status.State, status.Detail)
 	}
 }
 
