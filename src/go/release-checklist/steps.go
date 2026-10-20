@@ -635,7 +635,7 @@ var linuxAssets = &Step{
 			"the checksum beside it:\n\n" +
 			"    sha512sum rancher-desktop-linux-{tag}.zip > rancher-desktop-linux-{tag}.zip.sha512sum\n\n" +
 			"Leave -b off, so the line reads the way every released Linux checksum " +
-			"does. macOS has no sha512sum, and shasum -a 512 prints the same line. " +
+			"does. Where sha512sum is missing, shasum -a 512 prints the same line. " +
 			"Upload both files:\n\n" +
 			"    gh release upload {tag} --repo {repo} <the zip> <the checksum>",
 	},

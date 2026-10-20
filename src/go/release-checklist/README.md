@@ -360,7 +360,7 @@ gh unpacks the artifact, so the zip arrives under the name the build stamped it 
 
     sha512sum rancher-desktop-linux-{tag}.zip > rancher-desktop-linux-{tag}.zip.sha512sum
 
-Leave -b off, so the line reads the way every released Linux checksum does. macOS has no sha512sum, and shasum -a 512 prints the same line. Upload both files:
+Leave -b off, so the line reads the way every released Linux checksum does. Where sha512sum is missing, shasum -a 512 prints the same line. Upload both files:
 
     gh release upload {tag} --repo {repo} <the zip> <the checksum>
 
