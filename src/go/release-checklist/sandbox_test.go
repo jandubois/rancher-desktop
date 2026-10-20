@@ -71,6 +71,23 @@ func (r *realGit) runTo(ctx context.Context, dir string, out io.Writer, name str
 
 func (r *realGit) installed(string) bool { return true }
 
+// isolatedGitEnv is this process's environment for a git that does not
+// read the system config, takes its global config from the file it is
+// given, and looks for its attributes file under that file's directory, so
+// the developer's settings cannot change what git does or prints.
+func isolatedGitEnv(globalConfig string) []string {
+	var env []string
+
+	for _, setting := range os.Environ() {
+		if !strings.HasPrefix(setting, "GIT_") && !strings.HasPrefix(setting, "XDG_CONFIG_HOME=") {
+			env = append(env, setting)
+		}
+	}
+
+	return append(env, "GIT_CONFIG_COUNT=0", "GIT_CONFIG_NOSYSTEM=1", "GIT_CONFIG_GLOBAL="+globalConfig,
+		"XDG_CONFIG_HOME="+filepath.Dir(globalConfig))
+}
+
 // gitSandbox is a repository, a fork of it, and a clone of the repository,
 // all under a temporary directory, with an environment whose git reaches the
 // repository and the fork by their GitHub URLs.
@@ -142,14 +159,7 @@ func newGitSandbox(t *testing.T, upstreamRepo, forkRepo string, populate func(se
 		t.Fatal(err)
 	}
 
-	for _, setting := range os.Environ() {
-		if !strings.HasPrefix(setting, "GIT_") {
-			s.env = append(s.env, setting)
-		}
-	}
-
-	s.env = append(s.env, "GIT_CONFIG_COUNT=0", "GIT_CONFIG_NOSYSTEM=1", "GIT_CONFIG_GLOBAL="+configFile,
-		"GIT_ALLOW_PROTOCOL=file", "GIT_TERMINAL_PROMPT=0")
+	s.env = append(isolatedGitEnv(configFile), "GIT_ALLOW_PROTOCOL=file", "GIT_TERMINAL_PROMPT=0")
 
 	seed := filepath.Join(root, "seed")
 	if err := os.MkdirAll(seed, 0o755); err != nil {

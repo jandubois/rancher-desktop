@@ -153,8 +153,23 @@ func TestNotesThatDifferFromTheCloneAreNotDone(t *testing.T) {
 		t.Fatalf("notes differing from the clone were %s: %s", status.State, status.Detail)
 	}
 
-	if !strings.Contains(status.Detail, notesFile) {
-		t.Errorf("the detail %q does not name the file that differs", status.Detail)
+	if !strings.Contains(status.Detail, notesFile+" differs from the notes of v1.25.0") {
+		t.Errorf("the detail %q does not say the file differs from the release's notes", status.Detail)
+	}
+}
+
+func TestEditingTheClonesNotesAfterTheMarkMakesTheStepAvailable(t *testing.T) {
+	marking := notesRun(t, theNotes, theNotes)
+
+	if err := Mark(context.Background(), releaseNotes, marking); err != nil {
+		t.Fatal(err)
+	}
+
+	reading := notesRun(t, theNotes, theNotes+"\nA line the release has not seen.\n")
+	reading.Confirmations = marking.Confirmations
+
+	if status := reading.Status(context.Background(), releaseNotes); status.State != Available {
+		t.Errorf("notes edited in the clone after the mark were %s: %s", status.State, status.Detail)
 	}
 }
 
@@ -224,24 +239,27 @@ func TestTheNotesActionShowsWhatItWouldChange(t *testing.T) {
 
 	run := notesRun(t, theNotes, theNotes+"\nA new line.\n")
 	tools, _ := run.Tools.(*fakeTools)
-	tools.anyCommand = true
+
+	// Only the diff goes through run.Tools; the repository keeps the fake.
+	config := filepath.Join(t.TempDir(), "gitconfig")
+	if err := os.WriteFile(config, nil, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	run.Tools = &realGit{fake: tools, env: isolatedGitEnv(config)}
 
 	summary, err := notesChange(context.Background(), run)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	diffed := tools.calls[len(tools.calls)-1]
-	if !strings.HasPrefix(diffed, "git diff --no-index -- ") {
-		t.Errorf("the summary came from %q", diffed)
+	header, _, _ := strings.Cut(summary, "\n")
+	if !strings.HasPrefix(header, "diff --git ") || !strings.Contains(header, draftNotesFile) || !strings.Contains(header, notesFile) {
+		t.Errorf("the diff compares %q", header)
 	}
 
-	if !strings.Contains(diffed, draftNotesFile) || !strings.Contains(diffed, notesFile) {
-		t.Errorf("the diff compares %q", diffed)
-	}
-
-	if summary != "" {
-		t.Errorf("the fake git printed %q", summary)
+	if !strings.Contains(summary, "\n+A new line.\n") {
+		t.Errorf("the summary does not add the clone's new line: %q", summary)
 	}
 }
 
