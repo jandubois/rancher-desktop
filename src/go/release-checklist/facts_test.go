@@ -291,6 +291,24 @@ func TestALinesFirstReleaseAfterABurnedOneLinksTheLinesMilestone(t *testing.T) {
 	}
 }
 
+func TestAPatchLinksItsOwnMilestone(t *testing.T) {
+	answers := factsAnswers()
+	answers["gh api --paginate repos/"+testRepo+"/milestones?state=all&per_page=100 "+
+		"--jq .[] | select(.title == \"1.25.1\") | .number"] = "62\n"
+
+	run := factsRun(t, answers)
+	run.Release = &Release{Version: Version{Major: 1, Minor: 25, Patch: 1}, Kind: Patch}
+
+	changelog, err := changelogSection(t.Context(), run, testRelease)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !strings.Contains(changelog, "milestone/62?closed=1") {
+		t.Errorf("the changelog does not link the 1.25.1 milestone:\n%s", changelog)
+	}
+}
+
 func TestGatheringWritesUnderTheReleasesCacheDirectory(t *testing.T) {
 	inACacheOfItsOwn(t)
 
