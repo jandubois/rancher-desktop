@@ -524,9 +524,11 @@ func packageRun(ctx context.Context, run *Run, ref, commit string) (Answer, erro
 	}
 }
 
-// planTag pushes the release branch head to the tag. The fetch brings the
-// commit into the clone, because git resolves the source of a push locally
-// however well the remote knows it.
+// planTag pushes the release branch head to the tag. It pushes with git to
+// the clone's push URL rather than through the API, so where that URL is
+// ssh the tag goes out under the user's own key and needs nothing from gh's
+// token. The fetch brings the commit into the clone, because git resolves
+// the source of a push locally however well the remote knows it.
 func planTag(_ context.Context, run *Run) ([]Operation, error) {
 	branch := run.Release.Branch()
 
