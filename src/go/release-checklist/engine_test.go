@@ -206,6 +206,65 @@ func TestAJudgedStepWaitsForItsPreconditionBeforeItIsAvailable(t *testing.T) {
 	}
 }
 
+func TestAStepWaitsWhileTheStepItFollowsWaits(t *testing.T) {
+	first := answering(Answer{}, Answer{Waiting: true, Detail: "the build is still running"}, []Kind{Minor}, nil)
+
+	second := answering(Answer{}, Answer{}, []Kind{Minor}, nil)
+	second.ID = "2"
+	second.Precondition = func(ctx context.Context, run *Run) (Answer, error) {
+		return waitFor(ctx, run, first), nil
+	}
+
+	if status := testRun(t, Minor).Status(context.Background(), second); status.State != Waiting {
+		t.Errorf("a step following a waiting step is %s: %s", status.State, status.Detail)
+	}
+}
+
+func TestAMarkOnTheMinorReleaseLeavesItsPatchUnmarked(t *testing.T) {
+	marked, err := confirmationsAt(filepath.Join(t.TempDir(), confirmationsFile))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	step := judgedStep(Answer{OK: true})
+	step.Kinds = []Kind{Minor, Patch}
+
+	minor := testRun(t, Minor)
+	minor.Confirmations = marked
+
+	if err := Mark(context.Background(), step, minor); err != nil {
+		t.Fatal(err)
+	}
+
+	patch := testRun(t, Patch)
+	patch.Confirmations = marked
+
+	if status := Evaluate(context.Background(), step, patch); status.State == Done {
+		t.Errorf("a step marked on 1.25.0 is %s on 1.25.1: %s", status.State, status.Detail)
+	}
+}
+
+func TestMarkRefusesAStepWithNothingToMark(t *testing.T) {
+	marked, err := confirmationsAt(filepath.Join(t.TempDir(), confirmationsFile))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	run := testRun(t, Minor)
+	run.Confirmations = marked
+
+	step := judgedStep(Answer{OK: true})
+	step.Confirms = func(context.Context, *Run) (string, error) { return "", nil }
+
+	if err := Mark(context.Background(), step, run); err == nil {
+		t.Error("marking a step with no text to mark succeeded")
+	}
+
+	if _, found := run.Confirmation(step.ID); found {
+		t.Error("a step with no text to mark was marked")
+	}
+}
+
 func TestOneResourceIsProbedOncePerRefresh(t *testing.T) {
 	counted := newCountingResource(Answer{OK: true}, nil)
 	needs := []*Resource{counted.resource}
