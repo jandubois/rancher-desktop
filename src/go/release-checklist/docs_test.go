@@ -582,27 +582,29 @@ func TestTheDocsActionSaysWhereToWriteTheClonePath(t *testing.T) {
 }
 
 // The action rewrites the imports and the table rows and nothing else, so
-// regenerating a published page gives back what its author wrote.
+// regenerating each published page gives back what its author wrote.
 func TestTheReferencePageIsRewrittenAsPublished(t *testing.T) {
-	before := readTestFile(t, "bundled-utilities-before.md")
-	after := readTestFile(t, "bundled-utilities-after.md")
+	for _, release := range []Version{{Major: 1, Minor: 22}, {Major: 1, Minor: 23}, {Major: 1, Minor: 24}} {
+		before := readTestFile(t, "bundled-utilities-"+release.String()+"-before.md")
+		after := readTestFile(t, "bundled-utilities-"+release.String()+"-after.md")
 
-	window := []Version{{Major: 1, Minor: 24}, {Major: 1, Minor: 23}, {Major: 1, Minor: 22}}
+		window := []Version{release, {Major: 1, Minor: release.Minor - 1}, {Major: 1, Minor: release.Minor - 2}}
 
-	rewritten, err := rewriteReferencePage(before, window)
-	if err != nil {
-		t.Fatal(err)
-	}
+		rewritten, err := rewriteReferencePage(before, window)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-	if !bytes.Equal(rewritten, after) {
-		t.Errorf("the page was rewritten as\n%s\nwant\n%s", rewritten, after)
+		if !bytes.Equal(rewritten, after) {
+			t.Errorf("the %s page was rewritten as\n%s\nwant\n%s", release, rewritten, after)
+		}
 	}
 }
 
 // A page somebody restructured is one the tool cannot write into, and putting
 // the imports or the rows anywhere else would leave the page broken.
 func TestRewritingRefusesAPageItCannotWriteInto(t *testing.T) {
-	before := readTestFile(t, "bundled-utilities-before.md")
+	before := readTestFile(t, "bundled-utilities-1.24.0-before.md")
 
 	for what, page := range map[string][]byte{
 		"no table":   bytes.ReplaceAll(before, []byte("|"), []byte(":")),
@@ -688,7 +690,7 @@ func TestOnlyVersionFilesCountAsReleases(t *testing.T) {
 // Somebody adding an import between the version imports would otherwise leave
 // the ones after it behind, importing a file the action has deleted.
 func TestRewritingDropsEveryVersionImportItFinds(t *testing.T) {
-	split := bytes.Replace(readTestFile(t, "bundled-utilities-before.md"),
+	split := bytes.Replace(readTestFile(t, "bundled-utilities-1.24.0-before.md"),
 		[]byte("import Version122 from"),
 		[]byte("import Pricing from './pricing.md';\nimport Version122 from"), 1)
 

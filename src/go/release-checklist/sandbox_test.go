@@ -205,7 +205,7 @@ func newDocsSandbox(t *testing.T) *docsSandbox {
 	}
 
 	files := map[string][]byte{
-		docsReferencePage:  readTestdata(t, "bundled-utilities-after.md"),
+		docsReferencePage:  readTestdata(t, "bundled-utilities-1.24.0-after.md"),
 		rdctlReferencePage: readTestdata(t, "rdctl-command-reference.md"),
 		// Stands in for the generation, on a machine configured unlike the
 		// one that wrote the page.
