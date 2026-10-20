@@ -16,6 +16,10 @@ import (
 )
 
 const (
+	// testRepo belongs to "me", the login the fixtures give gh api user, so
+	// Fork answers with the release repository itself. A test built on
+	// checklistRun therefore cannot tell a push to the fork from a push to
+	// the release repository.
 	testRepo   = "me/rancher-desktop"
 	testBranch = "release-1.25"
 	// testHead is the commit the release branch points at, which is what
