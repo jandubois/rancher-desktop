@@ -69,6 +69,18 @@ upstream. The names below are examples.
        git clone --bare https://github.com/rancher-sandbox/docs.rancherdesktop.io.git
        git -C docs.rancherdesktop.io.git push --mirror git@github.com:<org>/docs-rehearsal.git
 
+   Check that GitHub made `main` the default branch of the documentation
+   repository:
+
+       gh repo view <org>/docs-rehearsal --json defaultBranchRef --jq .defaultBranchRef.name
+
+   You open the documentation pull request yourself, and `gh pr create`
+   targets the default branch unless you name a base. Steps 7a and 7b look for
+   the merged documentation on `main`. If the command prints another branch,
+   make `main` the default:
+
+       gh repo edit <org>/docs-rehearsal --default-branch main
+
 4. Turn Actions back on in the code repository only. Every push to
    `release-1.99` and step 9's tag start the package workflow, and steps 9, 10
    and 11 wait for its runs.
