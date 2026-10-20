@@ -169,8 +169,11 @@ func docsReferenceReady(ctx context.Context, run *Run) (Answer, error) {
 		return waiting, nil
 	}
 
+	// On Windows the installer adds rdctl's directory to PATH itself, so
+	// the ~/.rd/bin hint applies only to macOS and Linux.
 	if !run.Tools.installed("rdctl") {
-		return Answer{Detail: "rdctl is not on PATH; Rancher Desktop puts it in ~/.rd/bin"}, nil
+		return Answer{Detail: "rdctl is not on PATH; on macOS and Linux, Rancher Desktop " +
+			"puts it in ~/.rd/bin"}, nil
 	}
 
 	if _, err := run.Tools.run(ctx, "rdctl", "list-settings"); err != nil {
