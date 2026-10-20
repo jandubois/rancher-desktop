@@ -100,7 +100,7 @@ act() {
     local description=$1
     shift
     if [[ $mode == list ]]; then
-        [[ $found == yes ]] || echo "Resetting the $profile rehearsal will:"
+        [[ ${found} == yes ]] || echo "Resetting the rehearsal of profile ${profile} will:"
         echo "  $description"
     else
         echo "$description"
@@ -188,9 +188,10 @@ fi
 
 reset list
 if [[ $found == no ]]; then
-    echo "The $profile rehearsal has nothing to reset."
+    echo "The rehearsal of profile ${profile} has nothing to reset."
     exit
 fi
 read -r -p "Go ahead? [y/N] " answer || answer=""
-[[ $answer == [yY] ]] || die "Nothing was deleted."
+answer=$(lowercase "${answer}")
+[[ ${answer} =~ ^y(es)?$ ]] || die "Nothing was deleted."
 reset delete

@@ -159,6 +159,10 @@ func TestResetRehearsalDeletesOnlyTheRehearsalsLine(t *testing.T) {
 		t.Fatalf("reset-rehearsal.sh rehearsal exited with %v:\n%s", err, output)
 	}
 
+	if strings.Contains(string(output), "rehearsal rehearsal") {
+		t.Errorf("the listing says \"rehearsal rehearsal\":\n%s", output)
+	}
+
 	repo, fork, docs := "example-org/rancher-desktop-rehearsal", "me/rancher-desktop-rehearsal", "example-org/docs-rehearsal"
 	want := []string{
 		"pr close 12 --repo " + repo,
@@ -199,6 +203,22 @@ func TestResetRehearsalDeletesOnlyTheRehearsalsLine(t *testing.T) {
 		if _, err := os.Stat(kept); err != nil {
 			t.Errorf("the production profile lost %s: %v", kept, err)
 		}
+	}
+}
+
+// TestResetRehearsalTakesYesForAnAnswer answers the question with Yes, which
+// the tool's own prompts accept.
+func TestResetRehearsalTakesYesForAnAnswer(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("reset-rehearsal.sh runs on macOS and Linux only")
+	}
+
+	sandbox := newResetSandbox(t)
+	installGH(t, rehearsalGH)
+
+	output, err := sandbox.run(t, "Yes\n")
+	if writes := sandbox.writes(t); err != nil || len(writes) == 0 {
+		t.Errorf("answered Yes, reset-rehearsal.sh exited with %v after %d gh writes:\n%s", err, len(writes), output)
 	}
 }
 
