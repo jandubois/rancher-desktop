@@ -113,8 +113,10 @@ type Action struct {
 	// the step blocked, with the fix, before anything runs.
 	Writes []*Resource
 	// Summary shows what the action would change, above the operations and
-	// the question. An action whose operations speak for themselves has
-	// none.
+	// the question. Like Plan, it runs before the user confirms anything, so
+	// it may run commands that only read, such as rdctl version, and may
+	// write only files in the release's cache directory. An action whose
+	// operations speak for themselves has none.
 	Summary func(context.Context, *Run) (string, error)
 	// Plan builds the operations for this release. It runs before the user
 	// confirms anything, so it must change nothing itself.
