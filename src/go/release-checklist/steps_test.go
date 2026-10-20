@@ -631,3 +631,27 @@ func TestPackageBuildWaitsForTheTag(t *testing.T) {
 		t.Errorf("the detail does not say it waits for the tag: %s", status.Detail)
 	}
 }
+
+func TestEveryStepIsFoundByItsNumber(t *testing.T) {
+	for _, step := range checklist {
+		if found, ok := findStep(step.ID); !ok {
+			t.Errorf("step %s was not found", step.ID)
+		} else if found != step {
+			t.Errorf("step %s found step %s", step.ID, found.ID)
+		}
+	}
+
+	if found, ok := findStep("99"); ok {
+		t.Errorf("step 99 found step %s", found.ID)
+	}
+}
+
+func TestPackageBuildRerunNeedsARun(t *testing.T) {
+	tools := &fakeTools{output: tagged(`{"total_count":0,"workflow_runs":[]}`)}
+	run := tagRun(t, tools, map[Version]string{testRelease: testHead})
+
+	operations, err := planRerunPackage(context.Background(), run)
+	if err == nil || !strings.Contains(err.Error(), "v1.25.0 has no package run to rerun") {
+		t.Errorf("a rerun with no run planned %v and gave %v", operations, err)
+	}
+}

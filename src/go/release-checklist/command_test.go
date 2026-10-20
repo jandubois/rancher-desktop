@@ -5,6 +5,9 @@
 package main
 
 import (
+	"bytes"
+	"errors"
+	"io"
 	"runtime"
 	"strings"
 	"testing"
@@ -50,5 +53,43 @@ func TestACommandThatLeavesAChildBehindStillAnswers(t *testing.T) {
 
 	if took := time.Since(start); took > 5*time.Second {
 		t.Errorf("a command that left a child behind took %s", took)
+	}
+}
+
+func TestACommandRunToTheTerminalWritesBothStreamsFromItsDirectory(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("the command needs sh")
+	}
+
+	dir := t.TempDir()
+
+	var out bytes.Buffer
+	if err := (tools{}).runTo(t.Context(), dir, &out, "sh", "-c", "pwd; echo complained >&2"); err != nil {
+		t.Fatal(err)
+	}
+
+	if out.String() != dir+"\ncomplained\n" {
+		t.Errorf("a command run in %s wrote %q", dir, out.String())
+	}
+
+	err := (tools{}).runTo(t.Context(), dir, io.Discard, "sh", "-c", "exit 3")
+
+	var failure *commandFailure
+	if !errors.As(err, &failure) || failure.Command != "sh -c exit 3" {
+		t.Errorf("a command that failed gave %v", err)
+	}
+}
+
+func TestAShellIsInstalledAndANameNoSystemHasIsNot(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("the command needs sh")
+	}
+
+	if !(tools{}).installed("sh") {
+		t.Error("sh is not installed")
+	}
+
+	if (tools{}).installed("no-such-command-anywhere") {
+		t.Error("no-such-command-anywhere is installed")
 	}
 }
