@@ -226,6 +226,18 @@ func TestDocsUtilitiesReadsMainOnceTheReleaseBranchIsGone(t *testing.T) {
 	}
 }
 
+func TestABranchLookupThatFailsIsNotAMissingBranch(t *testing.T) {
+	tools := &fakeTools{
+		output: docsAnswers(),
+		stderr: map[string]string{headQuery(testDocsFork, testBranch): "gh: Server Error (HTTP 500)"},
+	}
+
+	home, ref, err := docsLocation(context.Background(), docsRun(t, tools))
+	if err == nil {
+		t.Errorf("a server error sent the docs to %s at %s", home.repo, ref)
+	}
+}
+
 func TestDocsUtilitiesIsAvailableWhenAVersionIsStale(t *testing.T) {
 	answers := docsAnswers()
 	answers[fileQuery(testDocsFork, testBranch, testDocsFile)] =
