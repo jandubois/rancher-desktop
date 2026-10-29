@@ -243,6 +243,12 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <p>This PR adds a workflow-side collector that writes a support bundle for every BATS job and lets a job that fails early upload its artifact; the fork artifacts show it working on all three platforms. The main problem is on Windows, where the bundle runs <code>rc-status</code> outside the PID namespace that Rancher Desktop&#39;s OpenRC uses. A probe that times out also prints nothing, and the first commit message credits the wrong change for the uploaded artifact.</p>
     </div>
     <hr>
+    <h2 id="code-changed-since-this-review">Code Changed Since This Review <a href="#code-changed-since-this-review" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The findings below cite <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ace644515"><code>ace644515</code></a>. On 2026-10-29 their fixes were amended into the reviewed commits, now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a>, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37dfed440"><code>37dfed440</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/3c6bc3380"><code>3c6bc3380</code></a>, so the cited lines have moved or changed. Each finding ends with its outcome.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -309,6 +315,7 @@ way.  It spent 12 minutes in gh run download and timed out, so the
 job never reached Set log directory, which creates logs/.  Consolidate
 logs failed on the missing report.tap, and Upload logs found nothing
 to upload.</code></pre>
+    <p><strong>Outcome:</strong> Fixed. The 411e7443d body was reworded this way (now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a>); the PR body sentence is drafted and waits for the next push.</p>
     </div>
     <div class="card card-important" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="I2">
@@ -393,6 +400,7 @@ func unshareCmd(ctx context.Context, ns netns.NsHandle, args string) error {
     <p>Fix: run <code>rc-status</code> through <code>wsl-exec</code>, which Rancher Desktop writes during startup (<code>wsl.ts:1405</code>).</p>
       <pre><code class="language-diff">-    with_timeout 20 wsl.exe --distribution rancher-desktop -- rc-status --all
 +    with_timeout 20 wsl.exe --distribution rancher-desktop --exec /usr/local/bin/wsl-exec rc-status --all</code></pre>
+    <p><strong>Outcome:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a>. <code>rc-status</code> runs through <code>--exec /usr/local/bin/wsl-exec</code>, <code>ps -ef</code> stays outside, and the <code>MSYS2_ARG_CONV_EXCL</code> comment now names the wsl-exec path that depends on it.</p>
     </div>
     <div class="card card-important" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="I3">
@@ -536,6 +544,7 @@ index 42ec9cdcf..c717ca67b 100755
      fi
  </code></pre>
       </details>
+    <p><strong>Outcome:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a> with GNU <code>timeout --verbose</code> in place of this patch. Verification showed that the 124/137 marker claims a timeout after an outside SIGKILL and says &quot;no answer&quot; under a listing cut off partway. The skip line prints what <code>wsl --list --running</code> returned, as proposed.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -604,6 +613,7 @@ rc=1</code></pre>
     <p>Fix: search the whole job, whose <code>timeout-minutes</code> is 150, and restore <code>lowmem</code> unless it was dropped on purpose. With <code>--last 150m</code> the probe passes, and on this Mac <code>log show</code> took 2-3 s for either window.</p>
       <pre><code class="language-diff">-        log show --style compact --last 1h --predicate \
 +        log show --style compact --last 150m --predicate \</code></pre>
+    <p><strong>Outcome:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a>: <code>--last 150m</code>, <code>lowmem</code> restored, and <code>| tail -100</code> dropped, since housekeeping matches would push an early kill out. <code>bats.yaml</code>&#39;s job timeout comment points back at the window, and the spell-check directives use RD1&#39;s <code>spell-checker:disable-next-line</code>.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="S2">
@@ -623,6 +633,7 @@ rc=1</code></pre>
         ;;</code></pre>
     <p>Without <code>--listening</code> or <code>--all</code>, <code>ss</code> lists only non-listening sockets, so the Linux table leaves out the listeners that a published-port failure needs most. Run 40809252951&#39;s Linux bundle shows the gap. <code>systemd-resolved</code> and <code>chronyd</code> are running, yet the socket table holds six ESTAB rows and no LISTEN or UNCONN row, while the macOS <code>lsof -i</code> table in the same run holds six LISTEN rows. RD2&#39;s <code>dump_sockets</code> and <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s <code>capture_host_sockets</code> pass the same options. This is a Suggestion because the merge-base had no socket table at all.</p>
     <p>Fix: add <code>--all</code> here and in <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s copy. Not run: this host has no <code>ss</code>.</p>
+    <p><strong>Outcome:</strong> Fixed: <code>--all</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37dfed440"><code>37dfed440</code></a> and in <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/99f431068"><code>99f431068</code></a>. Verification also found that unprivileged macOS lsof lists only the user&#39;s own sockets, so both now run lsof under passwordless sudo; <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a> checks for it without bats <code>run</code> and falls back to plain lsof.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="S3">
@@ -674,6 +685,7 @@ dump_api_state() {
         return
     fi</code></pre>
     <p>Fix: skip the function on win32, or print <code>not collected on Windows</code> under the headers.</p>
+    <p><strong>Outcome:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a>: Windows prints one <code>=== Memory: not collected on Windows ===</code> line.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="S4">
@@ -705,6 +717,7 @@ dump_api_state() {
     echo &quot;=== rdctl api /v1/backend_state ===&quot;
     with_timeout 10 &quot;$rdctl&quot; api /v1/backend_state</code></pre>
     <p>Fix: print a header before each check, and have line 185 echo <code>limactl not found at $limactl</code> before it returns.</p>
+    <p><strong>Outcome:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/37dfed440"><code>37dfed440</code></a>: header-form skip lines for a missing rdctl, limactl or wsl.exe, and for a host with neither ss nor lsof.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="S5">
@@ -755,6 +768,7 @@ Linux)
     # when it starts a native program.
     export MSYS2_ARG_CONV_EXCL=&#39;*&#39;</code></pre>
     <p>Fix: drop <code>&quot;$vm_dir&quot;/ha.std*</code>, and drop the <code>wslpath</code> fallback and the WSL half of the comment.</p>
+    <p><strong>Outcome:</strong> Fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/9408246e4"><code>9408246e4</code></a>: both dropped, and the <code>win32_path</code> comment now says only what the function does.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
@@ -762,7 +776,7 @@ Linux)
     <div class="card card-design">
     <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
     <ul>
-      <li>(future) A job that fails early now uploads an artifact, but <code>readRuns()</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/summarize.mjs#L99-L105"><code>summarize.mjs:99-105</code></a> skips any directory without <code>version.txt</code> or <code>report.tap</code>, so the summary shows <code>:x: ??</code> (line 308) with no link to the evidence. Recording name, OS and engine with zero counts when <code>report.tap</code> is missing would link it. <span class="pill pill-claude">Claude Opus 5.5</span></li>
+      <li>(future) A job that fails early now uploads an artifact, but <code>readRuns()</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/summarize.mjs#L99-L105"><code>summarize.mjs:99-105</code></a> skips any directory without <code>version.txt</code> or <code>report.tap</code>, so the summary shows <code>:x: ??</code> (line 308) with no link to the evidence. Recording name, OS and engine with zero counts when <code>report.tap</code> is missing would link it. <span class="pill pill-claude">Claude Opus 5.5</span> <strong>Outcome:</strong> Skipped; tracked in pending-work.</li>
     </ul>
     <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
     <ul>
