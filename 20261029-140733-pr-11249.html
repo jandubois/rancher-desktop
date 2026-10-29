@@ -243,6 +243,12 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <p>This round checks the eight round-1 fixes and the rebase onto <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11247" class="gh-ref" data-title="BATS: Port the Windows runner diagnostics from rancher-desktop-2" data-state="merged" data-type="pr">#11247</a>. Fork-run bundles from all three platforms and stub runs confirm every fix, and the code can stay as it is. The one Important finding is in the PR body, whose paragraph about <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11248" class="gh-ref" data-title="BATS: Port the macOS and Linux runner diagnostics from rancher-desktop-2" data-state="open" data-type="pr">#11248</a> predates <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11247" class="gh-ref" data-title="BATS: Port the Windows runner diagnostics from rancher-desktop-2" data-state="merged" data-type="pr">#11247</a>&#39;s merge. Once <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11248" class="gh-ref" data-title="BATS: Port the macOS and Linux runner diagnostics from rancher-desktop-2" data-state="open" data-type="pr">#11248</a> is rebased onto main, the two PRs merge in either order. Three Suggestions remain, about a commit&#39;s contents, Linux socket owners and one timeout line.</p>
     </div>
     <hr>
+    <h2 id="code-changed-since-this-review">Code changed since this review <a href="#code-changed-since-this-review" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The findings were addressed on 2026-10-29 and the branch was force-pushed. Commit 1 is now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/7340e368a"><code>7340e368a</code></a>, commit 2 <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d5ae7324a"><code>d5ae7324a</code></a> and commit 3 <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/a8284b708"><code>a8284b708</code></a>, so the <code>collect-logs.sh</code> lines this report cites at <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/950700b37"><code>950700b37</code></a> have moved.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -299,6 +305,7 @@ this PR + #11248 as pushed: 3 conflict(s)</code></pre>
       </details>
     <p>Fix: drop the paragraph, or replace it with this text.</p>
       <pre><code class="language-text">#11247 already added the `_diag` copy that #11248 adds, and it added Windows steps where #11248 adds its Unix steps. So #11248 needs a rebase onto main whichever PR merges first. This PR does not need one.</code></pre>
+    <p>Outcome: pending. The next PR body update drops the paragraph.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -329,6 +336,7 @@ this PR + #11248 as pushed: 3 conflict(s)</code></pre>
 </code></pre>
     <p>Commit 1 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d26440463"><code>d26440463</code></a>) writes <code>dump_sockets</code> with <code>ss --tcp --udp --processes --numeric</code> and plain <code>lsof -i -P -n</code>. Commit 2 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/df8a51541"><code>df8a51541</code></a>) adds <code>--all</code>, the <code>sudo --non-interactive</code> and the skip line for a host with neither tool, but its message describes only the Windows netstat table and <code>ps --windows</code>. So commit 1 on its own still does not list Linux listeners, and a reader looking for when <code>ss</code> gained <code>--all</code> would not think to open a commit titled &quot;List Windows sockets and processes&quot;.</p>
     <p>Fix: make those three edits in commit 1, so that commit 2 only wraps the existing branch in the <code>case</code>, adds the <code>win32</code> arm and switches <code>ps</code> to <code>ps --windows</code>.</p>
+    <p>Outcome: fixed. Commit 1 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/7340e368a"><code>7340e368a</code></a>) now makes the three edits, and commit 2 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/d5ae7324a"><code>d5ae7324a</code></a>) only adds the <code>case</code>, the <code>win32</code> arm and <code>ps --windows</code>.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="S2">
@@ -348,6 +356,7 @@ this PR + #11248 as pushed: 3 conflict(s)</code></pre>
         else</code></pre>
     <p>Found during consolidation. Round 1&#39;s S2 fix moved macOS <code>lsof</code> under sudo because &quot;lsof lists other users&#39; sockets only as root&quot;, and Linux <code>ss --processes</code> has the same limit, because only root can read another user&#39;s <code>/proc/&lt;pid&gt;/fd</code>. Run 40937460339&#39;s Linux bundle shows it. Its <code>Runner.Worker</code> connections show <code>users:((...))</code>, while sshd&#39;s listener on port 22 and systemd-resolved&#39;s on port 53 do not show an owner. So a port that a root process holds, such as one the runner&#39;s dockerd publishes, would appear with no program name. This is a Suggestion because the merge-base did not collect a socket table. <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s <code>capture_host_sockets</code> runs <code>ss</code> the same way.</p>
     <p>Fix: run <code>ss</code> under <code>sudo --non-interactive</code>, as line 165 does for <code>lsof</code>.</p>
+    <p>Outcome: fixed in commit 1 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/7340e368a"><code>7340e368a</code></a>), which runs <code>ss</code> under <code>sudo --non-interactive</code>. <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s copy is left for that PR.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
       <div class="finding-title" id="S3">
@@ -371,6 +380,7 @@ this PR + #11248 as pushed: 3 conflict(s)</code></pre>
     # rc-status reads OpenRC&#39;s state only from inside them, so it runs through</code></pre>
     <p>The round-1 I3 fix prints the captured listing only under the skip line. When <code>wsl.exe</code> prints <code>rancher-desktop</code> and then hangs, <code>grep</code> matches, the guest probes run, and the <code>timeout: sending signal TERM</code> line in <code>$running</code> never reaches the bundle. A stub <code>wsl.exe</code> that prints the distro name and then sleeps reproduces it. The bundle shows both guest sections and no timeout line. The guest probes run under their own timeouts, so a wedged WSL would still show up in their sections.</p>
     <p>Fix: print <code>$running</code> under its own <code>=== wsl --list --running ===</code> header before the check, whichever branch follows.</p>
+    <p>Outcome: fixed in commit 1 (<a href="https://github.com/rancher-sandbox/rancher-desktop/commit/7340e368a"><code>7340e368a</code></a>). The listing prints under its own header before the check, so a hang after the distro name keeps its <code>timeout:</code> line.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
@@ -378,7 +388,7 @@ this PR + #11248 as pushed: 3 conflict(s)</code></pre>
     <div class="card card-design">
     <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
     <ul>
-      <li>(future) Commit 1 cites run 34006415289, which exists only in jandubois/rancher-desktop; upstream&#39;s API returns 404 for it. Two commits already on main cite fork runs the same way, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b52ccee22"><code>b52ccee22</code></a> (<a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10964" class="gh-ref" data-title="Create the updater&#39;s cache directory before writing to it" data-state="merged" data-type="pr">#10964</a>) with 34060355127 and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/301ac5b42"><code>301ac5b42</code></a> (<a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10966" class="gh-ref" data-title="Log why the container engine is not ready yet" data-state="merged" data-type="pr">#10966</a>) with 34157782034. So whether to add &quot;on my fork&quot; is a choice for every commit message that cites a run. <span class="pill pill-claude">Claude Opus 5.5</span></li>
+      <li>(future) Commit 1 cites run 34006415289, which exists only in jandubois/rancher-desktop; upstream&#39;s API returns 404 for it. Two commits already on main cite fork runs the same way, <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/b52ccee22"><code>b52ccee22</code></a> (<a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10964" class="gh-ref" data-title="Create the updater&#39;s cache directory before writing to it" data-state="merged" data-type="pr">#10964</a>) with 34060355127 and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/301ac5b42"><code>301ac5b42</code></a> (<a href="https://github.com/rancher-sandbox/rancher-desktop/issues/10966" class="gh-ref" data-title="Log why the container engine is not ready yet" data-state="merged" data-type="pr">#10966</a>) with 34157782034. So whether to add &quot;on my fork&quot; is a choice for every commit message that cites a run. <span class="pill pill-claude">Claude Opus 5.5</span> Outcome: declined, as a repo-wide convention rather than this PR&#39;s.</li>
     </ul>
     <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
     <ul>
@@ -417,6 +427,7 @@ this PR + #11248 as pushed: 3 conflict(s)</code></pre>
 
     <div class="card card-neutral">
     <p>Commit 2 contains round 1&#39;s Unix socket fixes, which its message does not mention (S1).</p>
+    <p>Outcome: fixed with S1.</p>
     </div>
     <hr>
     <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
