@@ -243,6 +243,12 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <p>This PR ports three Windows diagnostic actions from rancher-desktop-2 into the BATS workflow and adds firewall and WSL capture. The wiring is sound, and the fork run produced every <code>_diag</code> file. The one fix needed before merge is in prose. Two ported comments describe rancher-desktop-2&#39;s Lima and gzip workload and its 2-vCPU runner, which this repo&#39;s Windows job does not have. The suggestions cover truncated tables, an exit status, and a minute of <code>go run</code> per Windows job.</p>
     </div>
     <hr>
+    <h2 id="after-this-review">After This Review <a href="#after-this-review" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The branch was rewritten after this review ran, so the cited lines, and commits 92edf3b30 and 1222a2855, no longer match <code>bats-windows-diagnostics</code>. Each finding below ends with what happened to it.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -416,6 +422,7 @@ index cb09b00ec..b5740600e 100644
      try {
          $sizeMB = 256</code></pre>
       </details>
+    <p><strong>Outcome:</strong> fixed in fdb2a5a62, folded into the port commit. The benchmark comment now describes %LOCALAPPDATA% and the flush. The telemetry comment says only that CompatTelRunner competes with the tests for CPU when it runs, and the commit body credits rancher-desktop-2&#39;s 22% figure.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -429,6 +436,7 @@ for host-switch.exe with their protocol and program.</code></pre>
     <p><code>Get-NetConnectionProfile</code> at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/29d9465f6ee6307f20d30047f6403bdc7e85a2f3/.github/actions/windows-machine-info/machine-info.ps1#L180"><code>.github/actions/windows-machine-info/machine-info.ps1:180</code></a> lists only adapters that have a connection profile. The fork capture lists one, <code>Ethernet 4</code>.</p>
     <p>The comment at <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/29d9465f6ee6307f20d30047f6403bdc7e85a2f3/.github/workflows/bats.yaml#L201"><code>.github/workflows/bats.yaml:201</code></a> says a hosted runner&#39;s WSL adapter has no connection profile, and that adapter is the one that host-switch traffic arrives on. So the capture never shows the adapter that motivates the commit. This finding came from the consolidation; no agent raised it.</p>
     <p>Fix: say &quot;the category of each connected network&quot; in the commit body.</p>
+    <p><strong>Outcome:</strong> fixed; the body of 92065d7e7, the reworded commit, now says &quot;the category of each connected network&quot;.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/actions/windows-machine-info/machine-info.ps1">
       <div class="finding-title" id="S2">
@@ -461,6 +469,7 @@ finally {
                       HealthStatus, OperationalStatus, SpindleSpeed |
         Format-Table -AutoSize</code></pre>
     <p>Fix: use <code>Format-List</code> for both, as the Defender and ComputerInfo sections do, or end each table with <code>| Out-String -Width 4096</code>. Neither ran here, because the review host has no PowerShell.</p>
+    <p><strong>Outcome:</strong> fixed in 3b11c3a72; both sections use <code>Format-List</code>. It has not run on Windows yet.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/actions/windows-typeperf-sampler/summarize-typeperf.go">
       <div class="finding-title" id="S3">
@@ -496,6 +505,7 @@ finally {
         Remove-Item $blgFile -Force
         Write-Output &quot;summary written to $outputDir/typeperf-summary.txt&quot;</code></pre>
     <p>Fix: exit 1 after printing the error, as the header-read branch at line 75 does.</p>
+    <p><strong>Outcome:</strong> fixed in 4bf1126b0; a row read error now exits 1, so the stop step keeps the BLG.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/actions/windows-typeperf-sampler/action.yaml">
       <div class="finding-title" id="S4">
@@ -517,6 +527,7 @@ finally {
     <p>The fork job spent 56 s in this call, half as long as its 112 s test run. On the review host, the same file builds and runs in 2.4 s with a cold cache and 0.2 s warm, so I suspect most of the 56 s is the runner&#39;s cold build.</p>
     <p>A full matrix has 24 Windows jobs (12 suite directories, two engines), so the call adds about 22 runner-minutes to a run. The summary also prints every one-second sample, about 2.7 KB each.</p>
     <p>Fix: summarize only when the job failed, or upload just the TSV and run the summarizer locally, as the file&#39;s usage line shows.</p>
+    <p><strong>Outcome:</strong> declined. It costs about a minute per Windows job on free hosted runners, and a passing job&#39;s summary is the baseline a failing job&#39;s is compared with.</p>
     </div>
     <div class="card card-suggestion" data-file=".github/actions/windows-machine-info/machine-info.ps1">
       <div class="finding-title" id="S5">
@@ -566,6 +577,7 @@ finally {
           RD_CONTAINER_ENGINE:\
           RD_KUBERNETES_VERSION:\</code></pre>
     <p>Fix: match <code>LOGS_DIR</code>, which the job does set before this step, or keep rancher-desktop-2&#39;s filter unchanged.</p>
+    <p><strong>Outcome:</strong> fixed in fdb2a5a62, the port commit; the filter no longer has <code>RDD?_.*|MSYS.*</code>.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
@@ -573,7 +585,7 @@ finally {
     <div class="card card-design">
     <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
     <ul>
-      <li><strong>(in-scope) This repo has no evidence yet that the telemetry step does anything.</strong> <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> The PR body says Compatibility Telemetry &quot;otherwise competes with the tests for CPU&quot;, which is rancher-desktop-2&#39;s measurement. On the fork&#39;s runner, both scheduled tasks that reference CompatTel were already Disabled, and the step logs only the state after its changes. Logging <code>Get-Service DiagTrack</code> and <code>Get-Process CompatTelRunner</code> before the changes would show whether the step acts. It also runs after the six-minute install of the CI build, while rancher-desktop-2 runs it before its job builds rdd.</li>
+      <li><strong>(in-scope) This repo has no evidence yet that the telemetry step does anything.</strong> <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span> The PR body says Compatibility Telemetry &quot;otherwise competes with the tests for CPU&quot;, which is rancher-desktop-2&#39;s measurement. On the fork&#39;s runner, both scheduled tasks that reference CompatTel were already Disabled, and the step logs only the state after its changes. Logging <code>Get-Service DiagTrack</code> and <code>Get-Process CompatTelRunner</code> before the changes would show whether the step acts. It also runs after the six-minute install of the CI build, while rancher-desktop-2 runs it before its job builds rdd. <strong>Outcome:</strong> fixed in c0bb399c2, a first step that logs CompatTelRunner and DiagTrack before the changes; the step stays where it is. The PR body&#39;s CPU claim gets reworded with the next push.</li>
     </ul>
     <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
     <ul>
