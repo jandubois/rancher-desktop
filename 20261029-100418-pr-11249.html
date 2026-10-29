@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deep Review: 20261029-100418-pr-11249</title>
+  <style>
+code[class*=language-],pre[class*=language-]{color:#ccc;background:0 0;font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto}:not(pre)>code[class*=language-],pre[class*=language-]{background:#2d2d2d}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal}.token.block-comment,.token.cdata,.token.comment,.token.doctype,.token.prolog{color:#999}.token.punctuation{color:#ccc}.token.attr-name,.token.deleted,.token.namespace,.token.tag{color:#e2777a}.token.function-name{color:#6196cc}.token.boolean,.token.function,.token.number{color:#f08d49}.token.class-name,.token.constant,.token.property,.token.symbol{color:#f8c555}.token.atrule,.token.builtin,.token.important,.token.keyword,.token.selector{color:#cc99cd}.token.attr-value,.token.char,.token.regex,.token.string,.token.variable{color:#7ec699}.token.entity,.token.operator,.token.url{color:#67cdcc}.token.bold,.token.important{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}.token.inserted{color:green}
+  </style>
+  <style>
+/* Deep Review — canonical stylesheet
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Edit this file to change the look of all future reviews.
+ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 2rem 1rem;
+}
+main { max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #111827; }
+h2 { font-size: 1.35rem; margin-top: 2.5rem; margin-bottom: 1rem; color: #111827; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.4rem; }
+h3 { font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; }
+hr { border: none; border-top: 2px solid #e5e7eb; margin: 2rem 0; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace; font-size: 0.85em; background: #f3f4f6; padding: 0.15em 0.35em; border-radius: 4px; }
+
+/* Code blocks — override Prism defaults */
+pre { margin: 0 !important; border-radius: 0 0 8px 8px !important; }
+pre[class*="language-"] { font-size: 0.78rem; line-height: 1.3; }
+pre code { background: none; padding: 0; }
+
+/* Report metadata table */
+.meta-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.meta-table td { padding: 0.35rem 0.6rem; border: 1px solid #e5e7eb; vertical-align: top; }
+.meta-table td:first-child { font-weight: 600; width: 140px; background: #f9fafb; white-space: nowrap; }
+
+/* Cards — every section and finding lives in a card */
+.card { border-radius: 10px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; }
+.card-neutral { background: #f1f3f5; border: 1px solid #d5d9e0; }
+.card-critical { background: #ffeef0; border: 1px solid #f5c6cb; }
+.card-important { background: #fff0e0; border: 1px solid #f5d9a8; }
+.card-suggestion { background: #f0f6ff; border: 1px solid #c7d9f5; }
+.card-design { background: #f0faf4; border: 1px solid #b7e4c7; }
+
+/* Severity section headings — colored to match their cards */
+.section-critical { color: #9b1c1c; }
+.section-important { color: #92400e; }
+.section-suggestion { color: #1e40af; }
+.section-design { color: #065f46; }
+
+/* Agent attribution pills */
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 600; padding: 0.15em 0.55em; border-radius: 999px; margin-right: 0.3em; vertical-align: middle; letter-spacing: 0.01em; }
+.pill-claude { background: #e9d5ff; color: #6b21a8; }
+.pill-codex { background: #d1fae5; color: #065f46; }
+.pill-gemini { background: #ffe4e6; color: #9f1239; }
+.pill-qwen { background: #fed7aa; color: #9a3412; }
+.pill-gemma { background: #fef9c3; color: #854d0e; }
+.pill-glm { background: #cffafe; color: #155e75; }
+
+/* Finding titles */
+.finding-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.4; }
+.finding-num { font-weight: 800; }
+.pass-tag, .title-note { font-weight: 400; color: #6b7280; }
+
+/* Code file header — dark bar above each source code block.
+ * The filename is a GitHub permalink to the displayed line range.
+ * Text color is light gray (#adbac7) for the bar, green (#7ee787)
+ * for the hyperlink — matching GitHub's dark-mode file header. */
+.code-file-header { background: #2d333b; color: #adbac7; font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: 0.75rem; padding: 0.4rem 0.9rem; border-radius: 8px 8px 0 0; margin-top: 0.8rem; }
+.code-file-header a { color: #7ee787; }
+.code-file-header a:hover { text-decoration: underline; }
+
+/* Line numbers (CSS counters) and line highlighting */
+.code-line { display: block; }
+.code-line::before {
+  content: counter(line);
+  counter-increment: line;
+  display: inline-block;
+  width: 3em;
+  margin-right: 0.8em;
+  padding-right: 0.5em;
+  text-align: right;
+  color: #636e7b;
+  border-right: 1px solid #3d4556;
+  user-select: none;
+}
+.line-hl { background: rgba(255, 199, 0, 0.18); }
+
+/* Pilcrow anchor links — hidden until parent is hovered */
+.pilcrow { color: #d1d5db; text-decoration: none; font-weight: 400; margin-left: 0.4em; opacity: 0; transition: opacity 0.15s; }
+h2:hover .pilcrow, h3:hover .pilcrow, .finding-title:hover .pilcrow { opacity: 1; }
+.pilcrow:hover { color: #6b7280; text-decoration: none; }
+
+/* Tables written directly in a section body. parseTable classes only the
+ * Retro and Summary tables, so every other one arrives unclassed. */
+table:not([class]) { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+table:not([class]) th, table:not([class]) td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; vertical-align: top; }
+table:not([class]) th { background: #f3f4f6; font-weight: 600; }
+table:not([class]) tr:nth-child(even) { background: #f9fafb; }
+/* A long path or job name offers no break of its own, so one cell can push
+ * the whole page into a horizontal scroll. Let those tokens wrap. */
+table:not([class]) code { overflow-wrap: anywhere; }
+
+/* Collapsible folds, for the bulk detail a report keeps out of the way */
+details { margin: 0.8rem 0; }
+summary { cursor: pointer; font-weight: 600; }
+
+/* Agent retro summary table */
+.retro-table { width: 100%; border-collapse: collapse; margin-top: 0.8rem; font-size: 0.9rem; table-layout: fixed; }
+.retro-table th, .retro-table td { padding: 0.45rem 0.7rem; border: 1px solid #e5e7eb; text-align: left; }
+.retro-table th { background: #f3f4f6; font-weight: 600; }
+.retro-table tr:nth-child(even) { background: #f9fafb; }
+
+/* Supply-chain Summary table — first column gets breathing room,
+ * numeric middle columns center, header keeps its label on one line. */
+.summary-table { width: 100%; border-collapse: collapse; margin: 0.4rem 0 0.8rem; font-size: 0.92rem; }
+.summary-table th, .summary-table td {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d9e0;
+  vertical-align: top;
+  text-align: left;
+}
+.summary-table th { background: rgba(255, 255, 255, 0.65); font-weight: 600; white-space: nowrap; }
+.summary-table td:first-child { min-width: 11rem; white-space: nowrap; }
+.summary-table th:not(:first-child):not(:last-child),
+.summary-table td:not(:first-child):not(:last-child) { text-align: center; }
+
+/* Lists and paragraphs inside cards */
+.card ul, .card ol { margin: 0.4rem 0; padding-left: 1.5rem; }
+.card li { margin-bottom: 0.3rem; }
+.card p { margin: 0.5rem 0; }
+.card p:first-child { margin-top: 0; }
+
+/* Supply-chain issue rows — used by issueList for bullets that
+ * uniformly start with a `file:line` reference. The location renders
+ * in a dark bar above the description so the eye picks up the path
+ * separately from the prose. */
+.issue-list { margin: 0.6rem 0; }
+.issue-row {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.55);
+}
+.issue-loc {
+  background: #2d333b;
+  color: #adbac7;
+  padding: 0.3rem 0.7rem;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+}
+.issue-loc a { color: #7ee787; text-decoration: none; }
+.issue-loc a:hover { text-decoration: underline; }
+.issue-loc code { background: none; padding: 0; color: inherit; font-size: 1em; }
+.issue-desc { padding: 0.55rem 0.8rem; }
+.issue-desc code { font-size: 0.85em; }
+
+/* Verdict highlight in metadata table */
+.verdict { font-weight: 700; }
+
+/* GitHub reference tooltips — shown on hover for #N links */
+.gh-tooltip {
+  position: absolute;
+  background: #1f2328;
+  color: #e6edf3;
+  padding: 0.55em 0.75em;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  max-width: 380px;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.gh-tooltip-state {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15em 0.5em;
+  border-radius: 999px;
+  margin-right: 0.4em;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+.gh-state-open { background: #238636; color: #fff; }
+.gh-state-closed { background: #848d97; color: #fff; }
+.gh-state-merged { background: #8957e5; color: #fff; }
+.gh-tooltip-title { vertical-align: baseline; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  body { padding: 1rem 0.5rem; }
+  .card { padding: 0.9rem 1rem; }
+  pre code { font-size: 0.72rem; }
+}
+
+/* Reproducers and patches, collapsed so a long block keeps the next finding on screen */
+details.fold { margin: 0.8rem 0; border: 1px solid #d0d7de; border-radius: 8px; overflow: hidden; }
+details.fold > summary { cursor: pointer; padding: 0.45rem 0.9rem; font-size: 0.8rem; font-weight: 600; color: #57606a; background: #f6f8fa; user-select: none; }
+details.fold > summary:hover { background: #eef1f4; }
+details.fold[open] > summary { border-bottom: 1px solid #d0d7de; }
+details.fold pre { border-radius: 0 !important; }
+details.fold .code-file-header { margin-top: 0; border-radius: 0; }
+
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Deep Review: 20261029-100418-pr-11249</h1>
+
+    <table class="meta-table">
+      <tr><td>Date</td><td>2026-10-29 10:04</td></tr>
+      <tr><td>Repo</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop">rancher-sandbox/rancher-desktop</a></td></tr>
+      <tr><td>Round</td><td>1</td></tr>
+      <tr><td>Author</td><td><a href="https://github.com/jandubois">@jandubois</a></td></tr>
+      <tr><td>PR</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/pull/11249" class="gh-ref" data-title="BATS: Collect logs and a support bundle when a job dies" data-state="open" data-type="pr">#11249</a> — BATS: Collect logs and a support bundle when a job dies</td></tr>
+      <tr><td>Branch</td><td><code>bats-support-bundle</code></td></tr>
+      <tr><td>Commits</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/411e7443d"><code>411e7443d</code></a> CI: BATS: Collect logs and a support bundle when a job dies<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/1d3339ed7"><code>1d3339ed7</code></a> CI: BATS: List Windows sockets and processes in the support bundle<br><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ace644515"><code>ace644515</code></a> BATS: Lint the BATS workflow&#39;s shell scripts</td></tr>
+      <tr><td>Review SHA</td><td><a href="https://github.com/rancher-sandbox/rancher-desktop/commit/ace6445156b11e79d01a401a0f54c21f9c93a73e"><code>ace6445156b11e79d01a401a0f54c21f9c93a73e</code></a></td></tr>
+      <tr><td>Reviewers</td><td><span class="pill pill-claude">Claude Opus 5.5</span> (effort: high), <span class="pill pill-codex">Codex GPT 6 Astra</span> (effort: high), <span class="pill pill-gemini">Gemini 3.1 Pro</span> (effort: default), <span class="pill pill-gemini">Gemini 3.5 Flash</span> (effort: default)</td></tr>
+      <tr><td>Verdict</td><td><span class="verdict">Merge with fixes</span> &mdash; the Windows guest&#39;s <code>rc-status</code> reads the wrong namespace, a hung probe looks like an empty one, and the first commit message credits the wrong change for the uploaded artifact</td></tr>
+      <tr><td>Wall-clock time</td><td><code>37 min 6 s</code></td></tr>
+    </table>
+
+    <hr>
+
+    <hr>
+    <h2 id="executive-summary">Executive Summary <a href="#executive-summary" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>This PR adds a workflow-side collector that writes a support bundle for every BATS job and lets a job that fails early upload its artifact; the fork artifacts show it working on all three platforms. The main problem is on Windows, where the bundle runs <code>rc-status</code> outside the PID namespace that Rancher Desktop&#39;s OpenRC uses. A probe that times out also prints nothing, and the first commit message credits the wrong change for the uploaded artifact.</p>
+    </div>
+    <hr>
+    <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-critical">
+    <p>None.</p>
+    </div>
+    <hr>
+    <h2 id="important-issues" class="section-important">Important Issues <a href="#important-issues" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-important" data-file="411e7443d">
+      <div class="finding-title" id="I1">
+        <span class="finding-num">I1.</span> The first commit message blames the empty upload on <code>report.tap</code>, but a missing <code>logs/</code> caused it<a href="#I1" class="pilcrow">&#182;</a>
+      </div>
+      <pre><code class="language-text">capture_logs() runs inside BATS, so it records nothing for a job that
+fails before Run BATS starts, and nothing for the test that hangs when
+Run BATS reaches its timeout.  Run 34006415289 lost a job the first
+way.  It spent 12 minutes in gh run download and timed out, and then
+Consolidate logs failed on the missing report.tap, so the job uploaded
+nothing at all.</code></pre>
+    <p>Job 101414365633 of run 34006415289 failed in Install latest CI build, so it skipped every step through Run BATS, Set log directory (<code>mkdir logs</code>) included. Upload logs then reported <code>No files were found with the provided path: logs/</code>. With the <code>report.tap</code> guard alone, it would still have found nothing, because <code>logs/</code> would still not exist. The upload works now because <code>collect-logs.sh</code> creates its output directory (line 22). The PR body says the guards are why &quot;a job that fails early still uploads its artifact&quot;. The probe replays the step from both revisions and with the guards alone.</p>
+      <details class="fold">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash">#!/usr/bin/env bash
+# Save as probe-consolidate.sh; run from the repo root: bash probe-consolidate.sh &lt;merge-base&gt;
+# Replays the &quot;Consolidate logs&quot; step on a workspace where &quot;Install latest CI
+# build&quot; failed, so &quot;Set log directory&quot; never ran: no logs/, no
+# bats/report.tap, no version.txt.  Upload logs then finds files only if
+# logs/ exists.  The collect-logs.sh stub keeps only what that script always
+# does to its output directory: create it and write support-bundle.log.
+set -o nounset
+base=${1:?usage: probe-consolidate.sh &lt;merge-base&gt;}
+step_body() { # &lt;rev&gt;: the run: block of the Consolidate logs step
+    git show &quot;$1:.github/workflows/bats.yaml&quot; |
+        awk &#39;/- name: Consolidate logs/ { f = 1 } f &amp;&amp; /run: \|/ { r = 1; next } r &amp;&amp; /^      [a-z]/ { exit } r { sub(/^        /, &quot;&quot;); print }&#39;
+}
+replay() { # &lt;label&gt; &lt;body&gt;
+    local ws
+    ws=$(mktemp -d)
+    mkdir -p &quot;$ws/.github/workflows/bats&quot;
+    cp .github/workflows/bats/sanitize-artifact-name.sh &quot;$ws/.github/workflows/bats/&quot;
+    printf &#39;#!/bin/sh\nmkdir -p &quot;$1&quot; &amp;&amp; : &gt;&quot;$1/support-bundle.log&quot;\n&#39; &gt;&quot;$ws/.github/workflows/bats/collect-logs.sh&quot;
+    chmod +x &quot;$ws/.github/workflows/bats/collect-logs.sh&quot;
+    local rc
+    (cd &quot;$ws&quot; &amp;&amp; NAME=n OS=o ENGINE=e LOG_NAME=l bash --noprofile --norc -eo pipefail -c &quot;$2&quot;) &gt;&quot;$ws.out&quot; 2&gt;&amp;1
+    rc=$?
+    sed &quot;s/^/    /&quot; &quot;$ws.out&quot;
+    rm -f &quot;$ws.out&quot;
+    printf &#39;%s: step exit %s; files under logs/: %s\n&#39; &quot;$1&quot; &quot;$rc&quot; &quot;$(find &quot;$ws/logs&quot; -type f 2&gt;/dev/null | wc -l | tr -d &#39; &#39;)&quot;
+    rm -rf &quot;$ws&quot;
+}
+replay &quot;merge-base&quot; &quot;$(step_body &quot;$base&quot;)&quot;
+replay &quot;guards only&quot; &quot;$(step_body HEAD | grep -v &#39;collect-logs.sh&#39;)&quot;
+replay &quot;this PR&quot; &quot;$(step_body HEAD)&quot;</code></pre>
+      <pre><code class="language-text">$ bash probe-consolidate.sh 59c77ed04
+    cp: bats/report.tap: No such file or directory
+merge-base: step exit 1; files under logs/: 0
+    find: logs: No such file or directory
+    .github/workflows/bats/sanitize-artifact-name.sh: line 56: FILES[@]: unbound variable
+guards only: step exit 1; files under logs/: 0
+this PR: step exit 0; files under logs/: 5</code></pre>
+      </details>
+    <p>Fix: reword lines 5-8 of the commit message as below, add to lines 27-29 that the script creates <code>logs/</code> itself, and make the PR body say &quot;<code>collect-logs.sh</code> creates <code>logs/</code> itself, so a job that fails early still uploads its artifact&quot;.</p>
+      <pre><code class="language-text">Run BATS reaches its timeout.  Run 34006415289 lost a job the first
+way.  It spent 12 minutes in gh run download and timed out, so the
+job never reached Set log directory, which creates logs/.  Consolidate
+logs failed on the missing report.tap, and Upload logs found nothing
+to upload.</code></pre>
+    </div>
+    <div class="card card-important" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="I2">
+        <span class="finding-num">I2.</span> The WSL <code>rc-status</code> probe runs outside the PID namespace where OpenRC runs <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-codex">Codex GPT 6 Astra</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#I2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L213-L224">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="213" data-line="218-219"><code class="language-bash">    if ! with_timeout 20 wsl.exe --list --running --quiet | tr -d &#39;\r&#39; | grep -qx rancher-desktop; then
+        echo &quot;=== Guest: skipped because wsl --list --running does not list rancher-desktop ===&quot;
+        return
+    fi
+
+    echo &quot;=== Guest: rc-status ===&quot;
+    with_timeout 20 wsl.exe --distribution rancher-desktop -- rc-status --all
+
+    echo
+    echo &quot;=== Guest: ps ===&quot;
+    with_timeout 20 wsl.exe --distribution rancher-desktop -- ps -ef
+}</code></pre>
+    <p>On WSL, network-setup starts the distro&#39;s init under <code>unshare --pid --mount-proc --fork</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/src/go/networking/cmd/network/setup_linux.go#L338-L339"><code>src/go/networking/cmd/network/setup_linux.go:338-339</code></a>), so OpenRC&#39;s pidfiles name PIDs in that child namespace. The distro&#39;s own <code>wsl-service</code> (rancher-desktop-wsl-distro v0.101, lines 3-5) gives the consequence: &quot;using rc-service directly will not return correct results.&quot; So Rancher Desktop never runs OpenRC commands directly.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/src/go/networking/cmd/network/setup_linux.go#L333-L344">src/go/networking/cmd/network/setup_linux.go</a></div>
+      <pre data-start="333" data-line="338-339"><code class="language-go">}
+
+func unshareCmd(ctx context.Context, ns netns.NsHandle, args string) error {
+	unshareCmd := exec.CommandContext( //nolint:gosec // no security concern with the potentially tainted command arguments
+		ctx,
+		nsenter, fmt.Sprintf(&quot;-n/proc/%d/fd/%d&quot;, os.Getpid(), ns), &quot;-F&quot;,
+		unshare, &quot;--pid&quot;, &quot;--mount-proc&quot;, &quot;--fork&quot;, &quot;--propagation&quot;, &quot;slave&quot;, args)
+	unshareCmd.Stdout = os.Stdout
+	unshareCmd.Stderr = os.Stderr
+	if err := unshareCmd.Start(); err != nil {
+		return fmt.Errorf(&quot;could not start the unshare process: %w&quot;, err)
+	}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L1-L10">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="1" data-line="3-5"><code class="language-bash">#!/usr/bin/env bash
+
+# Collect the evidence that BATS&#39;s own capture misses when a job fails.
+# capture_logs() runs inside BATS, so it records nothing for a job that fails
+# before Run BATS starts, or for the test that hangs until that step times
+# out.  The workflow runs this after Run BATS, even when that step failed or
+# never ran, unless the job was cancelled.
+#
+# Ported from rancher-desktop-2&#39;s rdd/scripts/collect-bats-logs.sh and the
+# non-destructive half of its bats-with-timeout.sh support bundle, adapted to</code></pre>
+    <p><code>execService</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/pkg/rancher-desktop/backend/wsl.ts#L1208"><code>pkg/rancher-desktop/backend/wsl.ts:1208</code></a>) goes through <code>wsl-service</code>, and <code>rdctl shell</code> goes through <code>wsl-exec</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/src/go/rdctl/pkg/shell/shell.go#L67"><code>src/go/rdctl/pkg/shell/shell.go:67</code></a>); both nsenter init&#39;s namespaces. Line 219 runs <code>rc-status</code> in the distro&#39;s root namespace, so on a running distro, the case that this section exists for, it reports the wrong service state. <code>ps -ef</code> on line 223 can stay, because the parent PID namespace sees every process.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/pkg/rancher-desktop/backend/wsl.ts#L1203-L1213">pkg/rancher-desktop/backend/wsl.ts</a></div>
+      <pre data-start="1203" data-line="1208"><code class="language-typescript">   * @param service The name of the OpenRC service to execute.
+   * @param action The name of the OpenRC service action to execute.
+   * @param argument Argument to pass to `wsl-service` (`--ifnotstart`, `--ifstarted`)
+   */
+  async execService(service: string, action: string, argument = &#39;&#39;) {
+    await this.execCommand(&#39;/usr/local/bin/wsl-service&#39;, argument, service, action);
+  }
+
+  /**
+   * Start the given OpenRC service.  This should only happen after
+   * provisioning, to ensure that provisioning can modify any configuration.</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/src/go/rdctl/pkg/shell/shell.go#L62-L72">src/go/rdctl/pkg/shell/shell.go</a></div>
+      <pre data-start="62" data-line="67"><code class="language-go">			err = assertWSLIsRunning(ctx, distroName)
+			if err == nil {
+				commandName = &quot;wsl&quot;
+				args = append([]string{
+					&quot;--distribution&quot;, distroName,
+					&quot;--exec&quot;, &quot;/usr/local/bin/wsl-exec&quot;,
+				}, args...)
+				found = true
+				break
+			}
+		}</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L218-L228">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="218" data-line="223"><code class="language-bash">    echo &quot;=== Guest: rc-status ===&quot;
+    with_timeout 20 wsl.exe --distribution rancher-desktop -- rc-status --all
+
+    echo
+    echo &quot;=== Guest: ps ===&quot;
+    with_timeout 20 wsl.exe --distribution rancher-desktop -- ps -ef
+}
+
+{
+    echo &quot;=== Support bundle at $(date -u +%FT%TZ) ===&quot;
+    echo &quot;uname: $(uname -a)&quot;</code></pre>
+    <p>Unproven: this host has no WSL, and the fork runs captured only a stopped distro (booted cold by the probe in run 40809252951, skipped in run 40819479405).</p>
+    <p>Fix: run <code>rc-status</code> through <code>wsl-exec</code>, which Rancher Desktop writes during startup (<code>wsl.ts:1405</code>).</p>
+      <pre><code class="language-diff">-    with_timeout 20 wsl.exe --distribution rancher-desktop -- rc-status --all
++    with_timeout 20 wsl.exe --distribution rancher-desktop --exec /usr/local/bin/wsl-exec rc-status --all</code></pre>
+    </div>
+    <div class="card card-important" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="I3">
+        <span class="finding-num">I3.</span> A probe that times out prints nothing, so the bundle reports a hung <code>wsl.exe</code> as a stopped distro <span class="pill pill-claude">Claude Opus 5.5</span><a href="#I3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L208-L219">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="208" data-line="213-214"><code class="language-bash">    with_timeout 20 wsl.exe --list --verbose
+
+    echo
+    # Running a command in a stopped distro boots it, so the guest sections
+    # would describe a fresh boot.
+    if ! with_timeout 20 wsl.exe --list --running --quiet | tr -d &#39;\r&#39; | grep -qx rancher-desktop; then
+        echo &quot;=== Guest: skipped because wsl --list --running does not list rancher-desktop ===&quot;
+        return
+    fi
+
+    echo &quot;=== Guest: rc-status ===&quot;
+    with_timeout 20 wsl.exe --distribution rancher-desktop -- rc-status --all</code></pre>
+    <p>GNU <code>timeout</code> prints nothing when it kills a command, and <code>with_timeout</code> (lines 69-76) returns the 124, but its callers ignore it. So a hung probe leaves a section that a reader cannot tell from an empty answer, though lines 159-162 say that a stuck rdctl request is when the capture is most useful. The probe runs the real script on a simulated Git Bash host with a stub <code>wsl.exe</code>. A hung WSL service gets the same skip line as a stopped distro (line 214), under an empty <code>wsl --list --verbose</code> section.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L64-L81">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="64" data-line="69-76"><code class="language-bash">        timeout_cmd=$candidate
+        break
+    fi
+done
+
+with_timeout() {
+    local seconds=$1
+    shift
+    if [[ -n $timeout_cmd ]]; then
+        set -- &quot;$timeout_cmd&quot; --kill-after=1 &quot;$seconds&quot; &quot;$@&quot;
+    fi
+    &quot;$@&quot; 2&gt;&amp;1
+}
+
+# Copy the application logs.  On Unix the lima logs are symlinks into the VM
+# directory; cp copies what they point to, and a dangling one fails quietly.
+if [[ -d $log_dir ]]; then
+    mkdir -p &quot;$output_dir/logs&quot;</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L154-L167">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="154" data-line="159-162"><code class="language-bash">        fi
+        ;;
+    esac
+}
+
+# Snapshot what Rancher Desktop thinks its own state is.  Probe unconditionally
+# rather than gating on a status check: the hangs worth diagnosing have the
+# server alive with one request path stuck, so a gate would skip exactly when
+# the capture is most useful.
+dump_api_state() {
+    local rdctl=&quot;$resources/$platform/bin/rdctl$exe&quot;
+    if [[ ! -x $rdctl ]]; then
+        echo &quot;rdctl not found at $rdctl&quot;
+        return</code></pre>
+      <details class="fold">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash">#!/usr/bin/env bash
+# Save as probe-wsl-timeout.sh; run from the repo root: bash probe-wsl-timeout.sh &lt;hang|answer|stopped&gt;
+# Runs the real collect-logs.sh as if under Git Bash, with a stub wsl.exe that
+# hangs past every timeout, lists rancher-desktop as running, or lists only
+# the openSUSE test distro.
+# Needs GNU timeout (Homebrew coreutils on macOS).
+set -o nounset
+mode=${1:?usage: probe-wsl-timeout.sh &lt;hang|answer|stopped&gt;}
+root=$(mktemp -d)
+mkdir -p &quot;$root/bin&quot; &quot;$root/localappdata&quot; &quot;$root/programfiles&quot;
+cat &gt;&quot;$root/bin/uname&quot; &lt;&lt;&#39;EOF&#39;
+#!/bin/sh
+echo MINGW64_NT-10.0-26100
+EOF
+cat &gt;&quot;$root/bin/cygpath&quot; &lt;&lt;&#39;EOF&#39;
+#!/bin/sh
+echo &quot;$2&quot;
+EOF
+cat &gt;&quot;$root/bin/netstat.exe&quot; &lt;&lt;&#39;EOF&#39;
+#!/bin/sh
+echo &quot;(netstat stub)&quot;
+EOF
+if [[ $mode == hang ]]; then
+    printf &#39;#!/bin/sh\nsleep 60\n&#39; &gt;&quot;$root/bin/wsl.exe&quot;
+else
+    printf &#39;#!/bin/sh\ncase &quot;$*&quot; in\n*--running*) echo %s ;;\n*) echo &quot;wsl.exe $*&quot; ;;\nesac\n&#39; &quot;$( [[ $mode == stopped ]] &amp;&amp; echo openSUSE || echo rancher-desktop )&quot; &gt;&quot;$root/bin/wsl.exe&quot;
+fi
+chmod +x &quot;$root/bin/&quot;*
+LOCALAPPDATA=$root/localappdata PROGRAMFILES=$root/programfiles \
+    PATH=&quot;$root/bin:$PATH&quot; bash .github/workflows/bats/collect-logs.sh &quot;$root/out&quot; &gt;/dev/null
+sed -n &#39;/^=== wsl --list --verbose/,/^=== End/p&#39; &quot;$root/out/support-bundle.log&quot;
+rm -rf &quot;$root&quot;</code></pre>
+      <pre><code class="language-text">$ bash probe-wsl-timeout.sh hang
+=== wsl --list --verbose ===
+
+=== Guest: skipped because wsl --list --running does not list rancher-desktop ===
+
+=== End of support bundle ===
+$ bash probe-wsl-timeout.sh stopped
+=== wsl --list --verbose ===
+wsl.exe --list --verbose
+
+=== Guest: skipped because wsl --list --running does not list rancher-desktop ===
+
+=== End of support bundle ===</code></pre>
+      </details>
+    <p>Fix: have <code>with_timeout</code> print a marker when <code>timeout</code> exits 124 or 137, and print what <code>wsl --list --running</code> returned under the skip line. With the patch, <code>hang</code> prints <code>(no answer within 20s)</code> in both sections, <code>stopped</code> prints <code>openSUSE</code> under the skip line, <code>answer</code> still runs both guest probes, and <code>make -C bats lint</code> passes.</p>
+      <details class="fold">
+        <summary>Patch</summary>
+      <pre><code class="language-diff">diff --git a/.github/workflows/bats/collect-logs.sh b/.github/workflows/bats/collect-logs.sh
+index 42ec9cdcf..c717ca67b 100755
+--- a/.github/workflows/bats/collect-logs.sh
++++ b/.github/workflows/bats/collect-logs.sh
+@@ -68,11 +68,19 @@ done
+ 
+ with_timeout() {
+     local seconds=$1
++    local status
+     shift
+     if [[ -n $timeout_cmd ]]; then
+         set -- &quot;$timeout_cmd&quot; --kill-after=1 &quot;$seconds&quot; &quot;$@&quot;
+     fi
+     &quot;$@&quot; 2&gt;&amp;1
++    status=$?
++    # timeout itself prints nothing, so a hung probe would leave a section
++    # that looks like an empty answer.
++    if [[ -n $timeout_cmd ]] &amp;&amp; ((status == 124 || status == 137)); then
++        echo &quot;(no answer within ${seconds}s)&quot;
++    fi
++    return &quot;$status&quot;
+ }
+ 
+ # Copy the application logs.  On Unix the lima logs are symlinks into the VM
+@@ -210,8 +218,11 @@ dump_wsl_guest() {
+     echo
+     # Running a command in a stopped distro boots it, so the guest sections
+     # would describe a fresh boot.
+-    if ! with_timeout 20 wsl.exe --list --running --quiet | tr -d &#39;\r&#39; | grep -qx rancher-desktop; then
+-        echo &quot;=== Guest: skipped because wsl --list --running does not list rancher-desktop ===&quot;
++    local running
++    running=$(with_timeout 20 wsl.exe --list --running --quiet | tr -d &#39;\r&#39;)
++    if ! grep -qx rancher-desktop &lt;&lt;&lt;&quot;$running&quot;; then
++        echo &quot;=== Guest: skipped because wsl --list --running did not list rancher-desktop ===&quot;
++        echo &quot;$running&quot;
+         return
+     fi
+ </code></pre>
+      </details>
+    </div>
+    <hr>
+    <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="S1">
+        <span class="finding-num">S1.</span> The macOS jetsam query looks back one hour, but Run BATS runs for up to two <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-codex">Codex GPT 6 Astra</span><a href="#S1" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L122-L134">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="122" data-line="127-129"><code class="language-bash">    echo &quot;=== Memory pressure / OOM events ===&quot;
+    case &quot;$platform&quot; in
+    darwin)
+        # Jetsam kills land in the unified log with sender=kernel.
+        # no-spell-check-next-line
+        log show --style compact --last 1h --predicate \
+            &#39;(sender == &quot;kernel&quot;) AND ((eventMessage CONTAINS[c] &quot;jetsam&quot;) OR (eventMessage CONTAINS[c] &quot;memorystatus&quot;) OR (eventMessage CONTAINS[c] &quot;low swap&quot;))&#39; \
+            2&gt;&amp;1 | tail -100
+        ;;
+    linux)
+        # dmesg needs root where kernel.dmesg_restrict is set.  Its stderr
+        # reaches the bundle, so a failure cannot pass for &quot;no OOM kills&quot;.
+        sudo --non-interactive dmesg | grep -iE &#39;OOM|killed process|out of memory&#39; | tail -50</code></pre>
+    <p>Line 127 keeps the window from RD2&#39;s <code>bats-with-timeout.sh:193-194</code>, which justifies it as covering &quot;any single bats target (30-min timeout + slack)&quot;. Here Run BATS has <code>timeout-minutes: 120</code> (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats.yaml#L411"><code>bats.yaml:411</code></a>), and the script runs right after it. In the hang-until-timeout case that the script header names, a jetsam kill in the step&#39;s first hour, the likely trigger of the hang, falls outside the window. The port also dropped RD2&#39;s <code>lowmem</code> term from the predicate. This is a Suggestion because the merge-base did not collect any memory evidence, so the gap loses nothing that shipped.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats.yaml#L406-L416">.github/workflows/bats.yaml</a></div>
+      <pre data-start="406" data-line="411"><code class="language-yaml">          RD_USE_RAMDISK:\
+          RD_USE_WINDOWS_EXE:\
+          RD_WAIT_FACTOR:\
+          &quot;
+      working-directory: bats
+      timeout-minutes: 120
+
+    - name: Calculate log name
+      id: log_name
+      if: ${{ !cancelled() }}
+      run: |</code></pre>
+      <details class="fold">
+        <summary>Reproducer</summary>
+      <pre><code class="language-bash">#!/usr/bin/env bash
+# Save as probe-log-window.sh; run on macOS from the repo root: bash probe-log-window.sh
+# Compares the jetsam query&#39;s window in collect-logs.sh with the Run BATS
+# step timeout, then counts the kernel lines that query loses on this Mac.
+set -o nounset
+cap=$(awk &#39;/- name: Run BATS/ { f = 1 } f &amp;&amp; /timeout-minutes:/ { print $2; exit }&#39; .github/workflows/bats.yaml)
+last=$(grep -o -- &#39;--last [0-9]*[hm]&#39; .github/workflows/bats/collect-logs.sh | awk &#39;{ print $2 }&#39;)
+case $last in
+*h) window=$((${last%h} * 60)) ;;
+*m) window=${last%m} ;;
+*) echo &quot;unrecognised window: $last&quot; &gt;&amp;2; exit 2 ;;
+esac
+echo &quot;Run BATS timeout-minutes: ${cap}; jetsam query window: ${window} min&quot;
+predicate=&#39;(sender == &quot;kernel&quot;) AND ((eventMessage CONTAINS[c] &quot;jetsam&quot;) OR (eventMessage CONTAINS[c] &quot;memorystatus&quot;) OR (eventMessage CONTAINS[c] &quot;low swap&quot;))&#39;
+in_window=$(log show --style compact --last &quot;${window}m&quot; --predicate &quot;$predicate&quot; | grep -c &#39; kernel\[&#39;)
+in_cap=$(log show --style compact --last &quot;${cap}m&quot; --predicate &quot;$predicate&quot; | grep -c &#39; kernel\[&#39;)
+echo &quot;kernel lines in the last ${window} min: $in_window; in the last ${cap} min: $in_cap&quot;
+if ((window &lt; cap &amp;&amp; in_cap &gt; in_window)); then
+    echo &quot;FAIL: $((in_cap - in_window)) lines from the start of a ${cap}-minute Run BATS fall outside the query window&quot;
+    exit 1
+fi
+echo &quot;PASS: the window covers the whole Run BATS step&quot;</code></pre>
+      <pre><code class="language-text">$ bash probe-log-window.sh
+Run BATS timeout-minutes: 120; jetsam query window: 60 min
+kernel lines in the last 60 min: 52; in the last 120 min: 62
+FAIL: 10 lines from the start of a 120-minute Run BATS fall outside the query window
+rc=1</code></pre>
+      </details>
+    <p>Fix: search the whole job, whose <code>timeout-minutes</code> is 150, and restore <code>lowmem</code> unless it was dropped on purpose. With <code>--last 150m</code> the probe passes, and on this Mac <code>log show</code> took 2-3 s for either window.</p>
+      <pre><code class="language-diff">-        log show --style compact --last 1h --predicate \
++        log show --style compact --last 150m --predicate \</code></pre>
+    </div>
+    <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="S2">
+        <span class="finding-num">S2.</span> The Linux socket table leaves out every listening socket <span class="pill pill-codex">Codex GPT 6 Astra</span><a href="#S2" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L145-L155">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="145" data-line="150"><code class="language-bash">        with_timeout 30 netstat.exe -ano
+        ;;
+    *)
+        if command -v ss &gt;/dev/null; then
+            echo &quot;=== Open sockets (ss) ===&quot;
+            with_timeout 30 ss --tcp --udp --processes --numeric
+        elif command -v lsof &gt;/dev/null; then
+            echo &quot;=== Open sockets (lsof) ===&quot;
+            with_timeout 30 lsof -i -P -n
+        fi
+        ;;</code></pre>
+    <p>Without <code>--listening</code> or <code>--all</code>, <code>ss</code> lists only non-listening sockets, so the Linux table leaves out the listeners that a published-port failure needs most. Run 40809252951&#39;s Linux bundle shows the gap. <code>systemd-resolved</code> and <code>chronyd</code> are running, yet the socket table holds six ESTAB rows and no LISTEN or UNCONN row, while the macOS <code>lsof -i</code> table in the same run holds six LISTEN rows. RD2&#39;s <code>dump_sockets</code> and <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s <code>capture_host_sockets</code> pass the same options. This is a Suggestion because the merge-base had no socket table at all.</p>
+    <p>Fix: add <code>--all</code> here and in <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11246" class="gh-ref" data-title="BATS: Capture more evidence when a test fails" data-state="open" data-type="pr">#11246</a>&#39;s copy. Not run: this host has no <code>ss</code>.</p>
+    </div>
+    <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="S3">
+        <span class="finding-num">S3.</span> Windows bundles print three memory headers with nothing under them <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S3" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L93-L105">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="93" data-line="98-100"><code class="language-bash">
+# Evidence of memory pressure or an external kill.  macOS jetsam and the Linux
+# OOM killer both use SIGKILL, which leaves no crash log, so without this a
+# process that vanished for want of memory looks identical to one that hung.
+dump_memory_pressure() {
+    echo &quot;=== Memory stats ===&quot;
+    case &quot;$platform&quot; in
+    darwin)
+        vm_stat 2&gt;&amp;1
+        # no-spell-check-next-line
+        sysctl vm.swapusage 2&gt;&amp;1
+        ;;
+    linux)</code></pre>
+    <p><code>dump_memory_pressure</code> has no <code>win32</code> arm, so every Windows bundle (run 40819479405, lines 158-163) has empty &quot;Memory stats&quot;, &quot;Top processes by memory&quot; and &quot;Memory pressure / OOM events&quot; sections. On Linux, lines 132-133 make sure that a dmesg failure cannot pass for &quot;no OOM kills&quot;, but a reader of a Windows bundle can take the empty section to mean exactly that.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L127-L138">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="127" data-line="132-133"><code class="language-bash">        log show --style compact --last 1h --predicate \
+            &#39;(sender == &quot;kernel&quot;) AND ((eventMessage CONTAINS[c] &quot;jetsam&quot;) OR (eventMessage CONTAINS[c] &quot;memorystatus&quot;) OR (eventMessage CONTAINS[c] &quot;low swap&quot;))&#39; \
+            2&gt;&amp;1 | tail -100
+        ;;
+    linux)
+        # dmesg needs root where kernel.dmesg_restrict is set.  Its stderr
+        # reaches the bundle, so a failure cannot pass for &quot;no OOM kills&quot;.
+        sudo --non-interactive dmesg | grep -iE &#39;OOM|killed process|out of memory&#39; | tail -50
+        ;;
+    esac
+}
+</code></pre>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L153-L168">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="153" data-line="158-163"><code class="language-bash">            with_timeout 30 lsof -i -P -n
+        fi
+        ;;
+    esac
+}
+
+# Snapshot what Rancher Desktop thinks its own state is.  Probe unconditionally
+# rather than gating on a status check: the hangs worth diagnosing have the
+# server alive with one request path stuck, so a gate would skip exactly when
+# the capture is most useful.
+dump_api_state() {
+    local rdctl=&quot;$resources/$platform/bin/rdctl$exe&quot;
+    if [[ ! -x $rdctl ]]; then
+        echo &quot;rdctl not found at $rdctl&quot;
+        return
+    fi</code></pre>
+    <p>Fix: skip the function on win32, or print <code>not collected on Windows</code> under the headers.</p>
+    </div>
+    <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="S4">
+        <span class="finding-num">S4.</span> Two probes report a missing binary badly <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span><a href="#S4" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L180-L190">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="180" data-line="185"><code class="language-bash">}
+
+# The guest holds the answer whenever the host side only shows a stuck ssh.
+dump_lima_guest() {
+    local limactl=&quot;$resources/$platform/lima/bin/limactl&quot;
+    [[ -x $limactl ]] || return
+    # limactl talks to the VM directly, so it still answers after the Rancher
+    # Desktop process itself is gone.
+    local -x LIMA_HOME=&quot;$app_home/lima&quot;
+
+    echo &quot;=== Guest: rc-status ===&quot;</code></pre>
+    <p><code>dump_lima_guest</code> returns without printing anything when <code>limactl</code> is missing, so a Linux job that failed at install does not say why the guest sections are missing. <code>dump_api_state</code> does print <code>rdctl not found at …</code> (line 166), but before its first header, so in run 40809255306&#39;s Windows bundle that line appears under <code>=== Open sockets (netstat) ===</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L161-L171">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="161" data-line="166"><code class="language-bash"># server alive with one request path stuck, so a gate would skip exactly when
+# the capture is most useful.
+dump_api_state() {
+    local rdctl=&quot;$resources/$platform/bin/rdctl$exe&quot;
+    if [[ ! -x $rdctl ]]; then
+        echo &quot;rdctl not found at $rdctl&quot;
+        return
+    fi
+
+    echo &quot;=== rdctl api /v1/backend_state ===&quot;
+    with_timeout 10 &quot;$rdctl&quot; api /v1/backend_state</code></pre>
+    <p>Fix: print a header before each check, and have line 185 echo <code>limactl not found at $limactl</code> before it returns.</p>
+    </div>
+    <div class="card card-suggestion" data-file=".github/workflows/bats/collect-logs.sh">
+      <div class="finding-title" id="S5">
+        <span class="finding-num">S5.</span> The <code>ha.std*</code> glob is redundant, and the <code>wslpath</code> fallback is dead code <span class="pill pill-claude">Claude Opus 5.5</span><a href="#S5" class="pilcrow">&#182;</a>
+      </div>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L86-L96">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="86" data-line="91"><code class="language-bash"># except for a test that hangs until the Run BATS step times out.
+for vm_dir in &quot;$app_home&quot;/lima/*/; do
+    vm_name=$(basename &quot;$vm_dir&quot;)
+    [[ $vm_name == _config ]] &amp;&amp; continue
+    mkdir -p &quot;$output_dir/lima-$vm_name&quot;
+    cp &quot;$vm_dir&quot;/*.log &quot;$vm_dir&quot;/ha.std* &quot;$output_dir/lima-$vm_name/&quot; 2&gt;/dev/null
+done
+
+# Evidence of memory pressure or an external kill.  macOS jetsam and the Linux
+# OOM killer both use SIGKILL, which leaves no crash log, so without this a
+# process that vanished for want of memory looks identical to one that hung.</code></pre>
+    <p><code>*.log</code> already matches <code>ha.stdout.log</code> and <code>ha.stderr.log</code> (Lima&#39;s <code>pkg/limatype/filenames/filenames.go:67-68</code>), the only <code>ha.*</code> files in the artifacts, so <code>ha.std*</code> names them a second time.</p>
+    <p>Separately, and found during consolidation: <code>win32_path</code> (lines 27-29) falls back to <code>wslpath</code>, and the comment above it names WSL, but only the <code>*)</code> branch from line 45 calls it, and under WSL <code>uname -s</code> prints <code>Linux</code>.</p>
+      <div class="code-file-header"><a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/collect-logs.sh#L22-L50">.github/workflows/bats/collect-logs.sh</a></div>
+      <pre data-start="22" data-line="27-45"><code class="language-bash">mkdir -p &quot;$output_dir&quot;
+bundle=&quot;$output_dir/support-bundle.log&quot;
+
+# Under Git Bash and WSL alike the Windows environment variables hold Windows
+# paths, which neither shell can use directly.
+win32_path() {
+    cygpath --unix &quot;$1&quot; 2&gt;/dev/null || wslpath -u &quot;$1&quot; 2&gt;/dev/null
+}
+
+exe=
+case &quot;$(uname -s)&quot; in
+Darwin)
+    platform=darwin
+    app_home=&quot;$HOME/Library/Application Support/rancher-desktop&quot;
+    log_dir=&quot;$HOME/Library/Logs/rancher-desktop&quot;
+    resources=&quot;/Applications/Rancher Desktop.app/Contents/Resources/resources&quot;
+    ;;
+Linux)
+    platform=linux
+    app_home=&quot;$HOME/.local/share/rancher-desktop&quot;
+    log_dir=&quot;$app_home/logs&quot;
+    resources=&quot;/opt/rancher-desktop/resources/resources&quot;
+    ;;
+*)
+    platform=win32
+    exe=.exe
+    # Stop Git Bash rewriting rdctl&#39;s /v1/... API paths into Windows paths
+    # when it starts a native program.
+    export MSYS2_ARG_CONV_EXCL=&#39;*&#39;</code></pre>
+    <p>Fix: drop <code>&quot;$vm_dir&quot;/ha.std*</code>, and drop the <code>wslpath</code> fallback and the WSL half of the comment.</p>
+    </div>
+    <hr>
+    <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-design">
+    <h3 id="concerns">Concerns <a href="#concerns" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>(future) A job that fails early now uploads an artifact, but <code>readRuns()</code> in <a href="https://github.com/rancher-sandbox/rancher-desktop/blob/ace6445156b11e79d01a401a0f54c21f9c93a73e/.github/workflows/bats/summarize.mjs#L99-L105"><code>summarize.mjs:99-105</code></a> skips any directory without <code>version.txt</code> or <code>report.tap</code>, so the summary shows <code>:x: ??</code> (line 308) with no link to the evidence. Recording name, OS and engine with zero counts when <code>report.tap</code> is missing would link it. <span class="pill pill-claude">Claude Opus 5.5</span></li>
+    </ul>
+    <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>(in-scope) Collecting first, running without errexit, and guarding the optional copies keep one failure from taking the rest of the evidence with it; run 40809255306&#39;s install-failure artifacts show the result on macOS and Windows. <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-codex">Codex GPT 6 Astra</span> <span class="pill pill-gemini">Gemini 3.1 Pro</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span></li>
+      <li>(in-scope) The <code>wsl --list --running</code> gate stops the probe from booting a stopped distro, which run 40809252951 shows happening before the gate existed. <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-codex">Codex GPT 6 Astra</span></li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="testing-assessment">Testing Assessment <a href="#testing-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>No test is required. The script runs only in CI, and testing its probes needs a real runner or WSL distro. The stub harness in I3&#39;s reproducer runs anywhere with GNU <code>timeout</code>, but the repo has no place for tests of workflow scripts, so I would leave it in the review.</p>
+    <p>I ran these in the lead worktree: <code>make -C bats lint</code> (passes at the review SHA and with the S1 and I3 patches applied), the script under macOS&#39;s <code>/bin/bash</code> 3.2 with no <code>timeout</code> on PATH (exit 0, probes skipped as designed), and the three probes above (I1&#39;s against the merge-base, the guards alone and this PR; I3&#39;s and S1&#39;s against the reviewed code and its fix). Every check on the head commit is green; the BATS workflow does not run on pull requests.</p>
+    <p>The hang-until-timeout case has not run anywhere. No Run BATS step in the 40 most recent BATS runs of either repo took longer than 7000 s, among the runs whose job listings loaded (GitHub answered several with &quot;Server Error&quot;). So no run shows Consolidate logs running after Run BATS hits its 120-minute timeout. The WSL guest section has not run against a running distro either.</p>
+    </div>
+    <hr>
+    <h2 id="documentation-assessment">Documentation Assessment <a href="#documentation-assessment" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The script&#39;s comments match the code, apart from the WSL half of the <code>win32_path</code> comment (S5). The first commit&#39;s body and the PR body misattribute the upload (I1). The rest of the commit messages hold: run 34006415289&#39;s download did run 12 minutes and end in &quot;read: operation timed out&quot;, <code>ps --windows</code> lists <code>wslservice.exe</code> and <code>vmmemWSL</code> in the Windows bundles, and <code>test.yaml</code> runs <code>make -C bats lint</code> on every push.</p>
+    </div>
+    <hr>
+    <h2 id="acknowledged-limitations">Acknowledged Limitations <a href="#acknowledged-limitations" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <ul>
+      <li><strong>No timeout, no probes.</strong> Lines 250-251 skip the rdctl and guest probes when neither <code>timeout</code> nor <code>gtimeout</code> exists. That happens only on macOS before &quot;macOS: Install prerequisites&quot;, when Rancher Desktop has not started, so nothing is lost; run 40809255306&#39;s macOS bundle shows the skip line. Do not suggest a fallback timer.</li>
+    </ul>
+    </div>
+    <hr>
+    <h2 id="agent-performance-retro">Agent Performance Retro <a href="#agent-performance-retro" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="claude-opus-5-5"><span class="pill pill-claude">Claude Opus 5.5</span> <a href="#claude-opus-5-5" class="pilcrow">&#182;</a></h3>
+    <p>Raised the WSL namespace problem with the full chain of evidence, and alone found I3, the hung probe that prints nothing. Its stub reproducer retyped <code>with_timeout</code>, and the result held when I re-ran it against the real script. It rated the jetsam window Important, which the merge-base rule makes a Suggestion, and it caught the dropped <code>lowmem</code> term and the redundant <code>ha.std*</code> glob. One sentence overstated: <code>with_timeout</code> returns the 124 rather than discarding it; only its callers ignore it. It missed the empty Linux listener table and the commit message&#39;s misattribution.</p>
+    <h3 id="codex-gpt-6-astra"><span class="pill pill-codex">Codex GPT 6 Astra</span> <a href="#codex-gpt-6-astra" class="pilcrow">&#182;</a></h3>
+    <p>Traced the WSL finding to <code>setup_linux.go</code>, as Claude did, and alone read the Linux bundle closely enough to see that <code>ss</code> printed only established connections (S2). It rated the jetsam window a Suggestion on the merge-base argument, the same call consolidation made. Its session log shows both of its Python probes ran, though the window probe checked only arithmetic. It missed I3, though its own probe saw <code>with_timeout</code> return 124, and it missed I1.</p>
+    <h3 id="gemini-3-1-pro"><span class="pill pill-gemini">Gemini 3.1 Pro</span> <a href="#gemini-3-1-pro" class="pilcrow">&#182;</a></h3>
+    <p>Reported no findings and marked <code>collect-logs.sh</code> reviewed with no issues, which misses I2 and I3. Gemini&#39;s own policy denied five of its shell calls. One experiment it did run, <code>test-cp-mac.sh</code> written to its worktree root instead of <code>.scratch/</code>, began with <code>rm -rf logs bats</code> and deleted the worktree&#39;s 104 tracked files under <code>bats/</code>, so its <code>bats/Makefile</code> verdict does not rest on the tree. It wrote its severity sections as bold bullets instead of headings.</p>
+    <h3 id="gemini-3-5-flash"><span class="pill pill-gemini">Gemini 3.5 Flash</span> <a href="#gemini-3-5-flash" class="pilcrow">&#182;</a></h3>
+    <p>Found the WSL namespace problem but stretched it. It moved <code>ps -ef</code> into the child namespace too, though the parent namespace sees every process; it cited run 40809252951&#39;s cold-boot output as proof of the wrong state; and it labeled new code a regression. Its two Suggestions became S3, which Claude also raised, and the rdctl half of S4, whose limactl half was Claude&#39;s. It proposed folding the Windows commit into the first one, which consolidation did not adopt, since one change per commit is the author&#39;s practice. The two Gemini models did not raise a common finding this round.</p>
+    <h3 id="summary">Summary <a href="#summary" class="pilcrow">&#182;</a></h3>
+    <p>Claude and Codex gave the most value: each found something nobody else did (I3 and S2), and both traced I2 to its source. Neither saw I1. The prompt summarized the job log, but no agent compared it with the commit body.</p>
+    <table class="retro-table">
+      <thead><tr><th></th><th><span class="pill pill-claude">Claude Opus 5.5</span></th><th><span class="pill pill-codex">Codex GPT 6 Astra</span></th><th><span class="pill pill-gemini">Gemini 3.1 Pro</span></th><th><span class="pill pill-gemini">Gemini 3.5 Flash</span></th></tr></thead>
+      <tbody>
+        <tr><td>Duration</td><td>8m 26s</td><td>6m 28s</td><td>7m 37s</td><td>9m 43s</td></tr>
+        <tr><td>Findings</td><td>2I 4S</td><td>1I 2S</td><td>none</td><td>1I 2S</td></tr>
+        <tr><td>Tool calls</td><td>32 (Bash 28, Read 4)</td><td>11 (shell 11)</td><td>39 (run<em>shell</em>command 36, read<em>file 2, grep</em>search 1)</td><td>78 (run<em>shell</em>command 25, read<em>file 24, grep</em>search 23)</td></tr>
+        <tr><td>Design observations</td><td>4</td><td>2</td><td>3</td><td>3</td></tr>
+        <tr><td>False positives</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Unique insights</td><td>3</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>Files reviewed</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+        <tr><td>Coverage misses</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td><strong>Totals</strong></td><td><strong>2I 4S</strong></td><td><strong>1I 2S</strong></td><td><strong>none</strong></td><td><strong>1I 2S</strong></td></tr>
+        <tr><td>Downgraded</td><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>Dropped</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Reconciliation.</strong> Claude Opus 5.5, pass 1, I2 (jetsam window): important → suggestion S1, because the merge-base had no memory evidence to lose. Gemini 3.5 Flash, pass 1, I1 (WSL namespace): classification regression → gap, and its <code>ps -ef</code> half dropped.</p>
+    </div>
+    <hr>
+    <h2 id="review-process-notes">Review Process Notes <a href="#review-process-notes" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <h3 id="skill-improvements">Skill improvements <a href="#skill-improvements" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>When a PR ports code from another project, have agents list every constant whose rationale came from the source project&#39;s environment (a timeout, a time window, a retry count, a size limit) and check it against the target&#39;s own configuration. A port copies the value and often drops the comment that tied it to the source&#39;s setup.</li>
+      <li>In diagnostic and collection code, check that each section separates an empty answer from a probe that failed, timed out or was skipped, and that every skip message&#39;s stated reason holds in each case that reaches it.</li>
+    </ul>
+    <h3 id="repo-context-updates">Repo context updates <a href="#repo-context-updates" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>[repo] On WSL, Rancher Desktop&#39;s OpenRC runs in a child PID and mount namespace that network-setup creates (<code>unshare --pid --mount-proc --fork</code>). An OpenRC command (<code>rc-status</code>, <code>rc-service</code>) run through plain <code>wsl.exe --distribution rancher-desktop</code> sees the distro&#39;s root namespace and does not report the services correctly; Rancher Desktop routes such commands through the distro&#39;s <code>/usr/local/bin/wsl-service</code> or <code>/usr/local/bin/wsl-exec</code>, which nsenter init&#39;s namespaces. A process listing works from the root namespace, which sees every child process. Flag any WSL-side diagnostic or test helper that runs OpenRC commands without them.</li>
+      <li>[repo] On the macOS runners, a script with <code>#!/bin/bash</code> runs bash 3.2 even after the workflow installs Homebrew bash, and so does a <code>shell: bash</code> step that runs before &quot;macOS: Install prerequisites&quot;. Under <code>set -o nounset</code>, bash 3.2 rejects an empty array expansion (<code>&quot;${arr[@]}&quot;</code>), so check such scripts against an empty input.</li>
+    </ul>
+    <h3 id="report-notes">Report notes <a href="#report-notes" class="pilcrow">&#182;</a></h3>
+    <ul>
+      <li>I1 cites a commit SHA, not a file, so it draws a beautify lint warning on purpose.</li>
+    </ul>
+    </div>
+  </main>
+  <script>window.Prism = window.Prism || {}; Prism.manual = true;</script>
+  <script>
+/**
+ * Minified by jsDelivr using Terser v5.39.0.
+ * Original file: /npm/prismjs@1.29.0/prism.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var _self="undefined"!=typeof window?window:"undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?self:{},Prism=function(e){var t=/(?:^|\s)lang(?:uage)?-([\w-]+)(?=\s|$)/i,n=0,a={},r={manual:e.Prism&&e.Prism.manual,disableWorkerMessageHandler:e.Prism&&e.Prism.disableWorkerMessageHandler,util:{encode:function e(t){return t instanceof s?new s(t.type,e(t.content),t.alias):Array.isArray(t)?t.map(e):t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\u00a0/g," ")},type:function(e){return Object.prototype.toString.call(e).slice(8,-1)},objId:function(e){return e.__id||Object.defineProperty(e,"__id",{value:++n}),e.__id},clone:function e(t,n){var a,s;switch(n=n||{},r.util.type(t)){case"Object":if(s=r.util.objId(t),n[s])return n[s];for(var i in a={},n[s]=a,t)t.hasOwnProperty(i)&&(a[i]=e(t[i],n));return a;case"Array":return s=r.util.objId(t),n[s]?n[s]:(a=[],n[s]=a,t.forEach((function(t,r){a[r]=e(t,n)})),a);default:return t}},getLanguage:function(e){for(;e;){var n=t.exec(e.className);if(n)return n[1].toLowerCase();e=e.parentElement}return"none"},setLanguage:function(e,n){e.className=e.className.replace(RegExp(t,"gi"),""),e.classList.add("language-"+n)},currentScript:function(){if("undefined"==typeof document)return null;if("currentScript"in document)return document.currentScript;try{throw new Error}catch(a){var e=(/at [^(\r\n]*\((.*):[^:]+:[^:]+\)$/i.exec(a.stack)||[])[1];if(e){var t=document.getElementsByTagName("script");for(var n in t)if(t[n].src==e)return t[n]}return null}},isActive:function(e,t,n){for(var a="no-"+t;e;){var r=e.classList;if(r.contains(t))return!0;if(r.contains(a))return!1;e=e.parentElement}return!!n}},languages:{plain:a,plaintext:a,text:a,txt:a,extend:function(e,t){var n=r.util.clone(r.languages[e]);for(var a in t)n[a]=t[a];return n},insertBefore:function(e,t,n,a){var s=(a=a||r.languages)[e],i={};for(var o in s)if(s.hasOwnProperty(o)){if(o==t)for(var l in n)n.hasOwnProperty(l)&&(i[l]=n[l]);n.hasOwnProperty(o)||(i[o]=s[o])}var u=a[e];return a[e]=i,r.languages.DFS(r.languages,(function(t,n){n===u&&t!=e&&(this[t]=i)})),i},DFS:function e(t,n,a,s){s=s||{};var i=r.util.objId;for(var o in t)if(t.hasOwnProperty(o)){n.call(t,o,t[o],a||o);var l=t[o],u=r.util.type(l);"Object"!==u||s[i(l)]?"Array"!==u||s[i(l)]||(s[i(l)]=!0,e(l,n,o,s)):(s[i(l)]=!0,e(l,n,null,s))}}},plugins:{},highlightAll:function(e,t){r.highlightAllUnder(document,e,t)},highlightAllUnder:function(e,t,n){var a={callback:n,container:e,selector:'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code'};r.hooks.run("before-highlightall",a),a.elements=Array.prototype.slice.apply(a.container.querySelectorAll(a.selector)),r.hooks.run("before-all-elements-highlight",a);for(var s,i=0;s=a.elements[i++];)r.highlightElement(s,!0===t,a.callback)},highlightElement:function(t,n,a){var s=r.util.getLanguage(t),i=r.languages[s];r.util.setLanguage(t,s);var o=t.parentElement;o&&"pre"===o.nodeName.toLowerCase()&&r.util.setLanguage(o,s);var l={element:t,language:s,grammar:i,code:t.textContent};function u(e){l.highlightedCode=e,r.hooks.run("before-insert",l),l.element.innerHTML=l.highlightedCode,r.hooks.run("after-highlight",l),r.hooks.run("complete",l),a&&a.call(l.element)}if(r.hooks.run("before-sanity-check",l),(o=l.element.parentElement)&&"pre"===o.nodeName.toLowerCase()&&!o.hasAttribute("tabindex")&&o.setAttribute("tabindex","0"),!l.code)return r.hooks.run("complete",l),void(a&&a.call(l.element));if(r.hooks.run("before-highlight",l),l.grammar)if(n&&e.Worker){var g=new Worker(r.filename);g.onmessage=function(e){u(e.data)},g.postMessage(JSON.stringify({language:l.language,code:l.code,immediateClose:!0}))}else u(r.highlight(l.code,l.grammar,l.language));else u(r.util.encode(l.code))},highlight:function(e,t,n){var a={code:e,grammar:t,language:n};if(r.hooks.run("before-tokenize",a),!a.grammar)throw new Error('The language "'+a.language+'" has no grammar.');return a.tokens=r.tokenize(a.code,a.grammar),r.hooks.run("after-tokenize",a),s.stringify(r.util.encode(a.tokens),a.language)},tokenize:function(e,t){var n=t.rest;if(n){for(var a in n)t[a]=n[a];delete t.rest}var r=new l;return u(r,r.head,e),o(e,r,t,r.head,0),function(e){var t=[],n=e.head.next;for(;n!==e.tail;)t.push(n.value),n=n.next;return t}(r)},hooks:{all:{},add:function(e,t){var n=r.hooks.all;n[e]=n[e]||[],n[e].push(t)},run:function(e,t){var n=r.hooks.all[e];if(n&&n.length)for(var a,s=0;a=n[s++];)a(t)}},Token:s};function s(e,t,n,a){this.type=e,this.content=t,this.alias=n,this.length=0|(a||"").length}function i(e,t,n,a){e.lastIndex=t;var r=e.exec(n);if(r&&a&&r[1]){var s=r[1].length;r.index+=s,r[0]=r[0].slice(s)}return r}function o(e,t,n,a,l,c){for(var d in n)if(n.hasOwnProperty(d)&&n[d]){var p=n[d];p=Array.isArray(p)?p:[p];for(var m=0;m<p.length;++m){if(c&&c.cause==d+","+m)return;var h=p[m],f=h.inside,v=!!h.lookbehind,b=!!h.greedy,y=h.alias;if(b&&!h.pattern.global){var F=h.pattern.toString().match(/[imsuy]*$/)[0];h.pattern=RegExp(h.pattern.source,F+"g")}for(var x=h.pattern||h,k=a.next,w=l;k!==t.tail&&!(c&&w>=c.reach);w+=k.value.length,k=k.next){var A=k.value;if(t.length>e.length)return;if(!(A instanceof s)){var P,$=1;if(b){if(!(P=i(x,w,e,v))||P.index>=e.length)break;var S=P.index,E=P.index+P[0].length,_=w;for(_+=k.value.length;S>=_;)_+=(k=k.next).value.length;if(w=_-=k.value.length,k.value instanceof s)continue;for(var j=k;j!==t.tail&&(_<E||"string"==typeof j.value);j=j.next)$++,_+=j.value.length;$--,A=e.slice(w,_),P.index-=w}else if(!(P=i(x,0,A,v)))continue;S=P.index;var C=P[0],L=A.slice(0,S),z=A.slice(S+C.length),O=w+A.length;c&&O>c.reach&&(c.reach=O);var T=k.prev;if(L&&(T=u(t,T,L),w+=L.length),g(t,T,$),k=u(t,T,new s(d,f?r.tokenize(C,f):C,y,C)),z&&u(t,k,z),$>1){var M={cause:d+","+m,reach:O};o(e,t,n,k.prev,w,M),c&&M.reach>c.reach&&(c.reach=M.reach)}}}}}}function l(){var e={value:null,prev:null,next:null},t={value:null,prev:e,next:null};e.next=t,this.head=e,this.tail=t,this.length=0}function u(e,t,n){var a=t.next,r={value:n,prev:t,next:a};return t.next=r,a.prev=r,e.length++,r}function g(e,t,n){for(var a=t.next,r=0;r<n&&a!==e.tail;r++)a=a.next;t.next=a,a.prev=t,e.length-=r}if(e.Prism=r,s.stringify=function e(t,n){if("string"==typeof t)return t;if(Array.isArray(t)){var a="";return t.forEach((function(t){a+=e(t,n)})),a}var s={type:t.type,content:e(t.content,n),tag:"span",classes:["token",t.type],attributes:{},language:n},i=t.alias;i&&(Array.isArray(i)?Array.prototype.push.apply(s.classes,i):s.classes.push(i)),r.hooks.run("wrap",s);var o="";for(var l in s.attributes)o+=" "+l+'="'+(s.attributes[l]||"").replace(/"/g,"&quot;")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'"'+o+">"+s.content+"</"+s.tag+">"},!e.document)return e.addEventListener?(r.disableWorkerMessageHandler||e.addEventListener("message",(function(t){var n=JSON.parse(t.data),a=n.language,s=n.code,i=n.immediateClose;e.postMessage(r.highlight(s,r.languages[a],a)),i&&e.close()}),!1),r):r;var c=r.util.currentScript();function d(){r.manual||r.highlightAll()}if(c&&(r.filename=c.src,c.hasAttribute("data-manual")&&(r.manual=!0)),!r.manual){var p=document.readyState;"loading"===p||"interactive"===p&&c&&c.defer?document.addEventListener("DOMContentLoaded",d):window.requestAnimationFrame?window.requestAnimationFrame(d):window.setTimeout(d,16)}return r}(_self);
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ *
+ * @license MIT <https://opensource.org/licenses/MIT>
+ * @author Lea Verou <https://lea.verou.me>
+ * @namespace
+ * @public
+ */"undefined"!=typeof module&&module.exports&&(module.exports=Prism),"undefined"!=typeof global&&(global.Prism=Prism),Prism.languages.markup={comment:{pattern:/<!--(?:(?!<!--)[\s\S])*?-->/,greedy:!0},prolog:{pattern:/<\?[\s\S]+?\?>/,greedy:!0},doctype:{pattern:/<!DOCTYPE(?:[^>"'[\]]|"[^"]*"|'[^']*')+(?:\[(?:[^<"'\]]|"[^"]*"|'[^']*'|<(?!!--)|<!--(?:[^-]|-(?!->))*-->)*\]\s*)?>/i,greedy:!0,inside:{"internal-subset":{pattern:/(^[^\[]*\[)[\s\S]+(?=\]>$)/,lookbehind:!0,greedy:!0,inside:null},string:{pattern:/"[^"]*"|'[^']*'/,greedy:!0},punctuation:/^<!|>$|[[\]]/,"doctype-tag":/^DOCTYPE/i,name:/[^\s<>'"]+/}},cdata:{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,greedy:!0},tag:{pattern:/<\/?(?!\d)[^\s>\/=$<%]+(?:\s(?:\s*[^\s>\/=]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))|(?=[\s/>])))+)?\s*\/?>/,greedy:!0,inside:{tag:{pattern:/^<\/?[^\s>\/]+/,inside:{punctuation:/^<\/?/,namespace:/^[^\s>\/:]+:/}},"special-attr":[],"attr-value":{pattern:/=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+)/,inside:{punctuation:[{pattern:/^=/,alias:"attr-equals"},{pattern:/^(\s*)["']|["']$/,lookbehind:!0}]}},punctuation:/\/?>/,"attr-name":{pattern:/[^\s>\/]+/,inside:{namespace:/^[^\s>\/:]+:/}}}},entity:[{pattern:/&[\da-z]{1,8};/i,alias:"named-entity"},/&#x?[\da-f]{1,8};/i]},Prism.languages.markup.tag.inside["attr-value"].inside.entity=Prism.languages.markup.entity,Prism.languages.markup.doctype.inside["internal-subset"].inside=Prism.languages.markup,Prism.hooks.add("wrap",(function(e){"entity"===e.type&&(e.attributes.title=e.content.replace(/&amp;/,"&"))})),Object.defineProperty(Prism.languages.markup.tag,"addInlined",{value:function(e,t){var n={};n["language-"+t]={pattern:/(^<!\[CDATA\[)[\s\S]+?(?=\]\]>$)/i,lookbehind:!0,inside:Prism.languages[t]},n.cdata=/^<!\[CDATA\[|\]\]>$/i;var a={"included-cdata":{pattern:/<!\[CDATA\[[\s\S]*?\]\]>/i,inside:n}};a["language-"+t]={pattern:/[\s\S]+/,inside:Prism.languages[t]};var r={};r[e]={pattern:RegExp(/(<__[^>]*>)(?:<!\[CDATA\[(?:[^\]]|\](?!\]>))*\]\]>|(?!<!\[CDATA\[)[\s\S])*?(?=<\/__>)/.source.replace(/__/g,(function(){return e})),"i"),lookbehind:!0,greedy:!0,inside:a},Prism.languages.insertBefore("markup","cdata",r)}}),Object.defineProperty(Prism.languages.markup.tag,"addAttribute",{value:function(e,t){Prism.languages.markup.tag.inside["special-attr"].push({pattern:RegExp(/(^|["'\s])/.source+"(?:"+e+")"+/\s*=\s*(?:"[^"]*"|'[^']*'|[^\s'">=]+(?=[\s>]))/.source,"i"),lookbehind:!0,inside:{"attr-name":/^[^\s=]+/,"attr-value":{pattern:/=[\s\S]+/,inside:{value:{pattern:/(^=\s*(["']|(?!["'])))\S[\s\S]*(?=\2$)/,lookbehind:!0,alias:[t,"language-"+t],inside:Prism.languages[t]},punctuation:[{pattern:/^=/,alias:"attr-equals"},/"|'/]}}}})}}),Prism.languages.html=Prism.languages.markup,Prism.languages.mathml=Prism.languages.markup,Prism.languages.svg=Prism.languages.markup,Prism.languages.xml=Prism.languages.extend("markup",{}),Prism.languages.ssml=Prism.languages.xml,Prism.languages.atom=Prism.languages.xml,Prism.languages.rss=Prism.languages.xml,function(e){var t=/(?:"(?:\\(?:\r\n|[\s\S])|[^"\\\r\n])*"|'(?:\\(?:\r\n|[\s\S])|[^'\\\r\n])*')/;e.languages.css={comment:/\/\*[\s\S]*?\*\//,atrule:{pattern:RegExp("@[\\w-](?:"+/[^;{\s"']|\s+(?!\s)/.source+"|"+t.source+")*?"+/(?:;|(?=\s*\{))/.source),inside:{rule:/^@[\w-]+/,"selector-function-argument":{pattern:/(\bselector\s*\(\s*(?![\s)]))(?:[^()\s]|\s+(?![\s)])|\((?:[^()]|\([^()]*\))*\))+(?=\s*\))/,lookbehind:!0,alias:"selector"},keyword:{pattern:/(^|[^\w-])(?:and|not|only|or)(?![\w-])/,lookbehind:!0}}},url:{pattern:RegExp("\\burl\\((?:"+t.source+"|"+/(?:[^\\\r\n()"']|\\[\s\S])*/.source+")\\)","i"),greedy:!0,inside:{function:/^url/i,punctuation:/^\(|\)$/,string:{pattern:RegExp("^"+t.source+"$"),alias:"url"}}},selector:{pattern:RegExp("(^|[{}\\s])[^{}\\s](?:[^{};\"'\\s]|\\s+(?![\\s{])|"+t.source+")*(?=\\s*\\{)"),lookbehind:!0},string:{pattern:t,greedy:!0},property:{pattern:/(^|[^-\w\xA0-\uFFFF])(?!\s)[-_a-z\xA0-\uFFFF](?:(?!\s)[-\w\xA0-\uFFFF])*(?=\s*:)/i,lookbehind:!0},important:/!important\b/i,function:{pattern:/(^|[^-a-z0-9])[-a-z0-9]+(?=\()/i,lookbehind:!0},punctuation:/[(){};:,]/},e.languages.css.atrule.inside.rest=e.languages.css;var n=e.languages.markup;n&&(n.tag.addInlined("style","css"),n.tag.addAttribute("style","css"))}(Prism),Prism.languages.clike={comment:[{pattern:/(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,lookbehind:!0,greedy:!0},{pattern:/(^|[^\\:])\/\/.*/,lookbehind:!0,greedy:!0}],string:{pattern:/(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,greedy:!0},"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|trait)\s+|\bcatch\s+\()[\w.\\]+/i,lookbehind:!0,inside:{punctuation:/[.\\]/}},keyword:/\b(?:break|catch|continue|do|else|finally|for|function|if|in|instanceof|new|null|return|throw|try|while)\b/,boolean:/\b(?:false|true)\b/,function:/\b\w+(?=\()/,number:/\b0x[\da-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:e[+-]?\d+)?/i,operator:/[<>]=?|[!=]=?=?|--?|\+\+?|&&?|\|\|?|[?*/~^%]/,punctuation:/[{}[\];(),.:]/},Prism.languages.javascript=Prism.languages.extend("clike",{"class-name":[Prism.languages.clike["class-name"],{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$A-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\.(?:constructor|prototype))/,lookbehind:!0}],keyword:[{pattern:/((?:^|\})\s*)catch\b/,lookbehind:!0},{pattern:/(^|[^.]|\.\.\.\s*)\b(?:as|assert(?=\s*\{)|async(?=\s*(?:function\b|\(|[$\w\xA0-\uFFFF]|$))|await|break|case|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally(?=\s*(?:\{|$))|for|from(?=\s*(?:['"]|$))|function|(?:get|set)(?=\s*(?:[#\[$\w\xA0-\uFFFF]|$))|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)\b/,lookbehind:!0}],function:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,number:{pattern:RegExp(/(^|[^\w$])/.source+"(?:"+/NaN|Infinity/.source+"|"+/0[bB][01]+(?:_[01]+)*n?/.source+"|"+/0[oO][0-7]+(?:_[0-7]+)*n?/.source+"|"+/0[xX][\dA-Fa-f]+(?:_[\dA-Fa-f]+)*n?/.source+"|"+/\d+(?:_\d+)*n/.source+"|"+/(?:\d+(?:_\d+)*(?:\.(?:\d+(?:_\d+)*)?)?|\.\d+(?:_\d+)*)(?:[Ee][+-]?\d+(?:_\d+)*)?/.source+")"+/(?![\w$])/.source),lookbehind:!0},operator:/--|\+\+|\*\*=?|=>|&&=?|\|\|=?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?|[~:]/}),Prism.languages.javascript["class-name"][0].pattern=/(\b(?:class|extends|implements|instanceof|interface|new)\s+)[\w.\\]+/,Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:RegExp(/((?:^|[^$\w\xA0-\uFFFF."'\])\s]|\b(?:return|yield))\s*)/.source+/\//.source+"(?:"+/(?:\[(?:[^\]\\\r\n]|\\.)*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}/.source+"|"+/(?:\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.|\[(?:[^[\]\\\r\n]|\\.)*\])*\])*\]|\\.|[^/\\\[\r\n])+\/[dgimyus]{0,7}v[dgimyus]{0,7}/.source+")"+/(?=(?:\s|\/\*(?:[^*]|\*(?!\/))*\*\/)*(?:$|[\r\n,.;:})\]]|\/\/))/.source),lookbehind:!0,greedy:!0,inside:{"regex-source":{pattern:/^(\/)[\s\S]+(?=\/[a-z]*$)/,lookbehind:!0,alias:"language-regex",inside:Prism.languages.regex},"regex-delimiter":/^\/|\/$/,"regex-flags":/^[a-z]+$/}},"function-variable":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*[=:]\s*(?:async\s*)?(?:\bfunction\b|(?:\((?:[^()]|\([^()]*\))*\)|(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)\s*=>))/,alias:"function"},parameter:[{pattern:/(function(?:\s+(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*)?\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\))/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(^|[^$\w\xA0-\uFFFF])(?!\s)[_$a-z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*=>)/i,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/(\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*=>)/,lookbehind:!0,inside:Prism.languages.javascript},{pattern:/((?:\b|\s|^)(?!(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|undefined|var|void|while|with|yield)(?![$\w\xA0-\uFFFF]))(?:(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*)\(\s*|\]\s*\(\s*)(?!\s)(?:[^()\s]|\s+(?![\s)])|\([^()]*\))+(?=\s*\)\s*\{)/,lookbehind:!0,inside:Prism.languages.javascript}],constant:/\b[A-Z](?:[A-Z_]|\dx?)*\b/}),Prism.languages.insertBefore("javascript","string",{hashbang:{pattern:/^#!.*/,greedy:!0,alias:"comment"},"template-string":{pattern:/`(?:\\[\s\S]|\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}|(?!\$\{)[^\\`])*`/,greedy:!0,inside:{"template-punctuation":{pattern:/^`|`$/,alias:"string"},interpolation:{pattern:/((?:^|[^\\])(?:\\{2})*)\$\{(?:[^{}]|\{(?:[^{}]|\{[^}]*\})*\})+\}/,lookbehind:!0,inside:{"interpolation-punctuation":{pattern:/^\$\{|\}$/,alias:"punctuation"},rest:Prism.languages.javascript}},string:/[\s\S]+/}},"string-property":{pattern:/((?:^|[,{])[ \t]*)(["'])(?:\\(?:\r\n|[\s\S])|(?!\2)[^\\\r\n])*\2(?=\s*:)/m,lookbehind:!0,greedy:!0,alias:"property"}}),Prism.languages.insertBefore("javascript","operator",{"literal-property":{pattern:/((?:^|[,{])[ \t]*)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*:)/m,lookbehind:!0,alias:"property"}}),Prism.languages.markup&&(Prism.languages.markup.tag.addInlined("script","javascript"),Prism.languages.markup.tag.addAttribute(/on(?:abort|blur|change|click|composition(?:end|start|update)|dblclick|error|focus(?:in|out)?|key(?:down|up)|load|mouse(?:down|enter|leave|move|out|over|up)|reset|resize|scroll|select|slotchange|submit|unload|wheel)/.source,"javascript")),Prism.languages.js=Prism.languages.javascript,function(){if(void 0!==Prism&&"undefined"!=typeof document){Element.prototype.matches||(Element.prototype.matches=Element.prototype.msMatchesSelector||Element.prototype.webkitMatchesSelector);var e={js:"javascript",py:"python",rb:"ruby",ps1:"powershell",psm1:"powershell",sh:"bash",bat:"batch",h:"c",tex:"latex"},t="data-src-status",n="loading",a="loaded",r="pre[data-src]:not(["+t+'="'+a+'"]):not(['+t+'="'+n+'"])';Prism.hooks.add("before-highlightall",(function(e){e.selector+=", "+r})),Prism.hooks.add("before-sanity-check",(function(s){var i=s.element;if(i.matches(r)){s.code="",i.setAttribute(t,n);var o=i.appendChild(document.createElement("CODE"));o.textContent="Loading…";var l=i.getAttribute("data-src"),u=s.language;if("none"===u){var g=(/\.(\w+)$/.exec(l)||[,"none"])[1];u=e[g]||g}Prism.util.setLanguage(o,u),Prism.util.setLanguage(i,u);var c=Prism.plugins.autoloader;c&&c.loadLanguages(u),function(e,t,n){var a=new XMLHttpRequest;a.open("GET",e,!0),a.onreadystatechange=function(){4==a.readyState&&(a.status<400&&a.responseText?t(a.responseText):a.status>=400?n("✖ Error "+a.status+" while fetching file: "+a.statusText):n("✖ Error: File does not exist or is empty"))},a.send(null)}(l,(function(e){i.setAttribute(t,a);var n=function(e){var t=/^\s*(\d+)\s*(?:(,)\s*(?:(\d+)\s*)?)?$/.exec(e||"");if(t){var n=Number(t[1]),a=t[2],r=t[3];return a?r?[n,Number(r)]:[n,void 0]:[n,n]}}(i.getAttribute("data-range"));if(n){var r=e.split(/\r\n?|\n/g),s=n[0],l=null==n[1]?r.length:n[1];s<0&&(s+=r.length),s=Math.max(0,Math.min(s-1,r.length)),l<0&&(l+=r.length),l=Math.max(0,Math.min(l,r.length)),e=r.slice(s,l).join("\n"),i.hasAttribute("data-start")||i.setAttribute("data-start",String(s+1))}o.textContent=e,Prism.highlightElement(o)}),(function(e){i.setAttribute(t,"failed"),o.textContent=e}))}})),Prism.plugins.fileHighlight={highlight:function(e){for(var t,n=(e||document).querySelectorAll(r),a=0;t=n[a++];)Prism.highlightElement(t)}};var s=!1;Prism.fileHighlight=function(){s||(console.warn("Prism.fileHighlight is deprecated. Use `Prism.plugins.fileHighlight.highlight` instead."),s=!0),Prism.plugins.fileHighlight.highlight.apply(this,arguments)}}}();
+//# sourceMappingURL=/sm/1f55244a569fc0911044b5e4725a97872b6d85b0662a3429a809bb62f713c381.map
+Prism.languages.go=Prism.languages.extend("clike",{string:{pattern:/(^|[^\\])"(?:\\.|[^"\\\r\n])*"|`[^`]*`/,lookbehind:!0,greedy:!0},keyword:/\b(?:break|case|chan|const|continue|default|defer|else|fallthrough|for|func|go(?:to)?|if|import|interface|map|package|range|return|select|struct|switch|type|var)\b/,boolean:/\b(?:_|false|iota|nil|true)\b/,number:[/\b0(?:b[01_]+|o[0-7_]+)i?\b/i,/\b0x(?:[a-f\d_]+(?:\.[a-f\d_]*)?|\.[a-f\d_]+)(?:p[+-]?\d+(?:_\d+)*)?i?(?!\w)/i,/(?:\b\d[\d_]*(?:\.[\d_]*)?|\B\.\d[\d_]*)(?:e[+-]?[\d_]+)?i?(?!\w)/i],operator:/[*\/%^!=]=?|\+[=+]?|-[=-]?|\|[=|]?|&(?:=|&|\^=?)?|>(?:>=?|=)?|<(?:<=?|=|-)?|:=|\.\.\./,builtin:/\b(?:append|bool|byte|cap|close|complex|complex(?:64|128)|copy|delete|error|float(?:32|64)|u?int(?:8|16|32|64)?|imag|len|make|new|panic|print(?:ln)?|real|recover|rune|string|uintptr)\b/}),Prism.languages.insertBefore("go","string",{char:{pattern:/'(?:\\.|[^'\\\r\n]){0,10}'/,greedy:!0}}),delete Prism.languages.go["class-name"];
+!function(e){var t="\\b(?:BASH|BASHOPTS|BASH_ALIASES|BASH_ARGC|BASH_ARGV|BASH_CMDS|BASH_COMPLETION_COMPAT_DIR|BASH_LINENO|BASH_REMATCH|BASH_SOURCE|BASH_VERSINFO|BASH_VERSION|COLORTERM|COLUMNS|COMP_WORDBREAKS|DBUS_SESSION_BUS_ADDRESS|DEFAULTS_PATH|DESKTOP_SESSION|DIRSTACK|DISPLAY|EUID|GDMSESSION|GDM_LANG|GNOME_KEYRING_CONTROL|GNOME_KEYRING_PID|GPG_AGENT_INFO|GROUPS|HISTCONTROL|HISTFILE|HISTFILESIZE|HISTSIZE|HOME|HOSTNAME|HOSTTYPE|IFS|INSTANCE|JOB|LANG|LANGUAGE|LC_ADDRESS|LC_ALL|LC_IDENTIFICATION|LC_MEASUREMENT|LC_MONETARY|LC_NAME|LC_NUMERIC|LC_PAPER|LC_TELEPHONE|LC_TIME|LESSCLOSE|LESSOPEN|LINES|LOGNAME|LS_COLORS|MACHTYPE|MAILCHECK|MANDATORY_PATH|NO_AT_BRIDGE|OLDPWD|OPTERR|OPTIND|ORBIT_SOCKETDIR|OSTYPE|PAPERSIZE|PATH|PIPESTATUS|PPID|PS1|PS2|PS3|PS4|PWD|RANDOM|REPLY|SECONDS|SELINUX_INIT|SESSION|SESSIONTYPE|SESSION_MANAGER|SHELL|SHELLOPTS|SHLVL|SSH_AUTH_SOCK|TERM|UID|UPSTART_EVENTS|UPSTART_INSTANCE|UPSTART_JOB|UPSTART_SESSION|USER|WINDOWID|XAUTHORITY|XDG_CONFIG_DIRS|XDG_CURRENT_DESKTOP|XDG_DATA_DIRS|XDG_GREETER_DATA_DIR|XDG_MENU_PREFIX|XDG_RUNTIME_DIR|XDG_SEAT|XDG_SEAT_PATH|XDG_SESSION_DESKTOP|XDG_SESSION_ID|XDG_SESSION_PATH|XDG_SESSION_TYPE|XDG_VTNR|XMODIFIERS)\\b",a={pattern:/(^(["']?)\w+\2)[ \t]+\S.*/,lookbehind:!0,alias:"punctuation",inside:null},n={bash:a,environment:{pattern:RegExp("\\$"+t),alias:"constant"},variable:[{pattern:/\$?\(\([\s\S]+?\)\)/,greedy:!0,inside:{variable:[{pattern:/(^\$\(\([\s\S]+)\)\)/,lookbehind:!0},/^\$\(\(/],number:/\b0x[\dA-Fa-f]+\b|(?:\b\d+(?:\.\d*)?|\B\.\d+)(?:[Ee]-?\d+)?/,operator:/--|\+\+|\*\*=?|<<=?|>>=?|&&|\|\||[=!+\-*/%<>^&|]=?|[?~:]/,punctuation:/\(\(?|\)\)?|,|;/}},{pattern:/\$\((?:\([^)]+\)|[^()])+\)|`[^`]+`/,greedy:!0,inside:{variable:/^\$\(|^`|\)$|`$/}},{pattern:/\$\{[^}]+\}/,greedy:!0,inside:{operator:/:[-=?+]?|[!\/]|##?|%%?|\^\^?|,,?/,punctuation:/[\[\]]/,environment:{pattern:RegExp("(\\{)"+t),lookbehind:!0,alias:"constant"}}},/\$(?:\w+|[#?*!@$])/],entity:/\\(?:[abceEfnrtv\\"]|O?[0-7]{1,3}|U[0-9a-fA-F]{8}|u[0-9a-fA-F]{4}|x[0-9a-fA-F]{1,2})/};e.languages.bash={shebang:{pattern:/^#!\s*\/.*/,alias:"important"},comment:{pattern:/(^|[^"{\\$])#.*/,lookbehind:!0},"function-name":[{pattern:/(\bfunction\s+)[\w-]+(?=(?:\s*\(?:\s*\))?\s*\{)/,lookbehind:!0,alias:"function"},{pattern:/\b[\w-]+(?=\s*\(\s*\)\s*\{)/,alias:"function"}],"for-or-select":{pattern:/(\b(?:for|select)\s+)\w+(?=\s+in\s)/,alias:"variable",lookbehind:!0},"assign-left":{pattern:/(^|[\s;|&]|[<>]\()\w+(?:\.\w+)*(?=\+?=)/,inside:{environment:{pattern:RegExp("(^|[\\s;|&]|[<>]\\()"+t),lookbehind:!0,alias:"constant"}},alias:"variable",lookbehind:!0},parameter:{pattern:/(^|\s)-{1,2}(?:\w+:[+-]?)?\w+(?:\.\w+)*(?=[=\s]|$)/,alias:"variable",lookbehind:!0},string:[{pattern:/((?:^|[^<])<<-?\s*)(\w+)\s[\s\S]*?(?:\r?\n|\r)\2/,lookbehind:!0,greedy:!0,inside:n},{pattern:/((?:^|[^<])<<-?\s*)(["'])(\w+)\2\s[\s\S]*?(?:\r?\n|\r)\3/,lookbehind:!0,greedy:!0,inside:{bash:a}},{pattern:/(^|[^\\](?:\\\\)*)"(?:\\[\s\S]|\$\([^)]+\)|\$(?!\()|`[^`]+`|[^"\\`$])*"/,lookbehind:!0,greedy:!0,inside:n},{pattern:/(^|[^$\\])'[^']*'/,lookbehind:!0,greedy:!0},{pattern:/\$'(?:[^'\\]|\\[\s\S])*'/,greedy:!0,inside:{entity:n.entity}}],environment:{pattern:RegExp("\\$?"+t),alias:"constant"},variable:n.variable,function:{pattern:/(^|[\s;|&]|[<>]\()(?:add|apropos|apt|apt-cache|apt-get|aptitude|aspell|automysqlbackup|awk|basename|bash|bc|bconsole|bg|bzip2|cal|cargo|cat|cfdisk|chgrp|chkconfig|chmod|chown|chroot|cksum|clear|cmp|column|comm|composer|cp|cron|crontab|csplit|curl|cut|date|dc|dd|ddrescue|debootstrap|df|diff|diff3|dig|dir|dircolors|dirname|dirs|dmesg|docker|docker-compose|du|egrep|eject|env|ethtool|expand|expect|expr|fdformat|fdisk|fg|fgrep|file|find|fmt|fold|format|free|fsck|ftp|fuser|gawk|git|gparted|grep|groupadd|groupdel|groupmod|groups|grub-mkconfig|gzip|halt|head|hg|history|host|hostname|htop|iconv|id|ifconfig|ifdown|ifup|import|install|ip|java|jobs|join|kill|killall|less|link|ln|locate|logname|logrotate|look|lpc|lpr|lprint|lprintd|lprintq|lprm|ls|lsof|lynx|make|man|mc|mdadm|mkconfig|mkdir|mke2fs|mkfifo|mkfs|mkisofs|mknod|mkswap|mmv|more|most|mount|mtools|mtr|mutt|mv|nano|nc|netstat|nice|nl|node|nohup|notify-send|npm|nslookup|op|open|parted|passwd|paste|pathchk|ping|pkill|pnpm|podman|podman-compose|popd|pr|printcap|printenv|ps|pushd|pv|quota|quotacheck|quotactl|ram|rar|rcp|reboot|remsync|rename|renice|rev|rm|rmdir|rpm|rsync|scp|screen|sdiff|sed|sendmail|seq|service|sftp|sh|shellcheck|shuf|shutdown|sleep|slocate|sort|split|ssh|stat|strace|su|sudo|sum|suspend|swapon|sync|sysctl|tac|tail|tar|tee|time|timeout|top|touch|tr|traceroute|tsort|tty|umount|uname|unexpand|uniq|units|unrar|unshar|unzip|update-grub|uptime|useradd|userdel|usermod|users|uudecode|uuencode|v|vcpkg|vdir|vi|vim|virsh|vmstat|wait|watch|wc|wget|whereis|which|who|whoami|write|xargs|xdg-open|yarn|yes|zenity|zip|zsh|zypper)(?=$|[)\s;|&])/,lookbehind:!0},keyword:{pattern:/(^|[\s;|&]|[<>]\()(?:case|do|done|elif|else|esac|fi|for|function|if|in|select|then|until|while)(?=$|[)\s;|&])/,lookbehind:!0},builtin:{pattern:/(^|[\s;|&]|[<>]\()(?:\.|:|alias|bind|break|builtin|caller|cd|command|continue|declare|echo|enable|eval|exec|exit|export|getopts|hash|help|let|local|logout|mapfile|printf|pwd|read|readarray|readonly|return|set|shift|shopt|source|test|times|trap|type|typeset|ulimit|umask|unalias|unset)(?=$|[)\s;|&])/,lookbehind:!0,alias:"class-name"},boolean:{pattern:/(^|[\s;|&]|[<>]\()(?:false|true)(?=$|[)\s;|&])/,lookbehind:!0},"file-descriptor":{pattern:/\B&\d\b/,alias:"important"},operator:{pattern:/\d?<>|>\||\+=|=[=~]?|!=?|<<[<-]?|[&\d]?>>|\d[<>]&?|[<>][&=]?|&[>&]?|\|[&|]?/,inside:{"file-descriptor":{pattern:/^\d/,alias:"important"}}},punctuation:/\$?\(\(?|\)\)?|\.\.|[{}[\];\\]/,number:{pattern:/(^|\s)(?:[1-9]\d*|0)(?:[.,]\d+)?\b/,lookbehind:!0}},a.inside=e.languages.bash;for(var s=["comment","function-name","for-or-select","assign-left","parameter","string","environment","function","keyword","builtin","boolean","file-descriptor","operator","punctuation","number"],o=n.variable[1].inside,i=0;i<s.length;i++)o[s[i]]=e.languages.bash[s[i]];e.languages.sh=e.languages.bash,e.languages.shell=e.languages.bash}(Prism);
+!function(e){e.languages.diff={coord:[/^(?:\*{3}|-{3}|\+{3}).*$/m,/^@@.*@@$/m,/^\d.*$/m]};var n={"deleted-sign":"-","deleted-arrow":"<","inserted-sign":"+","inserted-arrow":">",unchanged:" ",diff:"!"};Object.keys(n).forEach((function(a){var i=n[a],r=[];/^\w+$/.test(a)||r.push(/\w+/.exec(a)[0]),"diff"===a&&r.push("bold"),e.languages.diff[a]={pattern:RegExp("^(?:["+i+"].*(?:\r\n?|\n|(?![\\s\\S])))+","m"),alias:r,inside:{line:{pattern:/(.)(?=[\s\S]).*(?:\r\n?|\n)?/,lookbehind:!0},prefix:{pattern:/[\s\S]/,alias:/\w+/.exec(a)[0]}}}})),Object.defineProperty(e.languages.diff,"PREFIXES",{value:n})}(Prism);
+!function(e){var n=/[*&][^\s[\]{},]+/,r=/!(?:<[\w\-%#;/?:@&=+$,.!~*'()[\]]+>|(?:[a-zA-Z\d-]*!)?[\w\-%#;/?:@&=+$.~*'()]+)?/,t="(?:"+r.source+"(?:[ \t]+"+n.source+")?|"+n.source+"(?:[ \t]+"+r.source+")?)",a="(?:[^\\s\\x00-\\x08\\x0e-\\x1f!\"#%&'*,\\-:>?@[\\]`{|}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]|[?:-]<PLAIN>)(?:[ \t]*(?:(?![#:])<PLAIN>|:<PLAIN>))*".replace(/<PLAIN>/g,(function(){return"[^\\s\\x00-\\x08\\x0e-\\x1f,[\\]{}\\x7f-\\x84\\x86-\\x9f\\ud800-\\udfff\\ufffe\\uffff]"})),d="\"(?:[^\"\\\\\r\n]|\\\\.)*\"|'(?:[^'\\\\\r\n]|\\\\.)*'";function o(e,n){n=(n||"").replace(/m/g,"")+"m";var r="([:\\-,[{]\\s*(?:\\s<<prop>>[ \t]+)?)(?:<<value>>)(?=[ \t]*(?:$|,|\\]|\\}|(?:[\r\n]\\s*)?#))".replace(/<<prop>>/g,(function(){return t})).replace(/<<value>>/g,(function(){return e}));return RegExp(r,n)}e.languages.yaml={scalar:{pattern:RegExp("([\\-:]\\s*(?:\\s<<prop>>[ \t]+)?[|>])[ \t]*(?:((?:\r?\n|\r)[ \t]+)\\S[^\r\n]*(?:\\2[^\r\n]+)*)".replace(/<<prop>>/g,(function(){return t}))),lookbehind:!0,alias:"string"},comment:/#.*/,key:{pattern:RegExp("((?:^|[:\\-,[{\r\n?])[ \t]*(?:<<prop>>[ \t]+)?)<<key>>(?=\\s*:\\s)".replace(/<<prop>>/g,(function(){return t})).replace(/<<key>>/g,(function(){return"(?:"+a+"|"+d+")"}))),lookbehind:!0,greedy:!0,alias:"atrule"},directive:{pattern:/(^[ \t]*)%.+/m,lookbehind:!0,alias:"important"},datetime:{pattern:o("\\d{4}-\\d\\d?-\\d\\d?(?:[tT]|[ \t]+)\\d\\d?:\\d{2}:\\d{2}(?:\\.\\d*)?(?:[ \t]*(?:Z|[-+]\\d\\d?(?::\\d{2})?))?|\\d{4}-\\d{2}-\\d{2}|\\d\\d?:\\d{2}(?::\\d{2}(?:\\.\\d*)?)?"),lookbehind:!0,alias:"number"},boolean:{pattern:o("false|true","i"),lookbehind:!0,alias:"important"},null:{pattern:o("null|~","i"),lookbehind:!0,alias:"important"},string:{pattern:o(d),lookbehind:!0,greedy:!0},number:{pattern:o("[+-]?(?:0x[\\da-f]+|0o[0-7]+|(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:e[+-]?\\d+)?|\\.inf|\\.nan)","i"),lookbehind:!0},tag:r,important:n,punctuation:/---|[:[\]{}\-,|>?]|\.\.\./},e.languages.yml=e.languages.yaml}(Prism);
+!function(e){e.languages.typescript=e.languages.extend("javascript",{"class-name":{pattern:/(\b(?:class|extends|implements|instanceof|interface|new|type)\s+)(?!keyof\b)(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?:\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>)?/,lookbehind:!0,greedy:!0,inside:null},builtin:/\b(?:Array|Function|Promise|any|boolean|console|never|number|string|symbol|unknown)\b/}),e.languages.typescript.keyword.push(/\b(?:abstract|declare|is|keyof|readonly|require)\b/,/\b(?:asserts|infer|interface|module|namespace|type)\b(?=\s*(?:[{_$a-zA-Z\xA0-\uFFFF]|$))/,/\btype\b(?=\s*(?:[\{*]|$))/),delete e.languages.typescript.parameter,delete e.languages.typescript["literal-property"];var s=e.languages.extend("typescript",{});delete s["class-name"],e.languages.typescript["class-name"].inside=s,e.languages.insertBefore("typescript","function",{decorator:{pattern:/@[$\w\xA0-\uFFFF]+/,inside:{at:{pattern:/^@/,alias:"operator"},function:/^[\s\S]+/}},"generic-function":{pattern:/#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*\s*<(?:[^<>]|<(?:[^<>]|<[^<>]*>)*>)*>(?=\s*\()/,greedy:!0,inside:{function:/^#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*/,generic:{pattern:/<[\s\S]+/,alias:"class-name",inside:s}}}}),e.languages.ts=e.languages.typescript}(Prism);
+  </script>
+  <script>
+/* Deep Review — Prism initialization and line-number wrapping.
+ * Inlined into each generated HTML file by the beautify-review skill.
+ * Runs synchronously at the end of <body> — no event listeners.
+ *
+ * Prerequisite: a preceding <script> must set Prism.manual = true
+ * before the Prism core <script> loads.
+ */
+
+Prism.highlightAll();
+
+document.querySelectorAll('pre[data-start]').forEach(function(pre) {
+  var startLine = parseInt(pre.getAttribute('data-start'), 10) || 1;
+  var hlAttr = pre.getAttribute('data-line') || '';
+
+  /* Parse data-line into a Set of line numbers to highlight.
+   * Accepts comma-separated values: "75,76,77" or ranges: "75-84". */
+  var hlLines = new Set();
+  hlAttr.split(',').forEach(function(part) {
+    part = part.trim();
+    if (!part) return;
+    var m = part.match(/^(\d+)-(\d+)$/);
+    if (m) {
+      for (var i = parseInt(m[1], 10); i <= parseInt(m[2], 10); i++) hlLines.add(i);
+    } else {
+      hlLines.add(parseInt(part, 10));
+    }
+  });
+
+  var code = pre.querySelector('code');
+  if (!code) return;
+
+  var html = code.innerHTML;
+  var lines = html.split('\n');
+  /* Strip a trailing empty line that Prism sometimes leaves. */
+  if (lines.length > 0 && lines[lines.length - 1].trim() === '') lines.pop();
+
+  var wrapped = lines.map(function(line, idx) {
+    var lineNum = startLine + idx;
+    var cls = 'code-line' + (hlLines.has(lineNum) ? ' line-hl' : '');
+    return '<span class="' + cls + '">' + line + '</span>';
+  });
+
+  /* Join with '' (empty string) — NOT '\n'.
+   * Inside <pre>, newlines are literal whitespace. Since .code-line uses
+   * display: block, joining with '\n' produces double line spacing. */
+  code.innerHTML = wrapped.join('');
+  pre.style.counterReset = 'line ' + (startLine - 1);
+});
+
+/* GitHub reference tooltips — show title and state on hover for #N links.
+ * Links must have class="gh-ref" and data-title set by the generator. */
+document.querySelectorAll('a.gh-ref[data-title]').forEach(function(link) {
+  var tip = null;
+
+  link.addEventListener('mouseenter', function() {
+    if (tip) return;
+    tip = document.createElement('div');
+    tip.className = 'gh-tooltip';
+
+    var state = link.getAttribute('data-state') || '';
+    var type = link.getAttribute('data-type') || 'issue';
+    var label = state.charAt(0).toUpperCase() + state.slice(1).toLowerCase();
+
+    var pill = document.createElement('span');
+    pill.className = 'gh-tooltip-state gh-state-' + state;
+    pill.textContent = label + (type === 'pr' ? ' PR' : '');
+
+    var title = document.createElement('span');
+    title.className = 'gh-tooltip-title';
+    title.textContent = link.getAttribute('data-title');
+
+    tip.appendChild(pill);
+    tip.appendChild(title);
+    document.body.appendChild(tip);
+
+    var rect = link.getBoundingClientRect();
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    var left = rect.left + window.scrollX;
+    var top = rect.top + window.scrollY - th - 8;
+
+    if (left + tw > window.innerWidth - 12) left = window.innerWidth - tw - 12;
+    if (left < 4) left = 4;
+    if (top < window.scrollY + 4) top = rect.bottom + window.scrollY + 8;
+
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.opacity = '1';
+  });
+
+  link.addEventListener('mouseleave', function() {
+    if (tip) { tip.remove(); tip = null; }
+  });
+});
+
+  </script>
+</body>
+</html>
