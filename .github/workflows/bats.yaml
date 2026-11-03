@@ -352,6 +352,21 @@ jobs:
         output-dir: diag
       continue-on-error: true
 
+    - name: "Unix: Capture machine info"
+      if: runner.os != 'Windows'
+      uses: $/.github/actions/unix-machine-info
+      with:
+        output-path: diag/machine-info.txt
+      continue-on-error: true
+
+    - name: "Unix: Start resource sampler"
+      if: runner.os != 'Windows'
+      uses: $/.github/actions/unix-resource-sampler
+      with:
+        command: start
+        output-dir: diag
+      continue-on-error: true
+
     - name: Normalize test name
       id: normalize
       shell: bash
@@ -434,6 +449,14 @@ jobs:
     - name: "Windows: Stop typeperf sampler"
       if: always() && runner.os == 'Windows'
       uses: $/.github/actions/windows-typeperf-sampler
+      with:
+        command: stop
+        output-dir: diag
+      continue-on-error: true
+
+    - name: "Unix: Stop resource sampler"
+      if: always() && runner.os != 'Windows'
+      uses: $/.github/actions/unix-resource-sampler
       with:
         command: stop
         output-dir: diag
