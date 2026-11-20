@@ -243,6 +243,12 @@ details.fold .code-file-header { margin-top: 0; border-radius: 0; }
     <p>The PR edits <code>/containers/create</code> bodies as raw JSON, so the docker proxy forwards fields it does not model and passes dockerd&#39;s <code>API-Version</code> through. It also removes the moby spec download and go-swagger. The JSON editing is correct for the bodies that real clients send, and CI passed. But existing checkouts keep go-swagger&#39;s generated <code>models/</code> package, which then breaks <code>go test ./...</code> and golangci-lint in wsl-helper. The PR body should tell developers to delete it.</p>
     </div>
     <hr>
+    <h2 id="code-changed-since-this-review">Code Changed Since This Review <a href="#code-changed-since-this-review" class="pilcrow">&#182;</a></h2>
+
+    <div class="card card-neutral">
+    <p>The fixes were folded into the PR&#39;s two commits after this review ran (now <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4edd7c9ad"><code>4edd7c9ad</code></a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c37d5456c"><code>c37d5456c</code></a>). So the line numbers and quoted code for <code>containers_create_body.go</code>, its test and <code>mungers/helpers.go</code> (now <code>helpers_test.go</code>) no longer match the branch. The Review SHA above still points at the reviewed code.</p>
+    </div>
+    <hr>
     <h2 id="critical-issues" class="section-critical">Critical Issues <a href="#critical-issues" class="pilcrow">&#182;</a></h2>
 
     <div class="card card-critical">
@@ -293,6 +299,7 @@ vet: FAILED
       </details>
     <p>Fix: add the cleanup to the PR body: <code>rm -r src/go/wsl-helper/pkg/dockerproxy/models src/go/wsl-helper/pkg/dockerproxy/swagger*.yaml</code>.</p>
     <p>No patch: the fix is a PR-body line outside the tree; deleting the files from postinstall instead would be backward-compatibility code, which needs the author&#39;s go-ahead.</p>
+    <p><strong>Outcome:</strong> fixed in the commit message, pending in the PR body. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c37d5456c"><code>c37d5456c</code></a> (formerly <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c0612a520"><code>c0612a520</code></a>) explains the failure and gives the cleanup command, and the PR body gets the same paragraph once the author approves it. A postinstall cleanup was tried and dropped, because Yarn 4 reruns the root workspace&#39;s postinstall only when the dependency tree changes, and this PR leaves <code>yarn.lock</code> unchanged.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
@@ -380,6 +387,7 @@ PASS
 ok  	github.com/rancher-sandbox/rancher-desktop/src/go/wsl-helper/pkg/zzdupkeys	0.085s</code></pre>
       </details>
     <p>Fix: in <code>readContainersCreateBody</code>, return an error when any object that <code>writeTo</code> re-encodes (the top level, <code>HostConfig</code>, each mount) has two keys that <code>strings.EqualFold</code> matches. The munger then logs it and forwards the body unchanged. In my test the check rejected <code>Binds</code>/<code>binds</code>, <code>env</code>/<code>Env</code> and <code>Source</code>/<code>source</code>, and the control body and <code>TestContainersCreateBody</code> still passed.</p>
+    <p><strong>Outcome:</strong> fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4edd7c9ad"><code>4edd7c9ad</code></a>. <code>checkDuplicateKeys</code> reads the keys of the top level, HostConfig and each mount in document order and rejects the body when two of them match case-insensitively, identical keys included. A check over the decoded map&#39;s keys would miss identical keys, which encoding/json merges when their values are objects. A rejected body reaches dockerd unchanged. The new &quot;duplicate keys&quot; subtest covers five bodies.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/wsl-helper/pkg/dockerproxy/mungers/helpers.go">
       <div class="finding-title" id="S2">
@@ -435,6 +443,7 @@ func readRequestBodyJSON(req *http.Request, data interface{}) error {
 		assert.NoError(t, err)
 		assert.Equal(t, []map[string]any{mount}, body.HostConfig.Mounts)</code></pre>
     <p>Fix: move the helper into a <code>_test.go</code> file.</p>
+    <p><strong>Outcome:</strong> fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4edd7c9ad"><code>4edd7c9ad</code></a>. <code>helpers.go</code> moved unchanged to <code>helpers_test.go</code>.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/wsl-helper/pkg/dockerproxy/mungers/containers_create_body_test.go">
       <div class="finding-title" id="S3">
@@ -464,6 +473,7 @@ func readRequestBodyJSON(req *http.Request, data interface{}) error {
 	})
 }</code></pre>
     <p>Fix: <code>assert.ErrorContains(t, err, &quot;could not unmarshal request body&quot;)</code>.</p>
+    <p><strong>Outcome:</strong> fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4edd7c9ad"><code>4edd7c9ad</code></a>.</p>
     </div>
     <div class="card card-suggestion" data-file="src/go/wsl-helper/pkg/dockerproxy/mungers/containers_create_body.go">
       <div class="finding-title" id="S4">
@@ -495,6 +505,7 @@ func readRequestBodyJSON(req *http.Request, data interface{}) error {
 	}
 </code></pre>
     <p>Fix: use <code>bytes.NewReader(buf)</code> here too, so the file uses one constructor.</p>
+    <p><strong>Outcome:</strong> fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4edd7c9ad"><code>4edd7c9ad</code></a>.</p>
     </div>
     <hr>
     <h2 id="design-observations" class="section-design">Design Observations <a href="#design-observations" class="pilcrow">&#182;</a></h2>
@@ -504,6 +515,7 @@ func readRequestBodyJSON(req *http.Request, data interface{}) error {
     <ul>
       <li>(in-scope) The <code>containersCreateBody</code> comment (<a href="https://github.com/rancher-sandbox/rancher-desktop/blob/c0612a52092df1c2330d3a5105a9b07ae72cf368/src/go/wsl-helper/pkg/dockerproxy/mungers/containers_create_body.go#L21-L26"><code>containers_create_body.go:21-26</code></a>) presents forwarding unknown fields only as a benefit. <a href="https://github.com/rancher-sandbox/rancher-desktop/issues/11358" class="gh-ref" data-title="Docker proxy: moby API spec 1.57 is OpenAPI 3.2, which go-swagger cannot read" data-state="open" data-type="issue">#11358</a> accepted the cost of dropping the <code>API-Version</code> cap, which is that a future API change to how requests describe bind mounts reaches the mungers unchecked. If a later API version adds a field that carries a host path, the Windows proxy forwards it untranslated, the Linux proxy does not rebind it, and the proxy logs neither. A sentence in that comment naming the risk keeps it in front of the next reader. Today&#39;s spec is not affected. <code>v1.57-swagger.yaml</code> changes neither <code>Mount</code> nor <code>HostConfig.Binds</code> against <code>v1.56.yaml</code>, and moby&#39;s 1.57 changelog does not mention <code>POST /containers/create</code> at all. <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span></li>
     </ul>
+    <p>  <strong>Outcome:</strong> fixed in <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/4edd7c9ad"><code>4edd7c9ad</code></a>. The type comment now says that if a newer API version adds a field that holds a host path, or a mount type whose source is one, the proxy forwards that path without rewriting it. The same edit narrows &quot;the source of each mount&quot; to bind mounts and counts string escapes among the formatting changes. <code>marshalJSON</code>&#39;s comment no longer claims that strings keep the client&#39;s bytes.</p>
     <h3 id="strengths">Strengths <a href="#strengths" class="pilcrow">&#182;</a></h3>
     <ul>
       <li><code>readContainersCreateBody</code> puts the original bytes back before decoding, and the <code>Director</code> in <code>serve.go</code> only logs munger errors. So any decode failure forwards the client&#39;s request untouched. <span class="pill pill-claude">Claude Opus 5.5</span> <span class="pill pill-gemini">Gemini 3.5 Flash</span></li>
