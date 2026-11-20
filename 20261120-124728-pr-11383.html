@@ -299,7 +299,7 @@ vet: FAILED
       </details>
     <p>Fix: add the cleanup to the PR body: <code>rm -r src/go/wsl-helper/pkg/dockerproxy/models src/go/wsl-helper/pkg/dockerproxy/swagger*.yaml</code>.</p>
     <p>No patch: the fix is a PR-body line outside the tree; deleting the files from postinstall instead would be backward-compatibility code, which needs the author&#39;s go-ahead.</p>
-    <p><strong>Outcome:</strong> fixed in the commit message, pending in the PR body. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c37d5456c"><code>c37d5456c</code></a> (formerly <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c0612a520"><code>c0612a520</code></a>) explains the failure and gives the cleanup command, and the PR body gets the same paragraph once the author approves it. A postinstall cleanup was tried and dropped, because Yarn 4 reruns the root workspace&#39;s postinstall only when the dependency tree changes, and this PR leaves <code>yarn.lock</code> unchanged.</p>
+    <p><strong>Outcome:</strong> fixed in the commit message and the PR body. <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c37d5456c"><code>c37d5456c</code></a> (formerly <a href="https://github.com/rancher-sandbox/rancher-desktop/commit/c0612a520"><code>c0612a520</code></a>) explains the failure and gives the cleanup command, and the PR body has the same paragraph. A postinstall cleanup was tried and dropped, because Yarn 4 reruns the root workspace&#39;s postinstall only when the dependency tree changes, and this PR leaves <code>yarn.lock</code> unchanged.</p>
     </div>
     <hr>
     <h2 id="suggestions" class="section-suggestion">Suggestions <a href="#suggestions" class="pilcrow">&#182;</a></h2>
